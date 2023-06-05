@@ -11,7 +11,7 @@ set(ENGINE_SOURCES
 	"src/Turnip/Common/PlatformDetection.h"
 	"src/Turnip/Common/Types.h"
 	"src/pch.h"
-	"src/test.cpp"
+	
 )
 
 add_executable (turnip ${ENGINE_SOURCES})
