@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.12)
 
+find_package(spdlog CONFIG REQUIRED)
+
 set(ENGINE_SOURCES
 	"src/Turnip/Common/CPU_Information.cpp"
 	"src/Turnip/Common/CPU_Information.h"
@@ -14,7 +16,7 @@ set(ENGINE_SOURCES
 
 add_executable (turnip ${ENGINE_SOURCES})
 
-# target_link_libraries(turnip-engine PRIVATE spdlog::spdlog)
+target_link_libraries(turnip PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET turnip PROPERTY CXX_STANDARD 17)
