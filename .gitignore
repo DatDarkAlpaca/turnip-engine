@@ -9,6 +9,9 @@
 # Visual studio cache/options:
 .vs/
 
+# Log files:
+*.log
+
 # Build results
 [Oo]ut/
 [Bb]uild/
