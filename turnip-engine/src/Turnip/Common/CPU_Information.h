@@ -376,5 +376,5 @@ namespace tur
 
 namespace tur
 {
-	void TUR_API display_cpu_information();
+	void display_cpu_information();
 }

@@ -4,7 +4,7 @@
 
 namespace tur
 {
-	void TUR_API initialize_logger();
+	void initialize_logger();
 }
 
 #ifdef TUR_DEBUG

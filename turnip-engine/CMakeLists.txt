@@ -7,23 +7,30 @@ set(ENGINE_SOURCES
 	"src/Turnip/Common/CPU_Information.h"
 	"src/Turnip/Common/Assertion.h"
 	"src/Turnip/Common/Debug_Definition.h"
-	"src/Turnip/Common/DLL_Definition.h"
+	
 	"src/Turnip/Common/PlatformDetection.h"
 	"src/Turnip/Common/Types.h"
+	"src/Turnip/System/Logger/Logger.cpp"
+	"src/Turnip/System/Logger/Logger.h"
 	"src/pch.h"
-	
+	"src/Turnip.h"
 )
 
-add_executable (turnip ${ENGINE_SOURCES})
-
-target_link_libraries(turnip PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
+add_library("turnip" SHARED ${ENGINE_SOURCES})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET turnip PROPERTY CXX_STANDARD 17)
+  set_property(TARGET "turnip" PROPERTY CXX_STANDARD 17)
 endif()
 
-target_include_directories(turnip PUBLIC
+target_link_libraries("turnip" PUBLIC 
+	spdlog::spdlog 
+	spdlog::spdlog_header_only
+)
+
+target_include_directories("turnip" PUBLIC
 	"src/"
 	"src/Turnip"
 	"src/Turnip/Common"
 )
+
+target_compile_definitions("turnip" PUBLIC "TUR_EXPORT")

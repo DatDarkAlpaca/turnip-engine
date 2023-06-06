@@ -63,7 +63,7 @@ namespace tur
 
 	std::string CPU_Information::brand() const
 	{
-		char str[sizeof(unsigned int) * 12];
+		char str[sizeof(U32) * 13];
 
 		CPU_ID cpuID_Part0 = CPU_ID(0x80000000);
 		if (cpuID_Part0.eax() < 0x80000004)
@@ -77,6 +77,7 @@ namespace tur
 		memcpy(str + sizeof(cpuID_Part0.registers), (U32*)cpuID_Part1.registers, sizeof(cpuID_Part1.registers));
 		memcpy(str + sizeof(cpuID_Part0.registers) + sizeof(cpuID_Part1.registers), (U32*)cpuID_Part2.registers, sizeof(cpuID_Part2.registers));
 	
+		str[sizeof(str) - 1] = '\0';
 		return std::string(str);
 	}
 

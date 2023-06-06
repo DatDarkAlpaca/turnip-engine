@@ -8,3 +8,5 @@ endif()
 project ("turnip")
 
 add_subdirectory ("turnip-engine")
+
+add_subdirectory ("turnip-testbed")
