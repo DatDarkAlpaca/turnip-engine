@@ -12,7 +12,11 @@
 # Log files:
 *.log
 
+# Vcpkg:
+vcpkg_installed/
+
 # Build results
+[Ii]ntermediate/
 [Oo]ut/
 [Bb]uild/
 [Dd]ebug/

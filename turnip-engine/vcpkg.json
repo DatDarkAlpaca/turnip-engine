@@ -1,0 +1,9 @@
+{
+    "name": "turnip-engine",
+    "dependencies": [
+        "spdlog",
+        "glfw3",
+        "glad",
+        "glm"
+    ]
+}

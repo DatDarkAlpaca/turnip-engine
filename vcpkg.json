@@ -1,8 +1,0 @@
-{
-    "name": "turnip",
-    "version-string": "0.0.1",
-    "dependencies": [
-        "spdlog"
-    ],
-    "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc"
-}
