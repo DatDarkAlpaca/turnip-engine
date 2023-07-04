@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "TurnipEngine.h"
 
-#include "OpenGL/Buffer.h"
-#include "OpenGL/VertexArray.h"
-#include "OpenGL/Shader.h"
-
 static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
 {
     TUR_CORE_CRITICAL("GL: {}", message);
@@ -14,6 +10,9 @@ namespace tur
 {
     TurnipEngine::TurnipEngine()
     {
+        TUR_ASSERT(!s_Instance, "The engine instance already exists.");
+        s_Instance = this;
+
         Setup();
     }
 
@@ -32,13 +31,20 @@ namespace tur
         }
 
         Initialize();
-
+        
         while (!window.ShouldClose())
         {
             window.PollEvents();
 
             for (auto& view : viewQueue)
                 view->OnUpdate();
+
+            imguiView->Begin();
+
+            for (auto& view : viewQueue)
+                view->OnRenderGUI();
+
+            imguiView->End();
         
             window.SwapBuffers();
         }
@@ -51,7 +57,7 @@ namespace tur
         InitializeLogger();
 
         glfwWindowHint(GLFW_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         TUR_WRAP_DEBUG(glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE));
 
@@ -68,10 +74,12 @@ namespace tur
             TUR_CORE_ERROR("Failed to initialize GLAD.");
             return;
         }
-
         glDebugMessageCallback(MessageCallback, nullptr);
 
-        window.SetViewport({ 0, 0 });
+        window.SetViewport({ 800, 600 });
+
+        imguiView = new ImGuiView;
+        viewQueue.Push(imguiView);
 
         m_State.initialized = true;
     }

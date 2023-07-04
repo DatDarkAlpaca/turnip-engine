@@ -46,6 +46,11 @@ public:
         TofuRenderer::End();
     };
 
+    void OnRenderGUI() 
+    { 
+        ImGui::ShowDemoWindow();
+    };
+
 private:
     Texture m_Texture;
     Mesh m_Mesh;
@@ -60,7 +65,7 @@ public:
         TUR_CORE_INFO("Application initialized.");
 
         window.Resize({ 640, 480 });
-        window.Rename("TestApplication v1.0");
+        //window.Rename("TestApplication v1.0");
 
         viewQueue.Push(new ViewMain());
     }

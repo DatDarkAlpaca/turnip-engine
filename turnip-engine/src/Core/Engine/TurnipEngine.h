@@ -2,6 +2,7 @@
 #include "Window/Window.h"
 #include "View/ViewQueue.h"
 #include "TurnipEngineState.h"
+#include "ImGui/ImGuiView.h"
 
 namespace tur
 {
@@ -23,11 +24,18 @@ namespace tur
 	public:
 		void Run();
 
+	public:
+		Window& GetWindow() { return window; }
+
+		static inline TurnipEngine& Get() { return *s_Instance; }
+
 	protected:
+		ImGuiView* imguiView = nullptr;
 		ViewQueue viewQueue;
 		Window window;
 
 	private:
+		static inline TurnipEngine* s_Instance = nullptr;
 		TurnipEngineState m_State;
 	};
 }

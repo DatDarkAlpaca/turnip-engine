@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 out vec4 out_color;
 
 uniform vec4 u_color = vec4(1.0);

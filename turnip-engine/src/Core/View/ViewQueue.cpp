@@ -15,8 +15,8 @@ namespace tur
 
 	void ViewQueue::Push(IView* view)
 	{
-		view->OnInitialize();
 		m_Views.push_back(view);
+		view->OnInitialize();
 	}
 
 	void ViewQueue::Pop(IView* view)
