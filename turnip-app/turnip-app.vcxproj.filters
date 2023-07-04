@@ -23,4 +23,9 @@
     <None Include="res\basic.vert" />
     <None Include="res\basic.frag" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\turnip.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

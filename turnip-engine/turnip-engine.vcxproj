@@ -188,12 +188,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Assert\Assert.cpp" />
+    <ClCompile Include="src\Core\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\Window\Window.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Buffer.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Shader.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -215,6 +217,7 @@
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Core\Application\TurnipApplication.h" />
     <ClInclude Include="src\Core\Assert\Assert.h" />
+    <ClInclude Include="src\Core\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Core\File\ReadFile.h" />
     <ClInclude Include="src\Core\Input\Key.h" />
@@ -235,6 +238,7 @@
     <ClInclude Include="src\Graphics\OpenGL\ShaderHelpers.h" />
     <ClInclude Include="src\Graphics\OpenGL\VertexArray.h" />
     <ClInclude Include="src\Graphics\Renderer\TofuRenderer.h" />
+    <ClInclude Include="src\Graphics\OpenGL\Texture.h" />
     <ClInclude Include="src\Graphics\Vertex.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

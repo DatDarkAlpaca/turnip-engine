@@ -1,6 +1,7 @@
 #pragma once
-#include "Graphics/Mesh.h"
 #include "OpenGL/Shader.h"
+#include "OpenGL/Texture.h"
+#include "Graphics/Mesh.h"
 
 namespace tur
 {
@@ -23,10 +24,11 @@ namespace tur
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
-		void DrawMesh(const Mesh& mesh, Shader& shader)
+		void DrawMesh(const Mesh& mesh, Texture& texture, Shader& shader)
 		{
-			shader.Bind();
+			texture.Bind();
 			mesh.Bind();
+			shader.Bind();
 
 			glDrawElements(GL_TRIANGLES, mesh.GetElementCount(), GL_UNSIGNED_INT, nullptr);
 		}
