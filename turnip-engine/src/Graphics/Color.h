@@ -1,115 +1,32 @@
 #pragma once
 #include "pch.h"
 
-namespace
-{
-	inline glm::vec4 ConvertHexToRGBA(const char* hexValue)
-	{
-		glm::vec4 result = glm::vec4(0.f);
-
-		int convertedHex;
-		std::stringstream ss;
-		ss << std::hex << hexValue;
-		ss >> convertedHex;
-
-		result.r = float(((convertedHex >> 24) & 0xFF) / 255.f);
-		result.g = float(((convertedHex >> 16) & 0xFF) / 255.f);
-		result.b = float(((convertedHex >> 8)  & 0xFF) / 255.f);
-		result.a = float(((convertedHex >> 0)  & 0xFF) / 255.f);
-
-		return result;
-	}
-
-	inline glm::vec4 ConvertHexToRGBA(U64 hexValue)
-	{
-		glm::vec4 result = glm::vec4(0.f);
-
-		result.r = float(((hexValue >> 24) & 0xFF) / 255.f);
-		result.g = float(((hexValue >> 16) & 0xFF) / 255.f);
-		result.b = float(((hexValue >> 8)  & 0xFF) / 255.f);
-		result.a = float(((hexValue >> 0)  & 0xFF) / 255.f);
-
-		return result;
-	}
-}
-
 namespace tur
 {
 	class Color
 	{
 	public:
-		Color(float r, float g, float b, float a = 1.f)
-			: m_Color({ r, g, b, a })
-		{
-			TUR_ASSERT(r <= 1.f, "Color float values should be in the range of 0 to 1.");
-			TUR_ASSERT(r > 0.f, "Color float values should be in the range of 0 to 1.");
+		Color(double r, double g, double b, double a = 1.f);
 
-			TUR_ASSERT(g <= 1.f, "Color float values should be in the range of 0 to 1.");
-			TUR_ASSERT(g > 0.f, "Color float values should be in the range of 0 to 1.");
+		Color(U32 r, U32 g, U32 b, U32 a = 255);
 
-			TUR_ASSERT(b <= 1.f, "Color float values should be in the range of 0 to 1.");
-			TUR_ASSERT(b > 0.f, "Color float values should be in the range of 0 to 1.");
+		Color(int r, int g, int b, int a = 255);
 
-			TUR_ASSERT(a <= 1.f, "Color float values should be in the range of 0 to 1.");
-			TUR_ASSERT(a > 0.f, "Color float values should be in the range of 0 to 1.");
-		}
+		Color(const char* hex);
 
-		Color(U32 r, U32 g, U32 b, U32 a = 255)
-			: m_Color({ r / 255.F, g / 255.f, b / 255.f, a / 255.f })
-		{
-			TUR_ASSERT(r <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(r > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(g <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(g > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(b <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(b > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(a <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(a > 0, "Color integer values should be in the range of 0 to 255.");
-		}
-
-		Color(int r, int g, int b, int a = 255)
-			: m_Color({ r / 255.F, g / 255.f, b / 255.f, a / 255.f })
-		{
-			TUR_ASSERT(r <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(r > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(g <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(g > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(b <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(b > 0, "Color integer values should be in the range of 0 to 255.");
-
-			TUR_ASSERT(a <= 255, "Color integer values should be in the range of 0 to 255.");
-			TUR_ASSERT(a > 0, "Color integer values should be in the range of 0 to 255.");
-		}
-
-		Color(const char* hex)
-		{
-			m_Color = ConvertHexToRGBA(hex);
-		}
-
-		Color(U32 hex)
-		{
-			m_Color = ConvertHexToRGBA(hex);
-		}
+		Color(U64 hex);
 
 	public:
-		glm::vec4 RGBA() const 
-		{
-			return { U32(m_Color.r * 255), U32(m_Color.g * 255),  U32(m_Color.b * 255), U32(m_Color.a * 255) };
-		}
+		glm::vec4 RGBA() const;
 
 	public:
-		float r() const { return m_Color.r; }
+		inline float r() const { return m_Color.r; }
 
-		float g() const { return m_Color.g; }
+		inline float g() const { return m_Color.g; }
 
-		float b() const { return m_Color.b; }
+		inline float b() const { return m_Color.b; }
 
-		float a() const { return m_Color.a; }
+		inline float a() const { return m_Color.a; }
 
 	private:
 		glm::vec4 m_Color = {};
