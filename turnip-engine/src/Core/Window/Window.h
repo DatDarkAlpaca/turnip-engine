@@ -18,8 +18,13 @@ namespace tur
 		void SwapBuffers() const { glfwSwapBuffers(m_Window); }
 
 	public:
-		inline void SetViewport(const glm::vec2& viewport) { glViewport(0, 0, (U32)viewport.x, (U32)viewport.y); }
+		void SetViewport(const glm::vec2& viewport);
 
+		void Resize(const glm::vec2& size);
+
+		void Rename(const char* title);
+
+	public:
 		inline GLFWwindow* Get() const { return m_Window; }
 
 	private:

@@ -43,4 +43,20 @@ namespace tur
 	{
 		glfwDestroyWindow(m_Window);
 	}
+
+	void Window::SetViewport(const glm::vec2& viewport)
+	{
+		glViewport(0, 0, (U32)viewport.x, (U32)viewport.y);
+	}
+
+	void Window::Resize(const glm::vec2& size)
+	{
+		glfwSetWindowSize(m_Window, size.x, size.y);
+		SetViewport(size);
+	}
+
+	void Window::Rename(const char* title)
+	{
+		glfwSetWindowTitle(m_Window, title);
+	}
 }

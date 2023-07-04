@@ -197,6 +197,7 @@
     <ClCompile Include="src\Graphics\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\VertexArray.cpp" />
+    <ClCompile Include="src\Graphics\Renderer\TofuRenderer.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -215,10 +216,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\Core\Application\TurnipApplication.h" />
     <ClInclude Include="src\Core\Assert\Assert.h" />
     <ClInclude Include="src\Core\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
+    <ClInclude Include="src\Core\Engine\TurnipEngineState.h" />
     <ClInclude Include="src\Core\File\ReadFile.h" />
     <ClInclude Include="src\Core\Input\Key.h" />
     <ClInclude Include="src\Core\Input\Keyboard.h" />
@@ -227,9 +228,12 @@
     <ClInclude Include="src\Core\Input\MouseButton.h" />
     <ClInclude Include="src\Core\Input\State.h" />
     <ClInclude Include="src\Core\Logger\Logger.h" />
+    <ClInclude Include="src\Core\View\View.h" />
+    <ClInclude Include="src\Core\View\ViewQueue.h" />
     <ClInclude Include="src\Core\Window\Window.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
+    <ClInclude Include="src\Graphics\Color.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\OpenGL\Attribute.h" />
     <ClInclude Include="src\Graphics\OpenGL\Buffer.h" />
@@ -239,6 +243,7 @@
     <ClInclude Include="src\Graphics\OpenGL\VertexArray.h" />
     <ClInclude Include="src\Graphics\Renderer\TofuRenderer.h" />
     <ClInclude Include="src\Graphics\OpenGL\Texture.h" />
+    <ClInclude Include="src\Graphics\Renderer\TofuRendererProps.h" />
     <ClInclude Include="src\Graphics\Vertex.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

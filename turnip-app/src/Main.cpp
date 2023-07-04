@@ -2,22 +2,22 @@
 
 using namespace tur;
 
-class Test : public TurnipApplication
+class ViewMain : public IView
 {
 public:
-    void Initialize() override
+    void OnInitialize() override
     {
         m_Shader = new Shader({
-            { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
-            { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
+             { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
+             { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
         });
 
-        m_Texture.Initialize("res/turnip.png");
+        m_Texture.Initialize("res/turnip1.png");
 
         float width = 100 / 800.f, height = 100 / 600.f;
         std::vector<Vertex> vertices
         {
-            { {  width,  height, 0.0f }, { 0.0f , 0.0f , 0.0f }, { 1.0f, 1.0f, 0.5f, 1.0f }, {  1.0f,  1.0f } },
+            { {  width, height, 0.0f }, { 0.0f , 0.0f , 0.0f }, { 1.0f, 1.0f, 0.5f, 1.0f }, { 1.0f,  1.0f } },
             { { -width,  height, 0.0f }, { 0.0f , 0.0f , 0.0f }, { 0.4f, 1.0f, 0.2f, 1.0f }, {  0.0f,  1.0f } },
             { { -width, -height, 0.0f }, { 0.0f , 0.0f , 0.0f }, { 0.5f, 1.0f, 0.5f, 1.0f }, {  0.0f,  0.0f } },
             { {  width, -height, 0.0f }, { 0.0f , 0.0f , 0.0f }, { 1.0f, 0.6f, 0.3f, 1.0f }, {  1.0f,  0.0f } }
@@ -26,29 +26,49 @@ public:
 
         m_Mesh.Initialize(vertices, indices);
 
-        m_Renderer.SetColor({ 0.9803f, 0.9568f, 0.9098f, 1.f });
-    }
+        TofuRenderer::SetColor({ 250, 244, 232, 255 });
+    };
 
-    void Update() override
+    void OnShutdown() override 
     {
-        m_Renderer.Begin();
+        m_Texture.Destroy();
 
-        m_Renderer.DrawMesh(m_Mesh, m_Texture, *m_Shader);
-
-        m_Renderer.End();
-    }
-
-    void Shutdown() override
-    {
         m_Shader->Destroy();
         delete m_Shader;
-    }
+    };
+
+    void OnUpdate() override 
+    {
+        TofuRenderer::Begin();
+
+        TofuRenderer::DrawMesh(m_Mesh, m_Texture, *m_Shader);
+
+        TofuRenderer::End();
+    };
 
 private:
-    TofuRenderer m_Renderer;
     Texture m_Texture;
     Mesh m_Mesh;
     Shader* m_Shader = nullptr;
 };
 
-CREATE_APPLICATION(Test);
+class TestApplication : public TurnipEngine
+{
+public:
+    void Initialize() override 
+    {
+        TUR_CORE_INFO("Application initialized.");
+
+        window.Resize({ 640, 480 });
+        window.Rename("TestApplication v1.0");
+
+        viewQueue.Push(new ViewMain());
+    }
+
+    void Shutdown() override
+    {
+        TUR_CORE_INFO("Application shutdown.");
+    }
+};
+
+CREATE_APPLICATION(TestApplication);

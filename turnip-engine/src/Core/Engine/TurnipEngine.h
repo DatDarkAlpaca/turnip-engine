@@ -1,7 +1,8 @@
 #pragma once
 #include "Logger/Logger.h"
 #include "Window/Window.h"
-#include "Application/TurnipApplication.h"
+#include "View/ViewQueue.h"
+#include "TurnipEngineState.h"
 
 namespace tur
 {
@@ -12,20 +13,28 @@ namespace tur
 
 		~TurnipEngine();
 
+	private:
+		void Setup();
+
 	public:
-		void SetApplication(TurnipApplication* application = nullptr);
+		virtual void Initialize() { }
+
+		virtual void Shutdown() { }
 
 	public:
 		void Run();
 
-	private:
-		void InitializeSystems();
+	protected:
+		ViewQueue viewQueue;
+		Window window;
 
 	private:
-		Window m_Window;
-		TurnipApplication* m_Application;
-
-	private:
-		bool m_Initialized = false;
+		TurnipEngineState m_State;
 	};
+}
+
+#define CREATE_APPLICATION(applicationClass, ...)		\
+tur::TurnipEngine* CreateApp()							\
+{														\
+	return new applicationClass(__VA_ARGS__);			\
 }

@@ -2,46 +2,26 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/Texture.h"
 #include "Graphics/Mesh.h"
+#include "TofuRendererProps.h"
+#include "Color.h"
 
 namespace tur
 {
-	// Tofu renderer is a immediate mode renderer. It will have the ability to draw instanced in the future.
 	class TofuRenderer
 	{
-	public:
-		TofuRenderer()
-		{
-			glEnable(GL_BLEND);
-			glEnable(GL_DEPTH_TEST);
+		friend class TurnipEngine;
 
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDepthFunc(GL_LEQUAL);
-		}
+	private:
+		static void Initialize(const TofuRendererProps& properties);
 
 	public:
-		void Begin()
-		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
+		static void Begin();
 
-		void DrawMesh(const Mesh& mesh, Texture& texture, Shader& shader)
-		{
-			texture.Bind();
-			mesh.Bind();
-			shader.Bind();
+		static void DrawMesh(const Mesh& mesh, Texture& texture, Shader& shader);
 
-			glDrawElements(GL_TRIANGLES, mesh.GetElementCount(), GL_UNSIGNED_INT, nullptr);
-		}
-
-		void End()
-		{
-			
-		}
+		static void End();
 
 	public:
-		void SetColor(const glm::vec4& color)
-		{
-			glClearColor(color.r, color.g, color.b, color.a);
-		}
+		static void SetColor(const Color& color);
 	};
 }

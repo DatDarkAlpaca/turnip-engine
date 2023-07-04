@@ -17,45 +17,39 @@ namespace tur
 {
     TurnipEngine::TurnipEngine()
     {
-        InitializeSystems();
+        Setup();
     }
 
     TurnipEngine::~TurnipEngine()
     {
-        m_Window.Destroy();
-        
+        window.Destroy();
         glfwTerminate();
-    }
-
-    void TurnipEngine::SetApplication(TurnipApplication* application)
-    {
-        m_Application = application;
-        TUR_ASSERT(m_Application, "No application has been defined.");
     }
 
     void TurnipEngine::Run()
     {
-        if (!m_Initialized)
+        if (!m_State.initialized)
         {
             TUR_CORE_ERROR("Failed to initialize the required subsystems.");
             return;
         }
 
-        m_Application->Initialize();
+        Initialize();
 
-        while (!m_Window.ShouldClose())
+        while (!window.ShouldClose())
         {
-            m_Window.PollEvents();
+            window.PollEvents();
 
-            m_Application->Update();
-
-            m_Window.SwapBuffers();
+            for (auto& view : viewQueue)
+                view->OnUpdate();
+        
+            window.SwapBuffers();
         }
 
-        m_Application->Shutdown();
+        Shutdown();
     }
 
-    void TurnipEngine::InitializeSystems()
+    void TurnipEngine::Setup()
     {
         InitializeLogger();
 
@@ -70,7 +64,7 @@ namespace tur
             return;
         }
 
-        m_Window.Initialize(800, 600, "Turnip Engine v0.1");
+        window.Initialize(800, 600, "Turnip Engine v0.1");
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
@@ -80,8 +74,8 @@ namespace tur
 
         glDebugMessageCallback(MessageCallback, nullptr);
 
-        m_Window.SetViewport({ 800, 600 });
+        window.SetViewport({ 0, 0 });
 
-        m_Initialized = true;
+        m_State.initialized = true;
     }
 }
