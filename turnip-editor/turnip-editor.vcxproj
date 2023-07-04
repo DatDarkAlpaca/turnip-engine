@@ -165,6 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\EditorView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\turnip-engine\turnip-engine.vcxproj">
@@ -177,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\turnip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\EditorView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
