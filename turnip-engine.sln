@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "turnip-engine", "turnip-engine\turnip-engine.vcxproj", "{D08892B7-AA48-4FCE-96FC-6A4A8F228571}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "turnip-app", "turnip-app\turnip-app.vcxproj", "{BFFBD8E7-1C84-41E6-AECC-0F6E86BA7119}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "turnip-editor", "turnip-editor\turnip-editor.vcxproj", "{BFFBD8E7-1C84-41E6-AECC-0F6E86BA7119}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
