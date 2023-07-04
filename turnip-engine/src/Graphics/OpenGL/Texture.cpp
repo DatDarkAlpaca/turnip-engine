@@ -49,7 +49,9 @@ namespace tur
 
 	Texture::~Texture()
 	{
-		
+		if (m_ID == TUR_GL_INVALID)
+			return;
+		TUR_CORE_WARN("Texture instance destructor called, but object was never destroyed. It is advised to use Destroy() beforehand.");
 	}
 
 	void Texture::Initialize(const char* filepath, TextureOptions options)
@@ -115,5 +117,7 @@ namespace tur
 	void Texture::Destroy()
 	{
 		m_ID = TUR_GL_INVALID;
-	}	
+		if (m_Data)
+			stbi_image_free(m_Data);
+	}
 }

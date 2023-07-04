@@ -26,7 +26,7 @@ namespace tur
 
 	struct TextureOptions
 	{
-		TextureFilter minFilter = TextureFilter::LINEAR_MIPMAP_LINEAR, maxFilter = TextureFilter::LINEAR_MIPMAP_LINEAR;
+		TextureFilter minFilter = TextureFilter::NEAREST, maxFilter = TextureFilter::NEAREST;
 		TextureWrap wrap_s = TextureWrap::REPEAT, wrap_t = TextureWrap::REPEAT;
 	};
 
