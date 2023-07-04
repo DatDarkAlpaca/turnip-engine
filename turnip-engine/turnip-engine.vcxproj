@@ -193,6 +193,7 @@
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\View\ViewQueue.cpp" />
     <ClCompile Include="src\Core\Window\Window.cpp" />
+    <ClCompile Include="src\Graphics\Color.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Buffer.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Shader.cpp" />
