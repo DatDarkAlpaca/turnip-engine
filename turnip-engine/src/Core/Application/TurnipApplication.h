@@ -9,6 +9,8 @@ namespace tur
 		
 		~TurnipApplication() = default;
 
+		virtual ~TurnipApplication() = default;
+
 	public:
 		virtual void Initialize() { }
 
