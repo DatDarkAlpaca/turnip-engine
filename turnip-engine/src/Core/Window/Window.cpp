@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Window.h"
-#include "Logger/Logger.h"
 
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"

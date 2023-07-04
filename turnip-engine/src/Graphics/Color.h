@@ -1,34 +1,33 @@
 #pragma once
 #include "pch.h"
-#include "Assert/Assert.h"
 
 namespace
 {
 	inline glm::vec4 ConvertHexToRGBA(const char* hexValue)
 	{
-		glm::vec4 result;
+		glm::vec4 result = glm::vec4(0.f);
 
 		int convertedHex;
 		std::stringstream ss;
 		ss << std::hex << hexValue;
 		ss >> convertedHex;
 
-		result.r = ((convertedHex >> 64) & 0xFF) / 255.0;
-		result.g = ((convertedHex >> 16) & 0xFF) / 255.0;
-		result.b = ((convertedHex >> 4)  & 0xFF) / 255.0;
-		result.a = ((convertedHex >> 0)  & 0xFF) / 255.0;
+		result.r = float(((convertedHex >> 24) & 0xFF) / 255.f);
+		result.g = float(((convertedHex >> 16) & 0xFF) / 255.f);
+		result.b = float(((convertedHex >> 8)  & 0xFF) / 255.f);
+		result.a = float(((convertedHex >> 0)  & 0xFF) / 255.f);
 
 		return result;
 	}
 
 	inline glm::vec4 ConvertHexToRGBA(U64 hexValue)
 	{
-		glm::vec4 result;
+		glm::vec4 result = glm::vec4(0.f);
 
-		result.r = ((hexValue >> 64) & 0xFF) / 255.0;
-		result.g = ((hexValue >> 16) & 0xFF) / 255.0;
-		result.b = ((hexValue >> 4) & 0xFF) / 255.0;
-		result.a = ((hexValue >> 0) & 0xFF) / 255.0;
+		result.r = float(((hexValue >> 24) & 0xFF) / 255.f);
+		result.g = float(((hexValue >> 16) & 0xFF) / 255.f);
+		result.b = float(((hexValue >> 8)  & 0xFF) / 255.f);
+		result.a = float(((hexValue >> 0)  & 0xFF) / 255.f);
 
 		return result;
 	}

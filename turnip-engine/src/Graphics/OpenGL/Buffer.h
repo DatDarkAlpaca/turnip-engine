@@ -1,7 +1,6 @@
 #pragma once
 #include "pch.h"
 #include "GraphicsCommon.h"
-#include "Logger/Logger.h"
 
 namespace tur
 {

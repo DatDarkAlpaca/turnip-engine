@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "VertexArray.h"
-#include "Assert/Assert.h"
 
 namespace tur
 {

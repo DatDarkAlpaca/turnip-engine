@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Attribute.h"
 #include "GraphicsCommon.h"
-#include "Logger/Logger.h"
 
 namespace tur
 {

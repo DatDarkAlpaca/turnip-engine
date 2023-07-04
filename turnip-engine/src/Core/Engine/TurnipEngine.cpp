@@ -5,9 +5,6 @@
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/Shader.h"
 
-#include "Logger/Logger.h"
-#include "Assert/Assert.h"
-
 static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
 {
     TUR_CORE_CRITICAL("GL: {}", message);

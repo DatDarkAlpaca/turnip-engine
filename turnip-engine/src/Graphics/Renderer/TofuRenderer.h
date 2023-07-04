@@ -1,9 +1,9 @@
 #pragma once
+#include "Color.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/Texture.h"
 #include "Graphics/Mesh.h"
 #include "TofuRendererProps.h"
-#include "Color.h"
 
 namespace tur
 {

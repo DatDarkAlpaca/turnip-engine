@@ -1,6 +1,7 @@
 #pragma once
-#pragma warning(push, 0)
 #include "Common.h"
+
+#pragma warning(push, 0)
 
 #ifdef TUR_PLATFORM_WINDOWS
 	#include <intrin.h>
@@ -28,5 +29,9 @@
 #include <random>
 #include <memory>
 #include <array>
+#include <bitset>
 
 #pragma warning(pop)
+
+#include "Assert/Assert.h"
+#include "Logger/Logger.h"

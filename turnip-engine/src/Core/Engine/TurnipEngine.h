@@ -1,5 +1,4 @@
 #pragma once
-#include "Logger/Logger.h"
 #include "Window/Window.h"
 #include "View/ViewQueue.h"
 #include "TurnipEngineState.h"

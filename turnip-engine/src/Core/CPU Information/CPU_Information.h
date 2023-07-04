@@ -1,11 +1,6 @@
 #pragma once
-#include <bitset>
-#include <string>
-#include <vector>
-#include <array>
-
+#include "pch.h"
 #include "Common.h"
-#include "Logger/Logger.h"
 
 namespace tur
 {
