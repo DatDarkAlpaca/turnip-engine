@@ -7,7 +7,7 @@ void EditorView::OnInitialize()
                 { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
         });
 
-    m_Texture.Initialize("res/turnip1.png");
+    m_Texture.Initialize("res/turnip.png");
 
     float width = 100 / 800.f, height = 100 / 600.f;
     std::vector<Vertex> vertices
@@ -35,7 +35,6 @@ void EditorView::OnUpdate()
 
 void EditorView::OnRenderGUI()
 {
-    ImGui::ShowDemoWindow();
 }
 
 void EditorView::OnShutdown()

@@ -10,7 +10,7 @@ public:
 
     void OnUpdate() override;
 
-    void OnRenderGUI();
+    void OnRenderGUI() override;
 
     void OnShutdown() override;
 

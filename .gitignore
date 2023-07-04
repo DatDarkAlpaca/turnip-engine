@@ -9,6 +9,9 @@
 # Visual studio cache/options:
 .vs/
 
+# ImGui files:
+imgui.ini
+
 # Log files:
 *.log
 
