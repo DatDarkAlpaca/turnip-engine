@@ -3,9 +3,9 @@
 void EditorView::OnInitialize()
 {
     m_Shader = new Shader({
-                { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
-                { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
-        });
+        { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
+        { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
+    });
 
     m_Texture.Initialize("res/turnip.png");
 
@@ -26,6 +26,7 @@ void EditorView::OnInitialize()
 
 void EditorView::OnUpdate()
 {
+    TofuRenderer::SetColor(m_Color);
     TofuRenderer::Begin();
 
     TofuRenderer::DrawMesh(m_Mesh, m_Texture, *m_Shader);
@@ -35,6 +36,11 @@ void EditorView::OnUpdate()
 
 void EditorView::OnRenderGUI()
 {
+    ImGui::Begin("Color Picker");
+
+    ImGui::ColorPicker4("Color Picker", &m_Color[0]);
+
+    ImGui::End();
 }
 
 void EditorView::OnShutdown()

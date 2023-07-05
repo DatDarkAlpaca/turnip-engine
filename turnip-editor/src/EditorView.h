@@ -18,4 +18,5 @@ private:
     Texture m_Texture;
     Mesh m_Mesh;
     Shader* m_Shader = nullptr;
+    glm::vec4 m_Color = glm::vec4(0.f, 0.f, 0.f, 1.f);
 };
