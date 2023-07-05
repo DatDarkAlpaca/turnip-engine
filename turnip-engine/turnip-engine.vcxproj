@@ -196,6 +196,7 @@
     <ClCompile Include="src\Graphics\Color.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Buffer.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\Framebuffer.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\VertexArray.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\Color.h" />
+    <ClInclude Include="src\Graphics\OpenGL\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\OpenGL\Attribute.h" />
     <ClInclude Include="src\Graphics\OpenGL\Buffer.h" />
