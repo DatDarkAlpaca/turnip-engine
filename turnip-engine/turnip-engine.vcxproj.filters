@@ -45,7 +45,7 @@
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Mesh.cpp">
+    <ClCompile Include="src\Graphics\Mesh\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\CPU Information\CPU_Information.cpp">
@@ -101,7 +101,7 @@
     <ClInclude Include="src\Core\File\ReadFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Mesh.h">
+    <ClInclude Include="src\Graphics\Mesh\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Entry.h">
