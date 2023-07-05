@@ -164,5 +164,8 @@
     <ClInclude Include="src\Platform\ImGui\ImGuiView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Random\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

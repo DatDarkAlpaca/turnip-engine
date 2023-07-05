@@ -231,6 +231,7 @@
     <ClInclude Include="src\Core\Input\MouseButton.h" />
     <ClInclude Include="src\Core\Input\State.h" />
     <ClInclude Include="src\Core\Logger\Logger.h" />
+    <ClInclude Include="src\Core\Random\Random.h" />
     <ClInclude Include="src\Core\View\View.h" />
     <ClInclude Include="src\Core\View\ViewQueue.h" />
     <ClInclude Include="src\Core\Window\Window.h" />

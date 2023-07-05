@@ -3,11 +3,11 @@
 void EditorView::OnInitialize()
 {
     m_Shader = new Shader({
-        { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
-        { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
-    });
+         { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
+         { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
+        });
 
-    m_Texture.Initialize("res/turnip.png");
+    m_Texture.Initialize("res/turnip1.png");
 
     float width = 100 / 800.f, height = 100 / 600.f;
     std::vector<Vertex> vertices
@@ -29,6 +29,10 @@ void EditorView::OnUpdate()
     TofuRenderer::SetColor(m_Color);
     TofuRenderer::Begin();
 
+    glm::mat4 model(1.f);
+    model = glm::translate(model, m_Pos);
+    m_Shader->SetMatrix4f("u_model", model);
+
     TofuRenderer::DrawMesh(m_Mesh, m_Texture, *m_Shader);
 
     TofuRenderer::End();
@@ -37,9 +41,11 @@ void EditorView::OnUpdate()
 void EditorView::OnRenderGUI()
 {
     ImGui::Begin("Color Picker");
-
     ImGui::ColorPicker4("Color Picker", &m_Color[0]);
+    ImGui::End();
 
+    ImGui::Begin("Position");
+    ImGui::SliderFloat3("Position", &m_Pos[0], -1, 1);
     ImGui::End();
 }
 
