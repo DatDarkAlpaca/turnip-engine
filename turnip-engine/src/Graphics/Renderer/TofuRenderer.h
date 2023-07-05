@@ -2,7 +2,7 @@
 #include "Color.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/Texture.h"
-#include "Graphics/Mesh.h"
+#include "Graphics/Mesh/Mesh.h"
 #include "TofuRendererProps.h"
 
 namespace tur

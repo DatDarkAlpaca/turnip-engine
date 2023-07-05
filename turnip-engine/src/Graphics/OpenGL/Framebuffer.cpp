@@ -54,7 +54,7 @@ namespace tur
 			"Attempted to destroy a non-initialized framebuffer."
 		);
 
-		glDeleteFramebuffers(m_ID);
+		glDeleteFramebuffers(1, &m_ID);
 		m_ID = TUR_GL_INVALID;
 		m_TextureID = TUR_GL_INVALID;
 		m_RenderBufferID = TUR_GL_INVALID;

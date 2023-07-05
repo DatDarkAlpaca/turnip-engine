@@ -10,7 +10,6 @@
 #include "Graphics/OpenGL/Shader.h"
 #include "Graphics/OpenGL/Texture.h"
 #include "Graphics/Mesh/Mesh.h"
-#include "Graphics/Mesh/MeshBuilder.h"
 
 #include "Core/View/View.h"
 #include "Core/View/ViewQueue.h"
