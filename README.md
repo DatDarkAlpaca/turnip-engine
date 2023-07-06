@@ -31,7 +31,23 @@ Downloading this project is straightforward. You have a couple options:
 ## Building
 
 To build the project, open the Visual Studio solution and press `Build` using the configuration of your choice.
-  
-## License
+
+# Resources
+
+A couple of the resources I've used so far to build this engine in case anyone wants a head start as well.
+
+- [Learn OpenGL](https://learnopengl.com)
+- [Game Engine Architecture, 3rd Edition](https://www.amazon.com/Engine-Architecture-Third-Jason-Gregory/dp/1138035459)
+- [Cherno's Game Engine Playlist](https://www.youtube.com/watch?v=JxIZbV_XjAs&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT)
+- [Progrematic's Game Engine Playlist](https://www.youtube.com/watch?v=wMk182vENjk&list=PL7lh9ryRNHSIzqKzEdYPG94B0uvfqhHpb)
+- [OpenGL with Python](https://www.youtube.com/watch?v=LCK1qdp_HhQ&list=PLn3eTxaOtL2PDnEVNwOgZFm5xYPr4dUoR)
+- [Chili's C++ 3D DirectX Tutorial](https://www.youtube.com/watch?v=_4FArgOX1I4&list=PLqCJpWy5Fohd3S7ICFXwUomYW0Wv67pDD)
+- [OpenGL Superbible, 4th Edition](https://www.amazon.com/OpenGL-SuperBible-Comprehensive-Tutorial-Reference/dp/0321498828)
+- [SFML Game Development](https://www.amazon.com/SFML-Game-Development-Jan-Haller/dp/1849696845)
+- [Game Engine Design and Implementation](https://www.amazon.com.br/Game-Engine-Design-Implementation-Foundations/dp/0763784516)
+- [FGED I](https://foundationsofgameenginedev.com/#fged1)
+- [FGED II](https://foundationsofgameenginedev.com/#fged2)
+
+# License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](LICENSE) file for details
