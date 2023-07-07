@@ -17,9 +17,13 @@
 #include <imgui_impl_opengl3.h>
 
 #include <glm/glm.hpp>
+#include <glm/common.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <spdlog/spdlog.h>
+
+#include <entt/entt.hpp>
 
 #include <unordered_map>
 #include <string_view>
