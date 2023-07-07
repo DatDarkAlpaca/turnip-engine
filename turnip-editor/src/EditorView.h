@@ -15,8 +15,10 @@ public:
     void OnShutdown() override;
 
 private:
-    Texture m_Texture;
-    Mesh m_Mesh;
+    Scene m_CurrentScene;
+
+private:
+    std::shared_ptr<Texture> m_Texture;
     Shader* m_Shader = nullptr;
 
     glm::vec3 m_Pos = glm::vec3(0.f);

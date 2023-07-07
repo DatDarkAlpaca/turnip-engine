@@ -11,6 +11,12 @@
 #include "Graphics/OpenGL/Texture.h"
 #include "Graphics/Mesh/Mesh.h"
 
+#include "Maths/Transform.h"
+
+#include "Core/Scene/Scene.h"
+#include "Core/Scene/Entity.h"
+#include "Core/Scene/Components.h"
+
 #include "Core/View/View.h"
 #include "Core/View/ViewQueue.h"
 
