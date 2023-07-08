@@ -31,8 +31,6 @@ namespace tur
         }
 
         Initialize();
-        
-        // glfwSetWindowSizeCallback(window.Get(), resizeCallback);
 
         while (!window.ShouldClose())
         {
@@ -81,7 +79,7 @@ namespace tur
         window.SetViewport({ 800, 600 });
 
         imguiView = new ImGuiView;
-        viewQueue.Push(imguiView);
+        viewQueue.AddView(imguiView);
 
         m_State.initialized = true;
     }

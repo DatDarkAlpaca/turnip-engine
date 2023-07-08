@@ -14,9 +14,9 @@ namespace tur
 		~ViewQueue();
 
 	public:
-		void Push(IView* view);
+		void AddView(IView* view);
 
-		void Pop(IView* view);
+		void RemoveView(IView* view);
 
 	public:
 		ViewsType::iterator begin() { return m_Views.begin(); }

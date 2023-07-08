@@ -13,13 +13,13 @@ namespace tur
 		m_Views.clear();
 	}
 
-	void ViewQueue::Push(IView* view)
+	void ViewQueue::AddView(IView* view)
 	{
 		m_Views.push_back(view);
 		view->OnInitialize();
 	}
 
-	void ViewQueue::Pop(IView* view)
+	void ViewQueue::RemoveView(IView* view)
 	{
 		auto it = std::find(m_Views.begin(), m_Views.end(), view);
 		if (it != m_Views.end())
