@@ -223,8 +223,10 @@
     <ClInclude Include="src\Core\Event\Events.h" />
     <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\IEvent.h" />
+    <ClInclude Include="src\Core\Event\Concrete\KeyboardEvent.h" />
+    <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
-    <ClInclude Include="src\Core\Event\WindowResizeEvent.h" />
+    <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />

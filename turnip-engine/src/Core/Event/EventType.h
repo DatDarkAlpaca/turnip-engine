@@ -5,6 +5,9 @@ namespace tur
 	enum class EventType
 	{
 		UNKNOWN = 0,
-		WindowResize
+		WINDOW_RESIZE,
+		KEYBOARD,
+		MOUSE_POSITION,
+		MOUSE_BUTTON
 	};
 }

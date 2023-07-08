@@ -35,9 +35,30 @@ namespace tur
 	void Window::SetupCallbacks()
 	{
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-			UserPointerData* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
 			
 			WindowResizeEvent event(width, height);
+			data->eventCallback(event);
+		});
+
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+
+			KeyboardEvent event(key, scancode, action, mods);
+			data->eventCallback(event);
+		});
+
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
+			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+
+			MousePositionEvent event(xPos, yPos);
+			data->eventCallback(event);
+		});
+
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+
+			MouseButtonEvent event(button, action, mods);
 			data->eventCallback(event);
 		});
 	}

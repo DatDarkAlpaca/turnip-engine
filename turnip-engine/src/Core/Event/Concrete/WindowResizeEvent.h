@@ -11,7 +11,7 @@ namespace tur
 			: width(width), height(height) { }
 
 	public:
-		USE_EVENT_TYPE(WindowResize);
+		USE_EVENT_TYPE(WINDOW_RESIZE);
 
 	public:
 		int width = 0, height = 0;

@@ -49,8 +49,8 @@ namespace tur
     void TurnipEngine::OnEvent(IEvent& event)
     {
         Subscriber subscriber(event);
-        subscriber.SubscribeTo<WindowResizeEvent>([](WindowResizeEvent& event) -> bool {
-            TUR_CORE_INFO("{}, {}", event.width, event.height);
+        subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& event) -> bool {
+            window.SetViewport({ event.width, event.height });
             return false;
         });
 
