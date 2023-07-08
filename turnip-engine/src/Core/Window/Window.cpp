@@ -23,6 +23,11 @@ namespace tur
 		glfwMakeContextCurrent(m_Window);
 		glfwSetErrorCallback(GLFW_ErrorCallback);
 
+		// Window Callbacks:
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow*, int width, int height) {
+			glViewport(0, 0, width, height);
+		});
+
 		// Mouse Callbacks:
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow*, double x, double y) {
 			Mouse::SetPosition({ x, y });

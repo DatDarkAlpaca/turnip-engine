@@ -32,6 +32,8 @@ namespace tur
 
         Initialize();
         
+        // glfwSetWindowSizeCallback(window.Get(), resizeCallback);
+
         while (!window.ShouldClose())
         {
             window.PollEvents();
