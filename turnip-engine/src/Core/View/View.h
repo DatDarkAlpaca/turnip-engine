@@ -1,4 +1,5 @@
 #pragma once
+#include "Event/IEvent.h"
 
 namespace tur
 {
@@ -17,6 +18,6 @@ namespace tur
 
 		virtual void OnUpdate() { };
 
-		virtual void OnEvent() { };
+		virtual void OnEvent(IEvent& event) { };
 	};
 }
