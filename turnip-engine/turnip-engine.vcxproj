@@ -257,6 +257,7 @@
     <ClInclude Include="src\Graphics\Vertex.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Platform\ImGui\ImGuiView.h" />
+    <ClInclude Include="src\Utils\UUID\UUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

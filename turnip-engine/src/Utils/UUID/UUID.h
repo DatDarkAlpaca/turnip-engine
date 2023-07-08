@@ -4,6 +4,8 @@
 
 namespace tur
 {
+	// Todo: generate 64-bit number instead of a string. 
+	// This solution was made for testing purposes only.
 	class UUID
 	{
 	public:

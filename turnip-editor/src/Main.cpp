@@ -14,7 +14,7 @@ public:
         window.Resize({ 640, 480 });
         window.Rename("Turnip Editor v1.0");
 
-        viewQueue.Push(new EditorView());
+        viewQueue.AddView(new EditorView());
     }
 
     void Shutdown() override
