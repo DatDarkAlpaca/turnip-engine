@@ -3,6 +3,7 @@
 #include "View/ViewQueue.h"
 #include "TurnipEngineState.h"
 #include "ImGui/ImGuiView.h"
+#include "Event/Events.h"
 
 namespace tur
 {
@@ -23,6 +24,13 @@ namespace tur
 
 	public:
 		void Run();
+
+	private:
+		void OnEvent(IEvent& event);
+
+		void OnUpdate();
+
+		void OnRenderGUI();
 
 	public:
 		Window& GetWindow() { return window; }

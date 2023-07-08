@@ -36,15 +36,9 @@ namespace tur
         {
             window.PollEvents();
 
-            for (auto& view : viewQueue)
-                view->OnUpdate();
+            OnUpdate();
 
-            imguiView->Begin();
-
-            for (auto& view : viewQueue)
-                view->OnRenderGUI();
-
-            imguiView->End();
+            OnRenderGUI();
         
             window.SwapBuffers();
         }
@@ -52,10 +46,39 @@ namespace tur
         Shutdown();
     }
 
+    void TurnipEngine::OnEvent(IEvent& event)
+    {
+        Subscriber subscriber(event);
+        subscriber.SubscribeTo<WindowResizeEvent>([](WindowResizeEvent& event) -> bool {
+            TUR_CORE_INFO("{}, {}", event.width, event.height);
+            return false;
+        });
+
+        for (auto& view : viewQueue)
+            view->OnEvent(event);
+    }
+
+    void TurnipEngine::OnUpdate()
+    {
+        for (auto& view : viewQueue)
+            view->OnUpdate();
+    }
+
+    void TurnipEngine::OnRenderGUI()
+    {
+        imguiView->Begin();
+
+        for (auto& view : viewQueue)
+            view->OnRenderGUI();
+
+        imguiView->End();
+    }
+
     void TurnipEngine::Setup()
     {
         InitializeLogger();
 
+        // GLFW Setup:
         glfwWindowHint(GLFW_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -67,6 +90,7 @@ namespace tur
             return;
         }
 
+        // Window & GLAD Setup:
         window.Initialize(800, 600, "Turnip Engine v0.1");
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -77,10 +101,13 @@ namespace tur
         glDebugMessageCallback(MessageCallback, nullptr);
 
         window.SetViewport({ 800, 600 });
+        window.SetEventCallback(BIND_1(&TurnipEngine::OnEvent, this));
 
+        // ImGUI Setup:
         imguiView = new ImGuiView;
         viewQueue.AddView(imguiView);
 
+        // State Setup:
         m_State.initialized = true;
     }
 }

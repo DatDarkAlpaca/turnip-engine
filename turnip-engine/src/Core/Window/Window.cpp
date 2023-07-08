@@ -21,31 +21,30 @@ namespace tur
 		}
 
 		glfwMakeContextCurrent(m_Window);
-		glfwSetErrorCallback(GLFW_ErrorCallback);
 
-		// Window Callbacks:
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow*, int width, int height) {
-			glViewport(0, 0, width, height);
-		});
-
-		// Mouse Callbacks:
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow*, double x, double y) {
-			Mouse::SetPosition({ x, y });
-		});
-
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow*, int button, int action, int mods) {
-			Mouse::SetButtonState(button, action, mods);
-		});
-
-		// Keyboard Callbacks:
-		glfwSetKeyCallback(m_Window, [](GLFWwindow*, int key, int scancode, int action, int mods) {
-			Keyboard::SetKeyState(key, scancode, action, mods);
-		});
+		glfwSetWindowUserPointer(m_Window, &m_UserPointerData);
+		
+		SetupCallbacks();
 	}
 
 	void Window::Destroy()
 	{
 		glfwDestroyWindow(m_Window);
+	}
+
+	void Window::SetupCallbacks()
+	{
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			UserPointerData* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+			
+			WindowResizeEvent event(width, height);
+			data->eventCallback(event);
+		});
+	}
+
+	void Window::SetEventCallback(const FnEventCallback& callback)
+	{
+		m_UserPointerData.eventCallback = callback;
 	}
 
 	void Window::SetViewport(const glm::vec2& viewport)
