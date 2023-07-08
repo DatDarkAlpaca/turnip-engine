@@ -1,5 +1,6 @@
 #pragma once
 #include "Color.h"
+#include "Maths/Transform.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/Texture.h"
 #include "Graphics/Mesh/Mesh.h"
@@ -18,6 +19,8 @@ namespace tur
 		static void Begin();
 
 		static void DrawMesh(const Mesh& mesh, Texture& texture, Shader& shader);
+
+		static void DrawQuad(const Transform& transform, Texture& texture, Shader& shader);
 
 		static void End();
 
