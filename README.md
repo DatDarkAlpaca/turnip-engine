@@ -3,6 +3,8 @@
 Turnip is a game engine that follows the principles of the "yet another" mentality. It's "yet another" straightforward game engine capable of doing nothing out of the ordinary. 
 It's a side project that I develop in my free time to learn more about certain aspects of game engines and graphics programming.
 
+If you want to check out how the development is going, you can access this Trello: https://trello.com/b/GyxKro6L/turnip-engine.
+
 # Getting Started
 
 As of the current version, Turnip doesn't support a custom buid system like CMake or Meson.  
