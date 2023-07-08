@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Core/Maths;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Core/Maths;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Core/Maths;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Core/Maths;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
@@ -187,10 +187,10 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Assert\Assert.cpp" />
-    <ClCompile Include="src\Core\CPU Information\CPU_Information.cpp" />
+    <ClCompile Include="src\Utils\Assert\Assert.cpp" />
+    <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
-    <ClCompile Include="src\Core\Logger\Logger.cpp" />
+    <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\View\ViewQueue.cpp" />
     <ClCompile Include="src\Core\Window\Window.cpp" />
     <ClCompile Include="src\Graphics\Color.cpp" />
@@ -220,20 +220,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\Core\Assert\Assert.h" />
-    <ClInclude Include="src\Core\CPU Information\CPU_Information.h" />
+    <ClInclude Include="src\Utils\Assert\Assert.h" />
+    <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngineState.h" />
-    <ClInclude Include="src\Core\File\ReadFile.h" />
+    <ClInclude Include="src\Utils\File\ReadFile.h" />
     <ClInclude Include="src\Core\Input\Key.h" />
     <ClInclude Include="src\Core\Input\Keyboard.h" />
     <ClInclude Include="src\Core\Input\Mods.h" />
     <ClInclude Include="src\Core\Input\Mouse.h" />
     <ClInclude Include="src\Core\Input\MouseButton.h" />
     <ClInclude Include="src\Core\Input\State.h" />
-    <ClInclude Include="src\Core\Logger\Logger.h" />
-    <ClInclude Include="src\Core\Maths\Transform.h" />
-    <ClInclude Include="src\Core\Random\Random.h" />
+    <ClInclude Include="src\Utils\Logger\Logger.h" />
+    <ClInclude Include="src\Utils\Maths\Transform.h" />
+    <ClInclude Include="src\Utils\Random\Random.h" />
     <ClInclude Include="src\Core\Scene\Components.h" />
     <ClInclude Include="src\Core\Scene\Entity.h" />
     <ClInclude Include="src\Core\Scene\Scene.h" />
