@@ -21,7 +21,7 @@ namespace tur
 	#define TUR_CORE_TRACE(...)		::spdlog::trace(__VA_ARGS__)
 	#define TUR_CORE_INFO(...)		::spdlog::info(__VA_ARGS__)
 #else
+	#define TUR_CORE_DEBUG(...)
 	#define TUR_CORE_TRACE(...)
 	#define TUR_CORE_INFO(...)
-	#define TUR_CORE_WARN(...)
 #endif
