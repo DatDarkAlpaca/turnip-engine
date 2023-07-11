@@ -220,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Assets\AssetLibrary.h" />
     <ClInclude Include="src\Core\Event\Events.h" />
     <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\IEvent.h" />

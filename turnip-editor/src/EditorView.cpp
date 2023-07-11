@@ -4,18 +4,19 @@ struct Component { int a; };
 
 void EditorView::OnInitialize()
 {
-    m_Shader = new Shader({
+    m_ShaderLibrary.LoadAsset("basic", std::make_shared<Shader>(std::vector<ShaderStructure>{
         { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
         { "res/basic.frag", ShaderType::TUR_SHADER_FRAGMENT },
-    });
+    }));
+    
+    std::shared_ptr<Texture> turnipTexture = std::make_shared<Texture>();
+    turnipTexture->Initialize("res/turnip.png");
 
-    m_Texture = std::make_shared<Texture>();
-    m_Texture->Initialize("res/turnip.png");
-
+    auto texture = m_TextureLibrary.LoadAsset("turnip", std::move(turnipTexture));
     {
         Entity entity = m_CurrentScene.NewEntity();
         entity.AddComponent<ComponentTransform>();
-        entity.AddComponent<ComponentTexture>(m_Texture);
+        entity.AddComponent<ComponentTexture>(texture);
     }
 
     TofuRenderer::SetColor("#FAF4E8FF");
@@ -30,7 +31,9 @@ void EditorView::OnUpdate()
     {
         auto useTranform = transform.transform;
         auto useTexture = texture.texture.lock();
-        TofuRenderer::DrawQuad(useTranform, *useTexture.get(), *m_Shader);
+
+        auto shader = m_ShaderLibrary.Get("basic");
+        TofuRenderer::DrawQuad(useTranform, *useTexture.get(), *shader);
     }
 
     TofuRenderer::End();
@@ -42,8 +45,5 @@ void EditorView::OnRenderGUI()
 
 void EditorView::OnShutdown()
 {
-    m_Texture->Destroy();
-
-    m_Shader->Destroy();
-    delete m_Shader;
+    m_TextureLibrary.Clear();
 }

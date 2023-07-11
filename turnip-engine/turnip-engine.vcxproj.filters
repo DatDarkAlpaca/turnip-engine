@@ -209,5 +209,8 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Assets\AssetLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -25,8 +25,6 @@ public:
 
 private:
     Scene m_CurrentScene;
-
-private:
-    std::shared_ptr<Texture> m_Texture;
-    Shader* m_Shader = nullptr;
+    AssetLibrary<Shader> m_ShaderLibrary;
+    AssetLibrary<Texture> m_TextureLibrary;
 };
