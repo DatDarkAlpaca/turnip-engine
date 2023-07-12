@@ -1,7 +1,5 @@
 #include "EditorView.h"
 
-struct Component { int a; };
-
 void EditorView::OnInitialize()
 {
     m_ShaderLibrary.LoadAsset("basic", std::make_shared<Shader>(std::vector<ShaderStructure>{
