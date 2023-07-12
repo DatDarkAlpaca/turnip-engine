@@ -22,6 +22,10 @@ namespace tur
 		IMGUI_CHECKVERSION();
 
 		ImGui::CreateContext();
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 		GLFWwindow* window = TurnipEngine::Get().GetWindow().Get();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 

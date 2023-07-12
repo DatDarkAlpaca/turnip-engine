@@ -14,17 +14,11 @@ public:
 
     void OnShutdown() override;
 
-    void OnEvent(IEvent& event) override
-    {
-        Subscriber subscriber(event);
-        subscriber.SubscribeTo<WindowResizeEvent>([](WindowResizeEvent& event) -> bool {
-            TUR_CORE_INFO("Editor View: {}, {}", event.width, event.height);
-            return false;
-        });
-    }
+    void OnEvent(IEvent& event) override;
 
 private:
     Scene m_CurrentScene;
+    OrthographicCamera m_Camera;
     AssetLibrary<Shader> m_ShaderLibrary;
     AssetLibrary<Texture> m_TextureLibrary;
 };

@@ -7,7 +7,7 @@ namespace tur
 	{
 		U32 location = 0;
 		U32 size;
-		U32 type;
+		U32 type = GL_FLOAT;
 		bool normalized = false;
 	};
 

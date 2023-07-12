@@ -14,7 +14,7 @@ namespace tur
 		if (m_ID == TUR_GL_INVALID)
 			return;
 
-		TUR_CORE_WARN("VAO instance destructor called, but object was never destroyed. It is advised to use Destroy() beforehand.");
+		Destroy();
 	}
 
 	void VertexArray::Destroy()

@@ -13,8 +13,7 @@ namespace tur
 		if (m_ID == TUR_GL_INVALID && m_TextureID == TUR_GL_INVALID && m_RenderBufferID == TUR_GL_INVALID)
 			return;
 
-		TUR_CORE_WARN("Framebuffer instance destructor called, but object was never destroyed. It is advised to use Destroy() beforehand.");
-
+		Destroy();
 	}
 
 	void Framebuffer::Initialize(const glm::vec2& size)

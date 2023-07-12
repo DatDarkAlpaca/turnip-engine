@@ -187,6 +187,7 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Utils\Assert\Assert.cpp" />
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
+    <ClInclude Include="src\Graphics\Camera\ICamera.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
@@ -249,7 +251,7 @@
     <ClInclude Include="src\Core\View\ViewQueue.h" />
     <ClInclude Include="src\Core\Window\Window.h" />
     <ClInclude Include="src\Entry.h" />
-    <ClInclude Include="src\Graphics\Camera\Camera.h" />
+    <ClInclude Include="src\Graphics\Camera\OrthographicCamera.h" />
     <ClInclude Include="src\Graphics\Color.h" />
     <ClInclude Include="src\Graphics\OpenGL\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
