@@ -14,15 +14,6 @@ public:
 
     void OnShutdown() override;
 
-    void OnEvent(IEvent& event) override
-    {
-        Subscriber subscriber(event);
-        subscriber.SubscribeTo<WindowResizeEvent>([](WindowResizeEvent& event) -> bool {
-            TUR_CORE_INFO("Editor View: {}, {}", event.width, event.height);
-            return false;
-        });
-    }
-
 private:
     Scene m_CurrentScene;
     AssetLibrary<Shader> m_ShaderLibrary;
