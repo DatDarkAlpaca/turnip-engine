@@ -12,8 +12,10 @@ namespace tur
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
 
+		OrthographicCamera() = default;
+
 	public:
-		void UpdateCamera(int left, int right, int bottom, int top);
+		void UpdateCamera();
 
 	public:
 		void SetPosition(const glm::vec3& position);
@@ -22,6 +24,8 @@ namespace tur
 
 	public:
 		inline glm::vec3 GetPosition() const { return m_Position; }
+
+		inline glm::vec3& GetPosition() { return m_Position; }
 
 	private:
 		const glm::vec3 m_Front = glm::vec3(0.f, 0.f, -1.f);

@@ -29,12 +29,16 @@ namespace tur
 	public:
 		void SetViewport(const glm::vec2& viewport);
 
+		void SetContextCurrent();
+
 		void Resize(const glm::vec2& size);
 
 		void Rename(const char* title);
 
 	public:
 		inline GLFWwindow* Get() const { return m_Window; }
+
+		glm::vec2 GetSize() const;
 
 	private:
 		GLFWwindow* m_Window = nullptr;

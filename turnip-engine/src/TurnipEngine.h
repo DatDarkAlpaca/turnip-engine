@@ -12,6 +12,8 @@
 #include "Graphics/OpenGL/Texture.h"
 #include "Graphics/Mesh/Mesh.h"
 
+#include "Graphics/Camera/OrthographicCamera.h"
+
 #include "Maths/Transform.h"
 
 #include "Core/Assets/AssetLibrary.h"

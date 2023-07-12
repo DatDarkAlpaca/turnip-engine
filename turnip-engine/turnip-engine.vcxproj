@@ -229,6 +229,7 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
+    <ClInclude Include="src\Graphics\Camera\ICamera.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />

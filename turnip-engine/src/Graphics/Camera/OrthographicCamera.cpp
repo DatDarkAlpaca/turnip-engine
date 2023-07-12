@@ -12,14 +12,14 @@ namespace tur
 		SetProjection(left, right, bottom, top, near, far);
 	}
 
-	void OrthographicCamera::UpdateCamera(int left, int right, int bottom, int top)
+	void OrthographicCamera::UpdateCamera()
 	{
-		glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+		viewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 	}
 
 	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top, float near, float far)
 	{
-		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, near, far);
+		projectionMatrix = glm::ortho(left, right, bottom, top, near, far);
 	}
 
 	void OrthographicCamera::SetPosition(const glm::vec3& position)

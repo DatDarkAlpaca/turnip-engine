@@ -14,8 +14,11 @@ public:
 
     void OnShutdown() override;
 
+    void OnEvent(IEvent& event) override;
+
 private:
     Scene m_CurrentScene;
+    OrthographicCamera m_Camera;
     AssetLibrary<Shader> m_ShaderLibrary;
     AssetLibrary<Texture> m_TextureLibrary;
 };

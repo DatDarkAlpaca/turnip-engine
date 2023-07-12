@@ -73,6 +73,11 @@ namespace tur
 		glViewport(0, 0, (U32)viewport.x, (U32)viewport.y);
 	}
 
+	void Window::SetContextCurrent()
+	{
+		glfwMakeContextCurrent(m_Window);
+	}
+
 	void Window::Resize(const glm::vec2& size)
 	{
 		glfwSetWindowSize(m_Window, size.x, size.y);
@@ -82,5 +87,12 @@ namespace tur
 	void Window::Rename(const char* title)
 	{
 		glfwSetWindowTitle(m_Window, title);
+	}
+
+	glm::vec2 Window::GetSize() const
+	{
+		int x, y;
+		glfwGetWindowSize(m_Window, &x, &y);
+		return { x, y};
 	}
 }

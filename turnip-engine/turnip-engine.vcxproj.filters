@@ -215,5 +215,8 @@
     <ClInclude Include="src\Core\Assets\AssetLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Camera\ICamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
