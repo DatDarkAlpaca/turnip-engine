@@ -130,9 +130,7 @@ namespace tur
 		glValidateProgram(m_ID);
 		TUR_WRAP_DEBUG(CheckLinkErrors(m_ID));
 
-		// This probably adds a lot of overhead and makes the code slower than a simple for,
-		// but I wanted to test it out. Code subject to change.
-		std::for_each(std::execution::par, compiledShaders.begin(), compiledShaders.end(),
+		std::for_each(compiledShaders.begin(), compiledShaders.end(),
 			[](U32 shader) { glDeleteShader(shader); });
 
 		// Uniform caching:

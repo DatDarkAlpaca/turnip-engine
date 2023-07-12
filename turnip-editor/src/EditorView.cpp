@@ -65,7 +65,7 @@ void EditorView::OnEvent(IEvent& event)
 {
     Subscriber subscriber(event);
     subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& window) -> bool {
-        m_Camera.SetProjection(0.f, window.width, window.height, 0.f);
+        m_Camera.SetProjection(0.f, (float)window.width, (float)window.height, 0.f);
         return false;
     });
 }

@@ -18,17 +18,17 @@ static glm::vec4 ConvertHexToRGBA(const std::string& hexValue)
 
 	if (sanitizedValue.length() == 6)
 	{
-		result.r = double(((convertedHex >> 16) & 0xFF) / 255.);
-		result.g = double(((convertedHex >>  8) & 0xFF) / 255.);
-		result.b = double(((convertedHex >>  0) & 0xFF) / 255.);
+		result.r = float(((convertedHex >> 16) & 0xFF) / 255.);
+		result.g = float(((convertedHex >>  8) & 0xFF) / 255.);
+		result.b = float(((convertedHex >>  0) & 0xFF) / 255.);
 		result.a = 1.;
 	}
 	else if (sanitizedValue.length() == 8)
 	{
-		result.r = double(((convertedHex >> 24) & 0xFF) / 255.);
-		result.g = double(((convertedHex >> 16) & 0xFF) / 255.);
-		result.b = double(((convertedHex >>  8) & 0xFF) / 255.);
-		result.a = double(((convertedHex >>  0) & 0xFF) / 255.);
+		result.r = float(((convertedHex >> 24) & 0xFF) / 255.);
+		result.g = float(((convertedHex >> 16) & 0xFF) / 255.);
+		result.b = float(((convertedHex >>  8) & 0xFF) / 255.);
+		result.a = float(((convertedHex >>  0) & 0xFF) / 255.);
 	}
 	else
 		TUR_CORE_WARN("Invalid HEX value used for color.");

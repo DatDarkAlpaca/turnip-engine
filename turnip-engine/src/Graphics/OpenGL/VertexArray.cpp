@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "VertexArray.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4312)
+
 namespace tur
 {
 	VertexArray::VertexArray()
@@ -32,12 +35,12 @@ namespace tur
 
 	void VertexArray::FlushLayout()
 	{
-		auto sum = [&](int lhs, const Attribute& rhs)
+		auto sum = [&](int lhs, const Attribute& rhs) -> U32
 		{
-			return lhs + rhs.size * GetTypeSize(rhs.type);
+			return (U32)(lhs + rhs.size * GetTypeSize(rhs.type));
 		};
 
-		U32 stride = std::accumulate(m_Attributes.begin(), m_Attributes.end(), 0, sum);
+		U32 stride = std::accumulate(m_Attributes.begin(), m_Attributes.end(), (U32)0, sum);
 		U32 offset = 0;
 
 		for (const auto& attribute : m_Attributes)
@@ -50,7 +53,7 @@ namespace tur
 				attribute.type,
 				attribute.normalized,
 				stride,
-				(void*)offset
+				(const void*)offset
 			);
 
 			offset += attribute.size * (U32)GetTypeSize(attribute.type);
@@ -59,3 +62,5 @@ namespace tur
 		m_Attributes.clear();
 	}
 }
+
+#pragma warning(pop)

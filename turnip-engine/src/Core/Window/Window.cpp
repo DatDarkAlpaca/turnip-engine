@@ -80,7 +80,7 @@ namespace tur
 
 	void Window::Resize(const glm::vec2& size)
 	{
-		glfwSetWindowSize(m_Window, size.x, size.y);
+		glfwSetWindowSize(m_Window, (int)size.x, (int)size.y);
 		SetViewport(size);
 	}
 

@@ -1,7 +1,15 @@
 #pragma once
 #include "Common.h"
 
-#pragma warning(push, 0)
+#pragma warning(push)
+#pragma warning(disable: 4005)
+#pragma warning(disable: 6285)
+#pragma warning(disable: 4267)
+#pragma warning(disable: 4275)
+#pragma warning(disable: 26800)
+#pragma warning(disable: 26498)
+#pragma warning(disable: 26827)
+#pragma warning(disable: 26451)
 
 #ifdef TUR_PLATFORM_WINDOWS
 	#include <intrin.h>

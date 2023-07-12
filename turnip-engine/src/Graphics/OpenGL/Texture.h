@@ -21,7 +21,7 @@ namespace tur
 
 	struct TextureProps
 	{
-		U32 width, height, numChannels;
+		U32 width = 0, height = 0, numChannels = 0;
 	};
 
 	struct TextureOptions
@@ -59,7 +59,7 @@ namespace tur
 		TextureProps m_Properties;
 		TextureOptions m_Options;
 
-		unsigned char* m_Data;
+		unsigned char* m_Data = nullptr;
 		U32 m_ID = TUR_GL_INVALID;
 	};
 }
