@@ -20,6 +20,16 @@ namespace tur
 			m_Buttons[button] = State(action);
 		}
 
+		static void SetScrollOffset(double x, double y)
+		{
+			scrollOffset = { x, y };
+		}
+
+		static void Clear()
+		{
+			scrollOffset = { 0, 0 };
+		}
+
 	public:
 		static State Button(MouseButton button) { return m_Buttons[(int)button]; }
 
@@ -31,5 +41,6 @@ namespace tur
 
 	public:
 		static inline glm::vec2 position = glm::vec2(0), positionLast = glm::vec2(0);
+		static inline glm::vec2 scrollOffset = glm::vec2(0);
 	};
 }

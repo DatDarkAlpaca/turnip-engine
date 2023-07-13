@@ -13,7 +13,7 @@ namespace tur
 	{
 		friend class TurnipEngine;
 
-	private:
+	public:
 		static void Initialize(const TofuRendererProps& properties);
 
 	public:

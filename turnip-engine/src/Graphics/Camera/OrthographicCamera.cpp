@@ -12,7 +12,7 @@ namespace tur
 		SetProjection(left, right, bottom, top, near, far);
 	}
 
-	void OrthographicCamera::UpdateCamera()
+	void OrthographicCamera::Update()
 	{
 		viewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 	}

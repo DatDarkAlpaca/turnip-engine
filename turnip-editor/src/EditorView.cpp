@@ -3,7 +3,9 @@
 void EditorView::OnInitialize()
 {
     glm::vec2 windowSize = TurnipEngine::Get().GetWindow().GetSize();
-    m_Camera.SetProjection(0.f, windowSize.x, windowSize.y, 0.f);
+    m_Camera.SetProjection(glm::radians(90.f), windowSize.x / windowSize.y, 0.1f, 100.f);
+    m_Camera.SetPosition({ 0, 8.f, 25.f });
+    m_Camera.SetWindowSize(windowSize.x, windowSize.y);
 
     m_ShaderLibrary.LoadAsset("basic", std::make_shared<Shader>(std::vector<ShaderStructure>{
         { "res/basic.vert", ShaderType::TUR_SHADER_VERTEX },
@@ -16,20 +18,21 @@ void EditorView::OnInitialize()
     auto texture = m_TextureLibrary.LoadAsset("turnip", std::move(turnipTexture));
     {
         Transform transform;
-        transform.scale = glm::vec3(40.f);
-        transform.position = glm::vec3(100.f, 100.f, 0.f);
+        transform.scale = glm::vec3(20.f);
+        transform.position = glm::vec3(0.f, 0.f, 0.f);
 
         Entity entity = m_CurrentScene.NewEntity();
         entity.AddComponent<ComponentTransform>(transform);
         entity.AddComponent<ComponentTexture>(texture);
     }
 
+    TofuRenderer::Initialize({true, true});
     TofuRenderer::SetColor("#FAF4E8FF");
 }
 
 void EditorView::OnUpdate()
 {
-    m_Camera.UpdateCamera();
+    m_Camera.Update();
     TofuRenderer::Begin(&m_Camera);
 
     auto shader = m_ShaderLibrary.Get("basic");
@@ -44,16 +47,12 @@ void EditorView::OnUpdate()
     }
 
     TofuRenderer::End();
+    Mouse::Clear(); // Todo: move somewhere appropriate in the engine.
 }
 
 void EditorView::OnRenderGUI()
 {
-    //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-    ImGui::Begin("Camera Controls");
-
-    ImGui::SliderFloat3("Camera Position", &m_Camera.GetPosition()[0], -500.f, 500.f);
-   
-    ImGui::End();
+    
 }
 
 void EditorView::OnShutdown()
@@ -63,9 +62,5 @@ void EditorView::OnShutdown()
 
 void EditorView::OnEvent(IEvent& event)
 {
-    Subscriber subscriber(event);
-    subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& window) -> bool {
-        m_Camera.SetProjection(0.f, (float)window.width, (float)window.height, 0.f);
-        return false;
-    });
+    m_Camera.OnEvent(event);
 }

@@ -9,6 +9,9 @@ namespace tur
 		virtual ~ICamera() = default;
 
 	public:
+		virtual void Update() = 0;
+
+	public:
 		inline const glm::mat4& GetProjectionMatrix() const { return projectionMatrix; }
 
 		inline const glm::mat4& GetViewMatrix() const { return viewMatrix; }

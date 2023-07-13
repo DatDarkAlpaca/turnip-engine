@@ -15,7 +15,7 @@ namespace tur
 		OrthographicCamera() = default;
 
 	public:
-		void UpdateCamera();
+		void Update() override;
 
 	public:
 		void SetPosition(const glm::vec3& position);

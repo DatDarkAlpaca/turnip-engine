@@ -184,6 +184,7 @@
     <Image Include="res\turnip.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EditorCamera3D.h" />
     <ClInclude Include="src\EditorView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

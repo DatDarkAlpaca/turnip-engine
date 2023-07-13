@@ -1,5 +1,6 @@
 #pragma once
 #include <TurnipEngine.h>
+#include "EditorCamera3D.h"
 
 using namespace tur;
 
@@ -18,7 +19,7 @@ public:
 
 private:
     Scene m_CurrentScene;
-    OrthographicCamera m_Camera;
+    EditorCamera3D m_Camera;
     AssetLibrary<Shader> m_ShaderLibrary;
     AssetLibrary<Texture> m_TextureLibrary;
 };

@@ -13,6 +13,7 @@
 #include "Graphics/Mesh/Mesh.h"
 
 #include "Graphics/Camera/OrthographicCamera.h"
+#include "Graphics/Camera/PerspectiveCamera.h"
 
 #include "Maths/Transform.h"
 

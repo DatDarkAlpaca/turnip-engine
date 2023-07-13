@@ -29,4 +29,17 @@ namespace tur
 	public:
 		int button, action, mods;
 	};
+
+	class MouseScrollEvent : public IEvent
+	{
+	public:
+		MouseScrollEvent(double offsetX, double offsetY)
+			: offsetX(offsetX), offsetY(offsetY) { }
+
+	public:
+		USE_EVENT_TYPE(MOUSE_SCROLL);
+
+	public:
+		double offsetX, offsetY;
+	};
 }

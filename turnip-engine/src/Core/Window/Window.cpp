@@ -44,12 +44,16 @@ namespace tur
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
 
+			Keyboard::SetKeyState(key, scancode, action, mods);
+
 			KeyboardEvent event(key, scancode, action, mods);
 			data->eventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+
+			Mouse::SetPosition({ xPos, yPos });
 
 			MousePositionEvent event(xPos, yPos);
 			data->eventCallback(event);
@@ -58,7 +62,18 @@ namespace tur
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
 			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
 
+			Mouse::SetButtonState(button, action, mods);
+
 			MouseButtonEvent event(button, action, mods);
+			data->eventCallback(event);
+		});
+
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double offsetX, double offsetY) {
+			auto* data = static_cast<UserPointerData*>(glfwGetWindowUserPointer(window));
+
+			Mouse::SetScrollOffset(offsetX, offsetY);
+
+			MouseScrollEvent event(offsetX, offsetY);
 			data->eventCallback(event);
 		});
 	}
