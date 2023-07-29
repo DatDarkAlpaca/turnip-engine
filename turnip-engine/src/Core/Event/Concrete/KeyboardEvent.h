@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "IEvent.h"
+#include "Core/Event/IEvent.h"
 
 namespace tur
 {

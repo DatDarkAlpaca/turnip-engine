@@ -209,7 +209,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\TurnipEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
@@ -236,6 +235,7 @@
     <ClInclude Include="src\Platform\Windows\WIN32_Loader.h" />
     <ClInclude Include="src\Platform\Windows\WIN32_Window.h" />
     <ClInclude Include="src\Platform\Windows\WindowsHeaders.h" />
+    <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />

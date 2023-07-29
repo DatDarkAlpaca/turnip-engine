@@ -41,6 +41,7 @@
 
 #include <Windows.h>
 
+// Todo: REQUIRES(D3D11.1 | WINDOWS)
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d3dcompiler.h>

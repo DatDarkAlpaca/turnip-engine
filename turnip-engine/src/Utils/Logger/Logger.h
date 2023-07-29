@@ -3,6 +3,7 @@
 
 namespace tur
 {
+	// Todo: file logging
 	void InitializeLogger();
 }
 

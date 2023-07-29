@@ -1,6 +1,5 @@
 #pragma once
 #include "Graphics/API/IGraphicsAPI.h"
-#include "Graphics/API/IGraphicsAPI_Loader.h"
 
 namespace tur
 {

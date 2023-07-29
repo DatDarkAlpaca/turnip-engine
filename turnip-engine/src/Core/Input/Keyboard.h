@@ -3,7 +3,6 @@
 #include "Key.h"
 #include "State.h"
 #include "Mods.h"
-#include "Logger/Logger.h"
 
 namespace tur
 {

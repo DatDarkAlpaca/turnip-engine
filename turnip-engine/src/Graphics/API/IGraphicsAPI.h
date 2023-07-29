@@ -1,5 +1,4 @@
 #pragma once
-#include "IGraphicsAPI_Loader.h"
 
 namespace tur
 {

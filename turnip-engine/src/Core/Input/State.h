@@ -6,7 +6,7 @@ namespace tur
 	enum class State
 	{
 		RELEASE = GLFW_RELEASE,
-		PRESS = GLFW_PRESS,
-		REPEAT = GLFW_REPEAT
+		PRESS   = GLFW_PRESS,
+		REPEAT  = GLFW_REPEAT
 	};
 }
