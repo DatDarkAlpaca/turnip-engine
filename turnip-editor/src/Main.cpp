@@ -9,8 +9,6 @@ public:
     void Initialize() override 
     {
         TUR_CORE_INFO("Editor initialized.");
-
-        SwapGraphicsSystem(GraphicsAPI_Type::NONE);
     }
 
     void Shutdown() override

@@ -43,13 +43,14 @@ static void GLAPIENTRY OpenGLDebugCallback(GLenum source, GLenum type, GLuint id
 	{
 		case GL_DEBUG_SEVERITY_HIGH:
 		{
-			// [Error] GL:SHADER_COMPILER - Message
 			TUR_CORE_CRITICAL("[{}] GL:{} - {}", typeString, sourceString, message);
+			TUR_BREAKPOINT();
 		} break;
 
 		case GL_DEBUG_SEVERITY_MEDIUM:
 		{
 			TUR_CORE_ERROR("[{}] GL:{} - {}", typeString, sourceString, message);
+			TUR_BREAKPOINT();
 		} break;
 
 		case GL_DEBUG_SEVERITY_LOW:
@@ -100,7 +101,7 @@ namespace tur
 
 		// TODO: Requires(GL 4.3)
 		TUR_WRAP_DEBUG (
-			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 			glDebugMessageCallback(OpenGLDebugCallback, nullptr);
 		);
 	}
