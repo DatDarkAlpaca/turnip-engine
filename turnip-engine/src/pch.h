@@ -11,18 +11,19 @@
 #pragma warning(disable: 26827)
 #pragma warning(disable: 26451)
 
-#ifdef TUR_PLATFORM_WINDOWS
-	#include <intrin.h>
-#else
-	#include <signal.h>
-#endif
+#include <imgui.h>
+#include <imgui_impl_opengl3.h> // TODO: REQUIRES_GL(...)
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <imgui.h>
 #include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+
+#ifdef TUR_PLATFORM_WINDOWS
+	#include <intrin.h>
+	#include "Platform/Windows/WindowsHeaders.h"
+#else	
+	#include <signal.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/common.hpp>

@@ -11,10 +11,11 @@ public:
     {
         TUR_CORE_INFO("Editor initialized.");
         glfwSwapInterval(1);
-        window.Resize({ 640, 480 });
-        window.Rename("Turnip Editor v1.0");
+        //window.Resize({ 640, 480 });
+        //window.Rename("Turnip Editor v1.0");
 
-        viewQueue.AddView(new EditorView());
+        //viewQueue.AddView(new EditorView());
+        SwapGraphicsSystem(GraphicsAPI_Type::D3D11);
     }
 
     void Shutdown() override

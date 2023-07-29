@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "TurnipEngine.h"
 
-static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
-{
-    TUR_CORE_CRITICAL("GL: {}", message);
-}
-
 namespace tur
 {
     TurnipEngine::TurnipEngine()
@@ -18,8 +13,7 @@ namespace tur
 
     TurnipEngine::~TurnipEngine()
     {
-        window.Destroy();
-        glfwTerminate();
+        api->Shutdown();
     }
 
     void TurnipEngine::Run()
@@ -32,15 +26,15 @@ namespace tur
 
         Initialize();
 
-        while (!window.ShouldClose())
+        while (window->IsOpen())
         {
-            window.PollEvents();
+            window->PollEvents();
 
             OnUpdate();
 
             OnRenderGUI();
-        
-            window.SwapBuffers();
+
+            /* window.SwapBuffers(); */
         }
 
         Shutdown();
@@ -49,10 +43,13 @@ namespace tur
     void TurnipEngine::OnEvent(IEvent& event)
     {
         Subscriber subscriber(event);
+
+        /*
         subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& event) -> bool {
             window.SetViewport({ event.width, event.height });
             return false;
         });
+        */
 
         for (auto& view : viewQueue)
             view->OnEvent(event);
@@ -66,46 +63,34 @@ namespace tur
 
     void TurnipEngine::OnRenderGUI()
     {
-        imguiView->Begin();
-
         for (auto& view : viewQueue)
             view->OnRenderGUI();
+    }
 
-        imguiView->End();
+    void TurnipEngine::SwapGraphicsSystem(GraphicsAPI_Type graphicsAPI, const WindowProperties& properties)
+    {
+        TUR_CORE_DEBUG("Selected Graphics API: {}", GetGraphicsAPI_String(graphicsAPI));
+
+        api.reset();
+        api = SelectGraphicsAPI(graphicsAPI);
+        if (!api)
+            return;
+
+        std::unique_ptr<IGraphicsAPI_Loader> loader = SelectGraphicsAPI_Loader(graphicsAPI);
+        loader->PreInitialize();
+
+        window.reset();
+        window = std::make_unique<Window>(properties);
+
+        loader->PostInitialize(window.get());
     }
 
     void TurnipEngine::Setup()
     {
         InitializeLogger();
 
-        // GLFW Setup:
-        glfwWindowHint(GLFW_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        TUR_WRAP_DEBUG(glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE));
-
-        if (!glfwInit())
-        {
-            TUR_CORE_ERROR("Failed to initialize GLFW.");
-            return;
-        }
-
-        // Window & GLAD Setup:
-        window.Initialize(800, 600, "Turnip Engine v0.1");
-
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            TUR_CORE_ERROR("Failed to initialize GLAD.");
-            return;
-        }
-        glDebugMessageCallback(MessageCallback, nullptr);
-
-        window.SetViewport({ 800, 600 });
-        window.SetEventCallback(BIND_1(&TurnipEngine::OnEvent, this));
-
-        // ImGUI Setup:
-        imguiView = new ImGuiView;
-        viewQueue.AddView(imguiView);
+        // Graphics Systems:
+        SwapGraphicsSystem(GraphicsAPI_Type::DEFAULT);
 
         // State Setup:
         m_State.initialized = true;

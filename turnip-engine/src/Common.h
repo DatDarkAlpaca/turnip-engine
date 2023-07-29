@@ -23,6 +23,8 @@
 	#define TUR_BREAKPOINT() __builtin_trap()
 #endif
 
+//#undef TUR_PLATFORM_WINDOWS
+
 #define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)
 
 using U8  = std::uint8_t;

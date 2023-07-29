@@ -1,9 +1,10 @@
 #pragma once
-#include "Window/Window.h"
-#include "View/ViewQueue.h"
 #include "TurnipEngineState.h"
-#include "ImGui/ImGuiView.h"
+#include "View/ViewQueue.h"
 #include "Event/Events.h"
+
+#include "Window/Window.h"
+#include "Graphics/API/GraphicsAPI.h"
 
 namespace tur
 {
@@ -33,14 +34,16 @@ namespace tur
 		void OnRenderGUI();
 
 	public:
-		Window& GetWindow() { return window; }
+		void SwapGraphicsSystem(GraphicsAPI_Type graphicsAPI, const WindowProperties& properties = {});
 
+	public:
 		static inline TurnipEngine& Get() { return *s_Instance; }
 
 	protected:
-		ImGuiView* imguiView = nullptr;
+		std::unique_ptr<Window> window;
+		std::unique_ptr<IGraphicsAPI> api; // Todo: replace with renderer
+
 		ViewQueue viewQueue;
-		Window window;
 
 	private:
 		static inline TurnipEngine* s_Instance = nullptr;
