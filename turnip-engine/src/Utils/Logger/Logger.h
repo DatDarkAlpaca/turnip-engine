@@ -8,7 +8,7 @@ namespace tur
 }
 
 #if defined(TUR_DEBUG) || defined(TUR_RELEASE)
-	#define TUR_CORE_CRITICAL(...)	::spdlog::critical(__VA_ARGS__)
+	#define TUR_CORE_CRITICAL(...)	::spdlog::critical(__VA_ARGS__); TUR_BREAKPOINT()
 	#define TUR_CORE_ERROR(...)		::spdlog::error(__VA_ARGS__)
 	#define TUR_CORE_WARN(...)		::spdlog::warn(__VA_ARGS__)
 #else

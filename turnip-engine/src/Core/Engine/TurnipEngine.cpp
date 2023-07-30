@@ -82,7 +82,7 @@ namespace tur
         window.reset();
         window = std::make_unique<Window>(properties);
 
-        loader->PostInitialize(window.get());
+        loader->PostInitialize(window.get(), api.get());
     }
 
     void TurnipEngine::Setup()

@@ -47,7 +47,9 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
-#include <wrl.h>
+
+// Todo: REQUIRES(opengl)
+#include <glad/glad_wgl.h>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")

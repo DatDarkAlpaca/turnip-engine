@@ -45,6 +45,9 @@
     <ClCompile Include="src\Platform\Windows\WIN32_Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WIN32_Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Engine\TurnipEngine.h">

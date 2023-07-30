@@ -95,15 +95,23 @@
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -189,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="src\Platform\GLFW\GLFW_Loader.cpp" />
     <ClCompile Include="src\Platform\GLFW\GLFW_Window.cpp" />
+    <ClCompile Include="src\Platform\Windows\WIN32_Loader.cpp" />
     <ClCompile Include="src\Platform\Windows\WIN32_Window.cpp" />
     <ClCompile Include="src\Utils\Assert\Assert.cpp" />
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />

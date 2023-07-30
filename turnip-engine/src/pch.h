@@ -11,6 +11,8 @@
 #pragma warning(disable: 26827)
 #pragma warning(disable: 26451)
 
+#pragma comment(lib, "opengl32.lib") // Todo: REQUIRES(opengl)
+
 #include <imgui.h>
 #include <imgui_impl_opengl3.h> // TODO: REQUIRES_GL(...)
 
@@ -19,8 +21,8 @@
 #include <imgui_impl_glfw.h>
 
 #ifdef TUR_PLATFORM_WINDOWS
-	#include <intrin.h>
 	#include "Platform/Windows/WindowsHeaders.h"
+	#include <intrin.h>
 #else	
 	#include <signal.h>
 #endif

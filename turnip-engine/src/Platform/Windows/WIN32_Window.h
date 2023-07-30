@@ -32,6 +32,9 @@ namespace tur
 
 		LRESULT HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
+	public:
+		HWND GetHandle() const { return m_Handle; }
+
 	private:
 		static void InitializeClass();
 

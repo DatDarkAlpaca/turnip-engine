@@ -3,7 +3,12 @@
     "dependencies": [
         "spdlog",
         "glfw3",
-        "glad",
+        {
+            "name": "glad",
+            "features": [
+                "wgl"
+            ]
+        },
         "glm",
         "stb",
         {

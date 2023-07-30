@@ -1,4 +1,5 @@
 #pragma once
+#include "IGraphicsAPI.h"
 
 namespace tur
 {
@@ -10,7 +11,7 @@ namespace tur
 	public:
 		virtual void PreInitialize() { }
 
-		virtual void PostInitialize(Window* window) { }
+		virtual void PostInitialize(Window* window, IGraphicsAPI* api) { }
 
 	protected:
 		Window* window = nullptr;

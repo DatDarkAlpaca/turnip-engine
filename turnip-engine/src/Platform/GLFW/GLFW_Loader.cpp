@@ -88,7 +88,7 @@ namespace tur
 		TUR_WRAP_DEBUG(glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE));
 	}
 
-	void GLFW_Loader_OGL::PostInitialize(Window* window)
+	void GLFW_Loader_OGL::PostInitialize(Window* window, IGraphicsAPI*)
 	{
 		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(window->GetWindow());
 		glfwMakeContextCurrent(glfwWindow);
