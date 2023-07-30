@@ -1,4 +1,6 @@
 #pragma once
+#ifdef TUR_PLATFORM_WINDOWS
+
 #include "pch.h"
 #include "Window/IWindow.h"
 
@@ -47,4 +49,7 @@ namespace tur
 	private:
 		static constexpr const wchar_t* ClassName = L"TurnipEngineWindow";
 	};
+
+	using Window = WIN32_Window;
 }
+#endif // TUR_PLATFORM_WINDOWS

@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Window/Window.h"
+#ifdef TUR_PLATFORM_WINDOWS
 #include "Graphics/API/IGraphicsAPI_Loader.h"
 
 namespace tur
@@ -23,3 +23,4 @@ namespace tur
 		void PostInitialize(Window*, IGraphicsAPI*) override { TUR_CORE_WARN("An D3D11 loader is not available for Win32 platforms yet."); }
 	};
 }
+#endif // TUR_PLATFORM_WINDOWS

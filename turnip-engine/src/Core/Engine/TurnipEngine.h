@@ -3,8 +3,9 @@
 #include "View/ViewQueue.h"
 #include "Event/Events.h"
 
-#include "Window/Window.h"
+#include "Core/Window/WindowProperties.h"
 #include "Graphics/API/GraphicsAPI.h"
+#include "Platform/Platform.h"
 
 namespace tur
 {

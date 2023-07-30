@@ -26,15 +26,17 @@ namespace tur
 
         Initialize();
 
+        glClearColor(1, 0, 0, 1);
         while (window->IsOpen())
         {
+            glClear(GL_COLOR_BUFFER_BIT);
             window->PollEvents();
 
             OnUpdate();
 
             OnRenderGUI();
 
-            /* window.SwapBuffers(); */
+            // SwapBuffers(GetDC(window->GetHandle()));
         }
 
         Shutdown();

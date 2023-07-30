@@ -1,4 +1,6 @@
 #include "pch.h"
+#ifdef TUR_PLATFORM_WINDOWS
+
 #include "WIN32_Window.h"
 
 namespace tur
@@ -136,3 +138,4 @@ namespace tur
 		}
 	}
 }
+#endif // TUR_PLATFORM_WINDOWS

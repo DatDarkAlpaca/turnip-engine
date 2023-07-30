@@ -231,7 +231,6 @@
     <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
     <ClInclude Include="src\Core\Window\IWindow.h" />
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
     <ClInclude Include="src\Graphics\API\GraphicsAPI.h" />
     <ClInclude Include="src\Graphics\API\GraphicsAPI_Type.h" />
     <ClInclude Include="src\Graphics\API\IGraphicsAPI_Loader.h" />
@@ -241,6 +240,7 @@
     <ClInclude Include="src\Platform\GLFW\GLFW_Loader.h" />
     <ClInclude Include="src\Platform\GLFW\GLFW_Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OGL_API.h" />
+    <ClInclude Include="src\Platform\Platform.h" />
     <ClInclude Include="src\Platform\Windows\WIN32_Loader.h" />
     <ClInclude Include="src\Platform\Windows\WIN32_Window.h" />
     <ClInclude Include="src\Platform\Windows\WindowsHeaders.h" />

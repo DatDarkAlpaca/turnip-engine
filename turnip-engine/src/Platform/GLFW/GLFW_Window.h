@@ -1,4 +1,6 @@
 #pragma once
+#ifdef TUR_WINDOWING_GLFW
+
 #include "pch.h"
 #include "Window/IWindow.h"
 #include "Window/WindowProperties.h"
@@ -37,4 +39,7 @@ namespace tur
 	private:
 		std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_Window;
 	};
+
+	using Window = GLFW_Window;
 }
+#endif // TUR_WINDOWING_GLFW

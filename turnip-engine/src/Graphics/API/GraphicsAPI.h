@@ -1,29 +1,21 @@
 #pragma once
-#include "Core/Window/Window.h"
+#include "Platform/Platform.h"
 
-#include "IGraphicsAPI.h"
-#include "GraphicsAPI_Type.h"
+#include "Graphics/API/GraphicsAPI_Type.h"
+#include "Graphics/API/IGraphicsAPI.h"
 
 #ifdef TUR_PLATFORM_WINDOWS
 	#include "Platform/Windows/WIN32_Loader.h"
 	#include "Platform/OpenGL/OGL_API.h"
+
 #else
 	#include "Platform/GLFW/GLFW_Loader.h"
 	#include "Platform/OpenGL/OGL_API.h"
+
 #endif
 
 namespace tur
 {
-#ifdef TUR_PLATFORM_WINDOWS
-	using OGL_GraphicsLoader = WIN32_Loader_OGL;
-	using D3D11_GraphicsLoader = WIN32_Loader_D3D11;
-
-#else
-	using OGL_GraphicsLoader = GLFW_Loader_OGL;
-	using D3D11_GraphicsLoader = GLFW_Loader_D3D11;
-
-#endif
-
 	inline std::unique_ptr<IGraphicsAPI> SelectGraphicsAPI(GraphicsAPI_Type api)
 	{
 		switch (api)

@@ -1,6 +1,8 @@
 #include "pch.h"
-#include "WIN32_Loader.h"
+#ifdef TUR_PLATFORM_WINDOWS
 
+#include "WIN32_Window.h"
+#include "WIN32_Loader.h"
 #include "Platform/OpenGL/OGL_API.h"
 
 #define WGL_DRAW_TO_WINDOW_ARB                    0x2001
@@ -74,8 +76,7 @@ namespace tur
 			return;
 		}
 
-
-		OGL_API* glAPI = static_cast<OGL_API*>(api);
+		OGL_API_WIN32* glAPI = static_cast<OGL_API_WIN32*>(api);
 		int versionMajor = glAPI->GetAPIData().versionMajor;
 		int versionMinor = glAPI->GetAPIData().versionMinor;
 		
@@ -186,4 +187,4 @@ namespace tur
 		DestroyWindow(dummyHandle);
 	}
 }
-
+#endif // TUR_PLATFORM_WINDOWS

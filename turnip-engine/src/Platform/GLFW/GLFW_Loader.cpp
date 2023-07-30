@@ -1,8 +1,10 @@
 #include "pch.h"
+#ifdef TUR_WINDOWING_GLFW
+
+#include "GLFW_Window.h"
 #include "GLFW_Loader.h"
 
 #ifdef TUR_DEBUG
-
 static const char* GetDebugGLSourceString(GLenum source)
 {
 	switch (source)
@@ -69,7 +71,6 @@ static void GLAPIENTRY OpenGLDebugCallback(GLenum source, GLenum type, GLuint id
 		} break;
 	}
 }
-
 #endif
 
 namespace tur
@@ -106,3 +107,4 @@ namespace tur
 		);
 	}
 }
+#endif // TUR_WINDOWING_GLFW

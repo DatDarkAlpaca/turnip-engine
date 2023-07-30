@@ -1,26 +1,30 @@
 #pragma once
 #include <numeric>
 
+// Debug macros:
 #ifdef _DEBUG
 	#define TUR_DEBUG
+	#define TUR_WRAP_DEBUG(x) x
 #elif defined(NDEBUG)
 	#define TUR_RELEASE
-#endif
-
-#ifdef TUR_DEBUG
-	#define TUR_WRAP_DEBUG(x) x
-#else
 	#define TUR_WRAP_DEBUG(x)
 #endif
 
-#ifdef _WIN32
+// Platform-specific macros:
+#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
 	#define TUR_PLATFORM_WINDOWS
-#endif
-
-#ifdef TUR_PLATFORM_WINDOWS
 	#define TUR_BREAKPOINT() __debugbreak()
-#else
+
+#elif defined(__linux__)
+	#define TUR_PLATFORM_LINUX
+	#define TUR_WINDOWING_GLFW
 	#define TUR_BREAKPOINT() __builtin_trap()
+
+#elif defined(__APPLE__ ) || defined(__MACH__)
+	#define TUR_PLATFORM_MACOS
+	#define TUR_WINDOWING_GLFW
+	#define TUR_BREAKPOINT() __builtin_trap()
+
 #endif
 
 #define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)

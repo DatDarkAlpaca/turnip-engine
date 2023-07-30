@@ -6,7 +6,6 @@ namespace tur
 	enum class GraphicsAPI_Type { NONE = 0, OPENGL, D3D11, D3D12, VULKAN, DEFAULT = OPENGL };
 
 #ifdef TUR_DEBUG
-
 	inline std::string GetGraphicsAPI_String(GraphicsAPI_Type type)
 	{
 		switch(type)
@@ -19,6 +18,5 @@ namespace tur
 			default:						return "UNKNOWN";
 		}
 	}
-
 #endif
 }

@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef TUR_WINDOWING_GLFW
 #include "GLFW_Window.h"
 
 namespace tur
@@ -55,3 +56,4 @@ namespace tur
 		return m_Window.get();
 	}
 }
+#endif // TUR_WINDOWING_GLFW

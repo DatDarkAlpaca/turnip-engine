@@ -1,7 +1,7 @@
 #pragma once
-#include "Common.h"
 
 #ifdef TUR_PLATFORM_WINDOWS
+#include "Common.h"
 
 #define WIN32_LEAN_AND_MEAN
 #define NODEFERWINDOWPOS

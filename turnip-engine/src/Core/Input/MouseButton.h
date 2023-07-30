@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 
+// Todo: move the definition of mouse buttons to the platform specific layer
 namespace tur
 {
 	enum class MouseButton

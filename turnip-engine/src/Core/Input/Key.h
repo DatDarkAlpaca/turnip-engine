@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 
+// Todo: move the definition of keys to the platform specific layer
 namespace tur
 {
 	// https://www.glfw.org/docs/3.3/group__keys.html

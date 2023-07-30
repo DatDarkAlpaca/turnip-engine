@@ -9,4 +9,3 @@ namespace tur
 		TUR_CORE_CRITICAL("Assert: {} failed. [{}]\nFile: {} [{}]", condition, message, file, line);
 	}
 }
-
