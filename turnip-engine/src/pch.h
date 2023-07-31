@@ -34,16 +34,11 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
 
-#pragma comment(lib, "opengl32.lib") // Todo: REQUIRES(opengl)
-#define GLFW_INCLUDE_NONE
-#include <glad/glad.h>
-
-#include <imgui.h>
-#include <imgui_impl_opengl3.h> // TODO: REQUIRES_GL(...)
-
-// Todo: TUR_PLATFORM_DESKTOP_GENERAL (?)
-#include <GLFW/glfw3.h>
-#include <imgui_impl_glfw.h>
+#ifdef TUR_WINDOWING_GLFW
+	#include <GLFW/glfw3.h>
+	#include <imgui_impl_glfw.h>
+	#define GLFW_INCLUDE_NONE
+#endif
 
 #ifdef TUR_PLATFORM_WINDOWS
 	#include "Platform/Windows/WindowsHeaders.h"
@@ -51,6 +46,12 @@
 #else	
 	#include <signal.h>
 #endif
+
+#pragma comment(lib, "opengl32.lib") // Todo: REQUIRES(opengl)
+#include <glad/glad.h>
+
+#include <imgui.h>
+#include <imgui_impl_opengl3.h> // TODO: REQUIRES_GL(...)
 
 #include <spdlog/spdlog.h>
 #include <entt/entt.hpp>

@@ -7,12 +7,16 @@ public:
 	explicit CPU_ID(U32 eax, U32 ecx)
 	{
 		// Todo: write a cpuid function for linux/macos
+#ifdef TUR_PLATFORM_WINDOWS
 		__cpuidex((int*)registers, eax, ecx);
+#endif
 	}
 
 	explicit CPU_ID(U32 eax)
 	{
+#ifdef TUR_PLATFORM_WINDOWS
 		__cpuid((int*)registers, eax);
+#endif
 	}
 
 public:
