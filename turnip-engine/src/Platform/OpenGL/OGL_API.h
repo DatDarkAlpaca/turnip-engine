@@ -9,6 +9,8 @@ namespace tur
 #ifdef TUR_WINDOWING_GLFW
 	class OGL_API_GLFW : public IGraphicsAPI
 	{
+		friend class GLFW_Loader_OGL;
+
 	public:
 		struct APIData
 		{
@@ -22,11 +24,16 @@ namespace tur
 		{
 			
 		}
-
-	public:
-		void Shutdown() override
+		
+		~OGL_API_GLFW()
 		{
 			glfwTerminate();
+		}
+
+	public:
+		void SwapBuffers() override
+		{
+			glfwSwapBuffers(static_cast<GLFWwindow*>(m_Window->GetWindow()));
 		}
 
 	public:
@@ -34,6 +41,7 @@ namespace tur
 
 	private:
 		APIData m_APIData;
+		Window* m_Window = nullptr;
 	};
 #endif
 
@@ -56,10 +64,17 @@ namespace tur
 
 		}
 
-	public:
-		void Shutdown() override
+		~OGL_API_WIN32()
 		{
-			glfwTerminate();
+			wglMakeCurrent(GetDC(m_Window->GetHandle()), 0);
+			wglDeleteContext(m_Context);
+			ReleaseDC(m_Window->GetHandle(), GetDC(m_Window->GetHandle()));
+		}
+
+	public:
+		void SwapBuffers() override
+		{
+			::SwapBuffers(GetDC(m_Window->GetHandle()));
 		}
 
 	public:
@@ -67,6 +82,8 @@ namespace tur
 
 	private:
 		APIData m_APIData;
+		HGLRC m_Context = nullptr;
+		Window* m_Window = nullptr;
 	};
 #endif
 }

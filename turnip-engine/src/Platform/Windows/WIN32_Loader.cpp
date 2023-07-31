@@ -42,7 +42,6 @@ namespace tur
 	void WIN32_Loader_OGL::PostInitialize(Window* window, IGraphicsAPI* api)
 	{
 		WIN32_Window* win32Window = static_cast<WIN32_Window*>(window);
-		
 		HDC hdc = GetDC(win32Window->GetHandle());
 
 		int pixelFormatAttributes[] = {
@@ -79,6 +78,8 @@ namespace tur
 		OGL_API_WIN32* glAPI = static_cast<OGL_API_WIN32*>(api);
 		int versionMajor = glAPI->GetAPIData().versionMajor;
 		int versionMinor = glAPI->GetAPIData().versionMinor;
+		HGLRC& context = glAPI->m_Context;
+		glAPI->m_Window = win32Window;
 		
 		int openGLAttributes[] = 
 		{
@@ -88,7 +89,8 @@ namespace tur
 			0,
 		};
 
-		HGLRC context = wglCreateContextAttribsARB(hdc, 0, openGLAttributes);
+		context = wglCreateContextAttribsARB(hdc, 0, openGLAttributes);
+		
 		if (!context)
 		{
 			TUR_CORE_CRITICAL("Failed to create a OpenGL {}.{} context", versionMajor, versionMinor);

@@ -8,6 +8,6 @@ namespace tur
 		virtual ~IGraphicsAPI() = default;
 
 	public:
-		virtual void Shutdown() = 0;
+		virtual void SwapBuffers() = 0;
 	};
 }

@@ -13,7 +13,7 @@ namespace tur
 
     TurnipEngine::~TurnipEngine()
     {
-        api->Shutdown();
+
     }
 
     void TurnipEngine::Run()
@@ -36,7 +36,7 @@ namespace tur
 
             OnRenderGUI();
 
-            // SwapBuffers(GetDC(window->GetHandle()));
+            api->SwapBuffers();
         }
 
         Shutdown();
@@ -91,10 +91,8 @@ namespace tur
     {
         InitializeLogger();
 
-        // Graphics Systems:
         SwapGraphicsSystem(GraphicsAPI_Type::DEFAULT);
 
-        // State Setup:
         m_State.initialized = true;
     }
 }

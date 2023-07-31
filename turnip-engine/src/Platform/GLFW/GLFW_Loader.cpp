@@ -3,6 +3,7 @@
 
 #include "GLFW_Window.h"
 #include "GLFW_Loader.h"
+#include "Platform/OpenGL/OGL_API.h"
 
 #ifdef TUR_DEBUG
 static const char* GetDebugGLSourceString(GLenum source)
@@ -89,10 +90,13 @@ namespace tur
 		TUR_WRAP_DEBUG(glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE));
 	}
 
-	void GLFW_Loader_OGL::PostInitialize(Window* window, IGraphicsAPI*)
+	void GLFW_Loader_OGL::PostInitialize(Window* window, IGraphicsAPI* api)
 	{
 		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(window->GetWindow());
 		glfwMakeContextCurrent(glfwWindow);
+
+		OGL_API_GLFW* glfwAPI = static_cast<OGL_API_GLFW*>(api);
+		glfwAPI->m_Window = window;
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{

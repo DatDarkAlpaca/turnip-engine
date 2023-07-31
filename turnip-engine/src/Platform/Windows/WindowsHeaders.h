@@ -40,6 +40,7 @@
 #define NOWH
 
 #include <Windows.h>
+#include <shellscalingapi.h>
 
 // Todo: REQUIRES(D3D11.1 | WINDOWS)
 #include <d3d11.h>
@@ -51,6 +52,7 @@
 // Todo: REQUIRES(opengl)
 #include <glad/glad_wgl.h>
 
+#pragma comment(lib, "shcore.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
