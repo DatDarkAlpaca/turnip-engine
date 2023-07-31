@@ -14,6 +14,8 @@ namespace tur
 		~WIN32_Window();
 
 	public:
+		void SetEventCallback(const FnEventCallback& eventCallback) override;
+
 		void PollEvents() override;
 
 	public:
@@ -43,6 +45,7 @@ namespace tur
 		void InitializeWindow();
 
 	private:
+		FnEventCallback m_EventCallback;
 		HWND m_Handle = nullptr;
 		bool m_Open = false;
 

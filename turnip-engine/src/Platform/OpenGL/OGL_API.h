@@ -31,6 +31,11 @@ namespace tur
 		}
 
 	public:
+		void SetViewport(float x, float y, float width, float height, float minDepth = 0.f, float maxDepth = 1.f) override
+		{
+			glViewport(x, y, width, height);
+		}
+
 		void SwapBuffers() override
 		{
 			glfwSwapBuffers(static_cast<GLFWwindow*>(m_Window->GetWindow()));
@@ -72,6 +77,11 @@ namespace tur
 		}
 
 	public:
+		void SetViewport(float x, float y, float width, float height, float minDepth = 0.f, float maxDepth = 1.f) override
+		{
+			glViewport(x, y, width, height);
+		}
+
 		void SwapBuffers() override
 		{
 			::SwapBuffers(GetDC(m_Window->GetHandle()));

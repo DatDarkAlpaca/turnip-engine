@@ -1,6 +1,7 @@
 #include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
 #include "GLFW_Window.h"
+#include "Core/Event/Events.h"
 
 namespace tur
 {
@@ -27,6 +28,12 @@ namespace tur
 		}
 
 		m_Window.reset(window);
+		SetupCallbacks();
+	}
+
+	void GLFW_Window::SetEventCallback(const FnEventCallback& eventCallback)
+	{
+		m_WindowData.eventCallback = eventCallback;
 	}
 
 	void GLFW_Window::PollEvents()
@@ -54,6 +61,18 @@ namespace tur
 	void* GLFW_Window::GetWindow() const
 	{
 		return m_Window.get();
+	}
+
+	void GLFW_Window::SetupCallbacks()
+	{
+		glfwSetWindowUserPointer(m_Window.get(), &m_WindowData);
+
+		glfwSetWindowSizeCallback(m_Window.get(), [](GLFWwindow* window, int width, int height) {
+			auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+			WindowResizeEvent event(width, height);
+			data->eventCallback(event);
+		});
 	}
 }
 #endif // TUR_WINDOWING_GLFW

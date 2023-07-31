@@ -23,6 +23,8 @@ namespace tur
 		GLFW_Window(const WindowProperties& properties);
 
 	public:
+		void SetEventCallback(const FnEventCallback& eventCallback) override;
+
 		void PollEvents() override;
 
 	public:
@@ -37,7 +39,15 @@ namespace tur
 		void* GetWindow() const override;
 
 	private:
+		void SetupCallbacks();
+
+	private:
 		std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_Window;
+
+		struct WindowData
+		{
+			FnEventCallback eventCallback;
+		} m_WindowData;
 	};
 
 	using Window = GLFW_Window;

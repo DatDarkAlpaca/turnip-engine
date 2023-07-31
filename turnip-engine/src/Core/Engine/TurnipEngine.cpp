@@ -26,10 +26,8 @@ namespace tur
 
         Initialize();
 
-        glClearColor(1, 0, 0, 1);
         while (window->IsOpen())
         {
-            glClear(GL_COLOR_BUFFER_BIT);
             window->PollEvents();
 
             OnUpdate();
@@ -46,13 +44,11 @@ namespace tur
     {
         Subscriber subscriber(event);
 
-        /*
         subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& event) -> bool {
-            window.SetViewport({ event.width, event.height });
+            api->SetViewport(0.f, 0.f, (float)event.width, (float)event.height);
             return false;
         });
-        */
-
+        
         for (auto& view : viewQueue)
             view->OnEvent(event);
     }
@@ -83,6 +79,8 @@ namespace tur
 
         window.reset();
         window = std::make_unique<Window>(properties);
+        window->SetEventCallback(BIND_1(&TurnipEngine::OnEvent, this));
+        window->Show();
 
         loader->PostInitialize(window.get(), api.get());
     }

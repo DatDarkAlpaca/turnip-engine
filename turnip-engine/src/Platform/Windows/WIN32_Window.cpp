@@ -1,6 +1,7 @@
 #include "pch.h"
 #ifdef TUR_PLATFORM_WINDOWS
 
+#include "Core/Event/Events.h"
 #include "WIN32_Window.h"
 
 namespace tur
@@ -17,13 +18,16 @@ namespace tur
 
 		if (m_Handle)
 			m_Open = true;
-
-		Show();
 	}
 
 	WIN32_Window::~WIN32_Window()
 	{
 		DestroyWindow(m_Handle);
+	}
+
+	void WIN32_Window::SetEventCallback(const FnEventCallback& eventCallback)
+	{
+		m_EventCallback = eventCallback;
 	}
 
 	void WIN32_Window::PollEvents()
@@ -85,6 +89,15 @@ namespace tur
 			case WM_CLOSE:
 			{
 				m_Open = false;
+			} break;
+
+			case WM_SIZE:
+			{ 
+				if (!m_EventCallback)
+					break;
+
+				WindowResizeEvent event((int)LOWORD(lParam), (int)HIWORD(lParam));
+				m_EventCallback(event);
 			} break;
 		}
 
