@@ -22,9 +22,9 @@ namespace tur
 		OGL_API_GLFW(const APIData& apiData = {})
 			: m_APIData(apiData)
 		{
-			
+
 		}
-		
+
 		~OGL_API_GLFW()
 		{
 			glfwTerminate();
@@ -33,7 +33,7 @@ namespace tur
 	public:
 		void SetViewport(float x, float y, float width, float height, float minDepth = 0.f, float maxDepth = 1.f) override
 		{
-			glViewport(x, y, width, height);
+			glViewport((GLint)x, (GLint)y, (GLint)width, (GLint)height);
 		}
 
 		void SwapBuffers() override
@@ -79,7 +79,7 @@ namespace tur
 	public:
 		void SetViewport(float x, float y, float width, float height, float minDepth = 0.f, float maxDepth = 1.f) override
 		{
-			glViewport(x, y, width, height);
+			glViewport((GLint)x, (GLint)y, (GLint)width, (GLint)height);
 		}
 
 		void SwapBuffers() override

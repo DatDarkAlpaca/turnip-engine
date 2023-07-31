@@ -60,7 +60,7 @@ namespace tur
 		{
 			case GraphicsAPI_Type::NONE:
 			{
-				TUR_CORE_ERROR("No graphics API loader has been specified.");
+				TUR_CORE_CRITICAL("No graphics API loader has been specified.");
 				return nullptr;
 			} break;
 
