@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 
+// Todo: move the definition of key mods to the platform specific layer
 namespace tur
 {
 	enum class Mods

@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 
+// Todo: move the definition of mouse buttons to the platform specific layer
 namespace tur
 {
 	enum class MouseButton
@@ -13,10 +14,10 @@ namespace tur
 		BUTTON_6 = 5,
 		BUTTON_7 = 6,
 		BUTTON_8 = 7,
-		LEFT = BUTTON_1,
-		RIGHT = BUTTON_2,
-		MIDDLE = BUTTON_3,
-		LAST = BUTTON_8,
-		AMOUNT = 8
+		LEFT     = BUTTON_1,
+		RIGHT    = BUTTON_2,
+		MIDDLE   = BUTTON_3,
+		LAST     = BUTTON_8,
+		AMOUNT   = 8
 	};
 }

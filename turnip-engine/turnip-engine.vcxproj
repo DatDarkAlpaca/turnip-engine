@@ -95,15 +95,23 @@
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgAdditionalInstallOptions>
+    </VcpkgAdditionalInstallOptions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -187,22 +195,15 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Graphics\Camera\OrthographicCamera.cpp" />
-    <ClCompile Include="src\Graphics\Camera\PerspectiveCamera.cpp" />
+    <ClCompile Include="src\Platform\GLFW\GLFW_Loader.cpp" />
+    <ClCompile Include="src\Platform\GLFW\GLFW_Window.cpp" />
+    <ClCompile Include="src\Platform\Windows\WIN32_Loader.cpp" />
+    <ClCompile Include="src\Platform\Windows\WIN32_Window.cpp" />
     <ClCompile Include="src\Utils\Assert\Assert.cpp" />
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\View\ViewQueue.cpp" />
-    <ClCompile Include="src\Core\Window\Window.cpp" />
-    <ClCompile Include="src\Graphics\Color.cpp" />
-    <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\Buffer.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\Framebuffer.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\Shader.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\Texture.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\VertexArray.cpp" />
-    <ClCompile Include="src\Graphics\Renderer\TofuRenderer.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -217,8 +218,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Platform\ImGui\ImGuiView.cpp" />
-    <ClCompile Include="src\TurnipEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
@@ -230,8 +229,22 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
-    <ClInclude Include="src\Graphics\Camera\ICamera.h" />
-    <ClInclude Include="src\Graphics\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="src\Core\Window\IWindow.h" />
+    <ClInclude Include="src\Core\Window\WindowProperties.h" />
+    <ClInclude Include="src\Graphics\API\GraphicsAPI.h" />
+    <ClInclude Include="src\Graphics\API\GraphicsAPI_Type.h" />
+    <ClInclude Include="src\Graphics\API\IGraphicsAPI_Loader.h" />
+    <ClInclude Include="src\Graphics\API\IGraphicsAPI.h" />
+    <ClInclude Include="src\Graphics\Renderer\IRenderer.h" />
+    <ClInclude Include="src\Graphics\Renderer\OGL_Renderer.h" />
+    <ClInclude Include="src\Platform\GLFW\GLFW_Loader.h" />
+    <ClInclude Include="src\Platform\GLFW\GLFW_Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OGL_API.h" />
+    <ClInclude Include="src\Platform\Platform.h" />
+    <ClInclude Include="src\Platform\Windows\WIN32_Loader.h" />
+    <ClInclude Include="src\Platform\Windows\WIN32_Window.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsHeaders.h" />
+    <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
@@ -246,29 +259,10 @@
     <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Maths\Transform.h" />
     <ClInclude Include="src\Utils\Random\Random.h" />
-    <ClInclude Include="src\Core\Scene\Components.h" />
-    <ClInclude Include="src\Core\Scene\Entity.h" />
-    <ClInclude Include="src\Core\Scene\Scene.h" />
     <ClInclude Include="src\Core\View\View.h" />
     <ClInclude Include="src\Core\View\ViewQueue.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
     <ClInclude Include="src\Entry.h" />
-    <ClInclude Include="src\Graphics\Camera\OrthographicCamera.h" />
-    <ClInclude Include="src\Graphics\Color.h" />
-    <ClInclude Include="src\Graphics\OpenGL\Framebuffer.h" />
-    <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
-    <ClInclude Include="src\Graphics\OpenGL\Attribute.h" />
-    <ClInclude Include="src\Graphics\OpenGL\Buffer.h" />
-    <ClInclude Include="src\Graphics\GraphicsCommon.h" />
-    <ClInclude Include="src\Graphics\OpenGL\Shader.h" />
-    <ClInclude Include="src\Graphics\OpenGL\ShaderHelpers.h" />
-    <ClInclude Include="src\Graphics\OpenGL\VertexArray.h" />
-    <ClInclude Include="src\Graphics\Renderer\TofuRenderer.h" />
-    <ClInclude Include="src\Graphics\OpenGL\Texture.h" />
-    <ClInclude Include="src\Graphics\Renderer\TofuRendererProps.h" />
-    <ClInclude Include="src\Graphics\Vertex.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Platform\ImGui\ImGuiView.h" />
     <ClInclude Include="src\Utils\UUID\UUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

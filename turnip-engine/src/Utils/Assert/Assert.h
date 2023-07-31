@@ -12,7 +12,6 @@ namespace tur
 	else																\
 	{																	\
 		tur::__assert(#condition, message, __FILE__, __LINE__);			\
-		TUR_BREAKPOINT();												\
 	}																	\
 }
 
@@ -22,6 +21,5 @@ namespace tur
 	else																				\
 	{																					\
 		tur::__assert(#condition, "No message provided", __FILE__, __LINE__);			\
-		TUR_BREAKPOINT();																\
 	}																					\
 }

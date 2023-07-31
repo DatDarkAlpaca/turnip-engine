@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "State.h"
 #include "MouseButton.h"
-#include "Logger/Logger.h"
 
 namespace tur
 {

@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "Logger/Logger.h"
 
-// Todo: improve
+// Todo: use a platform layer and a proper filesytem
 namespace tur
 {
 	inline std::string ReadFile(const char* filepath)
