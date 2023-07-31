@@ -35,9 +35,9 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #ifdef TUR_WINDOWING_GLFW
+	#define GLFW_INCLUDE_NONE
 	#include <GLFW/glfw3.h>
 	#include <imgui_impl_glfw.h>
-	#define GLFW_INCLUDE_NONE
 #endif
 
 #ifdef TUR_PLATFORM_WINDOWS
