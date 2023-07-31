@@ -8,6 +8,9 @@ namespace tur
 	WIN32_Window::WIN32_Window(const WindowProperties& properties)
 		: IWindow(properties)
 	{
+		// TODO: Handle win7 dpi awareness.
+		SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+		
 		WIN32_Window::InitializeClass();
 
 		InitializeWindow();
@@ -99,28 +102,30 @@ namespace tur
 
 		if (FAILED(RegisterClassEx(&wndClass)))
 		{
-			TUR_CORE_ERROR("Failed to register WIN32 class. | Error: {}", GetLastError());
+			TUR_CORE_CRITICAL("Failed to register WIN32 class. | Error: {}", GetLastError());
 			return;
 		}
 	}
 
 	void WIN32_Window::InitializeWindow()
 	{
-		constexpr int dwStyle = WS_CAPTION | WS_OVERLAPPEDWINDOW;
+		DWORD dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-		// Todo: become a monk and handle the win32 faulty api
-		RECT rect;
-		rect.left = 0;
-		rect.right = (int)properties.dimensions.x + rect.left;
-		rect.top = 0;
-		rect.bottom = (int)properties.dimensions.y + rect.top;
-		if (!AdjustWindowRectEx(&rect, dwStyle, true, 0))
+		dwStyle |= WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+		DWORD exStyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
+		// TODO: window properties.
+
+		RECT rect = {};
+		rect.right = (int)properties.dimensions.x;
+		rect.bottom = (int)properties.dimensions.y;
+
+		if (!AdjustWindowRectEx(&rect, dwStyle, true, exStyle))
 			TUR_CORE_WARN("Failed to adjust the WIN32 window rect. | Error: {}", GetLastError());
 
 		std::wstring title = std::wstring(properties.title.begin(), properties.title.end());
 
 		m_Handle = CreateWindowEx(
-			0,
+			exStyle,
 			ClassName,
 			title.c_str(),
 			dwStyle,
@@ -128,14 +133,31 @@ namespace tur
 			(int)properties.position.y,
 			rect.right - rect.left,
 			rect.bottom - rect.top,
-			nullptr, nullptr, GetModuleHandle(nullptr), this
+			nullptr, nullptr, GetModuleHandleA(nullptr), this
 		);
 
 		if (!m_Handle)
 		{
-			TUR_CORE_ERROR("Failed to create WIN32 window. | Error Code: {}", GetLastError());
+			TUR_CORE_CRITICAL("Failed to create WIN32 window. | Error Code: {}", GetLastError());
 			return;
 		}
+
+		// Adjust the window dimensions:
+		RECT windowRect, clientRect;
+		GetWindowRect(m_Handle, &windowRect);
+		GetClientRect(m_Handle, &clientRect);
+
+		int xExtra = windowRect.right - windowRect.left - clientRect.right;
+		int yExtra = windowRect.bottom - windowRect.top - clientRect.bottom;
+
+		SetWindowPos(
+			m_Handle, nullptr, 
+			(int)properties.position.x,
+			(int)properties.position.y,
+			(int)properties.dimensions.x + xExtra,
+			(int)properties.dimensions.y + yExtra,
+			SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE
+		);
 	}
 }
 #endif // TUR_PLATFORM_WINDOWS
