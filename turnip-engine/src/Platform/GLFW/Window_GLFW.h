@@ -39,8 +39,5 @@ namespace tur
 		{
 			FnEventCallback eventCallback;
 		} m_WindowData;
-
-	private:
-		static inline bool s_IsGLFWLoaded = false;
 	};
 }

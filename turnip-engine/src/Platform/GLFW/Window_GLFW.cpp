@@ -6,17 +6,6 @@ namespace tur
 	Window::Window(const WindowProperties& properties)
 		: BaseWindow(properties)
 	{
-		if (!s_IsGLFWLoaded)
-		{
-			if (!glfwInit())
-			{
-				TUR_CORE_CRITICAL("Failed to initialize GLFW");
-				return;
-			}
-
-			s_IsGLFWLoaded = true;
-		}
-
 		int width = (int)properties.dimensions.x;
 		int height = (int)properties.dimensions.y;
 		int x = (int)properties.position.x;
