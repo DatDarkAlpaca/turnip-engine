@@ -1,16 +1,23 @@
 #pragma once
 #include "pch.h"
+#include "EventType.h"
+#include "Data/BaseEventData.h"
 
 namespace tur
 {
-	enum class EventType : U64
+	class Event
 	{
-		NONE = 0,
-		RESIZE
-	};
+		friend class Subscriber;
 
-	struct WindowResizeEvent
-	{
+	public:
+		Event(EventType type, std::unique_ptr<BaseEventData> data)
+			: type(type)
+			, data(std::move(data))
+		{ }
 
+	public:
+		EventType type = EventType::UNKNOWN;
+		std::unique_ptr<BaseEventData> data;
+		bool handled = false;
 	};
 }

@@ -28,6 +28,8 @@ namespace tur
 
 		m_Window.reset(window);
 		glfwSetWindowUserPointer(m_Window.get(), &m_WindowData);
+
+		SetupCallbacks();
 	}
 
 	void Window_GLFW::SetEventCallback(const FnEventCallback& eventCallback)
@@ -60,6 +62,23 @@ namespace tur
 	void* Window_GLFW::Get() const
 	{
 		return m_Window.get();
+	}
+
+	void Window_GLFW::SetupCallbacks() const
+	{
+		glfwSetWindowCloseCallback(m_Window.get(), [](GLFWwindow* window) {
+			auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+			Event event(EventType::WINDOW_CLOSE, std::make_unique<WindowCloseEventData>());
+			data->eventCallback(event);
+		});
+
+		glfwSetWindowSizeCallback(m_Window.get(), [](GLFWwindow* window, int width, int height) {
+			auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+			Event event(EventType::WINDOW_RESIZE, std::make_unique<WindowResizeEventData>((unsigned int)width, (unsigned int)height));
+			data->eventCallback(event);
+		});
 	}
 }
 #endif

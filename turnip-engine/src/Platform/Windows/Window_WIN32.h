@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
-#include "System/Window/BaseWindow.h"
+#include "Core/Window/BaseWindow.h"
 
 namespace tur
 {

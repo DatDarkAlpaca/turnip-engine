@@ -3,12 +3,10 @@
 
 /* Core */
 #include "Core/Engine/TurnipEngine.h"
-#include "Core/Event/Event.h"
-
-/* System */
-#include "System/View/View.h"
-#include "System/View/ViewQueue.h"
-#include "System/Assets/AssetLibrary.h"
+#include "Core/Assets/AssetLibrary.h"
+#include "Core/View/ViewQueue.h"
+#include "Core/Event/Events.h"
+#include "Core/View/View.h"
 
 /* Utils */
 #include "Utils/Assert/Assert.h"

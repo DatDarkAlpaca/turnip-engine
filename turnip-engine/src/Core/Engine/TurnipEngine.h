@@ -1,7 +1,7 @@
 #pragma once
 #include "TurnipEngineState.h"
 #include "View/ViewQueue.h"
-#include "Core/Event/Event.h"
+#include "Core/Event/Events.h"
 
 #include "Platform/Platform.h"
 
@@ -26,7 +26,7 @@ namespace tur
 		void Run();
 
 	private:
-		void OnEvent(IEvent& event);
+		void OnEvent(Event& event);
 
 		void OnUpdate();
 

@@ -219,7 +219,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Event\Data\BaseEventData.h" />
+    <ClInclude Include="src\Core\Event\Data\WindowCloseEventData.h" />
+    <ClInclude Include="src\Core\Event\Data\WindowResizeEventData.h" />
+    <ClInclude Include="src\Core\Event\Events.h" />
+    <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\Event.h" />
+    <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h" />
     <ClInclude Include="src\Platform\Windows\WindowLoader_WIN32.h" />
     <ClInclude Include="src\Platform\Windows\Window_WIN32.h" />

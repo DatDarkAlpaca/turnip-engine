@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
-#include "System/Window/BaseWindow.h"
+#include "Core/Window/BaseWindow.h"
 
 namespace tur
 {
@@ -33,6 +33,9 @@ namespace tur
 
 	public:
 		void* Get() const;
+
+	private:
+		void SetupCallbacks() const;
 
 	private:
 		std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_Window;

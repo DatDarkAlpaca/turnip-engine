@@ -38,9 +38,13 @@ namespace tur
         Shutdown();
     }
 
-    void TurnipEngine::OnEvent(IEvent& event)
+    void TurnipEngine::OnEvent(Event& event)
     {
-
+        Subscriber subscriber(event);
+        subscriber.SubscribeTo<WindowResizeEventData>([&](WindowResizeEventData* data) -> bool {
+            TUR_CORE_INFO("{}, {}", data->width, data->height);
+            return false;
+        });
     }
 
     void TurnipEngine::OnUpdate()
@@ -63,6 +67,7 @@ namespace tur
             return;
 
         window = std::make_unique<Window>(WindowProperties());
+        window->SetEventCallback(BIND_1(&TurnipEngine::OnEvent, this));
         windowLoader.PostLoad();
 
         m_State.initialized = true;

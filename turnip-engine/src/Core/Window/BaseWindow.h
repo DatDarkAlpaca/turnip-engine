@@ -1,6 +1,6 @@
 #pragma once
 #include "WindowProperties.h"
-#include "Core/Event/Event.h"
+#include "Core/Event/Events.h"
 
 namespace tur
 {
@@ -8,7 +8,7 @@ namespace tur
 	class BaseWindow
 	{
 	protected:
-		using FnEventCallback = std::function<void(IEvent&)>;
+		using FnEventCallback = std::function<void(Event&)>;
 
 	public:
 		BaseWindow(const WindowProperties& properties)

@@ -84,11 +84,27 @@ namespace tur
 	// TODO: Event queue
 	LRESULT Window_WIN32::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		if (!m_EventCallback)
+			return DefWindowProc(hWnd, msg, wParam, lParam);
+
 		switch (msg)
 		{
+			case WM_DESTROY:
 			case WM_CLOSE:
 			{
+				Event closeEvent(EventType::WINDOW_CLOSE, std::make_unique<WindowCloseEventData>());
+				m_EventCallback(closeEvent);
 				m_Open = false;
+			} break;
+
+			case WM_SIZE:
+			{
+				unsigned width, height;
+				width = static_cast<unsigned>((UINT64)lParam & 0xFFFF);
+				height = static_cast<unsigned>((UINT64)lParam >> 16);
+
+				Event resizeEvent(EventType::WINDOW_RESIZE, std::make_unique<WindowResizeEventData>(width, height));
+				m_EventCallback(resizeEvent);
 			} break;
 		}
 
