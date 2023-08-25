@@ -3,8 +3,6 @@
 #include "View/ViewQueue.h"
 #include "Event/Events.h"
 
-#include "Core/Window/WindowProperties.h"
-#include "Graphics/API/GraphicsAPI.h"
 #include "Platform/Platform.h"
 
 namespace tur
@@ -35,16 +33,14 @@ namespace tur
 		void OnRenderGUI();
 
 	public:
-		void SwapGraphicsSystem(GraphicsAPI_Type graphicsAPI, const WindowProperties& properties = {});
-
-	public:
 		static inline TurnipEngine& Get() { return *s_Instance; }
 
 	protected:
 		std::unique_ptr<Window> window;
-		std::unique_ptr<IGraphicsAPI> api; // Todo: replace with renderer
-
 		ViewQueue viewQueue;
+
+	private:
+		WindowLoader windowLoader;
 
 	private:
 		static inline TurnipEngine* s_Instance = nullptr;

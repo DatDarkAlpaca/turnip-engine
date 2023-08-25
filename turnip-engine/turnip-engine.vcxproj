@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/System;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/System;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/System;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/Graphics;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)src/Core;$(ProjectDir)src/Platform;$(ProjectDir)src/Utils;$(ProjectDir)src/System;$(ProjectDir)src/Core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
@@ -195,15 +195,12 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Platform\GLFW\GLFW_Loader.cpp" />
-    <ClCompile Include="src\Platform\GLFW\GLFW_Window.cpp" />
-    <ClCompile Include="src\Platform\Windows\WIN32_Loader.cpp" />
-    <ClCompile Include="src\Platform\Windows\WIN32_Window.cpp" />
+    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
     <ClCompile Include="src\Utils\Assert\Assert.cpp" />
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />
-    <ClCompile Include="src\Core\View\ViewQueue.cpp" />
+    <ClCompile Include="src\System\View\ViewQueue.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -221,7 +218,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\Core\Assets\AssetLibrary.h" />
+    <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h" />
+    <ClInclude Include="src\System\Assets\AssetLibrary.h" />
     <ClInclude Include="src\Core\Event\Events.h" />
     <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\IEvent.h" />
@@ -229,20 +227,13 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
-    <ClInclude Include="src\Core\Window\IWindow.h" />
-    <ClInclude Include="src\Core\Window\WindowProperties.h" />
-    <ClInclude Include="src\Graphics\API\GraphicsAPI.h" />
-    <ClInclude Include="src\Graphics\API\GraphicsAPI_Type.h" />
-    <ClInclude Include="src\Graphics\API\IGraphicsAPI_Loader.h" />
-    <ClInclude Include="src\Graphics\API\IGraphicsAPI.h" />
+    <ClInclude Include="src\System\Window\BaseWindow.h" />
+    <ClInclude Include="src\System\Window\BaseWindowLoader.h" />
+    <ClInclude Include="src\System\Window\WindowProperties.h" />
     <ClInclude Include="src\Graphics\Renderer\IRenderer.h" />
     <ClInclude Include="src\Graphics\Renderer\OGL_Renderer.h" />
-    <ClInclude Include="src\Platform\GLFW\GLFW_Loader.h" />
-    <ClInclude Include="src\Platform\GLFW\GLFW_Window.h" />
-    <ClInclude Include="src\Platform\OpenGL\OGL_API.h" />
+    <ClInclude Include="src\Platform\GLFW\Window_GLFW.h" />
     <ClInclude Include="src\Platform\Platform.h" />
-    <ClInclude Include="src\Platform\Windows\WIN32_Loader.h" />
-    <ClInclude Include="src\Platform\Windows\WIN32_Window.h" />
     <ClInclude Include="src\Platform\Windows\WindowsHeaders.h" />
     <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Utils\Assert\Assert.h" />
@@ -259,8 +250,8 @@
     <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Maths\Transform.h" />
     <ClInclude Include="src\Utils\Random\Random.h" />
-    <ClInclude Include="src\Core\View\View.h" />
-    <ClInclude Include="src\Core\View\ViewQueue.h" />
+    <ClInclude Include="src\System\View\View.h" />
+    <ClInclude Include="src\System\View\ViewQueue.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Utils\UUID\UUID.h" />

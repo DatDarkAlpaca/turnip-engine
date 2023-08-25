@@ -33,19 +33,10 @@
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\View\ViewQueue.cpp">
+    <ClCompile Include="src\System\View\ViewQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\GLFW_Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\GLFW_Loader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WIN32_Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WIN32_Loader.cpp">
+    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,10 +83,10 @@
     <ClInclude Include="src\Utils\CPU Information\CPU_Information.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\View\View.h">
+    <ClInclude Include="src\System\View\View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\View\ViewQueue.h">
+    <ClInclude Include="src\System\View\ViewQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Engine\TurnipEngineState.h">
@@ -131,7 +122,7 @@
     <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Assets\AssetLibrary.h">
+    <ClInclude Include="src\System\Assets\AssetLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Renderer\IRenderer.h">
@@ -140,46 +131,28 @@
     <ClInclude Include="src\Graphics\Renderer\OGL_Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Window\WindowProperties.h">
+    <ClInclude Include="src\System\Window\WindowProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\GLFW_Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WIN32_Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Window\IWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\API\IGraphicsAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\API\IGraphicsAPI_Loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\GLFW_Loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\OGL_API.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\API\GraphicsAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WIN32_Loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsHeaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\API\GraphicsAPI_Type.h">
+    <ClInclude Include="src\System\Window\BaseWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\TurnipEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\Window\BaseWindowLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
