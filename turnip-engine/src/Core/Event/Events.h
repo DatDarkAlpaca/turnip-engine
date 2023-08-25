@@ -1,7 +1,7 @@
 #pragma once
-#include "IEvent.h"
+#include "Event.h"
+#include "EventType.h"
 #include "Subscriber.h"
 
-#include "Concrete/KeyboardEvent.h"
-#include "Concrete/MouseEvent.h"
-#include "Concrete/WindowResizeEvent.h"
+#include "Data/WindowCloseEventData.h"
+#include "Data/WindowResizeEventData.h"

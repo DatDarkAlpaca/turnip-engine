@@ -1,33 +1,32 @@
 #pragma once
-#ifdef TUR_PLATFORM_WINDOWS
-
 #include "pch.h"
-#include "Window/IWindow.h"
+#ifdef TUR_WINDOWING_WINDOWS
+#include "Core/Window/BaseWindow.h"
 
 namespace tur
 {
-	class WIN32_Window : public IWindow
+	class Window_WIN32 : public BaseWindow<Window_WIN32>
 	{
 	public:
-		WIN32_Window(const WindowProperties& properties);
+		Window_WIN32(const WindowProperties& properties);
 
-		~WIN32_Window();
-
-	public:
-		void SetEventCallback(const FnEventCallback& eventCallback) override;
-
-		void PollEvents() override;
+		~Window_WIN32();
 
 	public:
-		void Show() override;
+		void SetEventCallback(const FnEventCallback& eventCallback);
 
-		void Hide() override;
+		void PollEvents();
 
 	public:
-		bool IsOpen() const override;
-		
+		void Show();
+
+		void Hide();
+
 	public:
-		void* GetWindow() const override;
+		bool IsOpen() const;
+
+	public:
+		void* Get() const;
 
 	private:
 		static LRESULT CALLBACK SetupMessagePump(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -52,7 +51,5 @@ namespace tur
 	private:
 		static constexpr const wchar_t* ClassName = L"TurnipEngineWindow";
 	};
-
-	using Window = WIN32_Window;
 }
-#endif // TUR_PLATFORM_WINDOWS
+#endif

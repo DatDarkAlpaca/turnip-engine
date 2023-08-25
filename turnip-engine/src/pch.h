@@ -43,8 +43,6 @@
 #ifdef TUR_PLATFORM_WINDOWS
 	#include "Platform/Windows/WindowsHeaders.h"
 	#include <intrin.h>
-#else	
-	#include <signal.h>
 #endif
 
 #pragma comment(lib, "opengl32.lib") // Todo: REQUIRES(opengl)

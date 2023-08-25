@@ -13,6 +13,7 @@
 // Platform-specific macros:
 #if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
 	#define TUR_PLATFORM_WINDOWS
+	#define TUR_WINDOWING_WINDOWS
 	#define TUR_BREAKPOINT() __debugbreak()
 
 #elif defined(__linux__)
@@ -26,9 +27,6 @@
 	#define TUR_BREAKPOINT() __builtin_trap()
 
 #endif
-
-#define TUR_WINDOWING_GLFW
-#undef TUR_PLATFORM_WINDOWS
 
 #define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)
 
