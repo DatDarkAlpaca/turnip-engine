@@ -1,8 +1,15 @@
 #pragma once
+#include "pch.h"
 
 namespace tur
 {
-	struct IEvent
+	enum class EventType : U64
+	{
+		NONE = 0,
+		RESIZE
+	};
+
+	struct WindowResizeEvent
 	{
 
 	};

@@ -74,25 +74,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/System;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/System;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/System;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/System;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)turnip-engine;$(SolutionDir)turnip-engine/src;$(SolutionDir)turnip-engine/src/Core;$(SolutionDir)turnip-engine/src/Platform;$(SolutionDir)turnip-engine/src/Utils;$(IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
