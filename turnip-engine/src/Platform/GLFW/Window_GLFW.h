@@ -1,4 +1,6 @@
 #pragma once
+#include "pch.h"
+#ifdef TUR_WINDOWING_GLFW
 #include "System/Window/BaseWindow.h"
 
 namespace tur
@@ -11,10 +13,10 @@ namespace tur
 		}
 	};
 
-	class Window : public BaseWindow<Window>
+	class Window_GLFW : public BaseWindow<Window_GLFW>
 	{
 	public:
-		Window(const WindowProperties& properties);
+		Window_GLFW(const WindowProperties& properties);
 
 	public:
 		void SetEventCallback(const FnEventCallback& eventCallback);
@@ -41,3 +43,4 @@ namespace tur
 		} m_WindowData;
 	};
 }
+#endif

@@ -1,9 +1,10 @@
 #include "pch.h"
+#ifdef TUR_WINDOWING_GLFW
 #include "Window_GLFW.h"
 
 namespace tur
 {
-	Window::Window(const WindowProperties& properties)
+	Window_GLFW::Window_GLFW(const WindowProperties& properties)
 		: BaseWindow(properties)
 	{
 		int width = (int)properties.dimensions.x;
@@ -29,35 +30,36 @@ namespace tur
 		glfwSetWindowUserPointer(m_Window.get(), &m_WindowData);
 	}
 
-	void Window::SetEventCallback(const FnEventCallback& eventCallback)
+	void Window_GLFW::SetEventCallback(const FnEventCallback& eventCallback)
 	{
 		m_WindowData.eventCallback = eventCallback;
 	}
 
-	void Window::PollEvents()
+	void Window_GLFW::PollEvents()
 	{
 		glfwPollEvents();
 	}
 
-	void Window::Show()
+	void Window_GLFW::Show()
 	{
 		TUR_ASSERT(m_Window, "Attempted to call Show() on an uninitialized window");
 		glfwShowWindow(m_Window.get());
 	}
 
-	void Window::Hide()
+	void Window_GLFW::Hide()
 	{
 		TUR_ASSERT(m_Window, "Attempted to call Hide() on an uninitialized window");
 		glfwHideWindow(m_Window.get());
 	}
 
-	bool Window::IsOpen() const
+	bool Window_GLFW::IsOpen() const
 	{
 		return !glfwWindowShouldClose(m_Window.get());
 	}
 
-	void* Window::Get() const
+	void* Window_GLFW::Get() const
 	{
 		return m_Window.get();
 	}
 }
+#endif

@@ -3,9 +3,7 @@
 
 /* Core */
 #include "Core/Engine/TurnipEngine.h"
-#include "Core/Event/Events.h"
-#include "Core/Input/Mouse.h"
-#include "Core/Input/Keyboard.h"
+#include "Core/Event/Event.h"
 
 /* System */
 #include "System/View/View.h"

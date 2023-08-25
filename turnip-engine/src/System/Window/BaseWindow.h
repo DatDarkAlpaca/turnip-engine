@@ -1,6 +1,6 @@
 #pragma once
 #include "WindowProperties.h"
-#include "Core/Event/IEvent.h"
+#include "Core/Event/Event.h"
 
 namespace tur
 {

@@ -1,16 +1,19 @@
 #pragma once
 #include "pch.h"
+#ifdef TUR_WINDOWING_GLFW
 #include "System/Window/BaseWindowLoader.h"
 
 namespace tur
 {
-	class WindowLoader : public BaseWindowLoader<WindowLoader>
+	class WindowLoader_GLFW : public BaseWindowLoader<WindowLoader_GLFW>
 	{
 	public:
 		bool Preload()
 		{
 			if (!glfwInit())
 				return s_IsGLFWInitialized;
+
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 			s_IsGLFWInitialized = true;
 			return true;
@@ -22,3 +25,4 @@ namespace tur
 		static inline bool s_IsGLFWInitialized = false;
 	};
 }
+#endif

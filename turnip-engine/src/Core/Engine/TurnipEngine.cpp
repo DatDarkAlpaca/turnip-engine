@@ -40,14 +40,7 @@ namespace tur
 
     void TurnipEngine::OnEvent(IEvent& event)
     {
-        Subscriber subscriber(event);
 
-        subscriber.SubscribeTo<WindowResizeEvent>([&](WindowResizeEvent& event) -> bool {
-            return false;
-        });
-        
-        for (auto& view : viewQueue)
-            view->OnEvent(event);
     }
 
     void TurnipEngine::OnUpdate()

@@ -196,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
+    <ClCompile Include="src\Platform\Windows\Window_WIN32.cpp" />
     <ClCompile Include="src\Utils\Assert\Assert.cpp" />
     <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
@@ -218,15 +219,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Event\Event.h" />
     <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h" />
+    <ClInclude Include="src\Platform\Windows\WindowLoader_WIN32.h" />
+    <ClInclude Include="src\Platform\Windows\Window_WIN32.h" />
     <ClInclude Include="src\System\Assets\AssetLibrary.h" />
-    <ClInclude Include="src\Core\Event\Events.h" />
-    <ClInclude Include="src\Core\Event\EventType.h" />
-    <ClInclude Include="src\Core\Event\IEvent.h" />
-    <ClInclude Include="src\Core\Event\Concrete\KeyboardEvent.h" />
-    <ClInclude Include="src\Core\Event\Concrete\MouseEvent.h" />
-    <ClInclude Include="src\Core\Event\Subscriber.h" />
-    <ClInclude Include="src\Core\Event\Concrete\WindowResizeEvent.h" />
     <ClInclude Include="src\System\Window\BaseWindow.h" />
     <ClInclude Include="src\System\Window\BaseWindowLoader.h" />
     <ClInclude Include="src\System\Window\WindowProperties.h" />
@@ -241,12 +238,6 @@
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngineState.h" />
     <ClInclude Include="src\Utils\File\ReadFile.h" />
-    <ClInclude Include="src\Core\Input\Key.h" />
-    <ClInclude Include="src\Core\Input\Keyboard.h" />
-    <ClInclude Include="src\Core\Input\Mods.h" />
-    <ClInclude Include="src\Core\Input\Mouse.h" />
-    <ClInclude Include="src\Core\Input\MouseButton.h" />
-    <ClInclude Include="src\Core\Input\State.h" />
     <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Maths\Transform.h" />
     <ClInclude Include="src\Utils\Random\Random.h" />

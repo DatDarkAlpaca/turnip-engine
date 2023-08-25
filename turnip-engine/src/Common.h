@@ -28,6 +28,7 @@
 
 #endif
 
+#undef TUR_WINDOWING_WINDOWS
 #define TUR_WINDOWING_GLFW
 
 #define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)
