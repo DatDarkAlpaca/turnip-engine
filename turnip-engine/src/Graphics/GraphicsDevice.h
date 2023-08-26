@@ -5,7 +5,7 @@
 
 namespace tur
 {
-    class GraphicsSystem
+    class GraphicsDevice
     {
     public:
         void Initialize(const TurnipEngineState& state, GraphicsAPI api)

@@ -2,7 +2,7 @@
 #include "TurnipEngineState.h"
 #include "View/ViewQueue.h"
 #include "Core/Event/Events.h"
-#include "Graphics/GraphicsSystem.h"
+#include "Graphics/GraphicsDevice.h"
 
 #include "Platform/Platform.h"
 
@@ -41,7 +41,7 @@ namespace tur
 
 	protected:
 		std::unique_ptr<Window> window;
-		GraphicsSystem graphics;
+		GraphicsDevice graphics;
 		ViewQueue viewQueue;
 
 	private:

@@ -152,7 +152,7 @@
     <ClInclude Include="src\Platform\Windows\OpenGL\OpenGLHandler_WIN32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\GraphicsSystem.h">
+    <ClInclude Include="src\Graphics\GraphicsDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

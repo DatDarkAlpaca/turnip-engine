@@ -228,7 +228,7 @@
     <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Window\WindowFactory.h" />
     <ClInclude Include="src\Graphics\GraphicsAPI.h" />
-    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="src\Graphics\GraphicsDevice.h" />
     <ClInclude Include="src\Platform\GLFW\OpenGL\OpenGLHandler_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h" />
     <ClInclude Include="src\Platform\Windows\OpenGL\OpenGLHandler_WIN32.h" />
