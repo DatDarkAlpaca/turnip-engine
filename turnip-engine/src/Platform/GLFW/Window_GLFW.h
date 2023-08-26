@@ -36,7 +36,7 @@ namespace tur
 		bool IsOpen() const;
 
 	public:
-		void* Get() const;
+		GLFWwindow* Get() const;
 
 	private:
 		void SetupCallbacks() const;

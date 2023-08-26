@@ -60,7 +60,7 @@ namespace tur
 		return !glfwWindowShouldClose(m_Window.get());
 	}
 
-	void* Window::Get() const
+	GLFWwindow* Window::Get() const
 	{
 		return m_Window.get();
 	}

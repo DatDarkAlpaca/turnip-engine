@@ -57,7 +57,7 @@ namespace tur
 		return m_Open;
 	}
 
-	void* Window::Get() const
+	HWND Window::Get() const
 	{
 		return m_Handle;
 	}

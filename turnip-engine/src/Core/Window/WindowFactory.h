@@ -10,17 +10,18 @@ namespace tur
 
 	public:
 		WindowFactory(const WindowProperties& properties)
-			: m_Properties(properties) { }
-
-	public:
-		std::unique_ptr<Window> Create(const EventCallback& eventCallback)
+			: m_Properties(properties) 
 		{
 			if (!m_WindowLoader.Preload())
 			{
 				TUR_CORE_CRITICAL("Failed to preload window.");
-				return nullptr;
+				return;
 			}
+		}
 
+	public:
+		std::unique_ptr<Window> Create(const EventCallback& eventCallback)
+		{
 			m_Window = std::make_unique<Window>(m_Properties);
 			m_Window->SetEventCallback(eventCallback);
 			

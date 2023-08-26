@@ -21,7 +21,7 @@ namespace tur
 
         static void Postload(Window& window)
         {
-            HWND handle = window.GetHandle();
+            HWND handle = window.Get();
             HDC hdc = GetDC(handle);
 
             if (!hdc)
@@ -86,12 +86,14 @@ namespace tur
                 return;
             }
 
+            wglMakeCurrent(hdc, context);
+
             s_Window = &window;
         }
         
         static void Shutdown()
         {
-            HWND handle = s_Window->GetHandle();
+            HWND handle = s_Window->Get();
 
             HGLRC context = wglGetCurrentContext();
             HDC hDC = wglGetCurrentDC();
@@ -106,6 +108,11 @@ namespace tur
                 ReleaseDC(handle, hDC);
 
             PostQuitMessage(0);
+        }
+
+        static void Swapbuffers(Window& window)
+        {
+            SwapBuffers(GetDC(window.Get()));
         }
 
     private:

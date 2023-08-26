@@ -35,7 +35,7 @@ namespace tur
 		bool IsOpen() const;
 
 	public:
-		void* Get() const;
+		HWND Get() const;
 
 	private:
 		static LRESULT CALLBACK SetupMessagePump(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -43,9 +43,6 @@ namespace tur
 		static LRESULT CALLBACK PumpMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 		LRESULT HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-
-	public:
-		HWND GetHandle() const { return m_Handle; }
 
 	public:
 		WindowProperties GetProperties() const { return m_Properties; }
