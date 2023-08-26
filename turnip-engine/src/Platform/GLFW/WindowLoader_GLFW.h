@@ -1,28 +1,23 @@
 #pragma once
 #include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
-#include "Core/Window/BaseWindowLoader.h"
+#include "Platform/GLFW/Window_GLFW.h"
 
 namespace tur
 {
-	class WindowLoader_GLFW : public BaseWindowLoader<WindowLoader_GLFW>
+	class WindowLoader
 	{
 	public:
 		bool Preload()
 		{
 			if (!glfwInit())
-				return s_IsGLFWInitialized;
+			{
+				TUR_CORE_ERROR("Failed to initialize GLFW");
+				return false;
+			}
 
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-			s_IsGLFWInitialized = true;
 			return true;
 		}
-
-		bool PostLoad() { return true; }
-
-	private:
-		static inline bool s_IsGLFWInitialized = false;
 	};
 }
 #endif

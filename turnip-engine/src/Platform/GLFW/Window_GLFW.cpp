@@ -1,11 +1,12 @@
 #include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
 #include "Window_GLFW.h"
+#include "Core/Event/Events.h"
 
 namespace tur
 {
-	Window_GLFW::Window_GLFW(const WindowProperties& properties)
-		: BaseWindow(properties)
+	Window::Window(const WindowProperties& properties)
+		: m_Properties(properties)
 	{
 		int width = (int)properties.dimensions.x;
 		int height = (int)properties.dimensions.y;
@@ -32,39 +33,39 @@ namespace tur
 		SetupCallbacks();
 	}
 
-	void Window_GLFW::SetEventCallback(const FnEventCallback& eventCallback)
+	void Window::SetEventCallback(const FnEventCallback& eventCallback)
 	{
 		m_WindowData.eventCallback = eventCallback;
 	}
 
-	void Window_GLFW::PollEvents()
+	void Window::PollEvents()
 	{
 		glfwPollEvents();
 	}
 
-	void Window_GLFW::Show()
+	void Window::Show()
 	{
 		TUR_ASSERT(m_Window, "Attempted to call Show() on an uninitialized window");
 		glfwShowWindow(m_Window.get());
 	}
 
-	void Window_GLFW::Hide()
+	void Window::Hide()
 	{
 		TUR_ASSERT(m_Window, "Attempted to call Hide() on an uninitialized window");
 		glfwHideWindow(m_Window.get());
 	}
 
-	bool Window_GLFW::IsOpen() const
+	bool Window::IsOpen() const
 	{
 		return !glfwWindowShouldClose(m_Window.get());
 	}
 
-	void* Window_GLFW::Get() const
+	void* Window::Get() const
 	{
 		return m_Window.get();
 	}
 
-	void Window_GLFW::SetupCallbacks() const
+	void Window::SetupCallbacks() const
 	{
 		glfwSetWindowCloseCallback(m_Window.get(), [](GLFWwindow* window) {
 			auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));

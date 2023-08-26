@@ -1,16 +1,25 @@
 #pragma once
 #include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
-#include "Core/Window/BaseWindow.h"
+#include "Core/Window/WindowProperties.h"
 
 namespace tur
 {
-	class Window_WIN32 : public BaseWindow<Window_WIN32>
-	{
-	public:
-		Window_WIN32(const WindowProperties& properties);
+	class Event;
 
-		~Window_WIN32();
+	class Window
+	{
+		using FnEventCallback = std::function<void(Event&)>;
+
+	public:
+		Window(const WindowProperties& properties);
+
+		~Window();
+
+	private:
+		static void InitializeClass();
+
+		void InitializeWindow();
 
 	public:
 		void SetEventCallback(const FnEventCallback& eventCallback);
@@ -38,13 +47,12 @@ namespace tur
 	public:
 		HWND GetHandle() const { return m_Handle; }
 
-	private:
-		static void InitializeClass();
-
-		void InitializeWindow();
+	public:
+		WindowProperties GetProperties() const { return m_Properties; }
 
 	private:
 		FnEventCallback m_EventCallback;
+		WindowProperties m_Properties;
 		HWND m_Handle = nullptr;
 		bool m_Open = false;
 

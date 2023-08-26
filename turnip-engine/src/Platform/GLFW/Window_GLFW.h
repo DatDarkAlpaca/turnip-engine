@@ -1,10 +1,12 @@
 #pragma once
 #include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
-#include "Core/Window/BaseWindow.h"
+#include "Core/Window/WindowProperties.h"
 
 namespace tur
 {
+	class Event;
+
 	struct GLFWWindowDeleter
 	{
 		void operator()(GLFWwindow* window)
@@ -13,10 +15,12 @@ namespace tur
 		}
 	};
 
-	class Window_GLFW : public BaseWindow<Window_GLFW>
+	class Window
 	{
+		using FnEventCallback = std::function<void(Event&)>;
+
 	public:
-		Window_GLFW(const WindowProperties& properties);
+		Window(const WindowProperties& properties);
 
 	public:
 		void SetEventCallback(const FnEventCallback& eventCallback);
@@ -37,8 +41,12 @@ namespace tur
 	private:
 		void SetupCallbacks() const;
 
+	public:
+		WindowProperties GetProperties() const { return m_Properties; }
+
 	private:
 		std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_Window;
+		WindowProperties m_Properties;
 
 		struct WindowData
 		{

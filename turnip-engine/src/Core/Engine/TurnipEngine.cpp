@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TurnipEngine.h"
+#include "Core/Window/WindowFactory.h"
 
 namespace tur
 {
@@ -59,16 +60,24 @@ namespace tur
             view->OnRenderGUI();
     }
 
+    void TurnipEngine::SwapGraphicsAPI(GraphicsAPI api)
+    {
+        window.reset();
+
+        WindowFactory factory({});
+        graphics.Initialize(m_State, api);
+
+        window = factory.Create(BIND_1(&TurnipEngine::OnEvent, this));
+
+        graphics.Link(*window.get());
+
+        TUR_CORE_DEBUG("Selected Graphics API: {}", GetGraphicsAPIString(api));
+    }
+
     void TurnipEngine::Setup()
     {
         InitializeLogger();
-
-        if (!windowLoader.Preload())
-            return;
-
-        window = std::make_unique<Window>(WindowProperties());
-        window->SetEventCallback(BIND_1(&TurnipEngine::OnEvent, this));
-        windowLoader.PostLoad();
+        SwapGraphicsAPI(m_State.defaultGraphicsAPI);
 
         m_State.initialized = true;
     }
