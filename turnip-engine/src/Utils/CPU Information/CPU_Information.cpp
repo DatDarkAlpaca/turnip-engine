@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CPU_Information.h"
+#include "Logger/Logger.h"
+#include "Assert/Assert.h"
 
 struct CPU_ID
 {

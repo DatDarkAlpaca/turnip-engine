@@ -1,7 +1,8 @@
 #pragma once
-#include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
+#define GLFW_INCLUDE_NONE
 #include "Core/Window/WindowProperties.h"
+#include <GLFW/glfw3.h>
 
 namespace tur
 {

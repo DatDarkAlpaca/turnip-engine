@@ -1,5 +1,6 @@
 #pragma once
-#include "pch.h"
+#include <glm/glm.hpp>
+#include <string>
 
 namespace tur
 {

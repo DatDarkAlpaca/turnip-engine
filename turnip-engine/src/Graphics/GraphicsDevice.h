@@ -1,7 +1,7 @@
 #pragma once
-#include "Core/Engine/TurnipEngineState.h"
-#include "GraphicsAPI.h"
 #include "Platform.h"
+#include "GraphicsAPI.h"
+#include "Core/Engine/TurnipEngineState.h"
 
 namespace tur
 {

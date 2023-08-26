@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Platform/Platform.h"
 
 namespace tur

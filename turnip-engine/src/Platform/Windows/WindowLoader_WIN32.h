@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
 #include "Platform/Windows/Window_WIN32.h"
 

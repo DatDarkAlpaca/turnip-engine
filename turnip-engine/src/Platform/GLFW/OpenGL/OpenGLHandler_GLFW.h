@@ -1,8 +1,10 @@
 #pragma once
-#include "pch.h"
 #ifdef TUR_WINDOWING_GLFW
 #include "Core/Engine/TurnipEngineState.h"
 #include "Platform/GLFW/Window_GLFW.h"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace tur
 { 

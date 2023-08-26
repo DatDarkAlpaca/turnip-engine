@@ -1,7 +1,8 @@
 #include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
-#include "Window_WIN32.h"
 #include "Core/Event/Events.h"
+#include "Window_WIN32.h"
+#include "Utils.h"
 
 namespace tur
 {

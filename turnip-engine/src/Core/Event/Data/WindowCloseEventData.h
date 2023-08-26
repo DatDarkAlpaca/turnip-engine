@@ -1,6 +1,6 @@
 #pragma once
-#include "Core/Event/EventType.h"
 #include "BaseEventData.h"
+#include "Core/Event/EventType.h"
 
 namespace tur
 {

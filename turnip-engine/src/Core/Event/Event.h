@@ -1,5 +1,5 @@
 #pragma once
-#include "pch.h"
+#include <memory>
 #include "EventType.h"
 #include "Data/BaseEventData.h"
 

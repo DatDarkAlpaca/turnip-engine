@@ -1,8 +1,8 @@
 #pragma once
-#include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
 #include "Core/Engine/TurnipEngineState.h"
 #include "Platform/Windows/Window_WIN32.h"
+#include "Utils.h"
 
 namespace tur
 {

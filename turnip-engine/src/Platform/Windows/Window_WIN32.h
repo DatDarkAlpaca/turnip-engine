@@ -1,6 +1,7 @@
 #pragma once
-#include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
+#include <functional>
+#include "Platform/Windows/WindowsHeaders.h"
 #include "Core/Window/WindowProperties.h"
 
 namespace tur

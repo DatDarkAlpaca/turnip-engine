@@ -254,6 +254,7 @@
     <ClInclude Include="src\Core\View\ViewQueue.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="src\Utils\UUID\UUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "Assert.h"
-#include "Logger/Logger.h"
+#include "Utils/Logger/Logger.h"
 
 namespace tur
 {

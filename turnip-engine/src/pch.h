@@ -36,8 +36,8 @@
 
 #ifdef TUR_WINDOWING_GLFW
 	#define GLFW_INCLUDE_NONE
-	#include <GLFW/glfw3.h>
 	#include <imgui_impl_glfw.h>
+	#include <GLFW/glfw3.h>
 	#include <glad/glad.h>
 #endif
 
@@ -53,6 +53,3 @@
 #include <entt/entt.hpp>
 
 #pragma warning(pop)
-
-#include "Assert/Assert.h"
-#include "Logger/Logger.h"
