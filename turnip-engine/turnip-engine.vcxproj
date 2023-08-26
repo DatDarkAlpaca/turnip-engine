@@ -226,12 +226,15 @@
     <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\Event.h" />
     <ClInclude Include="src\Core\Event\Subscriber.h" />
+    <ClInclude Include="src\Core\Window\WindowFactory.h" />
+    <ClInclude Include="src\Graphics\GraphicsAPI.h" />
+    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\OpenGLHandler_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h" />
+    <ClInclude Include="src\Platform\Windows\OpenGL\OpenGLHandler_WIN32.h" />
     <ClInclude Include="src\Platform\Windows\WindowLoader_WIN32.h" />
     <ClInclude Include="src\Platform\Windows\Window_WIN32.h" />
     <ClInclude Include="src\Core\Assets\AssetLibrary.h" />
-    <ClInclude Include="src\Core\Window\BaseWindow.h" />
-    <ClInclude Include="src\Core\Window\BaseWindowLoader.h" />
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
     <ClInclude Include="src\Graphics\Renderer\IRenderer.h" />
     <ClInclude Include="src\Graphics\Renderer\OGL_Renderer.h" />

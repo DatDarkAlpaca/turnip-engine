@@ -42,20 +42,24 @@
 #include <Windows.h>
 #include <shellscalingapi.h>
 
-// Todo: REQUIRES(D3D11.1 | WINDOWS)
+#pragma comment(lib, "shcore.lib")
+#pragma comment(lib, "winmm.lib")
+
+// DirectX:
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 
-// Todo: REQUIRES(opengl)
-#include <glad/glad_wgl.h>
-
-#pragma comment(lib, "shcore.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "winmm.lib")
+
+// OpenGL:
+#pragma comment(lib, "opengl32.lib")
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/wglext.h>
 
 #endif

@@ -1,15 +1,16 @@
 #include "pch.h"
 #ifdef TUR_WINDOWING_WINDOWS
 #include "Window_WIN32.h"
+#include "Core/Event/Events.h"
 
 namespace tur
 {
-	Window_WIN32::Window_WIN32(const WindowProperties& properties)
-		: BaseWindow(properties)
+	Window::Window(const WindowProperties& properties)
+		: m_Properties(properties)
 	{
 		SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 
-		Window_WIN32::InitializeClass();
+		Window::InitializeClass();
 
 		InitializeWindow();
 
@@ -19,17 +20,17 @@ namespace tur
 		Show();
 	}
 
-	Window_WIN32::~Window_WIN32()
+	Window::~Window()
 	{
 		DestroyWindow(m_Handle);
 	}
 
-	void Window_WIN32::SetEventCallback(const FnEventCallback& eventCallback)
+	void Window::SetEventCallback(const FnEventCallback& eventCallback)
 	{
 		m_EventCallback = eventCallback;
 	}
 
-	void Window_WIN32::PollEvents()
+	void Window::PollEvents()
 	{
 		MSG msg;
 		while (PeekMessageW(&msg, m_Handle, 0, 0, PM_REMOVE))
@@ -39,50 +40,49 @@ namespace tur
 		}
 	}
 
-	void Window_WIN32::Show()
+	void Window::Show()
 	{
 		TUR_ASSERT(m_Handle, "Attempted to call Show() on an uninitialized window");
 		ShowWindow(m_Handle, SW_SHOWNORMAL);
 	}
 
-	void Window_WIN32::Hide()
+	void Window::Hide()
 	{
 		TUR_ASSERT(m_Handle, "Attempted to call Hide() on an uninitialized window");
 		ShowWindow(m_Handle, SW_HIDE);
 	}
 
-	bool Window_WIN32::IsOpen() const
+	bool Window::IsOpen() const
 	{
 		return m_Open;
 	}
 
-	void* Window_WIN32::Get() const
+	HWND Window::Get() const
 	{
 		return m_Handle;
 	}
 
-	LRESULT Window_WIN32::SetupMessagePump(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT Window::SetupMessagePump(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
 		if (msg != WM_NCCREATE)
 			return DefWindowProc(hWnd, msg, wParam, lParam);
 
 		const CREATESTRUCTW* const createStruct = reinterpret_cast<CREATESTRUCTW*>(lParam);
-		Window_WIN32* const window = static_cast<Window_WIN32*>(createStruct->lpCreateParams);
+		Window* const window = static_cast<Window*>(createStruct->lpCreateParams);
 
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
-		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window_WIN32::PumpMessage));
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::PumpMessage));
 
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	LRESULT Window_WIN32::PumpMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT Window::PumpMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
-		Window_WIN32* const window = reinterpret_cast<Window_WIN32*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		Window* const window = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 		return window->HandleMessage(hWnd, msg, wParam, lParam);
 	}
 
-	// TODO: Event queue
-	LRESULT Window_WIN32::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT Window::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
 		if (!m_EventCallback)
 			return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -111,7 +111,7 @@ namespace tur
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	void Window_WIN32::InitializeClass()
+	void Window::InitializeClass()
 	{
 		WNDCLASSEX wndClass = {};
 		wndClass.cbSize = sizeof(wndClass);
@@ -127,29 +127,29 @@ namespace tur
 		}
 	}
 
-	void Window_WIN32::InitializeWindow()
+	void Window::InitializeWindow()
 	{
 		DWORD dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
 		dwStyle |= WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		DWORD exStyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
+		DWORD exStyle = WS_EX_APPWINDOW;
 
 		RECT rect = {};
-		rect.right = (int)properties.dimensions.x;
-		rect.bottom = (int)properties.dimensions.y;
+		rect.right = (int)m_Properties.dimensions.x;
+		rect.bottom = (int)m_Properties.dimensions.y;
 
 		if (!AdjustWindowRectEx(&rect, dwStyle, true, exStyle))
 			TUR_CORE_WARN("Failed to adjust the WIN32 window rect. | Error: {}", GetLastError());
 
-		std::wstring title = std::wstring(properties.title.begin(), properties.title.end());
+		std::wstring title = std::wstring(m_Properties.title.begin(), m_Properties.title.end());
 
 		m_Handle = CreateWindowEx(
 			exStyle,
 			ClassName,
 			title.c_str(),
 			dwStyle,
-			(int)properties.position.x,
-			(int)properties.position.y,
+			(int)m_Properties.position.x,
+			(int)m_Properties.position.y,
 			rect.right - rect.left,
 			rect.bottom - rect.top,
 			nullptr, nullptr, GetModuleHandleA(nullptr), this
@@ -171,10 +171,10 @@ namespace tur
 
 		SetWindowPos(
 			m_Handle, nullptr,
-			(int)properties.position.x,
-			(int)properties.position.y,
-			(int)properties.dimensions.x + xExtra,
-			(int)properties.dimensions.y + yExtra,
+			(int)m_Properties.position.x,
+			(int)m_Properties.position.y,
+			(int)m_Properties.dimensions.x + xExtra,
+			(int)m_Properties.dimensions.y + yExtra,
 			SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE
 		);
 	}
