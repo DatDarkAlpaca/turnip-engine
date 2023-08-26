@@ -28,12 +28,6 @@
 
 #endif
 
-#if 1
-	#undef TUR_PLATFORM_WINDOWS
-	#undef TUR_WINDOWING_WINDOWS
-	#define TUR_WINDOWING_GLFW
-#endif
-
 #define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)
 
 using U8  = std::uint8_t;
