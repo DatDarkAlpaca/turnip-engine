@@ -38,7 +38,6 @@
 	#define GLFW_INCLUDE_NONE
 	#include <imgui_impl_glfw.h>
 	#include <GLFW/glfw3.h>
-	#include <glad/glad.h>
 #endif
 
 #ifdef TUR_PLATFORM_WINDOWS
@@ -46,6 +45,7 @@
 	#include <intrin.h>
 #endif
 
+#include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h> // TODO: REQUIRES_GL(...)
 

@@ -58,8 +58,4 @@
 
 // OpenGL:
 #pragma comment(lib, "opengl32.lib")
-#include <GL/gl.h>
-#include <GL/glext.h>
-#include <GL/wglext.h>
-
 #endif

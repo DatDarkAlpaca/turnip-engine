@@ -34,6 +34,8 @@ namespace tur
             OnUpdate();
 
             OnRenderGUI();
+
+            graphics.Swapbuffers(*window.get());
         }
 
         Shutdown();

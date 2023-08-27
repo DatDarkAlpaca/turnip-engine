@@ -3,6 +3,19 @@
 #include "Core/Engine/TurnipEngineState.h"
 #include "Platform/Windows/Window_WIN32.h"
 #include "Utils.h"
+#include <glad/glad.h>
+
+#define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB 0X2092
+#define WGL_CONTEXT_FLAGS_ARB 0X2094
+#define WGL_CONTEXT_COREPROFILE_BIT_ARB 0x00000001
+#define WGL_CONTEXT_PROFILE_MASK_ARB 0x9126
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB  0x00000001
+#define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x00000002
+#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB  0x0002
+
+typedef HGLRC(WINAPI* PFNWGLCREATECONTEXTATTRIBSARBPROC) (HDC hDC, HGLRC hShareContext, const int* attribList);
+
 
 namespace tur
 {
@@ -36,6 +49,8 @@ namespace tur
             pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
             pfd.iPixelType = PFD_TYPE_RGBA;
             pfd.cColorBits = 32;
+            pfd.cDepthBits = 24;
+            pfd.cStencilBits = 8;
             pfd.iLayerType = PFD_MAIN_PLANE;
 
             int pixelFormat = ChoosePixelFormat(hdc, &pfd);
@@ -87,6 +102,12 @@ namespace tur
             }
 
             wglMakeCurrent(hdc, context);
+
+            if (!gladLoadGL())
+            {
+                TUR_CORE_ERROR("Failed to load OpenGL symbols.");
+                return;
+            }
 
             s_Window = &window;
         }

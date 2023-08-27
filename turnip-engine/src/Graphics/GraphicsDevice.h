@@ -24,7 +24,7 @@ namespace tur
 
                 default:
                 {
-                    TUR_CORE_CRITICAL("Invalid Graphics API selected.");
+                    TUR_CORE_CRITICAL("Invalid Graphics API selected during graphics initialization.");
                     return;
                 } break;
             }
@@ -43,7 +43,7 @@ namespace tur
 
                 default:
                 {
-                    TUR_CORE_CRITICAL("Invalid Graphics API selected.");
+                    TUR_CORE_CRITICAL("Invalid Graphics API selected during graphics link stage.");
                     return;
                 } break;
             }
@@ -62,7 +62,25 @@ namespace tur
 
                 default:
                 {
-                    TUR_CORE_CRITICAL("Invalid Graphics API selected.");
+                    TUR_CORE_CRITICAL("Invalid Graphics API selected during shutdown.");
+                    return;
+                } break;
+            }
+        }
+
+    public:
+        void Swapbuffers(Window& window)
+        {
+            switch (m_API)
+            {
+                case GraphicsAPI::OPENGL: 
+                {
+                    OpenGLHandler::Swapbuffers(window);
+                } break;
+
+                default:
+                {
+                    TUR_CORE_CRITICAL("Invalid Graphics API selected during Swapbuffer call.");
                     return;
                 } break;
             }
