@@ -72,5 +72,5 @@ private:
 
 tur_unique<TurnipEngine> CreateApplication()
 {
-	return std::make_unique<TurnipEditor>();
+	return tur::MakeUnique<TurnipEditor>();
 }
