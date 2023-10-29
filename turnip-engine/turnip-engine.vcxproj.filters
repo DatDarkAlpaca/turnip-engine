@@ -1,162 +1,92 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Core\Logger">
+      <UniqueIdentifier>{3D8AF183-A93F-6A79-3234-64509EE8607D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{D62B9585-42E1-0D7B-CBD5-0752378A047F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window">
+      <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW">
+      <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vcpkg.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Logger\Logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Assert\Assert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\CPU Information\CPU_Information.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\View\ViewQueue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Windows\Window_WIN32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Core\Engine\TurnipEngine.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Logger\Logger.h">
+      <Filter>Core\Logger</Filter>
     </ClInclude>
-    <ClInclude Include="src\pch.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Core\Memory\Memory.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Logger\Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\File\ReadFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Assert\Assert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\CPU Information\CPU_Information.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\View\View.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\View\ViewQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Engine\TurnipEngineState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Random\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Maths\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\UUID\UUID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Assets\AssetLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Renderer\IRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Renderer\OGL_Renderer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Core\Window\MonitorData.h">
+      <Filter>Core\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Window\WindowProperties.h">
-      <Filter>Header Files</Filter>
+      <Filter>Core\Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\TurnipEngine.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Platform.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
-      <Filter>Header Files</Filter>
+      <Filter>Platform\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsHeaders.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Platform\Platform.h">
+      <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\WindowLoader_GLFW.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\Window_WIN32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowLoader_WIN32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\EventType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Subscriber.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Data\BaseEventData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Data\WindowResizeEventData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Events.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Event\Data\WindowCloseEventData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Window\WindowFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\OpenGL\OpenGLHandler_GLFW.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\GraphicsAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\OpenGL\OpenGLHandler_WIN32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\GraphicsDevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="src\TurnipEngine.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Core\Event\Event.h" />
+    <ClInclude Include="src\Core\Event\EventType.h" />
+    <ClInclude Include="src\Core\Event\Subscriber.h" />
+    <ClInclude Include="src\Core\NonCopyable.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowCloseEvent.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowResizeEvent.h" />
+    <ClInclude Include="src\Core\Event\Events.h" />
+    <ClInclude Include="src\Core\Defines.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowFramebufferEvent.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowContentScaleEvent.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowMovedEvent.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowMaximizedEvent.h" />
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowFocusEvent.h" />
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyPressedEvent.h" />
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyboardEvent.h" />
+    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyReleasedEvent.h" />
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyRepeatEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MousePressedEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseReleasedEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseScrollEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseMovedEvent.h" />
+    <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
+    <ClInclude Include="src\Util\CPUInfo\CPUInfo.h" />
+    <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
+    <ClInclude Include="src\Core\View\View.h" />
+    <ClInclude Include="src\Core\View\ViewHolder.h" />
+    <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
+    <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Core\Window\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
+    <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
+    <ClCompile Include="src\Core\View\ViewHolder.cpp" />
   </ItemGroup>
 </Project>

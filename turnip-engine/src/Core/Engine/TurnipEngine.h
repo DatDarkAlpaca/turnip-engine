@@ -1,57 +1,38 @@
 #pragma once
-#include "TurnipEngineState.h"
-#include "View/ViewQueue.h"
-#include "Core/Event/Events.h"
-#include "Graphics/GraphicsDevice.h"
-
-#include "Platform/Platform.h"
+#include "Common.h"
+#include "TurnipEngineData.h"
+#include "Core/Event/Event.h"
+#include "Core/View/ViewHolder.h"
 
 namespace tur
 {
-	class TurnipEngine
+	class TurnipEngine : public Singleton
 	{
 	public:
 		TurnipEngine();
 
-		~TurnipEngine();
-
-	private:
-		void Setup();
-
 	public:
-		virtual void Initialize() { }
+		void RequestWindow(const WindowProperties& properties);
 
-		virtual void Shutdown() { }
+		void AddView(tur::tur_unique<View> view);
 
 	public:
 		void Run();
 
 	private:
-		void OnEvent(Event& event);
-
-		void OnUpdate();
+		void OnRender();
 
 		void OnRenderGUI();
 
-	public:
-		void SwapGraphicsAPI(GraphicsAPI api);
+		void OnUpdate();
+
+		void OnEvent(Event& event);
 
 	public:
-		static inline TurnipEngine& Get() { return *s_Instance; }
-
-	protected:
-		std::unique_ptr<Window> window;
-		GraphicsDevice graphics;
-		ViewQueue viewQueue;
+		const TurnipEngineData& Data() const { return m_Data; }
+		TurnipEngineData& Data() { return m_Data; }
 
 	private:
-		static inline TurnipEngine* s_Instance = nullptr;
-		TurnipEngineState m_State;
+		TurnipEngineData m_Data;
 	};
-}
-
-#define CREATE_APPLICATION(applicationClass, ...)		\
-tur::TurnipEngine* CreateApp()							\
-{														\
-	return new applicationClass(__VA_ARGS__);			\
 }

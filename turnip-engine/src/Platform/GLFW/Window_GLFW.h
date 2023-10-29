@@ -1,52 +1,51 @@
 #pragma once
-#ifdef TUR_WINDOWING_GLFW
-#define GLFW_INCLUDE_NONE
-#include "Core/Window/WindowProperties.h"
 #include <GLFW/glfw3.h>
+
+#include "Common.h"
+#include "Core/Event/Event.h"
+#include "Core/Window/Window.h"
 
 namespace tur
 {
 	class Event;
 
-	struct GLFWWindowDeleter
+	class GLFWWindowDestroyer
 	{
-		void operator()(GLFWwindow* window)
-		{
-			glfwDestroyWindow(window);
-		}
+	public:
+		void operator() (GLFWwindow* window);
 	};
 
-	class Window
+	class WindowGLFW : public Window
 	{
-		using FnEventCallback = std::function<void(Event&)>;
+	public:
+		WindowGLFW(const WindowProperties& properties);
 
 	public:
-		Window(const WindowProperties& properties);
+		void PollEvents() override;
+
+		void SetEventCallback(const FnEventCallback& callback) override;
 
 	public:
-		void SetEventCallback(const FnEventCallback& eventCallback);
+		void Hide() override;
 
-		void PollEvents();
-
-	public:
-		void Show();
-
-		void Hide();
+		void Show() override;
 
 	public:
-		bool IsOpen() const;
+		bool IsOpen() const override;
 
-	public:
-		GLFWwindow* Get() const;
+		glm::vec2 GetPosition() const override;
+
+		void SetPosition(const glm::vec2& position) override;
+
+		void SetSizeLimits(const glm::vec2& minimumSize, const glm::vec2& maximumSize) override;
 
 	private:
-		void SetupCallbacks() const;
+		void SetWindowDataPointer();
 
-	public:
-		WindowProperties GetProperties() const { return m_Properties; }
+		void SetWindowCallbacks();
 
 	private:
-		std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_Window;
+		tur_unique<GLFWwindow, GLFWWindowDestroyer> m_Window;
 		WindowProperties m_Properties;
 
 		struct WindowData
@@ -55,4 +54,3 @@ namespace tur
 		} m_WindowData;
 	};
 }
-#endif

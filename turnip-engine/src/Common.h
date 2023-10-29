@@ -1,36 +1,36 @@
 #pragma once
 #include <numeric>
 
-// Debug macros:
-#ifdef _DEBUG
-	#define TUR_DEBUG
-	#define TUR_WRAP_DEBUG(x) x
-#elif defined(NDEBUG)
-	#define TUR_RELEASE
-	#define TUR_WRAP_DEBUG(x)
-#endif
+#include "Core/Defines.h"
+#include "Core/NonCopyable.h"
 
-// Platform-specific macros:
-#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
-	#define TUR_PLATFORM_WINDOWS
-	#define TUR_WINDOWING_WINDOWS
-	#define TUR_BREAKPOINT() __debugbreak()
+#include "Core/Memory/Memory.h"
+#include "Core/Logger/Logger.h"
 
-#elif defined(__linux__)
-	#define TUR_PLATFORM_LINUX
-	#define TUR_WINDOWING_GLFW
-	#define TUR_BREAKPOINT() __builtin_trap()
+#define BIND(function, argument) std::bind(function, argument, std::placeholders::_1)
 
-#elif defined(__APPLE__ ) || defined(__MACH__)
-	#define TUR_PLATFORM_MACOS
-	#define TUR_WINDOWING_GLFW
-	#define TUR_BREAKPOINT() __builtin_trap()
+namespace tur
+{
+	inline void __tur_assert(const char* condition, const char* message, const char* file, uint64_t line)
+	{
+		TUR_LOG_CRITICAL("Assert: {} failed. [{}]\nFile: {} [{}]", condition, message, file, line);
+	}
 
-#endif
+#define TUR_ASSERT(condition, message)									\
+	{																		\
+		if(condition) { }													\
+		else																\
+		{																	\
+			tur::__tur_assert(#condition, message, __FILE__, __LINE__);		\
+		}																	\
+	}
 
-#define BIND_1(function, argument) std::bind(function, argument, std::placeholders::_1)
-
-using U8  = std::uint8_t;
-using U16 = std::uint16_t;
-using U32 = std::uint32_t;
-using U64 = std::uint64_t;
+#define TUR_ASS(condition)																\
+	{																						\
+		if(condition) { }																	\
+		else																				\
+		{																					\
+			tur::__tur_assert(#condition, "No message provided", __FILE__, __LINE__);		\
+		}																					\
+	}
+}

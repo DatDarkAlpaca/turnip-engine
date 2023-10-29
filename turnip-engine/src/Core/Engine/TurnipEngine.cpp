@@ -1,86 +1,77 @@
 #include "pch.h"
 #include "TurnipEngine.h"
-#include "Core/Window/WindowFactory.h"
+#include "Platform/Platform.h"
 
 namespace tur
 {
-    TurnipEngine::TurnipEngine()
-    {
-        TUR_ASSERT(!s_Instance, "The engine instance already exists.");
-        s_Instance = this;
+	TurnipEngine::TurnipEngine()
+	{
+		tur::PlatformSetup();
 
-        Setup();
-    }
+		// Creates a default view holder:
+		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
 
-    TurnipEngine::~TurnipEngine()
-    {
+		// Creates a default window:
+		RequestWindow({});
 
-    }
+		m_Data.initialized = true;
+	}
 
-    void TurnipEngine::Run()
-    {
-        if (!m_State.initialized)
-        {
-            TUR_CORE_ERROR("Failed to initialize the required subsystems.");
-            return;
-        }
+	void TurnipEngine::RequestWindow(const WindowProperties& properties)
+	{
+		m_Data.window = Window::Create(properties);
+		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
-        Initialize();
+		TUR_ASSERT(m_Data.window, "Request to modify the engine's window Has failed.");
+	}
 
-        while (window->IsOpen())
-        {
-            window->PollEvents();
+	void TurnipEngine::AddView(tur::tur_unique<View> view)
+	{
+		view->SetHandler(m_Data.viewHolder.get());
+		m_Data.viewHolder->AddView(std::move(view));
+	}
 
-            OnUpdate();
+	void TurnipEngine::Run()
+	{
+		auto& window = m_Data.window;
+		window->Show();
 
-            OnRenderGUI();
+		if (!m_Data.initialized)
+			TUR_LOG_CRITICAL("Failed to initialize the required subsystems.");
 
-            graphics.Swapbuffers(*window.get());
-        }
+		while (window->IsOpen())
+		{
+			window->PollEvents();
 
-        Shutdown();
-    }
+			OnUpdate();
 
-    void TurnipEngine::OnEvent(Event& event)
-    {
-        Subscriber subscriber(event);
-        subscriber.SubscribeTo<WindowResizeEventData>([&](WindowResizeEventData* data) -> bool {
-            TUR_CORE_INFO("{}, {}", data->width, data->height);
-            return false;
-        });
-    }
+			OnRender();
 
-    void TurnipEngine::OnUpdate()
-    {
-        for (auto& view : viewQueue)
-            view->OnUpdate();
-    }
+			OnRenderGUI();
+		}
+	}
 
-    void TurnipEngine::OnRenderGUI()
-    {
-        for (auto& view : viewQueue)
-            view->OnRenderGUI();
-    }
+	void TurnipEngine::OnRender()
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnRender();
+	}
 
-    void TurnipEngine::SwapGraphicsAPI(GraphicsAPI api)
-    {
-        window.reset();
+	void TurnipEngine::OnRenderGUI()
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnRenderGUI();
+	}
 
-        WindowFactory factory({});
-        graphics.Initialize(m_State, api);
+	void TurnipEngine::OnUpdate()
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnUpdate();
+	}
 
-        window = factory.Create(BIND_1(&TurnipEngine::OnEvent, this));
-
-        graphics.Link(*window.get());
-
-        TUR_CORE_DEBUG("Selected Graphics API: {}", GetGraphicsAPIString(api));
-    }
-
-    void TurnipEngine::Setup()
-    {
-        InitializeLogger();
-        SwapGraphicsAPI(m_State.defaultGraphicsAPI);
-
-        m_State.initialized = true;
-    }
+	void TurnipEngine::OnEvent(Event& event)
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnEvent(event);
+	}
 }

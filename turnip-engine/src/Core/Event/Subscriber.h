@@ -1,29 +1,28 @@
 #pragma once
-#include <functional>
 #include "Event.h"
 
 namespace tur
 {
 	class Subscriber
 	{
-		template<typename ConcreteEventData>
-		using SubscrictionCallback = std::function<bool(ConcreteEventData*)>;
-
 	public:
 		Subscriber(Event& event)
-			: event(event) { }
+			: event(event)
+		{
+
+		}
 
 	public:
-		template<typename ConcreteEventData>
-		void SubscribeTo(SubscrictionCallback<ConcreteEventData>&& callback)
+		template<typename ImplementedEvent>
+		void subscribe(std::function<bool(ImplementedEvent)> callback)
 		{
 			if (event.handled)
 				return;
 
-			if (ConcreteEventData::type == event.type)
+			if (event.type()  == (EventType)ImplementedEvent::GetEventType())
 			{
-				ConcreteEventData* eventData = static_cast<ConcreteEventData*>(event.data.get());
-				event.handled = event.handled || callback(eventData);
+				ImplementedEvent* implementedEvent = static_cast<ImplementedEvent*>(&event);
+				implementedEvent->handled = implementedEvent->handled || callback(*implementedEvent);
 			}
 		}
 

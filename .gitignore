@@ -9,6 +9,9 @@
 # Visual studio cache/options:
 .vs/
 
+# Conan Dependencies:
+dependencies/
+
 # ImGui files:
 imgui.ini
 

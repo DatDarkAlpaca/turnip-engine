@@ -1,23 +1,25 @@
 #pragma once
-#include <memory>
 #include "EventType.h"
-#include "Data/BaseEventData.h"
 
 namespace tur
-{
+{ 
+	#define DEFINE_EVENT(TYPE)											   \
+		public:															   \
+			static inline EventType GetEventType() { return TYPE; }		   \
+			static inline EventType s_EventType = TYPE;					   \
+			virtual EventType type() const { return TYPE; }
+
 	class Event
 	{
-		friend class Subscriber;
+	public:
+		virtual ~Event() = default;
 
 	public:
-		Event(EventType type, std::unique_ptr<BaseEventData> data)
-			: type(type)
-			, data(std::move(data))
-		{ }
+		virtual EventType type() const { return EventType::UNKNOWN; }
 
 	public:
-		EventType type = EventType::UNKNOWN;
-		std::unique_ptr<BaseEventData> data;
 		bool handled = false;
 	};
+
+	using FnEventCallback = std::function<void(Event&)>;
 }

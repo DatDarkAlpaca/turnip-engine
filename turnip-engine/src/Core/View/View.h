@@ -1,23 +1,39 @@
 #pragma once
-#include "Core/Event/Events.h"
+#include "Common.h"
+#include "Core/Event/Event.h"
 
 namespace tur
 {
-	class IView
+	class ViewHolder;
+
+	class View
 	{
 	public:
-		IView() = default;
-		virtual ~IView() = default;
+		explicit View(ViewHolder* handler = nullptr)
+			: handler(handler)
+		{
+
+		}
+
+		virtual ~View() = default;
 
 	public:
-		virtual void OnInitialize() { };
+		virtual void OnInstantiated() { };
 
-		virtual void OnShutdown() { };
+		virtual void OnRender() { };
 
 		virtual void OnRenderGUI() { };
 
 		virtual void OnUpdate() { };
 
 		virtual void OnEvent(Event& event) { };
+
+		virtual void OnRemoved() { };
+
+	public:
+		void SetHandler(ViewHolder* handler) { this->handler = handler; }
+
+	protected:
+		NON_OWNING ViewHolder* handler = nullptr;
 	};
 }
