@@ -1,42 +1,42 @@
 # Turnip Engine
 
-Turnip is a game engine that follows the principles of the "yet another" mentality. It's "yet another" straightforward game engine capable of doing nothing out of the ordinary. 
-It's a side project that I develop in my free time to learn more about certain aspects of game engines and graphics programming.
-
-If you want to check out how the development is going, you can access this Trello: https://trello.com/b/GyxKro6L/turnip-engine.
+> Turnip is my toy game engine that follows the principles of the "yet another" mentality.
 
 # Getting Started
 
-As of the current version, Turnip doesn't support a custom buid system like CMake or Meson.  
-For now, opening the [Visual Studio](https://visualstudio.microsoft.com/pt-br/downloads/) solution file will have to suffice
+Turnip doesn't have prebuilt binaries, so if you want to use it, you'll need to build it yourself.
+It uses [Premake 5](https://github.com/premake/premake-core/releases) to generate project files, but it has only been tested with [Visual Studio](https://visualstudio.microsoft.com/pt-br/downloads/).
 
 ## Prerequisites
 
-In order to build this project, you need `vcpkg` installed and integrated on Visual Studio.
+You'll need to install `python`, `conan` and `premake5` in order to build this project.
 
-- [vcpkg]([https://cmake.org/download/](https://vcpkg.io/en/)https://vcpkg.io/en/)
+* [Python 3](https://www.python.org/downloads/)
+* [Conan 2.0](https://conan.io/downloads)
+* [Premake 5](https://github.com/premake/premake-core/releases)
 
-You also need to set up an enviroment variable called `VCPKG_ROOT` to its root directory.
+You may also need to add an environment variable to use `premake5`.
 
-## Downloading
-Downloading this project is straightforward. You have a couple options:
+## Installation
+1. **Clone the repository**
+    ```bash
+    git clone https://github.com/DatDarkAlpaca/turnip-engine
+    ```
 
-1. **Clone the Repository**: To clone the project, simply follow these steps:
-   - Open a terminal and navigate to the directory where you want to store the project.
-   - Execute the following command:
-     ```
-     git clone https://github.com/DatDarkAlpaca/turnip-engine
-     ```
-2. **Download the Repository directly**: If you prefer not to use Git, you can download a ZIP archive of the project:
-   - [Download files](https://github.com/DatDarkAlpaca/turnip-engine/archive/refs/heads/main.zip).
+2. **Generate the project**
+    If you're building on a Windows machine, you can use the `build.cmd` file to execute the Python script. 
+    This automatically calls premake, so you must specify the project file of your choice.
 
-## Building
+    ```bash
+    .\build <action: vs2022, vs2021, gmake, ...>
+    ```
 
-To build the project, open the Visual Studio solution and press `Build` using the configuration of your choice.
+3. **Compile the project**
+   Use the generated project files to build the project. 
+   After that, you should have a working copy under `turnip-engine/build/bin/{configuration}/turnip-editor`. 
 
 # Resources
-
-A couple of the resources I've used so far to build this engine in case anyone wants a head start as well.
+An incomplete list of resources that I've used to build this engine so far.
 
 - [Learn OpenGL](https://learnopengl.com)
 - [Game Engine Architecture, 3rd Edition](https://www.amazon.com/Engine-Architecture-Third-Jason-Gregory/dp/1138035459)
@@ -49,6 +49,7 @@ A couple of the resources I've used so far to build this engine in case anyone w
 - [Game Engine Design and Implementation](https://www.amazon.com.br/Game-Engine-Design-Implementation-Foundations/dp/0763784516)
 - [FGED I](https://foundationsofgameenginedev.com/#fged1)
 - [FGED II](https://foundationsofgameenginedev.com/#fged2)
+- [Vulkan, GetIntoGameDev](https://www.youtube.com/watch?v=W2I0DofOw9M&list=PLn3eTxaOtL2NH5nbPHMK7gE07SqhcAjmk&index=1)
 
 # License
 
