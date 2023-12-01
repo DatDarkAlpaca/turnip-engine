@@ -17,6 +17,8 @@ namespace tur
 	public:
 		void Initialize(const BackendProperties& properties) override;
 
+		void Present() override;
+
 	private:
 		tur_unique<Window>& r_Window;
 

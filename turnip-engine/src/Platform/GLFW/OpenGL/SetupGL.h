@@ -26,4 +26,9 @@ namespace tur::platform
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 			throw "Failed to initialize GLAD";
 	}
+
+	inline void SwapBuffers(GLFWwindow* window)
+	{
+		glfwSwapBuffers(window);
+	}
 }

@@ -35,4 +35,9 @@ namespace tur
 	
 		DisplayOpenGLInformation();
 	}
+
+	void BackendOpenGL::Present()
+	{
+		platform::SwapBuffers(static_cast<GLFWwindow*>(r_Window->GetHandle()));
+	}
 }

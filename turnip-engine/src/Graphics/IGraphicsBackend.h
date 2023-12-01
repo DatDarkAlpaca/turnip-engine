@@ -12,5 +12,7 @@ namespace tur
 	{
 	public:
 		virtual void Initialize(const BackendProperties& properties) = 0;
+
+		virtual void Present() = 0;
 	};
 }

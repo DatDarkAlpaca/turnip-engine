@@ -6,6 +6,10 @@ using namespace tur;
 class MainView : public tur::View
 {
 public:
+	MainView(TurnipEngine& engine)
+		: r_Engine(engine) { }
+
+public:
 	void OnEvent(tur::Event& event) override
 	{
 		Subscriber subscriber(event);
@@ -15,6 +19,17 @@ public:
 			return true;
 		});
 	}
+
+	void OnRender() override
+	{
+		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		r_Engine.GetGraphicsBackend()->Present();
+	}
+
+private:
+	TurnipEngine& r_Engine;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -30,7 +45,7 @@ public:
 		}
 		
 		// Views:
-		AddView(MakeUnique<MainView>());
+		AddView(MakeUnique<MainView>(*this));
 	}
 
 private:

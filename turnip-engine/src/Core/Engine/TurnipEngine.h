@@ -35,6 +35,9 @@ namespace tur
 		void OnEvent(Event& event);
 
 	public:
+		const tur_unique<IGraphicsBackend>& GetGraphicsBackend() const { return m_Data.backend; }
+
+	public:
 		const TurnipEngineData& Data() const { return m_Data; }
 		TurnipEngineData& Data() { return m_Data; }
 
