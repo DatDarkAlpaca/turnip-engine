@@ -36,7 +36,7 @@ public:
 			properties.dimensions = { 640, 480 };
 		};
 
-		RequestWindow(properties);
+		CreateWindow(properties);
 
 		// Views:
 		AddView(MakeUnique<MainView>());

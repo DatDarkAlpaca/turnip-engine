@@ -3,7 +3,7 @@
 
 #include "Common.h"
 #include "Core/Event/Event.h"
-#include "Core/Window/Window.h"
+#include "Core/Window/WindowBase.h"
 
 namespace tur
 {
@@ -14,30 +14,31 @@ namespace tur
 	public:
 		void operator() (GLFWwindow* window);
 	};
+}
 
-	class WindowGLFW : public Window
+namespace tur
+{
+	class WindowGLFW
 	{
 	public:
-		WindowGLFW(const WindowProperties& properties);
+		void Initialize(const WindowProperties& properties);
 
 	public:
-		void PollEvents() override;
+		void SetEventCallback(const FnEventCallback& callback);
 
-		void SetEventCallback(const FnEventCallback& callback) override;
+		void SetProperties(const WindowProperties& properties);
 
-	public:
-		void Hide() override;
-
-		void Show() override;
+		void PollEvents();
 
 	public:
-		bool IsOpen() const override;
+		void Hide();
 
-		glm::vec2 GetPosition() const override;
+		void Show();
 
-		void SetPosition(const glm::vec2& position) override;
+	public:
+		WindowProperties GetProperties() const { return m_Properties; }
 
-		void SetSizeLimits(const glm::vec2& minimumSize, const glm::vec2& maximumSize) override;
+		bool IsOpen() const;
 
 	private:
 		void SetWindowDataPointer();

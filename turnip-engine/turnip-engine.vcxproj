@@ -125,7 +125,7 @@
     <ClInclude Include="src\Core\View\View.h" />
     <ClInclude Include="src\Core\View\ViewHolder.h" />
     <ClInclude Include="src\Core\Window\MonitorData.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
+    <ClInclude Include="src\Core\Window\WindowBase.h" />
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Entry.h" />

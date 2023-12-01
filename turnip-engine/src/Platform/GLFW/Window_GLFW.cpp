@@ -7,30 +7,15 @@
 
 namespace tur
 {
-	tur::tur_unique<Window> Window::Create(const WindowProperties& properties)
+	void GLFWWindowDestroyer::operator()(GLFWwindow* window)
 	{
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-
-		int width = (int)properties.dimensions.x;
-		int height = (int)properties.dimensions.y;
-		int x = (int)properties.position.x;
-		int y = (int)properties.position.y;
-
-		TUR_ASSERT(width > 0, "Window dimensions must be integers greater than zero");
-		TUR_ASSERT(height > 0, "Window dimensions must be integers greater than zero");
-
-		return tur::MakeUnique<WindowGLFW>(properties);
+		glfwDestroyWindow(window);
 	}
 }
 
 namespace tur
 {
-	void GLFWWindowDestroyer::operator()(GLFWwindow* window)
-	{
-		glfwDestroyWindow(window);
-	}
-
-	WindowGLFW::WindowGLFW(const WindowProperties& properties)
+	void WindowGLFW::Initialize(const WindowProperties& properties)
 	{
 		auto* glfwWindow = glfwCreateWindow(
 			(int)m_Properties.dimensions.x,
@@ -49,22 +34,49 @@ namespace tur
 			m_Properties.maxSize.x > 0 && m_Properties.maxSize.y > 0
 			? m_Properties.maxSize : glm::vec2(GLFW_DONT_CARE, GLFW_DONT_CARE);
 
-		SetSizeLimits(m_Properties.minSize, maximumSize);
-		SetPosition(m_Properties.position);
-
 		// Window Data:
 		SetWindowDataPointer();
 		SetWindowCallbacks();
 	}
 
-	void WindowGLFW::PollEvents()
-	{
-		glfwPollEvents();
-	}
-
 	void WindowGLFW::SetEventCallback(const FnEventCallback& callback)
 	{
 		m_WindowData.eventCallback = callback;
+	}
+
+	inline void WindowGLFW::SetProperties(const WindowProperties& properties)
+	{
+		auto* window = m_Window.get();
+		m_Properties = properties;
+
+		// Current Size:
+		glfwSetWindowSize(window, properties.dimensions.x, properties.dimensions.y);
+		
+		// Size Limits:
+		glfwSetWindowSizeLimits(
+			window,
+			properties.minSize.x,
+			properties.minSize.y,
+			properties.maxSize.x,
+			properties.maxSize.y
+		);
+
+		// Position:
+		int x = properties.position.x, y = properties.position.y;
+		if (properties.position.x == WindowProperties::Position::DEFAULT)
+			x = GLFW_DONT_CARE;
+		if (properties.position.y == WindowProperties::Position::DEFAULT)
+			y = GLFW_DONT_CARE;
+			
+		glfwSetWindowPos(window, x, y);
+
+		// Title:
+		glfwSetWindowTitle(window, properties.windowTitle.c_str());
+	}
+
+	void WindowGLFW::PollEvents()
+	{
+		glfwPollEvents();
 	}
 
 	void WindowGLFW::Hide()
@@ -75,38 +87,6 @@ namespace tur
 	void WindowGLFW::Show()
 	{
 		glfwShowWindow(m_Window.get());
-	}
-
-	void WindowGLFW::SetPosition(const glm::vec2& position)
-	{
-		glm::vec2 oldPosition = GetPosition();
-
-		int x = (int)position.x == (int)WindowPosition::DEFAULT ? (int)oldPosition.x : (int)position.x;
-		int y = (int)position.y == (int)WindowPosition::DEFAULT ? (int)oldPosition.y : (int)position.y;
-
-		glfwSetWindowPos(m_Window.get(), x, y);
-	}
-
-	void WindowGLFW::SetSizeLimits(const glm::vec2& minimumSize, const glm::vec2& maximumSize)
-	{
-		glfwSetWindowSizeLimits(
-			m_Window.get(), 
-			(int)minimumSize.x,
-			(int)minimumSize.y,
-			(int)maximumSize.x, 
-			(int)maximumSize.y
-		);
-
-		m_Properties.minSize = minimumSize;
-		m_Properties.maxSize = maximumSize;
-	}
-
-	glm::vec2 WindowGLFW::GetPosition() const
-	{
-		int oldX, oldY;
-		glfwGetWindowPos(m_Window.get(), &oldX, &oldY);
-
-		return glm::vec2(oldX, oldY);
 	}
 
 	bool WindowGLFW::IsOpen() const

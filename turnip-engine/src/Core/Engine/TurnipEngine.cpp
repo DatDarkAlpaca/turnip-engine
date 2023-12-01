@@ -8,21 +8,22 @@ namespace tur
 	{
 		tur::PlatformSetup();
 
-		// Creates a default view holder:
-		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
+		tur::InitializeLogger();
 
-		// Creates a default window:
-		RequestWindow({});
+		// Default Window:
+		CreateWindow({});
+
+		// Default View holder:
+		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
 
 		m_Data.initialized = true;
 	}
 
-	void TurnipEngine::RequestWindow(const WindowProperties& properties)
+	void TurnipEngine::CreateWindow(const WindowProperties& properties)
 	{
-		m_Data.window = Window::Create(properties);
+		m_Data.window = tur::MakeUnique<Window>();
+		m_Data.window->Initialize(properties);
 		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
-
-		TUR_ASSERT(m_Data.window, "Request to modify the engine's window Has failed.");
 	}
 
 	void TurnipEngine::AddView(tur::tur_unique<View> view)

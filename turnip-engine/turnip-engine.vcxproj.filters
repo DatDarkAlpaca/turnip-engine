@@ -78,7 +78,7 @@
     <ClInclude Include="src\Core\View\ViewHolder.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
     <ClInclude Include="src\Entry.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
+    <ClInclude Include="src\Core\Window\WindowBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">

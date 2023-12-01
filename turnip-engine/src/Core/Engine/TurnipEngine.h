@@ -12,8 +12,9 @@ namespace tur
 		TurnipEngine();
 
 	public:
-		void RequestWindow(const WindowProperties& properties);
+		void CreateWindow(const WindowProperties& properties);
 
+	public:
 		void AddView(tur::tur_unique<View> view);
 
 	public:

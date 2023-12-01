@@ -14,10 +14,8 @@ namespace tur
 {
 	inline void PlatformSetup()
 	{
-		tur::InitializeLogger();
-
 		glfwSetErrorCallback(GLFWErrorCallback);
 		if (!glfwInit())
-			TUR_LOG_CRITICAL("Failed to initialize GLFW. Maybe it's already been initialized before?");
+			TUR_LOG_CRITICAL("Failed to initialize GLFW. Perhaps it has already been initialized before?");
 	}
 }
