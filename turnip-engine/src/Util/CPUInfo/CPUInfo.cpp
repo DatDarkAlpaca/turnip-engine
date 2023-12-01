@@ -127,21 +127,21 @@ namespace tur
 
 		TUR_LOG_DEBUG("{} {}", information.Vendor(), information.Brand());
 		TUR_LOG_DEBUG("Instructions:");
-		TUR_LOG_DEBUG("* 3DNOW:     {}", supported(information.Has3DNOW()));
-		TUR_LOG_DEBUG("* 3DNOWEXT:  {}", supported(information.Has3DNOWEXT()));
-		TUR_LOG_DEBUG("* SSE:       {}", supported(information.HasSSE()));
-		TUR_LOG_DEBUG("* SSE2:      {}", supported(information.HasSSE2()));
-		TUR_LOG_DEBUG("* SSE3:      {}", supported(information.HasSSE3()));
-		TUR_LOG_DEBUG("* SSSE3:     {}", supported(information.HasS_SSE3()));
-		TUR_LOG_DEBUG("* SSE4A:     {}", supported(information.HasSSE4A()));
-		TUR_LOG_DEBUG("* SSE4.1:    {}", supported(information.HasSSE4_1()));
-		TUR_LOG_DEBUG("* SSE4.2:    {}", supported(information.HasSSE4_2()));
-		TUR_LOG_DEBUG("* MMX:       {}", supported(information.HasMMX()));
-		TUR_LOG_DEBUG("* MMXEXT:    {}", supported(information.HasMMEXT()));
-		TUR_LOG_DEBUG("* CMOV:      {}", supported(information.HasCMOV()));
-		TUR_LOG_DEBUG("* RDTSC:     {}", supported(information.HasRDTSC()));
-		TUR_LOG_DEBUG("* FPU:       {}", supported(information.HasFPU()));
-		TUR_LOG_DEBUG("* FPUx87:    {}", supported(information.HasFPUx87()));
-		TUR_LOG_DEBUG("* HTT:       {}", supported(information.HasHTT()));
+		TUR_LOG_DEBUG(" * 3DNOW:     {}", supported(information.Has3DNOW()));
+		TUR_LOG_DEBUG(" * 3DNOWEXT:  {}", supported(information.Has3DNOWEXT()));
+		TUR_LOG_DEBUG(" * SSE:       {}", supported(information.HasSSE()));
+		TUR_LOG_DEBUG(" * SSE2:      {}", supported(information.HasSSE2()));
+		TUR_LOG_DEBUG(" * SSE3:      {}", supported(information.HasSSE3()));
+		TUR_LOG_DEBUG(" * SSSE3:     {}", supported(information.HasS_SSE3()));
+		TUR_LOG_DEBUG(" * SSE4A:     {}", supported(information.HasSSE4A()));
+		TUR_LOG_DEBUG(" * SSE4.1:    {}", supported(information.HasSSE4_1()));
+		TUR_LOG_DEBUG(" * SSE4.2:    {}", supported(information.HasSSE4_2()));
+		TUR_LOG_DEBUG(" * MMX:       {}", supported(information.HasMMX()));
+		TUR_LOG_DEBUG(" * MMXEXT:    {}", supported(information.HasMMEXT()));
+		TUR_LOG_DEBUG(" * CMOV:      {}", supported(information.HasCMOV()));
+		TUR_LOG_DEBUG(" * RDTSC:     {}", supported(information.HasRDTSC()));
+		TUR_LOG_DEBUG(" * FPU:       {}", supported(information.HasFPU()));
+		TUR_LOG_DEBUG(" * FPUx87:    {}", supported(information.HasFPUx87()));
+		TUR_LOG_DEBUG(" * HTT:       {}", supported(information.HasHTT()));
 	}
 }
