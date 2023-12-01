@@ -1,14 +1,15 @@
 #pragma once
 #include "Core/Window/WindowProperties.h"
 #include "Graphics/IGraphicsBackend.h"
+#include "Platform/Platform.h"
 
 namespace tur
 {
 	class BackendOpenGL final : public IGraphicsBackend
 	{
 	public:
-		BackendOpenGL(const WindowProperties& usedProperties)
-			: m_Properties(usedProperties)
+		BackendOpenGL(tur_unique<Window>& window)
+			: r_Window(window)
 		{
 
 		}
@@ -17,7 +18,7 @@ namespace tur
 		void Initialize(const BackendProperties& properties) override;
 
 	private:
-		const WindowProperties& m_Properties;
+		tur_unique<Window>& r_Window;
 
 	private:
 		constexpr static inline uint32_t DefaultVersionMajor = 3;

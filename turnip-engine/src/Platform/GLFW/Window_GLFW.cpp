@@ -18,10 +18,12 @@ namespace tur
 {
 	void WindowGLFW::Initialize(const WindowProperties& properties)
 	{
+		m_Properties = properties;
+
 		auto* glfwWindow = glfwCreateWindow(
-			(int)m_Properties.dimensions.x,
-			(int)m_Properties.dimensions.y,
-			m_Properties.windowTitle.c_str(),
+			(int)properties.dimensions.x,
+			(int)properties.dimensions.y,
+			properties.windowTitle.c_str(),
 			nullptr, nullptr
 		);
 
@@ -32,8 +34,8 @@ namespace tur
 
 		// Default size limits:
 		glm::vec2 maximumSize =
-			m_Properties.maxSize.x > 0 && m_Properties.maxSize.y > 0
-			? m_Properties.maxSize : glm::vec2(GLFW_DONT_CARE, GLFW_DONT_CARE);
+			properties.maxSize.x > 0 && properties.maxSize.y > 0
+			? properties.maxSize : glm::vec2(GLFW_DONT_CARE, GLFW_DONT_CARE);
 
 		// Window Data:
 		SetWindowDataPointer();

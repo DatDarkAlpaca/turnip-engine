@@ -27,12 +27,13 @@ namespace tur
 		{
 			case BackendType::OPENGL:
 			{
-				WindowProperties windowProperties = m_Data.window ? m_Data.window->GetProperties() : WindowProperties { };
-
-				m_Data.backend = tur::MakeUnique<BackendOpenGL>(windowProperties);
+				m_Data.backend = tur::MakeUnique<BackendOpenGL>(m_Data.window);
 				m_Data.backend->Initialize(properties);
-
+				m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 			} break;
+
+			default:
+				TUR_LOG_CRITICAL("Unsupported graphics API");
 		}
 	}
 

@@ -29,15 +29,6 @@ public:
 			DisplayCPUInfo();
 		}
 		
-		// Window:	
-		WindowProperties properties;
-		{
-			properties.windowTitle = "Hello World v1.0";
-			properties.dimensions = { 640, 480 };
-		};
-
-		CreateWindow(properties);
-
 		// Views:
 		AddView(MakeUnique<MainView>());
 	}

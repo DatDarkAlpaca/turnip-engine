@@ -27,10 +27,11 @@ namespace tur
 
 		platform::ConfigureOpenGL(versionMajor, versionMinor);
 
-		auto window = tur::MakeUnique<Window>();
-		window->Initialize(m_Properties);
+		WindowProperties windowProperties = r_Window.get() ? r_Window->GetProperties() : WindowProperties{};
+		r_Window = tur::MakeUnique<Window>();
+		r_Window->Initialize(windowProperties);
 
-		platform::InitializeOpenGL(static_cast<GLFWwindow*>(window->GetHandle()));
+		platform::InitializeOpenGL(static_cast<GLFWwindow*>(r_Window->GetHandle()));
 	
 		DisplayOpenGLInformation();
 	}
