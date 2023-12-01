@@ -6,7 +6,7 @@ using namespace tur;
 class MainView : public tur::View
 {
 public:
-	void OnEvent(tur::Event& event)
+	void OnEvent(tur::Event& event) override
 	{
 		Subscriber subscriber(event);
 

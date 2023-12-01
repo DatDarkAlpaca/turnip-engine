@@ -9,7 +9,7 @@
 
 namespace tur
 {
-	class TurnipEngine : public Singleton
+	class TurnipEngine
 	{
 	public:
 		TurnipEngine();

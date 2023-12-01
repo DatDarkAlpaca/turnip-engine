@@ -29,18 +29,23 @@ namespace tur
 		NonCopyableNorMoveable& operator=(NonCopyableNorMoveable&&) noexcept = delete;
 	};
 
+	template<typename Base>
 	class Singleton : public NonCopyableNorMoveable
 	{
+	protected:
+		Singleton() = default;
+
 	public:
-		static inline Singleton& Instance()
+		static inline Base& Instance()
 		{
 			if (!s_Singleton)
-				s_Singleton = MakeUnique<Singleton>();
+				s_Singleton = MakeUnique<Base>();
 
 			return *s_Singleton;
 		}
 
+
 	protected:
-		static inline tur_unique<Singleton> s_Singleton = nullptr;
+		static inline tur_unique<Base> s_Singleton = nullptr;
 	};
 }
