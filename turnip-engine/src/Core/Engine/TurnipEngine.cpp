@@ -1,22 +1,39 @@
 #include "pch.h"
 #include "TurnipEngine.h"
+
+#include "Graphics/Graphics.h"
 #include "Platform/Platform.h"
 
 namespace tur
 {
 	TurnipEngine::TurnipEngine()
 	{
-		tur::PlatformSetup();
+		tur::platform::Setup();
 
 		tur::InitializeLogger();
 
-		// Default Window:
-		CreateWindow({});
+		// Default Window & Graphics API:
+		SwitchGraphicsAPI(BackendType::OPENGL, {});
 
 		// Default View holder:
 		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
 
 		m_Data.initialized = true;
+	}
+
+	void TurnipEngine::SwitchGraphicsAPI(BackendType type, const BackendProperties& properties)
+	{
+		switch (type)
+		{
+			case BackendType::OPENGL:
+			{
+				WindowProperties windowProperties = m_Data.window ? m_Data.window->GetProperties() : WindowProperties { };
+
+				m_Data.backend = tur::MakeUnique<BackendOpenGL>(windowProperties);
+				m_Data.backend->Initialize(properties);
+
+			} break;
+		}
 	}
 
 	void TurnipEngine::CreateWindow(const WindowProperties& properties)

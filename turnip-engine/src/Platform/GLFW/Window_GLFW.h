@@ -1,4 +1,5 @@
 #pragma once
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "Common.h"
@@ -39,6 +40,11 @@ namespace tur
 		WindowProperties GetProperties() const { return m_Properties; }
 
 		bool IsOpen() const;
+
+		void* GetHandle() const
+		{
+			return m_Window.get();
+		}
 
 	private:
 		void SetWindowDataPointer();

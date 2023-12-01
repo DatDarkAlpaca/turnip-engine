@@ -79,6 +79,12 @@
     <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Core\Window\WindowBase.h" />
+    <ClInclude Include="src\Graphics\BackendType.h" />
+    <ClInclude Include="src\Graphics\IGraphicsBackend.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupGL.h" />
+    <ClInclude Include="src\Graphics\BackendVersion.h" />
+    <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
+    <ClInclude Include="src\Graphics\Graphics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
@@ -88,5 +94,6 @@
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
   </ItemGroup>
 </Project>

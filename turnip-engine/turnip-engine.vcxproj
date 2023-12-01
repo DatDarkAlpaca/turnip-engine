@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\BackendVersion.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Core\Defines.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
@@ -129,9 +130,14 @@
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Graphics\Graphics.h" />
+    <ClInclude Include="src\Graphics\IGraphicsBackend.h" />
+    <ClInclude Include="src\Graphics\BackendType.h" />
+    <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupGL.h" />
     <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Window_GLFW.h" />
     <ClInclude Include="src\Platform\Platform.h" />
@@ -142,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

@@ -1,8 +1,11 @@
 #pragma once
 #include "Common.h"
 #include "TurnipEngineData.h"
+
 #include "Core/Event/Event.h"
 #include "Core/View/ViewHolder.h"
+
+#include "Graphics/BackendType.h"
 
 namespace tur
 {
@@ -12,6 +15,8 @@ namespace tur
 		TurnipEngine();
 
 	public:
+		void SwitchGraphicsAPI(BackendType type, const BackendProperties& properties);
+
 		void CreateWindow(const WindowProperties& properties);
 
 	public:

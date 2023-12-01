@@ -46,9 +46,19 @@ namespace tur
 		}
 
 	public:
+		WindowProperties GetProperties() const 
+		{ 
+			return window.GetProperties(); 
+		}
+
 		bool IsOpen() const
 		{
 			return window.IsOpen();
+		}
+
+		void* GetHandle() const
+		{
+			return window.GetHandle();
 		}
 	};
 }

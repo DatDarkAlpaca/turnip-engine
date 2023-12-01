@@ -14,6 +14,10 @@
 	#define TUR_PLATFORM_LINUX
 	#define TUR_WINDOWING_GLFW
 	#define TUR_BREAKPOINT() __builtin_trap()
+#elif defined(__APPLE__)
+	#define TUR_PLATFORM_APPLE
+	#define TUR_WINDOWING_GLFW
+	#define TUR_BREAKPOINT() __builtin_trap()
 #else
 	#error Unsupported platform
 #endif
