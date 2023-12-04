@@ -53,19 +53,19 @@ namespace tur
 		m_Properties = properties;
 
 		// Current Size:
-		glfwSetWindowSize(window, properties.dimensions.x, properties.dimensions.y);
+		glfwSetWindowSize(window, (int)properties.dimensions.x, (int)properties.dimensions.y);
 		
 		// Size Limits:
 		glfwSetWindowSizeLimits(
 			window,
-			properties.minSize.x,
-			properties.minSize.y,
-			properties.maxSize.x,
-			properties.maxSize.y
+			(int)properties.minSize.x,
+			(int)properties.minSize.y,
+			(int)properties.maxSize.x,
+			(int)properties.maxSize.y
 		);
 
 		// Position:
-		int x = properties.position.x, y = properties.position.y;
+		int x = (int)properties.position.x, y = (int)properties.position.y;
 		if (properties.position.x == WindowProperties::Position::DEFAULT)
 			x = GLFW_DONT_CARE;
 		if (properties.position.y == WindowProperties::Position::DEFAULT)

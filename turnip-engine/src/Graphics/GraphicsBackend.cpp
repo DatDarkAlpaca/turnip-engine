@@ -19,5 +19,7 @@ namespace tur
 			default:
 				TUR_LOG_CRITICAL("Unsupported graphics API");
 		}
+
+		return nullptr;
 	}
 }
