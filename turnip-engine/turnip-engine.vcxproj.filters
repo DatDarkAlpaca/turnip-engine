@@ -200,8 +200,9 @@
     </ClInclude>
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
-    <ClInclude Include="src\Graphics\Vulkan\IVulkanInitializer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h" />
     <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h" />
+    <ClInclude Include="src\Graphics\Vulkan\PhysicalDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">

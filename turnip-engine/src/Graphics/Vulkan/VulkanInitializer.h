@@ -3,6 +3,7 @@
 #include "BackendVulkan.h"
 
 #include "Instance.h"
+#include "PhysicalDevice.h"
 
 namespace tur
 {
@@ -19,6 +20,7 @@ namespace tur
 
     protected:
         vulkan::VulkanInstanceBuilder instanceBuilder;
+        vulkan::PhysicalDeviceSelector physicalDeviceSelector;
     };
 
     class DefaultVulkanInitializer : public IVulkanInitializer

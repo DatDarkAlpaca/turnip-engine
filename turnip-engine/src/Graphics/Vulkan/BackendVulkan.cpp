@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "BackendVulkan.h"
-#include "IVulkanInitializer.h"
+#include "VulkanInitializer.h"
 
 namespace tur
 {
