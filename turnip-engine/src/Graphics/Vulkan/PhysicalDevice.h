@@ -17,5 +17,24 @@ namespace tur::vulkan
 		{
 
 		}
+
+		// SelectFirstSuitable
+		// SelectAllDevices
+
+		// SetDeviceName
+		// SetRequiredMemorySize
+
+		// SetPreferredDeviceType
+		// AllowAnyDeviceType
+
+		// RequirePresentSupport
+		// RequireDedicatedComputeQueue
+		// RequireSeparateComputeQueue
+
+		// RequireDedicatedTransferQueue
+		// RequireSeparateTransferQueue
+
+		// AddRequiredExtension
+		// AddDesiredExtension
 	};
 }

@@ -405,64 +405,54 @@ namespace tur::vulkan
 	private:
 		void RequestSurfaceExtension(const std::vector<vk::ExtensionProperties>& supportedExtensions)
 		{
-			if (!m_Information.disableKHRSurface)
-			{
-				bool supportsKHRSurface = CheckExtensionSupport(supportedExtensions, SurfaceExtensionName);
-				if (supportsKHRSurface)
-					m_Information.extensions.push_back(SurfaceExtensionName);
-				else
-					TUR_LOG_CRITICAL("This device does not support the KHR Surface extension");
-			}
+			if (m_Information.disableKHRSurface)
+				return;
+
+			bool supportsKHRSurface = CheckExtensionSupport(supportedExtensions, SurfaceExtensionName);
+			if (supportsKHRSurface)
+				m_Information.extensions.push_back(SurfaceExtensionName);
+			else
+				TUR_LOG_CRITICAL("This device does not support the KHR Surface extension");
 		}
 
 		void RequestWindowingExtensions(const std::vector<vk::ExtensionProperties>& supportedExtensions)
 		{
+			if (m_Information.disableWindowingSurface)
+				return;
 
 #ifdef TUR_PLATFORM_WIN32
-			if (!m_Information.disableWindowingSurface)
-			{
-				if (CheckExtensionSupport(supportedExtensions, WIN32_SurfaceExtensionName))
-					m_Information.extensions.push_back(WIN32_SurfaceExtensionName);
-				else
-					TUR_LOG_CRITICAL("This device does not support the WIN32 Surface extension");
-			}
+			if (CheckExtensionSupport(supportedExtensions, WIN32_SurfaceExtensionName))
+				m_Information.extensions.push_back(WIN32_SurfaceExtensionName);
+			else
+				TUR_LOG_CRITICAL("This device does not support the WIN32 Surface extension");
 
 #elif defined(TUR_PLATFORM_LINUX)
-			if (!m_Information.disableWindowingSurface)
-			{
-				bool supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XCB_SurfaceExtensionName);
-				if (supportsLinuxSurface)
-					m_Information.extensions.push_back(XCB_SurfaceExtensionName);
+			bool supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XCB_SurfaceExtensionName);
+			if (supportsLinuxSurface)
+				m_Information.extensions.push_back(XCB_SurfaceExtensionName);
 
-				supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XLIB_SurfaceExtensionName);
-				if (supportsLinuxSurface)
-					m_Information.extensions.push_back(XLIB_SurfaceExtensionName);
+			supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XLIB_SurfaceExtensionName);
+			if (supportsLinuxSurface)
+				m_Information.extensions.push_back(XLIB_SurfaceExtensionName);
 
-				supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, WAYLAND_SurfaceExtensionName);
-				if (supportsLinuxSurface)
-					m_Information.extensions.push_back(WAYLAND_SurfaceExtensionName);
+			supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, WAYLAND_SurfaceExtensionName);
+			if (supportsLinuxSurface)
+				m_Information.extensions.push_back(WAYLAND_SurfaceExtensionName);
 
-				if (!supportsLinuxSurface)
-					TUR_LOG_CRITICAL("This linux device does not support any of the following supported surface extensions: XCB, XLIB, Wayland");
-			}
+			if (!supportsLinuxSurface)
+				TUR_LOG_CRITICAL("This linux device does not support any of the following supported surface extensions: XCB, XLIB, Wayland");
 
 #elif defined(TUR_PLATFORM_APPLE)
-			if (!m_Information.disableWindowingSurface)
-			{
-				if (CheckExtensionSupport(supportedExtensions, METAL_SurfaceExtensionName))
-					m_Information.extensions.push_back(METAL_SurfaceExtensionName);
-				else
-					TUR_LOG_CRITICAL("This device does not support the Apple/Metal Surface extension");
-			}
+			if (CheckExtensionSupport(supportedExtensions, METAL_SurfaceExtensionName))
+				m_Information.extensions.push_back(METAL_SurfaceExtensionName);
+			else
+				TUR_LOG_CRITICAL("This device does not support the Apple/Metal Surface extension");
 
 #elif defined(TUR_PLATFORM_ANDROID)
-			if (!m_Information.disableWindowingSurface)
-			{
-				if (CheckExtensionSupport(supportedExtensions, ANDROID_SurfaceExtensionName))
-					m_Information.extensions.push_back(ANDROID_SurfaceExtensionName);
-				else
-					TUR_LOG_CRITICAL("This device does not support the Android Surface extension");
-			}
+			if (CheckExtensionSupport(supportedExtensions, ANDROID_SurfaceExtensionName))
+				m_Information.extensions.push_back(ANDROID_SurfaceExtensionName);
+			else
+				TUR_LOG_CRITICAL("This device does not support the Android Surface extension");
 #endif
 		}
 
@@ -490,7 +480,6 @@ namespace tur::vulkan
 #else
 			bool useDebugMessenger = false;
 #endif
-
 		} m_Information;
 	};
 }
