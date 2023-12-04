@@ -12,29 +12,21 @@ namespace tur
 
 		tur::InitializeLogger();
 
-		// Default Window & Graphics API:
-		SwitchGraphicsAPI(BackendType::OPENGL, {});
-
 		// Default View holder:
 		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
 
 		m_Data.initialized = true;
 	}
 
-	void TurnipEngine::SwitchGraphicsAPI(BackendType type, const BackendProperties& properties)
+	tur_shared<IGraphicsBackend> TurnipEngine::CreateGraphicsAPI(BackendType type, const BackendProperties& properties)
 	{
-		switch (type)
-		{
-			case BackendType::OPENGL:
-			{
-				m_Data.backend = tur::MakeUnique<BackendOpenGL>(m_Data.window);
-				m_Data.backend->Initialize(properties);
-				m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
-			} break;
+		tur_shared<IGraphicsBackend> graphicsBackend;
+		graphicsBackend = MakeGraphicsBackend(type, properties);
+		graphicsBackend->InitializeWindow(m_Data.window);
 
-			default:
-				TUR_LOG_CRITICAL("Unsupported graphics API");
-		}
+		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		
+		return graphicsBackend;
 	}
 
 	void TurnipEngine::CreateWindow(const WindowProperties& properties)
@@ -52,6 +44,8 @@ namespace tur
 
 	void TurnipEngine::Run()
 	{
+		TUR_ASSERT(m_Data.window, "The application doesn't have a window. Create one using CreateWindow() or CreateGraphicsAPI()");
+
 		auto& window = m_Data.window;
 		window->Show();
 

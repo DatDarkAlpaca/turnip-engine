@@ -5,17 +5,21 @@
 #include "Core/Event/Event.h"
 #include "Core/View/ViewHolder.h"
 
-#include "Graphics/BackendType.h"
+#include "Graphics/Graphics.h"
+
+#define BACKEND(BackendClass) static_cast<BackendClass*>(Graphics());
 
 namespace tur
 {
 	class TurnipEngine
 	{
+		friend class GraphicsEngineWrapper;
+
 	public:
 		TurnipEngine();
 
 	public:
-		void SwitchGraphicsAPI(BackendType type, const BackendProperties& properties);
+		tur_shared<IGraphicsBackend> CreateGraphicsAPI(BackendType type, const BackendProperties& properties);
 
 		void CreateWindow(const WindowProperties& properties);
 
@@ -35,13 +39,12 @@ namespace tur
 		void OnEvent(Event& event);
 
 	public:
-		const tur_unique<IGraphicsBackend>& GetGraphicsBackend() const { return m_Data.backend; }
-
-	public:
 		const TurnipEngineData& Data() const { return m_Data; }
 		TurnipEngineData& Data() { return m_Data; }
-
+		
 	private:
 		TurnipEngineData m_Data;
 	};
+
+
 }

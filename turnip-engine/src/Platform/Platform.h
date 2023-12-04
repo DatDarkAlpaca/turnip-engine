@@ -10,6 +10,7 @@
 	#include "Platform/GLFW/Setup_GLFW.h"
 
 	#include "Platform/GLFW/OpenGL/SetupGL.h"
+	#include "Platform/GLFW/Vulkan/SetupVulkan.h"
 
 namespace tur
 {

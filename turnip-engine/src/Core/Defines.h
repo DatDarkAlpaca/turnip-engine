@@ -18,6 +18,9 @@
 	#define TUR_PLATFORM_APPLE
 	#define TUR_WINDOWING_GLFW
 	#define TUR_BREAKPOINT() __builtin_trap()
+#elif defined(__ANDROID__)
+	#define TUR_PLATFORM_ANDROID
+	#define TUR_BREAKPOINT() __builtin_trap()
 #else
 	#error Unsupported platform
 #endif

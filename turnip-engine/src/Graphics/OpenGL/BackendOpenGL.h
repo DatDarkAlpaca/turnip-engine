@@ -1,26 +1,25 @@
 #pragma once
 #include "Core/Window/WindowProperties.h"
-#include "Graphics/IGraphicsBackend.h"
+#include "Graphics/GraphicsBackend.h"
 #include "Platform/Platform.h"
+
+#define OPENGL_BACKEND(OpenGLBackendSmartPtr) static_cast<BackendOpenGL*>(OpenGLBackendSmartPtr.get())
 
 namespace tur
 {
 	class BackendOpenGL final : public IGraphicsBackend
 	{
 	public:
-		BackendOpenGL(tur_unique<Window>& window)
-			: r_Window(window)
-		{
-
-		}
+		BackendOpenGL(const BackendProperties& properties);
 
 	public:
-		void Initialize(const BackendProperties& properties) override;
+		void InitializeWindow(tur_unique<Window>& window) override;
 
 		void Present() override;
 
 	private:
-		tur_unique<Window>& r_Window;
+		BackendProperties m_Properties;
+		NON_OWNING Window* m_Window = nullptr;
 
 	private:
 		constexpr static inline uint32_t DefaultVersionMajor = 3;

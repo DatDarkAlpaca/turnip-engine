@@ -6,8 +6,8 @@ using namespace tur;
 class MainView : public tur::View
 {
 public:
-	MainView(TurnipEngine& engine)
-		: r_Engine(engine) { }
+	MainView(const tur_shared<IGraphicsBackend>& graphicsBackend)
+		: m_GraphicsBackend(graphicsBackend) { }
 
 public:
 	void OnEvent(tur::Event& event) override
@@ -22,14 +22,16 @@ public:
 
 	void OnRender() override
 	{
+		return;
+
 		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		r_Engine.GetGraphicsBackend()->Present();
+		m_GraphicsBackend->Present();
 	}
 
 private:
-	TurnipEngine& r_Engine;
+	tur_shared<IGraphicsBackend> m_GraphicsBackend;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -43,35 +45,39 @@ public:
 
 			DisplayCPUInfo();
 		}
-		
+
+		// Graphics API:
+		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::VULKAN, {});
+		DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
+
 		// Views:
-		AddView(MakeUnique<MainView>(*this));
+		AddView(MakeUnique<MainView>(graphicsAPI));
 	}
 
-private:
+private:	
 	void DisplayMonitorInformation()
 	{
 		uint64_t monitors = Monitor::GetMonitorAmount();
-		TUR_LOG_DEBUG("Monitors Available: {}x", monitors);
+		TUR_LOG_INFO("Monitors Available: {}x", monitors);
 
 		for (uint64_t index = 0; index < monitors; ++index)
 		{
 			MonitorData data = Monitor::FetchMonitorData(index);
-			TUR_LOG_DEBUG(" * {} - Size: [{}mm, {}mm] | Content Scale: [{}x, {}x]",
+			TUR_LOG_INFO(" * {} - Size: [{}mm, {}mm] | Content Scale: [{}x, {}x]",
 				data.monitorName,
 				data.physicalWidth, data.physicalHeight,
 				data.contentScaleX, data.contentScaleY
 			);
 
-			TUR_LOG_DEBUG(" * Monitor Work Area: [{}, {} - x: {}, y: {}]",
+			TUR_LOG_INFO(" * Monitor Work Area: [{}, {} - x: {}, y: {}]",
 				data.workWidth, data.workHeight, data.workX, data.workY);
 		}
-		TUR_LOG_DEBUG(' ');
+		TUR_LOG_INFO(' ');
 	}
 
 	void DisplayCPUInfo()
 	{
-		TUR_LOG_DEBUG("Processor Information:");
+		TUR_LOG_INFO("Processor Information:");
 		DisplayCPUInformation();
 	}
 };
