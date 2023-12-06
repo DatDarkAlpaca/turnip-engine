@@ -141,6 +141,9 @@ namespace tur::vulkan
 	{
 		vk::Instance instanceHandle;
 		vk::DebugUtilsMessengerEXT debugMessenger;
+
+		uint32_t apiVersion = 0;
+		bool enablePresentation = false;
 	};
 
 	class VulkanInstanceBuilder
@@ -227,6 +230,10 @@ namespace tur::vulkan
 
 			vk::DispatchLoaderDynamic DLDI(output.instanceHandle, vkGetInstanceProcAddr);
 			output.debugMessenger = output.instanceHandle.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
+			
+			// Addtional Information:
+			output.apiVersion = m_Information.apiVersion;
+			output.enablePresentation = !m_Information.disableKHRSurface && !m_Information.disableWindowingSurface;
 
 			return output;
 		}

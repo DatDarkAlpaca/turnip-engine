@@ -77,7 +77,7 @@ private:
 
 	void DisplayCPUInfo()
 	{
-		TUR_LOG_INFO("Processor Information:");
+		TUR_LOG_DEBUG("Processor Information:");
 		DisplayCPUInformation();
 	}
 };

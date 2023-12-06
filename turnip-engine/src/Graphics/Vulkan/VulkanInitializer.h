@@ -11,7 +11,10 @@ namespace tur
     {
     public:
         explicit IVulkanInitializer(BackendVulkan* backend)
-            : backend(backend) { }
+            : backend(backend) 
+        {
+
+        }
 
         virtual ~IVulkanInitializer() = default;
 
@@ -40,12 +43,13 @@ namespace tur
         void Configure()
         {
             // Instance:
+            vulkan::InstanceOutput instanceOutput;
             {
                 auto instanceOutputResult = instanceBuilder.Build();
                 if (!instanceOutputResult.has_value())
                     TUR_LOG_CRITICAL("Vulkan Initializer: Failed to initialize instance");
 
-                auto& instanceOutput = instanceOutputResult.value();
+                instanceOutput = instanceOutputResult.value();
 
                 backend->Instance() = instanceOutput.instanceHandle;
                 backend->DebugMessenger() = instanceOutput.debugMessenger;
@@ -53,6 +57,18 @@ namespace tur
                 instanceBuilder.DisplayVulkanAPIVersion();
                 TUR_LOG_DEBUG("Initialized Vulkan Instance");
                 TUR_LOG_DEBUG("Initialized Vulkan DebugMessenger");
+            }
+
+            // Physical Device:
+            {
+                physicalDeviceSelector.SetInstance(instanceOutput);
+                backend->PhysicalDevice() = physicalDeviceSelector.Select(vulkan::DefaultPhysicalDeviceSelector);
+                TUR_LOG_DEBUG("Selected GPU: {}", backend->PhysicalDevice().getProperties().deviceName.data());
+            }
+
+            // Logical Device:
+            {
+
             }
         }
     };

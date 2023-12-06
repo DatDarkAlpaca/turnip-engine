@@ -3,8 +3,11 @@
 
 namespace tur::vulkan
 {
+	static inline constexpr uint32_t InvalidQueueIndex = std::numeric_limits<uint32_t>::max();
+
 	static inline constexpr const char* ValidationLayerName = "VK_LAYER_KHRONOS_validation";
 	static inline constexpr const char* DebugUtilsExtensionName = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+	static inline constexpr const char* SwapchainExtensionName = VK_KHR_SWAPCHAIN_EXTENSION_NAME;
 
 	static inline constexpr const char* SurfaceExtensionName = "VK_KHR_surface";
 	static inline constexpr const char* WIN32_SurfaceExtensionName = "VK_KHR_win32_surface";
