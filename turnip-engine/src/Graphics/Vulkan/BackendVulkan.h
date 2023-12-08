@@ -25,14 +25,17 @@ namespace tur
 
 		EXPOSE_PROPERTY(vk::Instance, Instance, m_Instance);
 		EXPOSE_PROPERTY(vk::DebugUtilsMessengerEXT, DebugMessenger, m_DebugMessenger);
-
 		EXPOSE_PROPERTY(vk::PhysicalDevice, PhysicalDevice, m_PhysicalDevice);
+		EXPOSE_PROPERTY(vk::SurfaceKHR, SurfaceKHR, m_Surface);
+
+	public:
+		Window* GetWindow() const { return m_Window; }
 
 	private:
 		vk::Instance m_Instance;
 		vk::DebugUtilsMessengerEXT m_DebugMessenger;
-
 		vk::PhysicalDevice m_PhysicalDevice;
+		vk::SurfaceKHR m_Surface;
 
 	private:
 		BackendProperties m_Properties;

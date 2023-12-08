@@ -4,6 +4,7 @@
 
 #include "Instance.h"
 #include "PhysicalDevice.h"
+#include "LogicalDevice.h"
 
 namespace tur
 {
@@ -24,6 +25,7 @@ namespace tur
     protected:
         vulkan::VulkanInstanceBuilder instanceBuilder;
         vulkan::PhysicalDeviceSelector physicalDeviceSelector;
+        vulkan::LogicalDeviceBuilder logicalDeviceBuilder;
     };
 
     class DefaultVulkanInitializer : public IVulkanInitializer
@@ -34,7 +36,8 @@ namespace tur
         {
             instanceBuilder
                 .SetAppName(backend->Properties().applicationName)
-                .SetEngineName("TurnipEngine");
+                .SetEngineName("TurnipEngine")
+                .SetAPIVersion(1, 0, 0);
             
             Configure();
         }
@@ -42,8 +45,10 @@ namespace tur
     private:
         void Configure()
         {
+            using namespace vulkan;
+
             // Instance:
-            vulkan::InstanceOutput instanceOutput;
+            InstanceOutput instanceOutput;
             {
                 auto instanceOutputResult = instanceBuilder.Build();
                 if (!instanceOutputResult.has_value())
@@ -59,11 +64,40 @@ namespace tur
                 TUR_LOG_DEBUG("Initialized Vulkan DebugMessenger");
             }
 
-            // Physical Device:
+            // Surface:
             {
-                physicalDeviceSelector.SetInstance(instanceOutput);
-                backend->PhysicalDevice() = physicalDeviceSelector.Select(vulkan::DefaultPhysicalDeviceSelector);
-                TUR_LOG_DEBUG("Selected GPU: {}", backend->PhysicalDevice().getProperties().deviceName.data());
+                backend->SurfaceKHR() = platform::GetVulkanSurface(instanceOutput.instanceHandle, backend->GetWindow()->GetHandle());
+            }
+
+            // Physical Device:
+            PhysicalDeviceOutput physicalDeviceOutput;
+            {
+                physicalDeviceSelector.SetInstance(instanceOutput)
+                                      .SetSurface(backend->SurfaceKHR());
+
+                physicalDeviceOutput = physicalDeviceSelector.Select();
+                backend->PhysicalDevice() = physicalDeviceOutput.device;
+
+                TUR_LOG_DEBUG("Selected GPU: {}", physicalDeviceOutput.device.getProperties().deviceName.data());
+            }
+
+            // Queues:
+            vk::DeviceQueueCreateInfo presentQueueInfo, graphicsQueueInfo;
+            {
+                physicalDeviceOutput.queueInformation;
+                uint32_t presentQueueIndex, graphicsQueueIndex;
+                
+                for (const auto& queue : physicalDeviceOutput.queueInformation)
+                {
+                    if (GetQueueSupports(queue, QueueOperation::PRESENT))
+                        presentQueueIndex = queue.familyIndex;
+
+                    if (GetQueueSupports(queue, QueueOperation::GRAPHICS))
+                        graphicsQueueIndex = queue.familyIndex;
+                }
+
+                presentQueueInfo = SelectQueue(presentQueueIndex);
+                graphicsQueueInfo = SelectQueue(graphicsQueueIndex);
             }
 
             // Logical Device:

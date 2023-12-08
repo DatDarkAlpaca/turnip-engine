@@ -203,6 +203,8 @@
     <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h" />
     <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\PhysicalDevice.h" />
+    <ClInclude Include="src\Graphics\Vulkan\LogicalDevice.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Queues.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -225,5 +227,6 @@
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PhysicalDevice.cpp" />
   </ItemGroup>
 </Project>

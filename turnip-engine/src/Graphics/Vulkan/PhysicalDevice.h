@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "Instance.h"
+#include "Queues.h"
 
 namespace tur::vulkan
 {
@@ -19,102 +20,162 @@ namespace tur::vulkan
 		Other				= VK_PHYSICAL_DEVICE_TYPE_OTHER
 	};
 
+	struct PhysicalDeviceOutput
+	{
+		vk::PhysicalDevice device;
+		std::vector<QueueFamilyInformation> queueInformation;
+		std::vector<const char*> requestedExtensions;
+	};
+
 	class PhysicalDeviceSelector
 	{
 	public:
 		using AvailableDevices = std::vector<vk::PhysicalDevice>;
 
 	public:
-		vk::PhysicalDevice Select(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>& selectorFunction)
+		PhysicalDeviceOutput SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>& selectorFunction) const
+		{
+			if (!m_InstanceSet)
+				TUR_LOG_CRITICAL("Instance not set. Use SetInstance() before selecting a physical device");
+
+			if (!m_SurfaceSet && m_InstanceOutput.enablePresentation)
+				TUR_LOG_CRITICAL("Surface not set and instance requires presentation. Use SetSurface() before selecting a physical device");
+
+			std::vector<vk::PhysicalDevice> availableDevices = GetInstance().enumeratePhysicalDevices();
+			auto device = selectorFunction(*this, availableDevices);
+
+			return { device, GetQueueInformation(device, m_Surface) };
+		}
+
+		PhysicalDeviceOutput Select() const
+		{
+			vk::PhysicalDevice device = ChoosePhysicalDevice();
+			
+			PhysicalDeviceOutput output;
+			output.device = device;
+			output.queueInformation = GetQueueInformation(device, m_Surface);
+			output.requestedExtensions = m_RequestedExtensions;
+
+			return output;
+		}
+
+	private:
+		vk::PhysicalDevice ChoosePhysicalDevice() const
 		{
 			std::vector<vk::PhysicalDevice> availableDevices = GetInstance().enumeratePhysicalDevices();
-			return selectorFunction(*this, availableDevices);
+
+			for (const auto& device : availableDevices)
+			{
+				if (!DoesDeviceSupportRequirements(device))
+					continue;
+
+				return device;
+			}
+		}
+
+		bool DoesDeviceSupportRequirements(const vk::PhysicalDevice& device) const
+		{
+			const auto& instanceOutput = GetInstanceOutput();
+			const auto& surface = GetSurface();
+			const auto& availableExtensions = device.enumerateDeviceExtensionProperties();
+
+			bool requiresPresent = m_InstanceOutput.enablePresentation;
+			
+			bool supportsExtensions = false;
+			bool supportsPresent = false;
+
+			// Extensions:
+			{
+				std::unordered_map<const char*, bool> supportedExtensionsTable;
+				supportedExtensionsTable.reserve(availableExtensions.size());
+
+				for (const auto& extension : GetRequestedExtensions())
+					supportedExtensionsTable[extension] = false;
+
+				for (const auto& properties : device.enumerateDeviceExtensionProperties())
+					supportedExtensionsTable[properties.extensionName] = true;
+
+				supportsExtensions = true;
+				for (const auto& [_, value] : supportedExtensionsTable)
+				{
+					if (value == false)
+					{
+						supportsExtensions = false;
+						break;
+					}
+				}
+			}
+
+			// Queues:
+			if (requiresPresent)
+			{
+				for (const auto& queue : GetQueueInformation(device, m_Surface))
+				{
+					if (GetQueueSupports(queue, QueueOperation::GRAPHICS & QueueOperation::PRESENT))
+					{
+						supportsPresent = true;
+						break;
+					}
+				}
+			}
+			
+			if (!requiresPresent)
+				return supportsExtensions;
+
+			return supportsExtensions && supportsPresent;
 		}
 
 	public:
-		void SetInstance(const InstanceOutput& instanceOutput)
+		PhysicalDeviceSelector& SetInstance(const InstanceOutput& instanceOutput)
 		{
 			m_InstanceOutput = instanceOutput;
 			m_InstanceSet = true;
 
-			m_InstanceOutput.enablePresentation;
+			if (m_InstanceOutput.enablePresentation)
+				m_RequestedExtensions.push_back(vulkan::SwapchainExtensionName);
+
+			return *this;
+		}
+
+		PhysicalDeviceSelector& SetSurface(const vk::SurfaceKHR& surface)
+		{
+			m_RequestedExtensions.push_back(vulkan::SwapchainExtensionName);
+
+			m_Surface = surface;
+			m_SurfaceSet = true;
+			return *this;
+		}
+
+	public:
+		PhysicalDeviceSelector& AddRequiredExtensions(const std::vector<const char*>& extensions)
+		{
+			for(const auto& extension : extensions)
+				m_RequestedExtensions.push_back(extension);
+
+			return *this;
+		}
+		PhysicalDeviceSelector& AddRequiredExtension(const char* extensionName)
+		{
+			m_RequestedExtensions.push_back(extensionName);
+			return *this;
 		}
 
 	public:
 		const InstanceOutput& GetInstanceOutput() const { return m_InstanceOutput; }
-
 		vk::Instance GetInstance() const { return m_InstanceOutput.instanceHandle; }
+		vk::SurfaceKHR GetSurface() const { return m_Surface; }
+
+		const std::vector<const char*>& GetRequestedExtensions() const { return m_RequestedExtensions; }
 
 	private:
 		InstanceOutput m_InstanceOutput;
+		vk::SurfaceKHR m_Surface;
+
+		std::vector<const char*> m_RequestedExtensions;
+		
 		bool m_InstanceSet = false;
+		bool m_SurfaceSet = false;
 	};
 
-	inline vk::PhysicalDevice DefaultPhysicalDeviceSelector(const PhysicalDeviceSelector& deviceSelector, const std::vector<vk::PhysicalDevice>& physicalDevices)
-	{
-		const auto& instanceOutput = deviceSelector.GetInstanceOutput();
-		using score = uint32_t;
-
-		std::vector<score> scoreList(physicalDevices.size());
-
-		// Get device with most memory:
-		size_t maxMemoryElementIndex = 0;
-		auto maxMemoryElement = std::max_element(physicalDevices.begin(), physicalDevices.end(), [](vk::PhysicalDevice lhs, vk::PhysicalDevice rhs) 
-		{
-			auto memoryLHS = lhs.getMemoryProperties();
-			auto memoryRHS = rhs.getMemoryProperties();
-
-			size_t heapSizeLHS = 0, heapSizeRHS = 0;
-			for (size_t i = 0; i < memoryLHS.memoryHeapCount; ++i)
-			{
-				if (memoryLHS.memoryHeaps[i].flags & vk::MemoryHeapFlagBits::eDeviceLocal)
-					heapSizeLHS = memoryLHS.memoryHeaps[i].size;
-			}
-
-			for (size_t i = 0; i < memoryRHS.memoryHeapCount; ++i)
-			{
-				if (memoryRHS.memoryHeaps[i].flags & vk::MemoryHeapFlagBits::eDeviceLocal)
-					heapSizeRHS = memoryRHS.memoryHeaps[i].size;
-			}
-
-			return (heapSizeLHS > heapSizeRHS);
-		});
-		maxMemoryElementIndex = std::distance(physicalDevices.begin(), maxMemoryElement);
-
-		for (size_t i = 0; i < physicalDevices.size(); ++i)
-		{
-			auto& device = physicalDevices[i];
-
-			auto extensionProperties = device.enumerateDeviceExtensionProperties();
-			auto deviceProperties = device.getProperties();
-			auto memoryProperties = device.getMemoryProperties();
-
-			// Requires swapchain extension:
-			if (instanceOutput.enablePresentation)
-			{
-				bool found = false;
-				for (const auto& extension : extensionProperties)
-				{
-					if (extension.extensionName == vulkan::SwapchainExtensionName)
-					{
-						found = true;
-						break;
-					}
-				}
-
-				if (!found)
-					continue;
-			}
-
-			// Favors discrete GPUs:
-			if(deviceProperties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu)
-				scoreList[i] += 2;
-		}
-		
-		// Favors most memory:
-		scoreList[maxMemoryElementIndex] += 1;
-
-		size_t winnerIndex = std::distance(scoreList.begin(), std::max_element(scoreList.begin(), scoreList.end()));
-		return physicalDevices[winnerIndex];
-	}
+	vk::PhysicalDevice DefaultPhysicalDeviceSelector(const PhysicalDeviceSelector& deviceSelector, const std::vector<vk::PhysicalDevice>& physicalDevices);
 }

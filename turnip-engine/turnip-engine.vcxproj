@@ -137,6 +137,8 @@
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
     <ClInclude Include="src\Graphics\Vulkan\Instance.h" />
+    <ClInclude Include="src\Graphics\Vulkan\LogicalDevice.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Queues.h" />
     <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h" />
     <ClInclude Include="src\Graphics\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
@@ -157,6 +159,7 @@
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
     <ClCompile Include="src\pch.cpp">
