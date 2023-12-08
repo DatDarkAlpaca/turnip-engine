@@ -102,7 +102,10 @@ namespace tur
 
             // Logical Device:
             {
+                logicalDeviceBuilder.SetInstanceOutput(instanceOutput)
+                                    .SetPhysicalDeviceOutput(physicalDeviceOutput);
 
+                backend->Device() = logicalDeviceBuilder.Build().value();
             }
         }
     };
