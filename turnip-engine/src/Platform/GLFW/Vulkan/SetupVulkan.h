@@ -1,7 +1,6 @@
 #pragma once
+#include <vulkan/vulkan.h>
 #include <vulkan/vulkan.hpp>
-
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "Core/Defines.h"
@@ -12,6 +11,9 @@ namespace tur::platform
 	inline void ConfigureVulkan()
 	{
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+		if (!glfwVulkanSupported())
+			TUR_LOG_CRITICAL("Vulkan is not supported in this machine");
 	}
 
 	inline std::vector<const char*> GetWindowingVulkanExtensions()

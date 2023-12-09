@@ -7,8 +7,9 @@
 #include <memory>
 #include <vector>
 
-#define GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_VULKAN
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>

@@ -15,7 +15,8 @@ project "turnip-engine"
     }
    
     defines {
-        "GLFW_STATIC"
+        "GLFW_STATIC",
+        "GLFW_VULKAN_STATIC"
     }
 
     includedirs {

@@ -5,6 +5,8 @@
 #include "Instance.h"
 #include "PhysicalDevice.h"
 #include "LogicalDevice.h"
+#include "Queues.h"
+#include "Swapchain.h"
 
 namespace tur
 {
@@ -26,6 +28,7 @@ namespace tur
         vulkan::VulkanInstanceBuilder instanceBuilder;
         vulkan::PhysicalDeviceSelector physicalDeviceSelector;
         vulkan::LogicalDeviceBuilder logicalDeviceBuilder;
+        vulkan::SwapchainBuilder swapchainBuilder;
     };
 
     class DefaultVulkanInitializer : public IVulkanInitializer
@@ -110,12 +113,35 @@ namespace tur
                                     .AddQueueInfo(presentQueueInfo);
 
                 backend->Device() = logicalDeviceBuilder.Create().value();
-                backend->Queues().Add(backend->Device().getQueue(graphicsQueueIndex, 0), QueueOperation::GRAPHICS);
-                backend->Queues().Add(backend->Device().getQueue(presentQueueIndex, 0), QueueOperation::PRESENT);
+                backend->Queues().Add(backend->Device().getQueue(graphicsQueueIndex, 0), QueueOperation::GRAPHICS, graphicsQueueIndex);
+                backend->Queues().Add(backend->Device().getQueue(presentQueueIndex, 0), QueueOperation::PRESENT, presentQueueIndex);
             
                 TUR_LOG_DEBUG("Initialized Vulkan Logical Device");
                 TUR_LOG_DEBUG("Using Graphics Queue: {}", graphicsQueueIndex);
                 TUR_LOG_DEBUG("Using Present Queue: {}", presentQueueIndex);
+            }
+
+            // Swapchain:
+            {
+                auto& physicalDevice = backend->PhysicalDevice();
+                auto& surface = backend->SurfaceKHR();
+                auto& device = backend->Device();
+                auto& queues = backend->Queues();
+
+                auto& capabilities = QuerySurfaceCapabilities(physicalDevice, surface);
+                auto& surfaceFormats = QuerySurfaceFormats(physicalDevice, surface);
+                auto& presentMode = QuerySurfacePresentModes(physicalDevice, surface);
+
+                #ifdef TUR_DEBUG
+                    DisplaySurfaceCapabilities(capabilities);
+                    DisplaySurfaceFormats(surfaceFormats);
+                    DisplayPresentModes(presentMode);
+                #endif
+    
+                swapchainBuilder.SetArguments(surface, physicalDevice, device, queues)
+                                .Prepare();
+
+                backend->Swapchain() = swapchainBuilder.Create();
             }
         }
     };

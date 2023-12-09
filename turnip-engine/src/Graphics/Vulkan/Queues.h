@@ -5,12 +5,12 @@ namespace tur::vulkan
 {
 	enum QueueOperation : uint32_t
 	{
-		NONE			= 0,
-		GRAPHICS		= 1 << 0,
-		PRESENT			= 1 << 1,
-		COMPUTE			= 1 << 2,
-		TRANSFER		= 1 << 3,
-		SPARSE_BINDING  = 1 << 4
+		NONE = 0,
+		GRAPHICS = 1 << 0,
+		PRESENT = 1 << 1,
+		COMPUTE = 1 << 2,
+		TRANSFER = 1 << 3,
+		SPARSE_BINDING = 1 << 4
 	};
 
 	inline QueueOperation operator| (QueueOperation lhs, QueueOperation rhs)
@@ -79,4 +79,33 @@ namespace tur::vulkan
 	{
 		return vk::DeviceQueueCreateInfo { vk::DeviceQueueCreateFlags(), queueIndex, 1, & priority };
 	}
+
+	struct QueueInformation
+	{
+	public:
+		struct Data
+		{
+			uint32_t familyIndex;
+			vk::Queue queue;
+			QueueOperation operation;
+		};
+
+	public:
+		inline vk::Queue Get(vulkan::QueueOperation operation) const
+		{
+			for (const auto& [_, queue, supportedOperations] : queues)
+			{
+				if (supportedOperations & operation)
+					return queue;
+			}
+		}
+
+		inline void Add(vk::Queue queue, vulkan::QueueOperation operation, uint32_t index)
+		{
+			queues.push_back({ index, queue, operation,  });
+		}
+
+	public:
+		std::vector<Data> queues;
+	};
 }

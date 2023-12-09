@@ -5,6 +5,10 @@
 
 #include "Common.h"
 #include "Instance.h"
+#include "PhysicalDevice.h"
+#include "LogicalDevice.h"
+#include "Queues.h"
+#include "Swapchain.h"
 
 #define VULKAN_BACKEND(VulkanBackendSmartPtr) static_cast<BackendVulkan*>(VulkanBackendSmartPtr.get())
 
@@ -28,6 +32,8 @@ namespace tur
 		EXPOSE_PROPERTY(vk::SurfaceKHR, SurfaceKHR, m_Surface);
 		EXPOSE_PROPERTY(vk::PhysicalDevice, PhysicalDevice, m_PhysicalDevice);
 		EXPOSE_PROPERTY(vk::Device, Device, m_Device);
+		EXPOSE_PROPERTY(vulkan::QueueInformation, Queues, m_Queues);
+		EXPOSE_PROPERTY(vulkan::Swapchain, Swapchain, m_Swapchain);
 
 	public:
 		Window* GetWindow() const { return m_Window; }
@@ -38,6 +44,8 @@ namespace tur
 		vk::SurfaceKHR m_Surface;
 		vk::PhysicalDevice m_PhysicalDevice;
 		vk::Device m_Device;
+		vulkan::QueueInformation m_Queues;
+		vulkan::Swapchain m_Swapchain;
 
 	private:
 		BackendProperties m_Properties;
