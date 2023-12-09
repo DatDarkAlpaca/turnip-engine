@@ -18,9 +18,10 @@ namespace tur::vulkan
 		return static_cast<QueueOperation>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
 	}
 
-	inline QueueOperation operator|= (QueueOperation lhs, QueueOperation rhs)
+	inline QueueOperation& operator|= (QueueOperation& lhs, QueueOperation rhs)
 	{
-		return lhs | rhs;
+		lhs = lhs | rhs;
+		return lhs;
 	}
 
 	struct QueueFamilyInformation
@@ -45,7 +46,6 @@ namespace tur::vulkan
 			queueFamilyEntry.familyIndex = queueIndex;
 			queueFamilyEntry.queueCount = queueFamily.queueCount;
 
-
 			if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics)
 				queueFamilyEntry.supportedOperations |= QueueOperation::GRAPHICS;
 			
@@ -60,6 +60,8 @@ namespace tur::vulkan
 
 			if (device.getSurfaceSupportKHR(queueIndex, surface))
 				queueFamilyEntry.supportedOperations |= QueueOperation::PRESENT;
+
+			results.push_back(queueFamilyEntry);
 		}
 
 		return results;

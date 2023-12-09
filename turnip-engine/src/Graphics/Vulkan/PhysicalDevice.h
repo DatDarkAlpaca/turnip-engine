@@ -86,23 +86,20 @@ namespace tur::vulkan
 
 			// Extensions:
 			{
-				std::unordered_map<const char*, bool> supportedExtensionsTable;
-				supportedExtensionsTable.reserve(availableExtensions.size());
-
-				for (const auto& extension : GetRequestedExtensions())
-					supportedExtensionsTable[extension] = false;
-
-				for (const auto& properties : device.enumerateDeviceExtensionProperties())
-					supportedExtensionsTable[properties.extensionName] = true;
-
 				supportsExtensions = true;
-				for (const auto& [_, value] : supportedExtensionsTable)
+				for (const auto& extension : GetRequestedExtensions())
 				{
-					if (value == false)
+					bool found = false;
+					for (const auto& properties : device.enumerateDeviceExtensionProperties())
 					{
-						supportsExtensions = false;
-						break;
+						if (strcmp(properties.extensionName, extension) == 0)
+						{
+							found = true;
+							break;
+						}
 					}
+
+					supportsExtensions = found;
 				}
 			}
 
@@ -111,7 +108,7 @@ namespace tur::vulkan
 			{
 				for (const auto& queue : GetQueueInformation(device, m_Surface))
 				{
-					if (GetQueueSupports(queue, QueueOperation::GRAPHICS & QueueOperation::PRESENT))
+					if (GetQueueSupports(queue, QueueOperation::GRAPHICS | QueueOperation::PRESENT))
 					{
 						supportsPresent = true;
 						break;
@@ -139,8 +136,6 @@ namespace tur::vulkan
 
 		PhysicalDeviceSelector& SetSurface(const vk::SurfaceKHR& surface)
 		{
-			m_RequestedExtensions.push_back(vulkan::SwapchainExtensionName);
-
 			m_Surface = surface;
 			m_SurfaceSet = true;
 			return *this;

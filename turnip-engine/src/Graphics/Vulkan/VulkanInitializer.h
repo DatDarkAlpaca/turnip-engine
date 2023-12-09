@@ -109,12 +109,18 @@ namespace tur
                 logicalDeviceBuilder.SetInstanceOutput(instanceOutput)
                                     .SetPhysicalDeviceOutput(physicalDeviceOutput);
 
-                logicalDeviceBuilder.AddQueueInfo(presentQueueInfo)
-                                    .AddQueueInfo(presentQueueInfo);
+                logicalDeviceBuilder.AddQueueInfo(presentQueueInfo);
+
+                if (graphicsQueueIndex != presentQueueIndex)
+                    logicalDeviceBuilder.AddQueueInfo(graphicsQueueInfo);
 
                 backend->Device() = logicalDeviceBuilder.Create().value();
-                backend->Queues().Add(backend->Device().getQueue(graphicsQueueIndex, 0), QueueOperation::GRAPHICS, graphicsQueueIndex);
-                backend->Queues().Add(backend->Device().getQueue(presentQueueIndex, 0), QueueOperation::PRESENT, presentQueueIndex);
+
+                auto graphicsQueue = backend->Device().getQueue(graphicsQueueIndex, 0);
+                auto presentQueue = backend->Device().getQueue(presentQueueIndex, 0);
+
+                backend->Queues().Add(graphicsQueue, QueueOperation::GRAPHICS, graphicsQueueIndex);
+                backend->Queues().Add(presentQueue, QueueOperation::PRESENT, presentQueueIndex);
             
                 TUR_LOG_DEBUG("Initialized Vulkan Logical Device");
                 TUR_LOG_DEBUG("Using Graphics Queue: {}", graphicsQueueIndex);

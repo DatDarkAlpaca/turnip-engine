@@ -1,5 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
+
+#include "Common.h"
 #include "Queues.h"
 #include "Core/Logger/Logger.h"
 
@@ -249,6 +251,8 @@ namespace tur::vulkan
 			m_Supported.surfaceFormats = QuerySurfaceFormats(m_PhysicalDevice, m_Surface);
 			m_Supported.presentModes = QuerySurfacePresentModes(m_PhysicalDevice, m_Surface);
 			m_Prepared = true;
+
+			return *this;
 		}
 
 		Swapchain Create()	
@@ -260,6 +264,18 @@ namespace tur::vulkan
 			{
 				TUR_LOG_WARN("No surface format has been found for the current swapchain. Creating a default one.");
 				SetSurfaceFormat();
+			}
+
+			if (!m_ImageCountSet)
+			{
+				TUR_LOG_WARN("No image count has been specificed. Using the minimum amount of images.");
+				SetMinimumImageCount(0);
+			}
+
+			if (!m_ExtentSet)
+			{
+				TUR_LOG_WARN("No extent has been specificed. Using the minimum extent possible.");
+				SetExtent({ 0, 0 });
 			}
 
 			auto& info = m_Information;
@@ -407,6 +423,8 @@ namespace tur::vulkan
 				m_Supported.capabilities.minImageExtent.height,
 				m_Supported.capabilities.maxImageExtent.height);
 
+			m_ExtentSet = true;
+
 			return *this;
 		}
 
@@ -481,6 +499,8 @@ namespace tur::vulkan
 				m_Supported.capabilities.maxImageCount
 			);
 			
+			m_ImageCountSet = true;
+
 			return *this;
 		}
 		SwapchainBuilder& SetImageArrayLayers(uint32_t imageArrayLayers)
@@ -546,7 +566,7 @@ namespace tur::vulkan
 			vk::PresentModeKHR presentMode = vk::PresentModeKHR::eFifo;
 
 			vk::SwapchainKHR oldSwapchain = nullptr;
-			vk::Extent2D extent = vk::Extent2D();
+			vk::Extent2D extent = vk::Extent2D(256, 256);
 			vk::SharingMode sharingMode = vk::SharingMode::eConcurrent;
 
 			vk::ImageUsageFlags imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
@@ -562,5 +582,7 @@ namespace tur::vulkan
 		bool m_ArgumentsSet = false, m_Prepared = false;
 		bool m_SurfaceFormatSet = false;
 		bool m_SharingModeOverride = false;
+		bool m_ImageCountSet = false;
+		bool m_ExtentSet = false;
 	};
 }
