@@ -33,6 +33,7 @@ project "turnip-editor"
     filter { "configurations:Debug" }
         runtime "Debug"
         symbols "on"
+        defines { "TUR_DEBUG" }
     filter { }
         
     filter { "configurations:Release" }

@@ -188,6 +188,9 @@
     <ClInclude Include="src\Graphics\Vulkan\Queues.h">
       <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Swapchain.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h">
       <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
@@ -220,7 +223,6 @@
       <Filter>Util\CPUInfo</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Graphics\Vulkan\Swapchain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
