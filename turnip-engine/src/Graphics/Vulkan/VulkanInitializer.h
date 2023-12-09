@@ -81,12 +81,13 @@ namespace tur
                 TUR_LOG_DEBUG("Selected GPU: {}", physicalDeviceOutput.device.getProperties().deviceName.data());
             }
 
-            // Queues:
+            // Queue Creation:
             vk::DeviceQueueCreateInfo presentQueueInfo, graphicsQueueInfo;
+            uint32_t presentQueueIndex, graphicsQueueIndex;
+            std::vector<vk::Queue> queues;
             {
                 physicalDeviceOutput.queueInformation;
-                uint32_t presentQueueIndex, graphicsQueueIndex;
-                
+                               
                 for (const auto& queue : physicalDeviceOutput.queueInformation)
                 {
                     if (GetQueueSupports(queue, QueueOperation::PRESENT))
@@ -100,12 +101,21 @@ namespace tur
                 graphicsQueueInfo = SelectQueue(graphicsQueueIndex);
             }
 
-            // Logical Device:
+            // Logical Device & Queue:
             {
                 logicalDeviceBuilder.SetInstanceOutput(instanceOutput)
                                     .SetPhysicalDeviceOutput(physicalDeviceOutput);
 
-                backend->Device() = logicalDeviceBuilder.Build().value();
+                logicalDeviceBuilder.AddQueueInfo(presentQueueInfo)
+                                    .AddQueueInfo(presentQueueInfo);
+
+                backend->Device() = logicalDeviceBuilder.Create().value();
+                backend->Queues().Add(backend->Device().getQueue(graphicsQueueIndex, 0), QueueOperation::GRAPHICS);
+                backend->Queues().Add(backend->Device().getQueue(presentQueueIndex, 0), QueueOperation::PRESENT);
+            
+                TUR_LOG_DEBUG("Initialized Vulkan Logical Device");
+                TUR_LOG_DEBUG("Using Graphics Queue: {}", graphicsQueueIndex);
+                TUR_LOG_DEBUG("Using Present Queue: {}", presentQueueIndex);
             }
         }
     };

@@ -11,15 +11,15 @@ namespace tur::vulkan
 		LogicalDeviceBuilder() = default;
 
 	public:
-		std::optional<vk::Device> Build() const
+		std::optional<vk::Device> Create() const
 		{
 			vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 
 			vk::DeviceCreateInfo deviceInfo = vk::DeviceCreateInfo(
 				vk::DeviceCreateFlags(),
-				m_QueueInfoList.size(), m_QueueInfoList.data(),
-				m_Layers.size(), m_Layers.data(),
-				m_Extensions.size(), m_Extensions.data(),
+				(uint32_t)m_QueueInfoList.size(), m_QueueInfoList.data(),
+				(uint32_t)m_Layers.size(), m_Layers.data(),
+				(uint32_t)m_Extensions.size(), m_Extensions.data(),
 				&deviceFeatures
 			);
 
@@ -59,6 +59,7 @@ namespace tur::vulkan
 		LogicalDeviceBuilder& AddQueueInfo(const vk::DeviceQueueCreateInfo& queueCreateInfo)
 		{
 			m_QueueInfoList.push_back(queueCreateInfo);
+			return *this;
 		}
 
 	public:
