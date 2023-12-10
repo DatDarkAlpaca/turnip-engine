@@ -49,7 +49,11 @@ namespace tur::vulkan
 
 		PhysicalDeviceOutput Select() const
 		{
-			vk::PhysicalDevice device = ChoosePhysicalDevice();
+			auto deviceResult = ChoosePhysicalDevice();
+			if (!deviceResult.has_value())
+				TUR_LOG_CRITICAL("Selection parameters failed to return a valid physical device");
+			
+			vk::PhysicalDevice device = deviceResult.value();
 			
 			PhysicalDeviceOutput output;
 			output.device = device;
@@ -60,7 +64,7 @@ namespace tur::vulkan
 		}
 
 	private:
-		vk::PhysicalDevice ChoosePhysicalDevice() const
+		std::optional<vk::PhysicalDevice> ChoosePhysicalDevice() const
 		{
 			std::vector<vk::PhysicalDevice> availableDevices = GetInstance().enumeratePhysicalDevices();
 
@@ -71,6 +75,8 @@ namespace tur::vulkan
 
 				return device;
 			}
+
+			return std::nullopt;
 		}
 
 		bool DoesDeviceSupportRequirements(const vk::PhysicalDevice& device) const

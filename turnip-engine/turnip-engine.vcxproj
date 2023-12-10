@@ -136,6 +136,7 @@
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Frame.h" />
     <ClInclude Include="src\Graphics\Vulkan\Instance.h" />
     <ClInclude Include="src\Graphics\Vulkan\LogicalDevice.h" />
     <ClInclude Include="src\Graphics\Vulkan\PhysicalDevice.h" />

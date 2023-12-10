@@ -7,6 +7,7 @@
 #include "LogicalDevice.h"
 #include "Queues.h"
 #include "Swapchain.h"
+#include "Frame.h"
 
 namespace tur
 {
@@ -29,6 +30,7 @@ namespace tur
         vulkan::PhysicalDeviceSelector physicalDeviceSelector;
         vulkan::LogicalDeviceBuilder logicalDeviceBuilder;
         vulkan::SwapchainBuilder swapchainBuilder;
+        vulkan::SwapchainFrameBuilder swapchainFrameBuilder;
     };
 
     class DefaultVulkanInitializer : public IVulkanInitializer
@@ -54,6 +56,7 @@ namespace tur
             InstanceOutput instanceOutput;
             {
                 auto instanceOutputResult = instanceBuilder.Build();
+
                 if (!instanceOutputResult.has_value())
                     TUR_LOG_CRITICAL("Vulkan Initializer: Failed to initialize instance");
 
@@ -86,7 +89,7 @@ namespace tur
 
             // Queue Creation:
             vk::DeviceQueueCreateInfo presentQueueInfo, graphicsQueueInfo;
-            uint32_t presentQueueIndex, graphicsQueueIndex;
+            uint32_t presentQueueIndex = InvalidQueueIndex, graphicsQueueIndex = InvalidQueueIndex;
             std::vector<vk::Queue> queues;
             {
                 physicalDeviceOutput.queueInformation;
@@ -99,6 +102,12 @@ namespace tur
                     if (GetQueueSupports(queue, QueueOperation::GRAPHICS))
                         graphicsQueueIndex = queue.familyIndex;
                 }
+
+                if (presentQueueIndex == InvalidQueueIndex)
+                    TUR_LOG_ERROR("Failed to assign a present queue index");
+
+                if (graphicsQueueIndex == InvalidQueueIndex)
+                    TUR_LOG_ERROR("Failed to assign a graphics queue index");
 
                 presentQueueInfo = SelectQueue(presentQueueIndex);
                 graphicsQueueInfo = SelectQueue(graphicsQueueIndex);
@@ -147,7 +156,10 @@ namespace tur
                 swapchainBuilder.SetArguments(surface, physicalDevice, device, queues)
                                 .Prepare();
 
-                backend->Swapchain() = swapchainBuilder.Create();
+                backend->SwapchainData() = swapchainBuilder.Create();
+
+                // Image & Image Views:
+                swapchainFrameBuilder.Build(device, backend->SwapchainData());
             }
         }
     };

@@ -33,7 +33,7 @@ namespace tur
 		EXPOSE_PROPERTY(vk::PhysicalDevice, PhysicalDevice, m_PhysicalDevice);
 		EXPOSE_PROPERTY(vk::Device, Device, m_Device);
 		EXPOSE_PROPERTY(vulkan::QueueInformation, Queues, m_Queues);
-		EXPOSE_PROPERTY(vulkan::Swapchain, Swapchain, m_Swapchain);
+		EXPOSE_PROPERTY(vulkan::SwapchainData, SwapchainData, m_SwapchainData);
 
 	public:
 		Window* GetWindow() const { return m_Window; }
@@ -45,7 +45,7 @@ namespace tur
 		vk::PhysicalDevice m_PhysicalDevice;
 		vk::Device m_Device;
 		vulkan::QueueInformation m_Queues;
-		vulkan::Swapchain m_Swapchain;
+		vulkan::SwapchainData m_SwapchainData;
 
 	private:
 		BackendProperties m_Properties;

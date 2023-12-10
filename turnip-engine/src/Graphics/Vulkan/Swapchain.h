@@ -124,13 +124,16 @@ namespace tur::vulkan
 
 namespace tur::vulkan
 {
-	struct Swapchain
+	struct SwapchainFrame
+	{
+		vk::Image image;
+		vk::ImageView view;
+	};
+
+	struct SwapchainData
 	{
 		vk::SwapchainKHR swapchain;
-
-		vk::SurfaceCapabilitiesKHR capabilities;
-		std::vector<vk::SurfaceFormatKHR> surfaceFormats;
-		std::vector<vk::PresentModeKHR> presentModes;
+		std::vector<SwapchainFrame> frames;
 
 		// Information:
 		vk::SurfaceFormatKHR surfaceFormat;
@@ -144,10 +147,10 @@ namespace tur::vulkan
 		vk::SurfaceTransformFlagBitsKHR preTransform;
 		vk::CompositeAlphaFlagBitsKHR compositeAlpha;
 
-		uint32_t minImageCount;
-		uint32_t imageArrayLayers;
+		uint32_t minImageCount = 0;
+		uint32_t imageArrayLayers = 1;
 
-		bool clipped;
+		bool clipped = true;
 	};
 
 	inline vk::SurfaceCapabilitiesKHR QuerySurfaceCapabilities(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface)
@@ -255,7 +258,7 @@ namespace tur::vulkan
 			return *this;
 		}
 
-		Swapchain Create()	
+		SwapchainData Create()
 		{
 			if (!m_Prepared)
 				TUR_LOG_CRITICAL("The swapchain supported features haven't been cached. Call Prepare() before (re)creating a swapchain");
@@ -295,18 +298,13 @@ namespace tur::vulkan
 
 			PrepareQueueInformation(createInfo);
 
-			Swapchain swapchainResult;
-
+			SwapchainData swapchainResult;
 			try
 			{
 				swapchainResult.swapchain = m_LogicalDevice.createSwapchainKHR(createInfo);
 			}
 			catch (vk::SystemError err)
 				TUR_LOG_CRITICAL("Failed to create swapchain: {}", err.what());
-
-			swapchainResult.capabilities = m_Supported.capabilities;
-			swapchainResult.surfaceFormats = m_Supported.surfaceFormats;
-			swapchainResult.presentModes = m_Supported.presentModes;
 
 			// Information:
 			swapchainResult.surfaceFormat = m_Information.surfaceFormat;
@@ -323,6 +321,11 @@ namespace tur::vulkan
 			swapchainResult.minImageCount = m_Information.minImageCount;
 			swapchainResult.imageArrayLayers = m_Information.imageArrayLayers;
 			swapchainResult.clipped = m_Information.clipped;
+
+			// Images:
+			
+
+			
 
 			return swapchainResult;
 		}
@@ -395,13 +398,15 @@ namespace tur::vulkan
 			return *this;
 		}
 
-		SwapchainBuilder& SetOldSwapchain(const Swapchain& swapchain)
+		SwapchainBuilder& SetOldSwapchain(const SwapchainData& swapchain)
 		{
-
+			m_Information.oldSwapchain = swapchain.swapchain;
+			return *this;
 		}
 		SwapchainBuilder& SetOldSwapchain(const vk::SwapchainKHR& swapchain)
 		{
-
+			m_Information.oldSwapchain = swapchain;
+			return *this;
 		}
 
 		SwapchainBuilder& SetExtent(vk::Extent2D extent)
@@ -519,14 +524,21 @@ namespace tur::vulkan
 		{
 			// TODO: expand for flexibility.
 
-			uint32_t graphicsQueue, presentQueue;
+			uint32_t graphicsQueue = InvalidQueueIndex, presentQueue = InvalidQueueIndex;
 			for (const auto& [index, queue, operation] : m_Queues.queues)
 			{
 				if (operation & QueueOperation::GRAPHICS)
 					graphicsQueue = index;
+
 				if (operation & QueueOperation::PRESENT)
 					presentQueue = index;
 			}
+
+			if (graphicsQueue == InvalidQueueIndex)
+				TUR_LOG_ERROR("Failed to assign a present queue index");
+
+			if (presentQueue == InvalidQueueIndex)
+				TUR_LOG_ERROR("Failed to assign a graphics queue index");
 
 			if (m_SharingModeOverride)
 				return;
@@ -545,6 +557,11 @@ namespace tur::vulkan
 				createInfo.imageSharingMode = vk::SharingMode::eExclusive;
 				m_Information.sharingMode = vk::SharingMode::eExclusive;
 			}
+		}
+
+		void PrepareFrameData(SwapchainData& swapchainResult)
+		{
+			
 		}
 
 	private:
