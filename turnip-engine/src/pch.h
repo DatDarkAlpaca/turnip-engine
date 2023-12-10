@@ -2,6 +2,7 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
+#include <fstream>
 #include <string>
 #include <bitset>
 #include <memory>

@@ -40,6 +40,9 @@
     <Filter Include="Graphics\Vulkan">
       <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Vulkan\Initialization">
+      <UniqueIdentifier>{0DCFBE0B-F9F4-8872-E23A-0E3ECEFFAD3E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -170,29 +173,41 @@
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h">
       <Filter>Graphics\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\CommonGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h">
       <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Constants.h">
       <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Instance.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\LogicalDevice.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h">
       <Filter>Platform\GLFW</Filter>
@@ -223,7 +238,6 @@
       <Filter>Util\CPUInfo</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -238,11 +252,17 @@
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp">
       <Filter>Graphics\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp">
       <Filter>Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp">
-      <Filter>Graphics\Vulkan</Filter>
+      <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
       <Filter>Platform\GLFW</Filter>

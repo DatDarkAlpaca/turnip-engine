@@ -44,7 +44,7 @@
     <IntDir>..\build\intermediate\Debug-windows-x86_64\turnip-engine\</IntDir>
     <TargetName>turnip-engine</TargetName>
     <TargetExt>.lib</TargetExt>
-    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad521eacca7aefd\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad2795ec90d739f\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\build\bin\Release-windows-x86_64\turnip-engine\</OutDir>
@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;TUR_DEBUG;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;..\..\..\.conan2\p\b\glad521eacca7aefd\p\include;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\glad2795ec90d739f\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -69,8 +69,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib;gdi32.lib;vulkan-1.lib;fmtd.lib;opengl32.lib;glad.lib;spdlogd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;..\..\..\.conan2\p\b\glad521eacca7aefd\p\lib;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;gdi32.lib;opengl32.lib;spdlogd.lib;vulkan-1.lib;glad.lib;fmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\glad2795ec90d739f\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,6 +134,9 @@
     <ClInclude Include="src\Graphics\Graphics.h" />
     <ClInclude Include="src\Graphics\GraphicsBackend.h" />
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h" />
@@ -160,6 +163,8 @@
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
