@@ -4,11 +4,11 @@
 #include "Platform/Platform.h"
 
 #include "Common.h"
-#include "Instance.h"
-#include "PhysicalDevice.h"
-#include "LogicalDevice.h"
-#include "Queues.h"
-#include "Swapchain.h"
+#include "Initialization/Instance.h"
+#include "Initialization/PhysicalDevice.h"
+#include "Initialization/LogicalDevice.h"
+#include "Initialization/Queues.h"
+#include "Initialization/Swapchain.h"
 
 #define VULKAN_BACKEND(VulkanBackendSmartPtr) static_cast<BackendVulkan*>(VulkanBackendSmartPtr.get())
 

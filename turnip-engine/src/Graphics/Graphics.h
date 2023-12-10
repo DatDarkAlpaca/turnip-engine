@@ -5,4 +5,4 @@
 
 #include "Graphics/OpenGL/BackendOpenGL.h"
 #include "Graphics/Vulkan/BackendVulkan.h"
-#include "Graphics/Vulkan/VulkanInitializer.h"
+#include "Graphics/Vulkan/Initialization/VulkanInitializer.h"
