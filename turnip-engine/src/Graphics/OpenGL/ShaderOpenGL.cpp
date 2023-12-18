@@ -54,10 +54,7 @@ namespace tur
 	{
         auto shaderContents = ReadFile(descriptor.filepath);
 
-        std::string shaderCode;
-        std::ifstream shaderFile;
-
-        const char* cShaderCode = shaderCode.c_str();
+        const char* cShaderCode = shaderContents.c_str();
         m_ID = glCreateShader(GetShaderTypeValue(descriptor.type));
         glShaderSource(m_ID, 1, &cShaderCode, NULL);
         glCompileShader(m_ID);

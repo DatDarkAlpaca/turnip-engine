@@ -116,6 +116,8 @@
     <None Include="res\compile_shaders.cmd" />
     <None Include="res\shaders\basic.frag" />
     <None Include="res\shaders\basic.vert" />
+    <None Include="res\shaders\shader.frag" />
+    <None Include="res\shaders\shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
