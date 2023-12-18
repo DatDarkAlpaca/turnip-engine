@@ -192,11 +192,11 @@ namespace tur
 }
 
 #else
-	inline constexpr const char* DebugMouseButtonName(MouseButton button) { }
+	inline constexpr const char* DebugMouseButtonName(MouseButton button) { return ""; }
 
-	inline std::string DebugMods(KeyboardMods mods) { }
+	inline std::string DebugMods(KeyboardMods mods) { return ""; }
 
-	inline constexpr const char* DebugKeyName(Key key) { }
+	inline constexpr const char* DebugKeyName(Key key) { return ""; }
 
 #endif	
 }

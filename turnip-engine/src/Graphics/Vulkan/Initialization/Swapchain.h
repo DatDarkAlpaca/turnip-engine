@@ -322,11 +322,6 @@ namespace tur::vulkan
 			swapchainResult.imageArrayLayers = m_Information.imageArrayLayers;
 			swapchainResult.clipped = m_Information.clipped;
 
-			// Images:
-			
-
-			
-
 			return swapchainResult;
 		}
 
@@ -540,28 +535,27 @@ namespace tur::vulkan
 			if (presentQueue == InvalidQueueIndex)
 				TUR_LOG_ERROR("Failed to assign a graphics queue index");
 
-			if (m_SharingModeOverride)
-				return;
-
 			if (graphicsQueue != presentQueue) 
 			{
 				uint32_t queues[2] = { graphicsQueue, presentQueue };
-				createInfo.imageSharingMode = vk::SharingMode::eConcurrent;
-				m_Information.sharingMode = vk::SharingMode::eConcurrent;
 
 				createInfo.queueFamilyIndexCount = 2;
 				createInfo.pQueueFamilyIndices = queues;
+
+				if (m_SharingModeOverride)
+					return;
+
+				createInfo.imageSharingMode = vk::SharingMode::eConcurrent;
+				m_Information.sharingMode = vk::SharingMode::eConcurrent;
 			}
 			else
 			{
+				if (m_SharingModeOverride)
+					return;
+
 				createInfo.imageSharingMode = vk::SharingMode::eExclusive;
 				m_Information.sharingMode = vk::SharingMode::eExclusive;
 			}
-		}
-
-		void PrepareFrameData(SwapchainData& swapchainResult)
-		{
-			
 		}
 
 	private:

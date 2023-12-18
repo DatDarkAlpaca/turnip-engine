@@ -85,7 +85,7 @@ namespace tur::vulkan
 	struct QueueInformation
 	{
 	public:
-		struct Data
+		struct QueueData
 		{
 			uint32_t familyIndex;
 			vk::Queue queue;
@@ -108,6 +108,6 @@ namespace tur::vulkan
 		}
 
 	public:
-		std::vector<Data> queues;
+		std::vector<QueueData> queues;
 	};
 }

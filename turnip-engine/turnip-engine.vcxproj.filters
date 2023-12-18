@@ -237,6 +237,9 @@
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h">
       <Filter>Util\CPUInfo</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\File.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>

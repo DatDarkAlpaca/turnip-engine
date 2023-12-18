@@ -130,7 +130,7 @@ namespace tur::vulkan
 		auto severity = GetMessageSeverityName(messageSeverity);
 		auto type = GetMessageTypeName(messageType);
 
-		TUR_LOG_DEBUG("[Vulkan: {}] [{}]: {}", severity, type, pCallbackData->pMessage);
+		TUR_LOG_ERROR("[Vulkan: {}] [{}]: {}", severity, type, pCallbackData->pMessage);
 		return VK_FALSE;
 	}
 }
@@ -163,6 +163,7 @@ namespace tur::vulkan
 #ifdef TUR_DEBUG
 			AddValidationLayer();
 			AddDebugUtilsExtension();
+			UseDefaultDebugCallback();
 #endif
 		}
 
@@ -219,6 +220,8 @@ namespace tur::vulkan
 
 			// Messenger Creation:
 			output.enableValidation = m_Information.useDebugMessenger;
+			output.apiVersion = m_Information.apiVersion;
+			output.enablePresentation = !m_Information.disableKHRSurface && !m_Information.disableWindowingSurface;
 
 			if (!m_Information.useDebugMessenger)
 				return output;
@@ -233,10 +236,6 @@ namespace tur::vulkan
 
 			vk::DispatchLoaderDynamic DLDI(output.instanceHandle, vkGetInstanceProcAddr);
 			output.debugMessenger = output.instanceHandle.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
-			
-			// Addtional Information:
-			output.apiVersion = m_Information.apiVersion;
-			output.enablePresentation = !m_Information.disableKHRSurface && !m_Information.disableWindowingSurface;
 
 			return output;
 		}
@@ -306,7 +305,11 @@ namespace tur::vulkan
 		}
 		VulkanInstanceBuilder& AddValidationLayer()
 		{
+			if (m_Information.addedValidationLayer)
+				return *this;
+
 			m_Information.layers.push_back(ValidationLayerName);
+			m_Information.addedValidationLayer = true;
 			return *this;
 		}
 		VulkanInstanceBuilder& AddLayers(const std::vector<const char*>& layers)
@@ -324,7 +327,11 @@ namespace tur::vulkan
 		}
 		VulkanInstanceBuilder& AddDebugUtilsExtension()
 		{
+			if (m_Information.addDebugExtensions)
+				return *this;
+
 			m_Information.extensions.push_back(DebugUtilsExtensionName);
+			m_Information.addDebugExtensions = true;
 			return *this; 
 		}
 		VulkanInstanceBuilder& AddExtensions(const std::vector<const char*>& extensions)
@@ -362,10 +369,7 @@ namespace tur::vulkan
 		VulkanInstanceBuilder& UseDebugMessenger(bool value)
 		{
 			if (value)
-			{
-				AddValidationLayer();
-				AddDebugUtilsExtension();
-			}
+				UseDefaultDebugCallback();
 
 			m_Information.useDebugMessenger = value;
 			return *this;
@@ -490,6 +494,8 @@ namespace tur::vulkan
 #else
 			bool useDebugMessenger = false;
 #endif
+			bool addedValidationLayer = true, addDebugExtensions = false;
+
 		} m_Information;
 	};
 }

@@ -18,17 +18,17 @@ namespace tur::vulkan
 			vk::DeviceCreateInfo deviceInfo = vk::DeviceCreateInfo(
 				vk::DeviceCreateFlags(),
 				(uint32_t)m_QueueInfoList.size(), m_QueueInfoList.data(),
-				(uint32_t)m_Layers.size(), m_Layers.data(),
+				0, nullptr,
 				(uint32_t)m_Extensions.size(), m_Extensions.data(),
 				&deviceFeatures
 			);
 
-			try 
+			try
 			{
 				vk::Device device = m_DeviceOutput.device.createDevice(deviceInfo);
 				return device;
 			}
-			catch (vk::SystemError err) 
+			catch (vk::SystemError err)
 			{
 				TUR_LOG_ERROR("Device creation failed: {}", err.what());
 				return std::nullopt;
@@ -39,9 +39,6 @@ namespace tur::vulkan
 		LogicalDeviceBuilder& SetInstanceOutput(const InstanceOutput& instance)
 		{
 			m_InstanceOutput = instance;
-
-			if (instance.enableValidation)
-				AddRequiredLayer(vulkan::ValidationLayerName);
 
 			if (instance.enablePresentation)
 				AddRequiredExtension(vulkan::SwapchainExtensionName);
@@ -76,24 +73,11 @@ namespace tur::vulkan
 			return *this;
 		}
 
-		LogicalDeviceBuilder& AddRequiredLayers(const std::vector<const char*>& layers)
-		{
-			for (const auto& layer : layers)
-				m_Layers.push_back(layer);
-
-			return *this;
-		}
-		LogicalDeviceBuilder& AddRequiredLayer(const char* layer)
-		{
-			m_Layers.push_back(layer);
-			return *this;
-		}
-
 	private:
 		PhysicalDeviceOutput m_DeviceOutput;
 		InstanceOutput m_InstanceOutput;
 
-		std::vector<const char*> m_Extensions, m_Layers;
+		std::vector<const char*> m_Extensions;
 		std::vector<vk::DeviceQueueCreateInfo> m_QueueInfoList;
 	};
 }
