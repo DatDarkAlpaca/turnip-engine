@@ -324,7 +324,7 @@ namespace tur
 		glEnable(GL_MULTISAMPLE);
 		platform::SetWindowBufferSamples(descriptor.sampleCount);
 
-		RecreateWindow(m_Window); // TODO: Organize.
+		RecreateWindow(m_Window);
 	}
 
 	void PipelineOpenGL::SetupColorBlending(const PipelineDescriptor& descriptor)
@@ -350,7 +350,6 @@ namespace tur
 			glEnable(GL_COLOR_LOGIC_OP);
 			glLogicOp(GetLogicOp(descriptor.logicOperation));
 		}
-		
 	}
 }
 

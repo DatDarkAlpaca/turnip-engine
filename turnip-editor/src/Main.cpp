@@ -15,14 +15,14 @@ public:
 public:
 	void OnEngineInitialize() override
 	{
-		auto vertexShader = graphics->CreateShader({ "res/shaders/shader.vert", ShaderType::VERTEX });
-		auto fragShader = graphics->CreateShader({ "res/shaders/shader.frag", ShaderType::FRAGMENT });
+		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
+		auto fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
 
 		PipelineDescriptor descriptor;
 		{
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
-			descriptor.enableMultisampling = true;
+			// descriptor.enableMultisampling = true;
 		};
 		pipeline = graphics->CreatePipeline(descriptor);
 	}
@@ -65,8 +65,8 @@ public:
 		}
 
 		// Graphics API:
-		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::OPENGL, {});
-		//DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
+		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::VULKAN, {});
+		DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
 
 		// Views:
 		AddView(MakeUnique<MainView>(graphicsAPI));
