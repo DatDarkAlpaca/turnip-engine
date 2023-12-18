@@ -22,9 +22,24 @@ public:
 		{
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
-			// descriptor.enableMultisampling = true;
 		};
 		pipeline = graphics->CreatePipeline(descriptor);
+		
+		// Command Pools are handled indirectly:
+		// commands = graphics->CreateCommandBuffer(ImmediateSubmit);
+
+		// commands->SetViewport()
+		// commands->SetVertexBuffer()
+		// commands->BeginRenderPass()
+			// commands->Clear();
+			// commands->SetPipeline(pipeline);
+			// commands->Draw(3, 0);
+		// commands->EndRenderPass()
+
+		// commands->Begin();
+
+		// commands->End();
+		// graphics->Present();
 	}
 
 	void OnEvent(tur::Event& event) override

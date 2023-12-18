@@ -563,6 +563,8 @@ namespace tur
 			scissors.push_back(rect);
 		}
 
+		// TODO: Allow viewport and scissor to be dynamic states.
+
 		// Viewport State:
 		vk::PipelineViewportStateCreateInfo viewportState = { };
 		viewportState.flags = vk::PipelineViewportStateCreateFlags();

@@ -236,6 +236,7 @@ namespace tur
 		SetupShaders(descriptor);
 		SetupRasterizer(descriptor);
 		SetupMultisampling(descriptor);
+		SetupColorBlending(descriptor);
     }
 
 	void PipelineOpenGL::SetupShaders(const PipelineDescriptor& descriptor)
