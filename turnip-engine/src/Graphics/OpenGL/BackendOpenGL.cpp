@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "BackendOpenGL.h"
-
 #include "Platform/Platform.h"
+
+#include "ShaderOpenGL.h"
 
 namespace tur
 {
@@ -45,5 +46,10 @@ namespace tur
 	void BackendOpenGL::Present()
 	{
 		platform::SwapBuffers(static_cast<GLFWwindow*>(m_Window->GetHandle()));
+	}
+
+	Shader* BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)
+	{
+		return new ShaderOpenGL(descriptor);
 	}
 }

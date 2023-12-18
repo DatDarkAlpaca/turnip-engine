@@ -28,12 +28,4 @@ namespace tur
 		
 		return nullptr;
 	}
-
-	tur_shared<Shader> Shader::Create(const std::vector<ShaderDescriptor>& descriptions)
-	{
-
-
-		return tur_shared<Shader>();
-	}
-	
 }

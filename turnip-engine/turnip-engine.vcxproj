@@ -140,6 +140,7 @@
     <ClInclude Include="src\Graphics\GraphicsBackend.h" />
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h" />
@@ -169,10 +171,12 @@
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
     <ClCompile Include="src\pch.cpp">

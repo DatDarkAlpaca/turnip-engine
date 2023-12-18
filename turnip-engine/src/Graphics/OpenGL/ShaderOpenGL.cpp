@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ShaderOpenGL.h"
+#include "Util/File.h"
 
 #define TUR_GL_LOG_BUFFER_SIZE 1 << 11
 
@@ -46,70 +47,22 @@ namespace tur
             TUR_LOG_ERROR("Failed to compile {} Shader: {}", GetShaderTypeName(type), infoLog);
         }
     }
-
-    static void CheckProgramLinkErrors(GLID program)
-    {
-        int success;
-        char infoLog[TUR_GL_LOG_BUFFER_SIZE];
-
-        glGetProgramiv(program, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(program, TUR_GL_LOG_BUFFER_SIZE, NULL, infoLog);
-            TUR_LOG_ERROR("Failed to link shader program: {}", infoLog);
-        }
-    }
 }
 
 namespace tur
 {
-	ShaderOpenGL::ShaderOpenGL(const std::vector<ShaderDescriptor>& shaderDescriptors)
+	ShaderOpenGL::ShaderOpenGL(const ShaderDescriptor& descriptor)
 	{
-        m_ID = glCreateProgram();
+        auto shaderContents = ReadFile(descriptor.filepath);
 
-        std::vector<unsigned int> shaderIDs;
-        for (const auto& [filepath, type] : shaderDescriptors)
-        {
-            // Step 1: File reading
-            std::string shaderCode;
-            std::ifstream shaderFile;
-            shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        std::string shaderCode;
+        std::ifstream shaderFile;
 
-            try
-            {
-                shaderFile.open(filepath);
-                std::stringstream shaderStream;
+        const char* cShaderCode = shaderCode.c_str();
+        m_ID = glCreateShader(GetShaderTypeValue(descriptor.type));
+        glShaderSource(m_ID, 1, &cShaderCode, NULL);
+        glCompileShader(m_ID);
 
-                shaderStream << shaderFile.rdbuf();
-
-                shaderFile.close();
-
-                shaderCode = shaderStream.str();
-            }
-            catch (const std::ifstream::failure& e)
-            {
-                TUR_LOG_ERROR("Failed to read shader file at '{}': {}", filepath, e.what());
-                continue;
-            }
-
-            // Step 2: Compiling
-            const char* cShaderCode = shaderCode.c_str();
-            GLID shaderID;
-
-            shaderID = glCreateShader(GetShaderTypeValue(type));
-            glShaderSource(shaderID, 1, &cShaderCode, NULL);
-            glCompileShader(shaderID);
-            CheckCompileErrors(shaderID, type);
-
-            glAttachShader(m_ID, shaderID);
-
-            shaderIDs.push_back(shaderID);
-        }
-
-        glLinkProgram(m_ID);
-        CheckProgramLinkErrors(m_ID);
-
-        for (const auto& shaderID : shaderIDs)
-            glDeleteShader(shaderID);
+        CheckCompileErrors(m_ID, descriptor.type);
 	}
 }

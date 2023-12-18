@@ -17,6 +17,9 @@ namespace tur
 
 		void Present() override;
 
+	public:
+		Shader* CreateShader(const ShaderDescriptor&) override;
+
 	private:
 		BackendProperties m_Properties;
 		NON_OWNING Window* m_Window = nullptr;

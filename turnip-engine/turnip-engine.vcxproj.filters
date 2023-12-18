@@ -241,6 +241,8 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
+    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -274,5 +276,7 @@
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
   </ItemGroup>
 </Project>

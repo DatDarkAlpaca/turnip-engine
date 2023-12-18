@@ -2,6 +2,8 @@
 #include "BackendVulkan.h"
 #include "Initialization/VulkanInitializer.h"
 
+#include "ShaderVulkan.h"
+
 namespace tur
 {
 	BackendVulkan::BackendVulkan(const BackendProperties& properties)
@@ -18,5 +20,10 @@ namespace tur
 		window->Initialize(windowProperties);
 
 		m_Window = window.get();
+	}
+
+	Shader* BackendVulkan::CreateShader(const ShaderDescriptor& descriptor)
+	{
+		return new ShaderVulkan(m_Device, descriptor);
 	}
 }

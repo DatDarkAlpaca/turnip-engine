@@ -6,8 +6,10 @@ namespace tur
 {
 	class ShaderOpenGL : public Shader
 	{
-	public:
-		explicit ShaderOpenGL(const std::vector<ShaderDescriptor>& shaderDescriptors);
+		friend class BackendOpenGL;
+
+	private:
+		explicit ShaderOpenGL(const ShaderDescriptor& descriptor);
 
 	private:
 		GLID m_ID = InvalidGLID;

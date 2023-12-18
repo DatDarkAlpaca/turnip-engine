@@ -35,10 +35,5 @@ namespace tur
 	{
 	public:
 		virtual ~Shader() = default;
-
-	public:
-		static tur_shared<Shader> Create(const std::vector<ShaderDescriptor>& descriptions);
-
-		virtual void Bind() = 0;
 	};
 }

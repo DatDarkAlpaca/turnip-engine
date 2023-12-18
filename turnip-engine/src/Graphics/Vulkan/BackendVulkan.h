@@ -19,10 +19,15 @@ namespace tur
 	public:
 		BackendVulkan(const BackendProperties& properties);
 
+		// TODO: Implement Destructor.
+
 	public:
 		void InitializeWindow(tur_unique<Window>& window) override;
 
 		void Present() override { TUR_LOG_WARN("Not implemented"); }
+
+	public:
+		Shader* CreateShader(const ShaderDescriptor& descriptor) override;
 
 	public:
 		EXPOSE_PROPERTY(BackendProperties, Properties, m_Properties);

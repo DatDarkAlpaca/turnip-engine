@@ -8,9 +8,15 @@ class MainView : public tur::View
 {
 public:
 	MainView(const tur_shared<IGraphicsBackend>& graphicsBackend)
-		: m_GraphicsBackend(graphicsBackend) { }
+		: graphics(graphicsBackend) { }
 
 public:
+	void OnInstantiated() override
+	{
+		auto* vertexShader = graphics->CreateShader({ "res/shaders/basic.vert", ShaderType::VERTEX });
+		auto* fragShader = graphics->CreateShader({ "res/shaders/basic.frag", ShaderType::FRAGMENT });
+	}
+
 	void OnEvent(tur::Event& event) override
 	{
 		Subscriber subscriber(event);
@@ -28,11 +34,11 @@ public:
 		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		m_GraphicsBackend->Present();
+		graphics->Present();
 	}
 
 private:
-	tur_shared<IGraphicsBackend> m_GraphicsBackend;
+	tur_shared<IGraphicsBackend> graphics;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -48,8 +54,8 @@ public:
 		}
 
 		// Graphics API:
-		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::VULKAN, {});
-		DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
+		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::OPENGL, {});
+		//DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
 
 		// Views:
 		AddView(MakeUnique<MainView>(graphicsAPI));
