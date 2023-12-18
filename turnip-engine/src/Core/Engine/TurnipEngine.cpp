@@ -45,6 +45,8 @@ namespace tur
 	void TurnipEngine::Run()
 	{
 		TUR_ASSERT(m_Data.window, "The application doesn't have a window. Create one using CreateWindow() or CreateGraphicsAPI()");
+	
+		OnEngineInitialize();
 
 		auto& window = m_Data.window;
 		window->Show();
@@ -62,6 +64,12 @@ namespace tur
 
 			OnRenderGUI();
 		}
+	}
+
+	void TurnipEngine::OnEngineInitialize()
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnEngineInitialize();
 	}
 
 	void TurnipEngine::OnRender()

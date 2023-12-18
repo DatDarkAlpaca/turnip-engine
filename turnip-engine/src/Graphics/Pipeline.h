@@ -47,8 +47,14 @@ namespace tur
 		// Color Blending:
 		ColorComponents blendingWriteMask = ColorComponents::R | ColorComponents::G | ColorComponents::B | ColorComponents::A;
 		bool enableColorBlending = false;
+		BlendFactor srcColorBlendFactor = BlendFactor::ONE;
+		BlendFactor dstColorBlendFactor = BlendFactor::ZERO;
+		BlendFactor srcAlphaColorBlendFactor = BlendFactor::ONE;
+		BlendFactor dstAlphaColorBlendFactor = BlendFactor::ZERO;
+		BlendOperation colorBlendOp = BlendOperation::ADD;
+		BlendOperation alphaBlendOp = BlendOperation::ADD;
 		bool enableLogicOp = false;
-		ColorBlendingOperation blendingOperation = ColorBlendingOperation::COPY;
+		LogicOperation logicOperation = LogicOperation::COPY;
 		float blendConstants[4] = { 0.f, 0.f, 0.f, 0.f };
 
 		// Layout:

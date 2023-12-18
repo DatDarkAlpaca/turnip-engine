@@ -18,6 +18,8 @@ namespace tur
 		virtual ~View() = default;
 
 	public:
+		virtual void OnEngineInitialize() { };
+
 		virtual void OnInstantiated() { };
 
 		virtual void OnRender() { };

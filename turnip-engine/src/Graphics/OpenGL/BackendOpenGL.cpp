@@ -31,13 +31,14 @@ namespace tur
 
 	void BackendOpenGL::InitializeWindow(tur_unique<Window>& window)
 	{
-		m_Window = window.get();
-
 		platform::ConfigureOpenGL(m_Properties.version.major, m_Properties.version.minor);
 
-		WindowProperties windowProperties = window.get() ? window->GetProperties() : WindowProperties{};
-		window = tur::MakeUnique<Window>();
-		window->Initialize(windowProperties);
+		if(!window)
+			window = tur::MakeUnique<Window>();
+		
+		RecreateWindow(window.get());
+		
+		m_Window = window.get();
 
 		platform::InitializeOpenGL(static_cast<GLFWwindow*>(window->GetHandle()));
 	
@@ -56,6 +57,6 @@ namespace tur
 
 	tur_unique<Pipeline> BackendOpenGL::CreatePipeline(const PipelineDescriptor& descriptor)
 	{
-		return tur::MakeUnique<PipelineOpenGL>(descriptor);
+		return tur::MakeUnique<PipelineOpenGL>(descriptor, m_Window);
 	}
 }

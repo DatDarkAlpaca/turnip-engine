@@ -41,7 +41,10 @@ namespace tur
 				return vk::PrimitiveTopology::ePatchList;
 
 			default:
-				TUR_LOG_CRITICAL("Invalid topology");
+			{
+				TUR_LOG_ERROR("Invalid topology. Using default: TRIANGLES");
+				return vk::PrimitiveTopology::eTriangleList;
+			}
 		}
 	}
 
@@ -62,7 +65,10 @@ namespace tur
 				return vk::PolygonMode::eFillRectangleNV;
 
 			default:
-				TUR_LOG_CRITICAL("Invalid Polygon Mode");
+			{
+				TUR_LOG_ERROR("Invalid Polygon Mode. Using Default: FILL");
+				return vk::PolygonMode::eFill;
+			}
 		}
 	}
 
@@ -79,8 +85,11 @@ namespace tur
 			case CullMode::FRONT_AND_BACK:
 				return vk::CullModeFlagBits::eFrontAndBack;
 
-			default:
-				TUR_LOG_CRITICAL("Invalid CullMode");
+			default: 
+			{
+				TUR_LOG_ERROR("Invalid Cull Mode. Using default: BACK");
+				return vk::CullModeFlagBits::eBack;
+			}
 		}
 	}
 
@@ -95,7 +104,10 @@ namespace tur
 				return vk::FrontFace::eClockwise;
 
 			default:
-				TUR_LOG_CRITICAL("Invalid Front Face");
+			{
+				TUR_LOG_ERROR("Invalid Front Face. Using default: CLOCKWISE");
+				return vk::FrontFace::eClockwise;
+			} break;
 		}
 	}
 
@@ -119,7 +131,7 @@ namespace tur
 				return vk::SampleCountFlagBits::e64;
 			default:
 			{
-				TUR_LOG_ERROR("Multisampler samples count must be a power of 2. Setting value to 1");
+				TUR_LOG_ERROR("Multisampler samples count must be a power of 2. Using Default: 1");
 				return vk::SampleCountFlagBits::e1;
 			} break;
 		}
@@ -144,60 +156,279 @@ namespace tur
 		return flags;
 	}
 
-	static constexpr vk::LogicOp GetLogicOp(ColorBlendingOperation operation)
+	static constexpr vk::BlendFactor GetBlendFactor(BlendFactor blendFactor, BlendFactor fallback)
 	{
-		switch (operation)
+		switch (blendFactor)
 		{
-			case ColorBlendingOperation::CLEAR:
+			case BlendFactor::ZERO:
+				return vk::BlendFactor::eZero;
+			case BlendFactor::ONE:
+				return vk::BlendFactor::eOne;
+			case BlendFactor::SRC_COLOR:
+				return vk::BlendFactor::eSrcColor;
+			case BlendFactor::ONE_MINUS_SRC_COLOR:
+				return vk::BlendFactor::eOneMinusSrcColor;
+			case BlendFactor::DST_COLOR:
+				return vk::BlendFactor::eDstColor;
+			case BlendFactor::ONE_MINUS_DST_COLOR:
+				return vk::BlendFactor::eOneMinusDstColor;
+			case BlendFactor::SRC_ALPHA:
+				return vk::BlendFactor::eSrcAlpha;
+			case BlendFactor::ONE_MINUS_SRC_ALPHA:
+				return vk::BlendFactor::eOneMinusSrcAlpha;
+			case BlendFactor::DST_ALPHA:
+				return vk::BlendFactor::eDstAlpha;
+			case BlendFactor::ONE_MINUS_DST_ALPHA:
+				return vk::BlendFactor::eOneMinusDstAlpha;
+			case BlendFactor::CONSTANT_COLOR:
+				return vk::BlendFactor::eConstantColor;
+			case BlendFactor::ONE_MINUS_CONSTANT_COLOR:
+				return vk::BlendFactor::eOneMinusConstantColor;
+			case BlendFactor::CONSTANT_ALPHA:
+				return vk::BlendFactor::eConstantAlpha;
+			case BlendFactor::ONE_MINUS_CONSTANT_ALPHA:
+				return vk::BlendFactor::eOneMinusConstantAlpha;
+			case BlendFactor::SRC_ALPHA_SATURATE:
+				return vk::BlendFactor::eSrcAlphaSaturate;
+			case BlendFactor::SRC1_COLOR:
+				return vk::BlendFactor::eSrc1Color;
+			case BlendFactor::ONE_MINUS_SRC1_COLOR:
+				return vk::BlendFactor::eOneMinusSrc1Color;
+			case BlendFactor::SRC1_ALPHA:
+				return vk::BlendFactor::eSrc1Alpha;
+			case BlendFactor::ONE_MINUS_SRC1_ALPHA:
+				return vk::BlendFactor::eOneMinusSrc1Alpha;
+
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Blend Factor. Using fallback.");
+				return GetBlendFactor(fallback, fallback);
+			} break;
+		}
+	}
+
+	static constexpr vk::BlendOp GetBlendOperation(BlendOperation blendOperation)
+	{
+		switch (blendOperation)
+		{
+			case BlendOperation::ADD:
+				return vk::BlendOp::eAdd;
+
+			case BlendOperation::SUBTRACT: 
+				return vk::BlendOp::eSubtract;
+
+			case BlendOperation::REVERSE_SUBTRACT:
+				return vk::BlendOp::eReverseSubtract;
+
+			case BlendOperation::MIN:
+				return vk::BlendOp::eMin;
+
+			case BlendOperation::MAX:
+				return vk::BlendOp::eMax;
+
+			case BlendOperation::ZERO_EXT:
+				return vk::BlendOp::eZeroEXT;
+
+			case BlendOperation::SRC_EXT:
+				return vk::BlendOp::eSrcEXT;
+
+			case BlendOperation::DST_EXT:
+				return vk::BlendOp::eDstEXT;
+
+			case BlendOperation::SRC_OVER_EXT:
+				return vk::BlendOp::eSrcOverEXT;
+
+			case BlendOperation::DST_OVER_EXT:
+				return vk::BlendOp::eDstOverEXT;
+
+			case BlendOperation::SRC_IN_EXT:
+				return vk::BlendOp::eSrcInEXT;
+
+			case BlendOperation::DST_IN_EXT:
+				return vk::BlendOp::eDstInEXT;
+
+			case BlendOperation::SRC_OUT_EXT:
+				return vk::BlendOp::eSrcOutEXT;
+
+			case BlendOperation::DST_OUT_EXT:
+				return vk::BlendOp::eDstOutEXT;
+
+			case BlendOperation::SRC_ATOP_EXT:
+				return vk::BlendOp::eSrcAtopEXT;
+
+			case BlendOperation::DST_ATOP_EXT:
+				return vk::BlendOp::eDstAtopEXT;
+
+			case BlendOperation::XOR_EXT:
+				return vk::BlendOp::eXorEXT;
+
+			case BlendOperation::MULTIPLY_EXT:
+				return vk::BlendOp::eMultiplyEXT;
+
+			case BlendOperation::SCREEN_EXT:
+				return vk::BlendOp::eScreenEXT;
+
+			case BlendOperation::OVERLAY_EXT:
+				return vk::BlendOp::eOverlayEXT;
+
+			case BlendOperation::DARKEN_EXT:
+				return vk::BlendOp::eDarkenEXT;
+
+			case BlendOperation::LIGHTEN_EXT:
+				return vk::BlendOp::eLightenEXT;
+
+			case BlendOperation::COLORDODGE_EXT:
+				return vk::BlendOp::eColordodgeEXT;
+
+			case BlendOperation::COLORBURN_EXT:
+				return vk::BlendOp::eColorburnEXT;
+
+			case BlendOperation::HARDLIGHT_EXT:
+				return vk::BlendOp::eHardlightEXT;
+
+			case BlendOperation::SOFTLIGHT_EXT:
+				return vk::BlendOp::eSoftlightEXT;
+
+			case BlendOperation::DIFFERENCE_EXT:
+				return vk::BlendOp::eDifferenceEXT;
+
+			case BlendOperation::EXCLUSION_EXT:
+				return vk::BlendOp::eExclusionEXT;
+
+			case BlendOperation::INVERT_EXT:
+				return vk::BlendOp::eInvertEXT;
+
+			case BlendOperation::INVERT_RGB_EXT:
+				return vk::BlendOp::eInvertRgbEXT;
+
+			case BlendOperation::LINEARDODGE_EXT:
+				return vk::BlendOp::eLineardodgeEXT;
+
+			case BlendOperation::LINEARBURN_EXT:
+				return vk::BlendOp::eLinearburnEXT;
+
+			case BlendOperation::VIVIDLIGHT_EXT:
+				return vk::BlendOp::eVividlightEXT;
+
+			case BlendOperation::LINEARLIGHT_EXT:
+				return vk::BlendOp::eLinearlightEXT;
+
+			case BlendOperation::PINLIGHT_EXT:
+				return vk::BlendOp::ePinlightEXT;
+
+			case BlendOperation::HARDMIX_EXT:
+				return vk::BlendOp::eHardmixEXT;
+
+			case BlendOperation::HSL_HUE_EXT:
+				return vk::BlendOp::eHslHueEXT;
+
+			case BlendOperation::HSL_SATURATION_EXT:
+				return vk::BlendOp::eHslSaturationEXT;
+
+			case BlendOperation::HSL_COLOR_EXT:
+				return vk::BlendOp::eHslColorEXT;
+
+			case BlendOperation::HSL_LUMINOSITY_EXT:
+				return vk::BlendOp::eHslLuminosityEXT;
+
+			case BlendOperation::PLUS_EXT:
+				return vk::BlendOp::ePlusEXT;
+
+			case BlendOperation::PLUS_CLAMPED_EXT:
+				return vk::BlendOp::ePlusClampedEXT;
+
+			case BlendOperation::PLUS_CLAMPED_ALPHA_EXT:
+				return vk::BlendOp::ePlusClampedAlphaEXT;
+
+			case BlendOperation::PLUS_DARKER_EXT:
+				return vk::BlendOp::ePlusDarkerEXT;
+
+			case BlendOperation::MINUS_EXT:
+				return vk::BlendOp::eMinusEXT;
+
+			case BlendOperation::MINUS_CLAMPED_EXT:
+				return vk::BlendOp::eMinusClampedEXT;
+
+			case BlendOperation::CONTRAST_EXT:
+				return vk::BlendOp::eContrastEXT;
+
+			case BlendOperation::INVERT_OVG_EXT:
+				return vk::BlendOp::eInvertOvgEXT;
+
+			case BlendOperation::RED_EXT:
+				return vk::BlendOp::eRedEXT;
+
+			case BlendOperation::GREEN_EXT:
+				return vk::BlendOp::eGreenEXT;
+
+			case BlendOperation::BLUE_EXT:
+				return vk::BlendOp::eBlueEXT;
+
+			default:
+			{
+				TUR_LOG_ERROR("Invalid blend operation. Using default: ADD");
+				return vk::BlendOp::eAdd;
+			}
+		}
+	}
+
+	static constexpr vk::LogicOp GetLogicOp(LogicOperation logicOp)
+	{
+		switch (logicOp)
+		{
+			case LogicOperation::CLEAR:
 				return vk::LogicOp::eClear;
 
-			case ColorBlendingOperation::AND:
+			case LogicOperation::AND:
 				return vk::LogicOp::eAnd;
 
-			case ColorBlendingOperation::AND_REVERSE:
+			case LogicOperation::AND_REVERSE:
 				return vk::LogicOp::eAndReverse;
 
-			case ColorBlendingOperation::COPY:
+			case LogicOperation::COPY:
 				return vk::LogicOp::eCopy;
 
-			case ColorBlendingOperation::AND_INVERTED:
+			case LogicOperation::AND_INVERTED:
 				return vk::LogicOp::eAndInverted;
 
-			case ColorBlendingOperation::NO_OP:
+			case LogicOperation::NO_OP:
 				return vk::LogicOp::eNoOp;
 
-			case ColorBlendingOperation::XOR:
+			case LogicOperation::XOR:
 				return vk::LogicOp::eXor;
 
-			case ColorBlendingOperation::OR:
+			case LogicOperation::OR:
 				return vk::LogicOp::eOr;
 
-			case ColorBlendingOperation::NOR:
+			case LogicOperation::NOR:
 				return vk::LogicOp::eNor;
 
-			case ColorBlendingOperation::EQUIVALENT:
+			case LogicOperation::EQUIVALENT:
 				return vk::LogicOp::eEquivalent;
 
-			case ColorBlendingOperation::INVERT:
+			case LogicOperation::INVERT:
 				return vk::LogicOp::eInvert;
 
-			case ColorBlendingOperation::OR_REVERSE:
+			case LogicOperation::OR_REVERSE:
 				return vk::LogicOp::eOrReverse;
 
-			case ColorBlendingOperation::COPY_INVERTED:
+			case LogicOperation::COPY_INVERTED:
 				return vk::LogicOp::eCopyInverted;
 
-			case ColorBlendingOperation::OR_INVERTED:
+			case LogicOperation::OR_INVERTED:
 				return vk::LogicOp::eOrInverted;
 
-			case ColorBlendingOperation::NAND:
+			case LogicOperation::NAND:
 				return vk::LogicOp::eNand;
 
-			case ColorBlendingOperation::SET:
+			case LogicOperation::SET:
 				return vk::LogicOp::eSet;
 
 			default:
-				TUR_LOG_CRITICAL("Invalid Color Blending Operation");
+			{
+				TUR_LOG_ERROR("Invalid Color Blending Operation. Using default: COPY");
+				return vk::LogicOp::eCopy;
+			} break;
 		}
 	}
 }
@@ -377,11 +608,17 @@ namespace tur
 		vk::PipelineColorBlendAttachmentState colorBlendAttachment = { };
 		colorBlendAttachment.colorWriteMask = GetColorComponentFlags(descriptor.blendingWriteMask);
 		colorBlendAttachment.blendEnable = descriptor.enableColorBlending;
+		colorBlendAttachment.srcColorBlendFactor	= GetBlendFactor(descriptor.srcColorBlendFactor, BlendFactor::ONE);
+		colorBlendAttachment.dstColorBlendFactor	= GetBlendFactor(descriptor.dstColorBlendFactor, BlendFactor::ZERO);
+		colorBlendAttachment.colorBlendOp			= GetBlendOperation(descriptor.colorBlendOp);
+		colorBlendAttachment.srcAlphaBlendFactor	= GetBlendFactor(descriptor.srcAlphaColorBlendFactor, BlendFactor::ONE);
+		colorBlendAttachment.dstAlphaBlendFactor	= GetBlendFactor(descriptor.dstAlphaColorBlendFactor, BlendFactor::ZERO);
+		colorBlendAttachment.alphaBlendOp			= GetBlendOperation(descriptor.alphaBlendOp);
 
 		vk::PipelineColorBlendStateCreateInfo colorBlending = {};
 		colorBlending.flags = vk::PipelineColorBlendStateCreateFlags();
 		colorBlending.logicOpEnable = descriptor.enableLogicOp;
-		colorBlending.logicOp = GetLogicOp(descriptor.blendingOperation);
+		colorBlending.logicOp = GetLogicOp(descriptor.logicOperation);
 		colorBlending.attachmentCount = 1;
 		colorBlending.pAttachments = &colorBlendAttachment;
 		colorBlending.blendConstants[0] = descriptor.blendConstants[0];

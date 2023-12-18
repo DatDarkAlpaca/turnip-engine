@@ -27,6 +27,11 @@ namespace tur::platform
 			throw "Failed to initialize GLAD";
 	}
 
+	inline void SetWindowBufferSamples(uint32_t samples)
+	{
+		glfwWindowHint(GLFW_SAMPLES, samples);
+	}
+
 	inline void SwapBuffers(GLFWwindow* window)
 	{
 		glfwSwapBuffers(window);

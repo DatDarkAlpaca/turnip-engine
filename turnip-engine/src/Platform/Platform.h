@@ -17,6 +17,12 @@
 namespace tur
 {
 	using Window = WindowBase<WindowGLFW>;
+
+	inline void RecreateWindow(Window* window)
+	{
+		WindowProperties windowProperties = window ? window->GetProperties() : WindowProperties { };
+		window->Initialize(windowProperties);
+	}
 }
 
 #endif

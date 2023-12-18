@@ -13,7 +13,7 @@ public:
 		: graphics(graphicsBackend) { }
 
 public:
-	void OnInstantiated() override
+	void OnEngineInitialize() override
 	{
 		auto vertexShader = graphics->CreateShader({ "res/shaders/shader.vert", ShaderType::VERTEX });
 		auto fragShader = graphics->CreateShader({ "res/shaders/shader.frag", ShaderType::FRAGMENT });
@@ -22,6 +22,7 @@ public:
 		{
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
+			descriptor.enableMultisampling = true;
 		};
 		pipeline = graphics->CreatePipeline(descriptor);
 	}

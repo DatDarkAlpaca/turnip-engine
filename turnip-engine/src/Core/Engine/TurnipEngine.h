@@ -30,6 +30,8 @@ namespace tur
 		void Run();
 
 	private:
+		void OnEngineInitialize();
+
 		void OnRender();
 
 		void OnRenderGUI();
