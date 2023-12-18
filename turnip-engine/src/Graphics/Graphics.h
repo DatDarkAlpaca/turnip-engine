@@ -1,4 +1,7 @@
 #pragma once
+#include "Shader.h"
+#include "Pipeline.h"
+
 #include "Graphics/BackendType.h"
 #include "Graphics/BackendVersion.h"
 #include "Graphics/GraphicsBackend.h"

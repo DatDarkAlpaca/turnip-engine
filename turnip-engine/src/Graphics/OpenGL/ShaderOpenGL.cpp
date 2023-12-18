@@ -1,8 +1,7 @@
 #include "pch.h"
+#include "CommonGL.h"
 #include "ShaderOpenGL.h"
 #include "Util/File.h"
-
-#define TUR_GL_LOG_BUFFER_SIZE 1 << 11
 
 namespace tur
 {

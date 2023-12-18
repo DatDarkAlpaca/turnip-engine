@@ -494,7 +494,7 @@ namespace tur::vulkan
 #else
 			bool useDebugMessenger = false;
 #endif
-			bool addedValidationLayer = true, addDebugExtensions = false;
+			bool addedValidationLayer = false, addDebugExtensions = false;
 
 		} m_Information;
 	};

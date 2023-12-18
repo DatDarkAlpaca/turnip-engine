@@ -142,7 +142,15 @@
     <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
+    <ClInclude Include="src\Graphics\Pipeline.h" />
+    <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
+    <ClInclude Include="src\Graphics\Types\CullMode.h" />
+    <ClInclude Include="src\Graphics\Types\FrontFace.h" />
+    <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
+    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
+    <ClInclude Include="src\Graphics\Types\Scissor.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Types\Viewport.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h" />
@@ -152,6 +160,7 @@
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
@@ -176,6 +185,7 @@
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />

@@ -3,6 +3,7 @@
 #include "Initialization/VulkanInitializer.h"
 
 #include "ShaderVulkan.h"
+#include "PipelineVulkan.h"
 
 namespace tur
 {
@@ -22,8 +23,18 @@ namespace tur
 		m_Window = window.get();
 	}
 
-	Shader* BackendVulkan::CreateShader(const ShaderDescriptor& descriptor)
+	tur_unique<Shader> BackendVulkan::CreateShader(const ShaderDescriptor& descriptor)
 	{
-		return new ShaderVulkan(m_Device, descriptor);
+		return tur::MakeUnique<ShaderVulkan>(m_Device, descriptor);
+	}
+
+	tur_unique<Pipeline> BackendVulkan::CreatePipeline(const PipelineDescriptor& descriptor)
+	{
+		PipelineBuilder builder(descriptor);
+		builder.SetDevice(m_Device)
+			   .SetSwapchain(m_SwapchainData);
+
+		PipelineVulkan pipeline = builder.Build();
+		return tur::MakeUnique<PipelineVulkan>(pipeline);
 	}
 }

@@ -243,6 +243,15 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
     <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
+    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
+    <ClInclude Include="src\Graphics\Pipeline.h" />
+    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
+    <ClInclude Include="src\Graphics\Types\Viewport.h" />
+    <ClInclude Include="src\Graphics\Types\Scissor.h" />
+    <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
+    <ClInclude Include="src\Graphics\Types\CullMode.h" />
+    <ClInclude Include="src\Graphics\Types\FrontFace.h" />
+    <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -278,5 +287,6 @@
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
   </ItemGroup>
 </Project>

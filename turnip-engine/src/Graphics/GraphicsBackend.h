@@ -4,6 +4,7 @@
 #include "Platform/Platform.h"
 
 #include "Shader.h"
+#include "Pipeline.h"
 
 namespace tur
 {
@@ -21,7 +22,9 @@ namespace tur
 		virtual void Present() = 0;
 
 	public:
-		virtual Shader* CreateShader(const ShaderDescriptor&) = 0;
+		virtual tur_unique<Shader> CreateShader(const ShaderDescriptor&) = 0;
+
+		virtual tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor&) = 0;
 	};
 
 	tur_shared<IGraphicsBackend> MakeGraphicsBackend(BackendType type, const BackendProperties& properties);

@@ -113,6 +113,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\compile_shaders.cmd" />
     <None Include="res\shaders\basic.frag" />
     <None Include="res\shaders\basic.vert" />
   </ItemGroup>

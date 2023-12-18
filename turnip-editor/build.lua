@@ -22,7 +22,7 @@ project "turnip-editor"
         "GLFW_STATIC",
         "GLFW_VULKAN_STATIC"
     }
-   
+    
     includedirs {
         "%{prj.location}",
         "%{prj.location}/src",

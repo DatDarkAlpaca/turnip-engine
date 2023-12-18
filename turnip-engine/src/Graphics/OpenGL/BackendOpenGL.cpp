@@ -3,6 +3,7 @@
 #include "Platform/Platform.h"
 
 #include "ShaderOpenGL.h"
+#include "PipelineOpenGL.h"
 
 namespace tur
 {
@@ -48,8 +49,13 @@ namespace tur
 		platform::SwapBuffers(static_cast<GLFWwindow*>(m_Window->GetHandle()));
 	}
 
-	Shader* BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)
+	tur_unique<Shader> BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)
 	{
-		return new ShaderOpenGL(descriptor);
+		return tur::MakeUnique<ShaderOpenGL>(descriptor);
+	}
+
+	tur_unique<Pipeline> BackendOpenGL::CreatePipeline(const PipelineDescriptor& descriptor)
+	{
+		return tur::MakeUnique<PipelineOpenGL>(descriptor);
 	}
 }

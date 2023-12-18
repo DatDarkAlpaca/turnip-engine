@@ -27,7 +27,9 @@ namespace tur
 		void Present() override { TUR_LOG_WARN("Not implemented"); }
 
 	public:
-		Shader* CreateShader(const ShaderDescriptor& descriptor) override;
+		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;
+
+		tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
 
 	public:
 		EXPOSE_PROPERTY(BackendProperties, Properties, m_Properties);

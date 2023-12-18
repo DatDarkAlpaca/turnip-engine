@@ -2,6 +2,8 @@
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
 
+#include "Graphics/Vulkan/PipelineVulkan.h"
+
 using namespace tur;
 
 class MainView : public tur::View
@@ -13,8 +15,15 @@ public:
 public:
 	void OnInstantiated() override
 	{
-		auto* vertexShader = graphics->CreateShader({ "res/shaders/basic.vert", ShaderType::VERTEX });
-		auto* fragShader = graphics->CreateShader({ "res/shaders/basic.frag", ShaderType::FRAGMENT });
+		auto& vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
+		auto& fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
+
+		PipelineDescriptor descriptor;
+		{
+			descriptor.vertexShader = vertexShader.get();
+			descriptor.fragmentShader = fragShader.get();
+		};
+		pipeline = graphics->CreatePipeline(descriptor);
 	}
 
 	void OnEvent(tur::Event& event) override
@@ -39,6 +48,7 @@ public:
 
 private:
 	tur_shared<IGraphicsBackend> graphics;
+	tur_unique<Pipeline> pipeline = nullptr;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -54,8 +64,8 @@ public:
 		}
 
 		// Graphics API:
-		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::OPENGL, {});
-		//DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
+		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::VULKAN, {});
+		DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
 
 		// Views:
 		AddView(MakeUnique<MainView>(graphicsAPI));

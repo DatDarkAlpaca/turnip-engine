@@ -6,7 +6,7 @@ namespace tur
 {
 	ShaderVulkan::ShaderVulkan(const vk::Device& device, const ShaderDescriptor& descriptor)
 	{
-		std::string sourceCode = ReadFile(descriptor.filepath);
+		auto sourceCode = ReadBinaryFile(descriptor.filepath);
 
 		vk::ShaderModuleCreateInfo moduleInfo = {};
 		moduleInfo.flags = vk::ShaderModuleCreateFlags();

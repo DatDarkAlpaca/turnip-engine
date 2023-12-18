@@ -18,7 +18,9 @@ namespace tur
 		void Present() override;
 
 	public:
-		Shader* CreateShader(const ShaderDescriptor&) override;
+		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;
+
+		tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
 
 	private:
 		BackendProperties m_Properties;
