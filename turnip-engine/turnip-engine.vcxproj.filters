@@ -4,14 +4,44 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Engine">
+      <UniqueIdentifier>{F35E8B73-5F14-0469-E808-FE3F54BDFA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Event">
+      <UniqueIdentifier>{FF1F37CD-EBD7-781A-54DF-517640B6130B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Event\KeyboardEvents">
+      <UniqueIdentifier>{14132094-80D5-531E-C985-E2AA35872CFC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Event\MouseEvents">
+      <UniqueIdentifier>{4C705E2A-386A-877C-21D7-1D8D0D70EDE8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Event\WindowEvents">
+      <UniqueIdentifier>{FB484122-6780-89B9-708A-EDDCDC40B0B2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\Logger">
       <UniqueIdentifier>{3D8AF183-A93F-6A79-3234-64509EE8607D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{D62B9585-42E1-0D7B-CBD5-0752378A047F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\View">
+      <UniqueIdentifier>{58F5C415-C45F-798C-0D9E-2A32794757E1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\Window">
       <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\OpenGL">
+      <UniqueIdentifier>{8AE717A8-F672-856C-FF83-08616B8EE16C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan">
+      <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan\Initialization">
+      <UniqueIdentifier>{0DCFBE0B-F9F4-8872-E23A-0E3ECEFFAD3E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
@@ -19,26 +49,183 @@
     <Filter Include="Platform\GLFW">
       <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\GLFW\OpenGL">
+      <UniqueIdentifier>{BD3DCDD9-A9CC-56A3-52EB-6A9E3E596749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW\Vulkan">
+      <UniqueIdentifier>{09A27FEA-F530-09B4-9E4F-1DAF8ABD195A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\CPUInfo">
+      <UniqueIdentifier>{46D4A41A-3237-34BF-DBBC-6C75C7FEFF41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Defines.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Engine\TurnipEngine.h">
+      <Filter>Core\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Engine\TurnipEngineData.h">
+      <Filter>Core\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\Event.h">
+      <Filter>Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\EventType.h">
+      <Filter>Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\Events.h">
+      <Filter>Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyPressedEvent.h">
+      <Filter>Core\Event\KeyboardEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyReleasedEvent.h">
+      <Filter>Core\Event\KeyboardEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyRepeatEvent.h">
+      <Filter>Core\Event\KeyboardEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyboardEvent.h">
+      <Filter>Core\Event\KeyboardEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseEvent.h">
+      <Filter>Core\Event\MouseEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseMovedEvent.h">
+      <Filter>Core\Event\MouseEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\MouseEvents\MousePressedEvent.h">
+      <Filter>Core\Event\MouseEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseReleasedEvent.h">
+      <Filter>Core\Event\MouseEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseScrollEvent.h">
+      <Filter>Core\Event\MouseEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\Subscriber.h">
+      <Filter>Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowCloseEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowContentScaleEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowFocusEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowFramebufferEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowMaximizedEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowMovedEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Event\WindowEvents\WindowResizeEvent.h">
+      <Filter>Core\Event\WindowEvents</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Logger\Logger.h">
       <Filter>Core\Logger</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Memory\Memory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\NonCopyable.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\View\View.h">
+      <Filter>Core\View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\View\ViewHolder.h">
+      <Filter>Core\View</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Window\MonitorData.h">
+      <Filter>Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Window\WindowBase.h">
       <Filter>Core\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Window\WindowProperties.h">
       <Filter>Core\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Graphics\BackendType.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\BackendVersion.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Graphics.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\GraphicsBackend.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\CommonGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Constants.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Instance.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\LogicalDevice.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
       <Filter>Platform\GLFW</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupGL.h">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
       <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h">
+      <Filter>Platform\GLFW\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
       <Filter>Platform\GLFW</Filter>
@@ -47,46 +234,59 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\TurnipEngine.h" />
+    <ClInclude Include="src\Util\CPUInfo\CPUInfo.h">
+      <Filter>Util\CPUInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\File.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Core\Event\Event.h" />
-    <ClInclude Include="src\Core\Event\EventType.h" />
-    <ClInclude Include="src\Core\Event\Subscriber.h" />
-    <ClInclude Include="src\Core\NonCopyable.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowCloseEvent.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowResizeEvent.h" />
-    <ClInclude Include="src\Core\Event\Events.h" />
-    <ClInclude Include="src\Core\Defines.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowFramebufferEvent.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowContentScaleEvent.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowMovedEvent.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowMaximizedEvent.h" />
-    <ClInclude Include="src\Core\Event\WindowEvents\WindowFocusEvent.h" />
-    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyPressedEvent.h" />
-    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyboardEvent.h" />
-    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
-    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyReleasedEvent.h" />
-    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyRepeatEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MouseEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MousePressedEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MouseReleasedEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MouseScrollEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MouseMovedEvent.h" />
-    <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
-    <ClInclude Include="src\Util\CPUInfo\CPUInfo.h" />
-    <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
-    <ClInclude Include="src\Core\View\View.h" />
-    <ClInclude Include="src\Core\View\ViewHolder.h" />
-    <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
-    <ClInclude Include="src\Entry.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
+    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
+    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
+    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
+    <ClInclude Include="src\Graphics\Pipeline.h" />
+    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
+    <ClInclude Include="src\Graphics\Types\Viewport.h" />
+    <ClInclude Include="src\Graphics\Types\Scissor.h" />
+    <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
+    <ClInclude Include="src\Graphics\Types\CullMode.h" />
+    <ClInclude Include="src\Graphics\Types\FrontFace.h" />
+    <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
+      <Filter>Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\View\ViewHolder.cpp">
+      <Filter>Core\View</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\GraphicsBackend.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp">
+      <Filter>Graphics\Vulkan\Initialization</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
       <Filter>Platform\GLFW</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp">
+      <Filter>Util\CPUInfo</Filter>
+    </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
-    <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
-    <ClCompile Include="src\Core\View\ViewHolder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
   </ItemGroup>
 </Project>

@@ -19,9 +19,10 @@ project "turnip-editor"
     }
 
     defines {
-        "GLFW_STATIC"
+        "GLFW_STATIC",
+        "GLFW_VULKAN_STATIC"
     }
-   
+    
     includedirs {
         "%{prj.location}",
         "%{prj.location}/src",
@@ -32,6 +33,7 @@ project "turnip-editor"
     filter { "configurations:Debug" }
         runtime "Debug"
         symbols "on"
+        defines { "TUR_DEBUG" }
     filter { }
         
     filter { "configurations:Release" }

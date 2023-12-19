@@ -28,19 +28,4 @@ namespace tur
 		NonCopyableNorMoveable& operator=(const NonCopyableNorMoveable&) noexcept = delete;
 		NonCopyableNorMoveable& operator=(NonCopyableNorMoveable&&) noexcept = delete;
 	};
-
-	class Singleton : public NonCopyableNorMoveable
-	{
-	public:
-		static inline Singleton& Instance()
-		{
-			if (!s_Singleton)
-				s_Singleton = MakeUnique<Singleton>();
-
-			return *s_Singleton;
-		}
-
-	protected:
-		static inline tur_unique<Singleton> s_Singleton = nullptr;
-	};
 }

@@ -1,4 +1,5 @@
 #pragma once
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "Core/Logger/Logger.h"
 
@@ -10,14 +11,14 @@ namespace
 	}
 }
 
-namespace tur
+namespace tur::platform
 {
-	inline void PlatformSetup()
+	inline void Setup()
 	{
-		tur::InitializeLogger();
-
 		glfwSetErrorCallback(GLFWErrorCallback);
 		if (!glfwInit())
-			TUR_LOG_CRITICAL("Failed to initialize GLFW. Maybe it's already been initialized before?");
+			TUR_LOG_CRITICAL("Failed to initialize GLFW. Perhaps it has already been initialized before?");
+
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 	}
 }

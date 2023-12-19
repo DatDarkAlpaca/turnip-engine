@@ -2,8 +2,11 @@ import sys
 import subprocess
 
 
-def execute_conan(build_type: str):
-    subprocess.run(['conan', 'install', '.', '--build', 'missing',
+def execute_conan(build_types: str):
+    build_type_list = build_types.split()
+
+    for build_type in build_type_list:
+        subprocess.run(['conan', 'install', '.', '--build', 'missing',
                     '-of', './dependencies', f"--settings=build_type={build_type}"])
 
 
@@ -19,8 +22,8 @@ def main():
     
     # Conan:
     print('> Running conan...')
-    build_type = sys.argv[2] if len(sys.argv) > 2 else 'Debug'
-    execute_conan(build_type=build_type)
+    build_type = sys.argv[2] if len(sys.argv) > 2 else 'Debug Release'
+    execute_conan(build_types=build_type)
     
     # Premake:
     print('Running premake...')

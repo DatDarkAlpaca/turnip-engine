@@ -1,28 +1,39 @@
 #include "pch.h"
 #include "TurnipEngine.h"
+
+#include "Graphics/Graphics.h"
 #include "Platform/Platform.h"
 
 namespace tur
 {
 	TurnipEngine::TurnipEngine()
 	{
-		tur::PlatformSetup();
+		tur::platform::Setup();
 
-		// Creates a default view holder:
+		tur::InitializeLogger();
+
+		// Default View holder:
 		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
-
-		// Creates a default window:
-		RequestWindow({});
 
 		m_Data.initialized = true;
 	}
 
-	void TurnipEngine::RequestWindow(const WindowProperties& properties)
+	tur_shared<IGraphicsBackend> TurnipEngine::CreateGraphicsAPI(BackendType type, const BackendProperties& properties)
 	{
-		m_Data.window = Window::Create(properties);
-		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		tur_shared<IGraphicsBackend> graphicsBackend;
+		graphicsBackend = MakeGraphicsBackend(type, properties);
+		graphicsBackend->InitializeWindow(m_Data.window);
 
-		TUR_ASSERT(m_Data.window, "Request to modify the engine's window Has failed.");
+		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		
+		return graphicsBackend;
+	}
+
+	void TurnipEngine::CreateWindow(const WindowProperties& properties)
+	{
+		m_Data.window = tur::MakeUnique<Window>();
+		m_Data.window->Initialize(properties);
+		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 	}
 
 	void TurnipEngine::AddView(tur::tur_unique<View> view)
@@ -33,6 +44,10 @@ namespace tur
 
 	void TurnipEngine::Run()
 	{
+		TUR_ASSERT(m_Data.window, "The application doesn't have a window. Create one using CreateWindow() or CreateGraphicsAPI()");
+	
+		OnEngineInitialize();
+
 		auto& window = m_Data.window;
 		window->Show();
 
@@ -49,6 +64,12 @@ namespace tur
 
 			OnRenderGUI();
 		}
+	}
+
+	void TurnipEngine::OnEngineInitialize()
+	{
+		for (const auto& view : *m_Data.viewHolder)
+			view->OnEngineInitialize();
 	}
 
 	void TurnipEngine::OnRender()

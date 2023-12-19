@@ -44,21 +44,22 @@
     <IntDir>..\build\intermediate\Debug-windows-x86_64\turnip-engine\</IntDir>
     <TargetName>turnip-engine</TargetName>
     <TargetExt>.lib</TargetExt>
-    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad521eacca7aefd\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\glad2795ec90d739f\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\build\bin\Release-windows-x86_64\turnip-engine\</OutDir>
     <IntDir>..\build\intermediate\Release-windows-x86_64\turnip-engine\</IntDir>
     <TargetName>turnip-engine</TargetName>
     <TargetExt>.lib</TargetExt>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\glad39715e4bdf27b\p\bin;$(ProjectDir)..\..\..\.conan2\p\spdlo585c949eca222\p\bin;$(ProjectDir)..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\bin;$(ProjectDir)..\..\..\.conan2\p\fmt99c02610800b9\p\bin;$(ProjectDir)..\..\..\.conan2\p\glfweacdc550e8335\p\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLFW_STATIC;TUR_DEBUG;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\b\glad521eacca7aefd\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;TUR_DEBUG;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\b\glad2795ec90d739f\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -69,8 +70,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>spdlogd.lib;glad.lib;glfw3.lib;gdi32.lib;fmtd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\glad521eacca7aefd\p\lib;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glad.lib;spdlogd.lib;opengl32.lib;vulkan-1.lib;fmtd.lib;glfw3.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\glad2795ec90d739f\p\lib;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,8 +79,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLFW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\spdlo585c949eca222\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\fmt99c02610800b9\p\include;..\..\..\.conan2\p\glfweacdc550e8335\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -94,23 +95,29 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>glad.lib;spdlog.lib;opengl32.lib;vulkan-1.lib;fmt.lib;glfw3.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\glad39715e4bdf27b\p\lib;..\..\..\.conan2\p\spdlo585c949eca222\p\lib;..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\lib;..\..\..\.conan2\p\fmt99c02610800b9\p\lib;..\..\..\.conan2\p\glfweacdc550e8335\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Core\Defines.h" />
+    <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
     <ClInclude Include="src\Core\Event\Event.h" />
-    <ClInclude Include="src\Core\Event\Events.h" />
     <ClInclude Include="src\Core\Event\EventType.h" />
-    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyboardEvent.h" />
+    <ClInclude Include="src\Core\Event\Events.h" />
     <ClInclude Include="src\Core\Event\KeyboardEvents\KeyPressedEvent.h" />
     <ClInclude Include="src\Core\Event\KeyboardEvents\KeyReleasedEvent.h" />
     <ClInclude Include="src\Core\Event\KeyboardEvents\KeyRepeatEvent.h" />
+    <ClInclude Include="src\Core\Event\KeyboardEvents\KeyboardEvent.h" />
+    <ClInclude Include="src\Core\Event\MouseEvents\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\MouseEvents\MouseMovedEvent.h" />
     <ClInclude Include="src\Core\Event\MouseEvents\MousePressedEvent.h" />
-    <ClInclude Include="src\Core\Event\MouseEvents\MouseEvent.h" />
     <ClInclude Include="src\Core\Event\MouseEvents\MouseReleasedEvent.h" />
     <ClInclude Include="src\Core\Event\MouseEvents\MouseScrollEvent.h" />
+    <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Event\WindowEvents\WindowCloseEvent.h" />
     <ClInclude Include="src\Core\Event\WindowEvents\WindowContentScaleEvent.h" />
     <ClInclude Include="src\Core\Event\WindowEvents\WindowFocusEvent.h" />
@@ -118,35 +125,73 @@
     <ClInclude Include="src\Core\Event\WindowEvents\WindowMaximizedEvent.h" />
     <ClInclude Include="src\Core\Event\WindowEvents\WindowMovedEvent.h" />
     <ClInclude Include="src\Core\Event\WindowEvents\WindowResizeEvent.h" />
-    <ClInclude Include="src\Core\Event\Subscriber.h" />
     <ClInclude Include="src\Core\Logger\Logger.h" />
     <ClInclude Include="src\Core\Memory\Memory.h" />
     <ClInclude Include="src\Core\NonCopyable.h" />
     <ClInclude Include="src\Core\View\View.h" />
     <ClInclude Include="src\Core\View\ViewHolder.h" />
     <ClInclude Include="src\Core\Window\MonitorData.h" />
-    <ClInclude Include="src\Core\Window\Window.h" />
+    <ClInclude Include="src\Core\Window\WindowBase.h" />
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
-    <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Graphics\BackendType.h" />
+    <ClInclude Include="src\Graphics\BackendVersion.h" />
+    <ClInclude Include="src\Graphics\Graphics.h" />
+    <ClInclude Include="src\Graphics\GraphicsBackend.h" />
+    <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
+    <ClInclude Include="src\Graphics\Pipeline.h" />
+    <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
+    <ClInclude Include="src\Graphics\Types\CullMode.h" />
+    <ClInclude Include="src\Graphics\Types\FrontFace.h" />
+    <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
+    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
+    <ClInclude Include="src\Graphics\Types\Scissor.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Types\Viewport.h" />
+    <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Instance.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\LogicalDevice.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
+    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupGL.h" />
     <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h" />
+    <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h" />
     <ClInclude Include="src\Platform\GLFW\Window_GLFW.h" />
     <ClInclude Include="src\Platform\Platform.h" />
     <ClInclude Include="src\TurnipEngine.h" />
-    <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h" />
+    <ClInclude Include="src\Util\File.h" />
+    <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
+    <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp" />
+    <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

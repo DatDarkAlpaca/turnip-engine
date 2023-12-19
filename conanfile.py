@@ -10,3 +10,8 @@ class TurnipEngine(ConanFile):
         self.requires('spdlog/1.12.0')
         self.requires('glad/0.1.36')
         self.requires('glm/cci.20230113')
+        self.requires('vulkan-loader/1.3.268.0')
+
+    def configure(self):
+        self.options['glad'].gl_profile = 'core'
+        self.options['glad'].gl_version = '4.5'

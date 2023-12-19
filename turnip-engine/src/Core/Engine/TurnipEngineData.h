@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/View/ViewHolder.h"
+#include "Graphics/Graphics.h"
+
 #include "Platform/Platform.h"
 
 namespace tur
