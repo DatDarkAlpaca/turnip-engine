@@ -248,6 +248,8 @@
     <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
     <ClInclude Include="src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="src\Graphics\OpenGL\OpenGLInitializer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Framebuffer.h" />
+    <ClInclude Include="src\Graphics\Vulkan\SwapchainFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">

@@ -3,6 +3,7 @@
 #include <TurnipEngine.h>
 
 #include "Graphics/Vulkan/PipelineVulkan.h"
+#include "Graphics/Vulkan/Framebuffer.h"
 
 using namespace tur;
 
@@ -22,6 +23,10 @@ public:
 			descriptor.fragmentShader = fragShader.get();
 		};
 		pipeline = graphics->CreatePipeline(descriptor);
+
+
+
+		FramebufferBuilder builder;
 		
 		// Command Pools are handled indirectly:
 		// commands = graphics->CreateCommandBuffer(ImmediateSubmit);

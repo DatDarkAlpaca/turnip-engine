@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Queues.h"
 #include "Core/Logger/Logger.h"
+#include "Graphics/Vulkan/SwapchainFrame.h"
 
 // Logging Helpers:
 namespace tur::vulkan
@@ -124,12 +125,6 @@ namespace tur::vulkan
 
 namespace tur::vulkan
 {
-	struct SwapchainFrame
-	{
-		vk::Image image;
-		vk::ImageView view;
-	};
-
 	struct SwapchainData
 	{
 		vk::SwapchainKHR swapchain;
@@ -137,20 +132,8 @@ namespace tur::vulkan
 
 		// Information:
 		vk::SurfaceFormatKHR surfaceFormat;
-		vk::PresentModeKHR presentMode;
-
-		vk::SwapchainKHR oldSwapchain;
+		vk::PresentModeKHR presentMode = vk::PresentModeKHR::eFifo;
 		vk::Extent2D extent;
-		vk::SharingMode sharingMode;
-
-		vk::ImageUsageFlags imageUsage;
-		vk::SurfaceTransformFlagBitsKHR preTransform;
-		vk::CompositeAlphaFlagBitsKHR compositeAlpha;
-
-		uint32_t minImageCount = 0;
-		uint32_t imageArrayLayers = 1;
-
-		bool clipped = true;
 	};
 
 	inline vk::SurfaceCapabilitiesKHR QuerySurfaceCapabilities(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface)
@@ -309,18 +292,7 @@ namespace tur::vulkan
 			// Information:
 			swapchainResult.surfaceFormat = m_Information.surfaceFormat;
 			swapchainResult.presentMode = m_Information.presentMode;
-
-			swapchainResult.oldSwapchain = m_Information.oldSwapchain;
 			swapchainResult.extent = m_Information.extent;
-			swapchainResult.sharingMode = m_Information.sharingMode;
-
-			swapchainResult.imageUsage = m_Information.imageUsage;
-			swapchainResult.preTransform = m_Information.preTransform;
-			swapchainResult.compositeAlpha = m_Information.compositeAlpha;
-
-			swapchainResult.minImageCount = m_Information.minImageCount;
-			swapchainResult.imageArrayLayers = m_Information.imageArrayLayers;
-			swapchainResult.clipped = m_Information.clipped;
 
 			return swapchainResult;
 		}

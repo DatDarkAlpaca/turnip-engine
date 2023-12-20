@@ -543,7 +543,7 @@ namespace tur
 		{
 			Scissor scissor;
 			{
-				scissor.offset = glm::vec2(0.f);
+				scissor.offset = glm::vec2(0);
 				scissor.size.x = m_SwapchainExtent.width;
 				scissor.size.y = m_SwapchainExtent.height;
 			}
@@ -568,9 +568,9 @@ namespace tur
 		// Viewport State:
 		vk::PipelineViewportStateCreateInfo viewportState = { };
 		viewportState.flags = vk::PipelineViewportStateCreateFlags();
-		viewportState.viewportCount = viewports.size();
+		viewportState.viewportCount = static_cast<uint32_t>(viewports.size());
 		viewportState.pViewports = viewports.data();
-		viewportState.scissorCount = scissors.size();
+		viewportState.scissorCount = static_cast<uint32_t>(scissors.size());
 		viewportState.pScissors = scissors.data();
 		pipelineInfo.pViewportState = &viewportState;
 
@@ -596,7 +596,7 @@ namespace tur
 		shaderStages.push_back(fragmentShaderInfo);
 
 		// Pipeline Shader Stages:
-		pipelineInfo.stageCount = shaderStages.size();
+		pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
 		pipelineInfo.pStages = shaderStages.data();
 
 		// Multisampling

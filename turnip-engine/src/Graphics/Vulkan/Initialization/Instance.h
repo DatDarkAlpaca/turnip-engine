@@ -144,7 +144,6 @@ namespace tur::vulkan
 
 		uint32_t apiVersion = 0;
 		bool enablePresentation = false;
-		bool enableValidation = false;
 	};
 
 	class VulkanInstanceBuilder
@@ -219,7 +218,6 @@ namespace tur::vulkan
 			}
 
 			// Messenger Creation:
-			output.enableValidation = m_Information.useDebugMessenger;
 			output.apiVersion = m_Information.apiVersion;
 			output.enablePresentation = !m_Information.disableKHRSurface && !m_Information.disableWindowingSurface;
 

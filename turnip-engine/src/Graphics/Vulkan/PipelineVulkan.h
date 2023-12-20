@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <vulkan/vulkan.hpp>
 
 #include "Common.h"
@@ -42,6 +43,8 @@ namespace tur
 			{
 				TUR_LOG_ERROR("Failed to create pipeline layout: {}", err.what());
 			}
+
+			return nullptr;
 		}
 
 		vk::RenderPass CreateRenderpass() const
@@ -113,7 +116,7 @@ namespace tur
 
 		// Swapchain Input:
 		vk::Extent2D m_SwapchainExtent;
-		vk::Format m_SwapchainFormat;
+		vk::Format m_SwapchainFormat = vk::Format::eUndefined;
 		bool m_SwapchainSet = false;
 
 		PipelineDescriptor descriptor;

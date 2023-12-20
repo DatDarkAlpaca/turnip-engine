@@ -153,6 +153,7 @@
     <ClInclude Include="src\Graphics\Types\Viewport.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Constants.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\Instance.h" />
     <ClInclude Include="src\Graphics\Vulkan\Initialization\LogicalDevice.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h" />
     <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
+    <ClInclude Include="src\Graphics\Vulkan\SwapchainFrame.h" />
     <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Events_GLFW.h" />
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h" />

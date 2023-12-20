@@ -80,7 +80,7 @@ namespace tur::vulkan
 
 	inline vk::DeviceQueueCreateInfo SelectQueue(uint32_t queueIndex, float priority = 1.0f)
 	{
-		return vk::DeviceQueueCreateInfo { vk::DeviceQueueCreateFlags(), queueIndex, 1, & priority };
+		return vk::DeviceQueueCreateInfo { vk::DeviceQueueCreateFlags(), queueIndex, 1, &priority };
 	}
 
 	struct QueueInformation

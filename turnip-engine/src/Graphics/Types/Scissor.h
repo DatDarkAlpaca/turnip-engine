@@ -5,7 +5,7 @@ namespace tur
 {
 	struct Scissor
 	{
-		glm::vec2 offset = glm::vec2(0.f);
-		glm::vec2 size   = glm::vec2(0.f);
+		glm::uvec2 offset = glm::uvec2(0);
+		glm::uvec2 size   = glm::uvec2(0);
 	};
 }
