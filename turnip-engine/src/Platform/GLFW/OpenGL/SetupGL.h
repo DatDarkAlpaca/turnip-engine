@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 
 #include "Core/Defines.h"
-#include "Graphics/BackendVersion.h"
 
 namespace tur::platform
 {
@@ -24,7 +23,7 @@ namespace tur::platform
 		glfwMakeContextCurrent(window);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-			throw "Failed to initialize GLAD";
+			TUR_LOG_CRITICAL("Failed to initialize a valid OpenGL context");
 	}
 
 	inline void SetWindowBufferSamples(uint32_t samples)

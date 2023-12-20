@@ -10,46 +10,25 @@ namespace tur
 	{
 		tur::platform::Setup();
 
-		g_LoggerSystem = new LoggerSystem();
+		// Logger system:
+		g_LoggerSystem = new LoggerSystem;
 		g_LoggerSystem->Get().Initialize();
 
-		// Default View holder:
+		// View system:
 		g_ViewSystem = new ViewSystem();
+
+		// Graphics system:
+		g_GraphicsSystem = new GraphicsSystem;
+		g_GraphicsSystem->Get().Initialize(BIND(&TurnipEngine::OnEvent, this));
 
 		m_Initialized = true;
 	}
 
-	tur_shared<IGraphicsBackend> TurnipEngine::CreateGraphicsAPI(BackendType type, const BackendProperties& properties)
-	{
-		tur_shared<IGraphicsBackend> graphicsBackend;
-		graphicsBackend = MakeGraphicsBackend(type, properties);
-		graphicsBackend->InitializeWindow(m_Data.window);
-
-		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
-		
-		return graphicsBackend;
-	}
-
-	void TurnipEngine::CreateWindow(const WindowProperties& properties)
-	{
-		m_Data.window = tur::MakeUnique<Window>();
-		m_Data.window->Initialize(properties);
-		m_Data.window->SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
-	}
-
-	void TurnipEngine::AddView(tur::tur_unique<View> view)
-	{
-		view->SetHandler(g_ViewSystem);
-		g_ViewSystem->AddView(std::move(view));
-	}
-
 	void TurnipEngine::Run()
 	{
-		TUR_ASSERT(m_Data.window, "The application doesn't have a window. Create one using CreateWindow() or CreateGraphicsAPI()");
-	
 		OnEngineInitialize();
 
-		auto& window = m_Data.window;
+		auto& window = Graphics().GetWindow();
 		window->Show();
 
 		if (!m_Initialized)

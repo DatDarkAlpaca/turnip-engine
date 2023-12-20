@@ -104,7 +104,6 @@
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Core\Defines.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
-    <ClInclude Include="src\Core\Engine\TurnipEngineData.h" />
     <ClInclude Include="src\Core\Event\Event.h" />
     <ClInclude Include="src\Core\Event\EventType.h" />
     <ClInclude Include="src\Core\Event\Events.h" />
@@ -135,11 +134,12 @@
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Graphics\BackendType.h" />
-    <ClInclude Include="src\Graphics\BackendVersion.h" />
     <ClInclude Include="src\Graphics\Graphics.h" />
     <ClInclude Include="src\Graphics\GraphicsBackend.h" />
+    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\OpenGLInitializer.h" />
     <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
     <ClInclude Include="src\Graphics\Pipeline.h" />
@@ -180,6 +180,7 @@
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\View\ViewSystem.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
+    <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp" />

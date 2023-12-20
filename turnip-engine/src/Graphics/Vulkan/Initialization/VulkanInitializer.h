@@ -11,16 +11,13 @@
 
 namespace tur
 {
-    class IVulkanInitializer
+    class VulkanInitializer
     {
     public:
-        explicit IVulkanInitializer(BackendVulkan* backend)
-            : backend(backend) 
-        {
+        VulkanInitializer(IGraphicsBackend* backend)
+            : backend(VULKAN_BACKEND(backend)) { }
 
-        }
-
-        virtual ~IVulkanInitializer() = default;
+        virtual ~VulkanInitializer() = default;
 
     protected:
         NON_OWNING BackendVulkan* backend = nullptr;
@@ -33,17 +30,17 @@ namespace tur
         vulkan::SwapchainFrameBuilder swapchainFrameBuilder;
     };
 
-    class DefaultVulkanInitializer : public IVulkanInitializer
+    class DefaultVulkanInitializer : public VulkanInitializer
     {
     public:
-        DefaultVulkanInitializer(BackendVulkan* backend)
-            : IVulkanInitializer(backend)
+        DefaultVulkanInitializer(IGraphicsBackend* graphicsBackend)
+            : VulkanInitializer(graphicsBackend)
         {
             instanceBuilder
                 .SetAppName(backend->Properties().applicationName)
                 .SetEngineName("TurnipEngine")
                 .SetAPIVersion(1, 0, 0);
-            
+
             Configure();
         }
 

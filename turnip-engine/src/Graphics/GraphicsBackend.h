@@ -1,5 +1,4 @@
 #pragma once
-#include "BackendVersion.h"
 #include "BackendType.h"
 #include "Platform/Platform.h"
 
@@ -8,16 +7,22 @@
 
 namespace tur
 {
+	static constexpr inline uint32_t InvalidBackendVersion = 0xFFFFFFFF;
+
 	struct BackendProperties
 	{
+		uint32_t major = InvalidBackendVersion;
+		uint32_t minor = InvalidBackendVersion;
+		uint32_t patch = InvalidBackendVersion;
+		uint32_t extra = InvalidBackendVersion;
+
 		std::string applicationName = "";
-		BackendVersion version;
 	};
 
 	class IGraphicsBackend
 	{
 	public:
-		virtual void InitializeWindow(tur_unique<Window>&) = 0;
+		virtual void FinishSetup(tur_unique<Window>&) { }
 
 		virtual void Present() = 0;
 
@@ -25,6 +30,12 @@ namespace tur
 		virtual tur_unique<Shader> CreateShader(const ShaderDescriptor&) = 0;
 
 		virtual tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor&) = 0;
+	};
+
+	class IGraphicsBackendInitializer
+	{
+	public:
+		virtual ~IGraphicsBackendInitializer() = default;
 	};
 
 	tur_shared<IGraphicsBackend> MakeGraphicsBackend(BackendType type, const BackendProperties& properties);

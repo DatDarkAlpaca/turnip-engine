@@ -1,7 +1,5 @@
 #pragma once
 #include "Common.h"
-#include "TurnipEngineData.h"
-
 #include "Core/Event/Event.h"
 #include "Core/View/ViewSystem.h"
 
@@ -19,14 +17,6 @@ namespace tur
 		TurnipEngine();
 
 	public:
-		tur_shared<IGraphicsBackend> CreateGraphicsAPI(BackendType type, const BackendProperties& properties);
-
-		void CreateWindow(const WindowProperties& properties);
-
-	public:
-		void AddView(tur::tur_unique<View> view);
-
-	public:
 		void Run();
 
 	private:
@@ -39,17 +29,16 @@ namespace tur
 		void OnUpdate();
 
 		void OnEvent(Event& event);
-
-	public:
-		const TurnipEngineData& Data() const { return m_Data; }
-		TurnipEngineData& Data() { return m_Data; }
 		
+	public:
+		ViewSystem& View() const { return g_ViewSystem->Get(); }
+		GraphicsSystem& Graphics() const { return g_GraphicsSystem->Get(); }
+
 	private:
 		LoggerSystem* g_LoggerSystem = nullptr;
 		ViewSystem* g_ViewSystem = nullptr;
-
+		GraphicsSystem* g_GraphicsSystem = nullptr;
 
 		bool m_Initialized = false;
-		TurnipEngineData m_Data;
 	};
 }

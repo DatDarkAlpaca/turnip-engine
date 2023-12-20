@@ -70,9 +70,6 @@
     <ClInclude Include="src\Core\Engine\TurnipEngine.h">
       <Filter>Core\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Engine\TurnipEngineData.h">
-      <Filter>Core\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\Event\Event.h">
       <Filter>Core\Event</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
     </ClInclude>
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Graphics\BackendType.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\BackendVersion.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Graphics.h">
@@ -252,6 +246,8 @@
     <ClInclude Include="src\Graphics\Types\CullMode.h" />
     <ClInclude Include="src\Graphics\Types\FrontFace.h" />
     <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
+    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="src\Graphics\OpenGL\OpenGLInitializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -289,5 +285,6 @@
     <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
+    <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
   </ItemGroup>
 </Project>

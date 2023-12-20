@@ -10,7 +10,7 @@
 #include "Initialization/Queues.h"
 #include "Initialization/Swapchain.h"
 
-#define VULKAN_BACKEND(VulkanBackendSmartPtr) static_cast<BackendVulkan*>(VulkanBackendSmartPtr.get())
+#define VULKAN_BACKEND(IBackend) static_cast<BackendVulkan*>(IBackend)
 
 namespace tur
 {
@@ -22,7 +22,7 @@ namespace tur
 		// TODO: Implement Destructor.
 
 	public:
-		void InitializeWindow(tur_unique<Window>& window) override;
+		void FinishSetup(tur_unique<Window>&) override;
 
 		void Present() override { TUR_LOG_WARN("Not implemented"); }
 

@@ -13,7 +13,7 @@ namespace tur
 		BackendOpenGL(const BackendProperties& properties);
 
 	public:
-		void InitializeWindow(tur_unique<Window>& window) override;
+		void FinishSetup(tur_unique<Window>& window) override;
 
 		void Present() override;
 

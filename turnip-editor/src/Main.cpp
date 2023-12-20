@@ -9,12 +9,10 @@ using namespace tur;
 class MainView : public tur::View
 {
 public:
-	MainView(const tur_shared<IGraphicsBackend>& graphicsBackend)
-		: graphics(graphicsBackend) { }
-
-public:
 	void OnEngineInitialize() override
 	{
+		auto& graphics = GraphicsSystem::Get().GetBackend();
+
 		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
 		auto fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
 
@@ -59,11 +57,10 @@ public:
 		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		graphics->Present();
+		GraphicsSystem::Get().GetBackend()->Present();
 	}
 
 private:
-	tur_shared<IGraphicsBackend> graphics;
 	tur_unique<Pipeline> pipeline = nullptr;
 };
 
@@ -79,12 +76,16 @@ public:
 			DisplayCPUInfo();
 		}
 
-		// Graphics API:
-		tur_shared<IGraphicsBackend> graphicsAPI = CreateGraphicsAPI(BackendType::VULKAN, {});
-		DefaultVulkanInitializer initializer(VULKAN_BACKEND(graphicsAPI));
+		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
+
+		Graphics().SelectGraphicsBackend(BackendType::OPENGL, {});
+		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
+
+		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
+		Graphics().InitializeBackend<DefaultVulkanInitializer>();
 
 		// Views:
-		AddView(MakeUnique<MainView>(graphicsAPI));
+		View().Add(MakeUnique<MainView>());
 	}
 
 private:	

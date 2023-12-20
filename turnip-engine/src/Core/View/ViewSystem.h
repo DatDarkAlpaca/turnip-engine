@@ -10,9 +10,9 @@ namespace tur
 		using ViewContainer = std::vector<tur_unique<View>>;
 
 	public:
-		size_t AddView(tur_unique<View> view);
+		size_t Add(tur_unique<View> view);
 
-		void RemoveView(size_t index);
+		void Remove(size_t index);
 
 		View& GetView(size_t index);
 

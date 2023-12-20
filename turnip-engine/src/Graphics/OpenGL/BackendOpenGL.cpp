@@ -20,26 +20,19 @@ namespace tur
 	BackendOpenGL::BackendOpenGL(const BackendProperties& properties)
 		: m_Properties(properties)
 	{
-		uint32_t versionMajor = properties.version.major;
-		uint32_t versionMinor = properties.version.minor;
+		m_Properties.major = properties.major;
+		m_Properties.minor = properties.minor;
 
-		if (versionMajor == 0xFFFFFFFF)
-			m_Properties.version.major = DefaultVersionMajor;
-		if (versionMinor == 0xFFFFFFFF)
-			m_Properties.version.minor = DefaultVersionMinor;
+		if (m_Properties.major == 0xFFFFFFFF)
+			m_Properties.major = DefaultVersionMajor;
+		if (m_Properties.minor == 0xFFFFFFFF)
+			m_Properties.minor = DefaultVersionMinor;
+
+		platform::ConfigureOpenGL(m_Properties.major, m_Properties.minor);
 	}
 
-	void BackendOpenGL::InitializeWindow(tur_unique<Window>& window)
+	void BackendOpenGL::FinishSetup(tur_unique<Window>& window)
 	{
-		platform::ConfigureOpenGL(m_Properties.version.major, m_Properties.version.minor);
-
-		if(!window)
-			window = tur::MakeUnique<Window>();
-		
-		RecreateWindow(window.get());
-		
-		m_Window = window.get();
-
 		platform::InitializeOpenGL(static_cast<GLFWwindow*>(window->GetHandle()));
 	
 		DisplayOpenGLInformation();
