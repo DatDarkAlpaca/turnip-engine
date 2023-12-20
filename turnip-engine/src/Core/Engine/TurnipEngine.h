@@ -45,6 +45,8 @@ namespace tur
 		TurnipEngineData& Data() { return m_Data; }
 		
 	private:
+		LoggerSystem* g_LoggerSystem = nullptr;
+
 		TurnipEngineData m_Data;
 	};
 

@@ -10,7 +10,8 @@ namespace tur
 	{
 		tur::platform::Setup();
 
-		tur::InitializeLogger();
+		g_LoggerSystem = new LoggerSystem();
+		g_LoggerSystem->Get().Initialize();
 
 		// Default View holder:
 		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();

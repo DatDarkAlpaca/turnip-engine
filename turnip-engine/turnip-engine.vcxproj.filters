@@ -288,5 +288,6 @@
     <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
     <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
+    <ClCompile Include="src\Core\Logger\Logger.cpp" />
   </ItemGroup>
 </Project>

@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
+    <ClCompile Include="src\Core\Logger\Logger.cpp" />
     <ClCompile Include="src\Core\View\ViewHolder.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
