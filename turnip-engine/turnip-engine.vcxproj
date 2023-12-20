@@ -129,7 +129,7 @@
     <ClInclude Include="src\Core\Memory\Memory.h" />
     <ClInclude Include="src\Core\NonCopyable.h" />
     <ClInclude Include="src\Core\View\View.h" />
-    <ClInclude Include="src\Core\View\ViewHolder.h" />
+    <ClInclude Include="src\Core\View\ViewSystem.h" />
     <ClInclude Include="src\Core\Window\MonitorData.h" />
     <ClInclude Include="src\Core\Window\WindowBase.h" />
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
@@ -178,7 +178,7 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
-    <ClCompile Include="src\Core\View\ViewHolder.cpp" />
+    <ClCompile Include="src\Core\View\ViewSystem.cpp" />
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp" />
     <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />

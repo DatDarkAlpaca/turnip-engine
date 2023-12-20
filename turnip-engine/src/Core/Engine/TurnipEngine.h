@@ -3,7 +3,7 @@
 #include "TurnipEngineData.h"
 
 #include "Core/Event/Event.h"
-#include "Core/View/ViewHolder.h"
+#include "Core/View/ViewSystem.h"
 
 #include "Graphics/Graphics.h"
 
@@ -46,9 +46,10 @@ namespace tur
 		
 	private:
 		LoggerSystem* g_LoggerSystem = nullptr;
+		ViewSystem* g_ViewSystem = nullptr;
 
+
+		bool m_Initialized = false;
 		TurnipEngineData m_Data;
 	};
-
-
 }

@@ -14,9 +14,9 @@ namespace tur
 		g_LoggerSystem->Get().Initialize();
 
 		// Default View holder:
-		m_Data.viewHolder = tur::MakeUnique<ViewHolder>();
+		g_ViewSystem = new ViewSystem();
 
-		m_Data.initialized = true;
+		m_Initialized = true;
 	}
 
 	tur_shared<IGraphicsBackend> TurnipEngine::CreateGraphicsAPI(BackendType type, const BackendProperties& properties)
@@ -39,8 +39,8 @@ namespace tur
 
 	void TurnipEngine::AddView(tur::tur_unique<View> view)
 	{
-		view->SetHandler(m_Data.viewHolder.get());
-		m_Data.viewHolder->AddView(std::move(view));
+		view->SetHandler(g_ViewSystem);
+		g_ViewSystem->AddView(std::move(view));
 	}
 
 	void TurnipEngine::Run()
@@ -52,8 +52,8 @@ namespace tur
 		auto& window = m_Data.window;
 		window->Show();
 
-		if (!m_Data.initialized)
-			TUR_LOG_CRITICAL("Failed to initialize the required subsystems.");
+		if (!m_Initialized)
+			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
 		while (window->IsOpen())
 		{
@@ -69,31 +69,31 @@ namespace tur
 
 	void TurnipEngine::OnEngineInitialize()
 	{
-		for (const auto& view : *m_Data.viewHolder)
+		for (const auto& view : *g_ViewSystem)
 			view->OnEngineInitialize();
 	}
 
 	void TurnipEngine::OnRender()
 	{
-		for (const auto& view : *m_Data.viewHolder)
+		for (const auto& view : *g_ViewSystem)
 			view->OnRender();
 	}
 
 	void TurnipEngine::OnRenderGUI()
 	{
-		for (const auto& view : *m_Data.viewHolder)
+		for (const auto& view : *g_ViewSystem)
 			view->OnRenderGUI();
 	}
 
 	void TurnipEngine::OnUpdate()
 	{
-		for (const auto& view : *m_Data.viewHolder)
+		for (const auto& view : *g_ViewSystem)
 			view->OnUpdate();
 	}
 
 	void TurnipEngine::OnEvent(Event& event)
 	{
-		for (const auto& view : *m_Data.viewHolder)
+		for (const auto& view : *g_ViewSystem)
 			view->OnEvent(event);
 	}
 }

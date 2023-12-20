@@ -4,12 +4,12 @@
 
 namespace tur
 {
-	class ViewHolder;
+	class ViewSystem;
 
 	class View
 	{
 	public:
-		explicit View(ViewHolder* handler = nullptr)
+		explicit View(ViewSystem* handler = nullptr)
 			: handler(handler)
 		{
 
@@ -33,9 +33,9 @@ namespace tur
 		virtual void OnRemoved() { };
 
 	public:
-		void SetHandler(ViewHolder* handler) { this->handler = handler; }
+		void SetHandler(ViewSystem* handler) { this->handler = handler; }
 
 	protected:
-		NON_OWNING ViewHolder* handler = nullptr;
+		NON_OWNING ViewSystem* handler = nullptr;
 	};
 }
