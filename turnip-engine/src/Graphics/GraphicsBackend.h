@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include "Pipeline.h"
+#include "Renderpass.h"
 
 namespace tur
 {
@@ -28,6 +29,9 @@ namespace tur
 
 	public:
 		virtual tur_unique<Shader> CreateShader(const ShaderDescriptor&) = 0;
+
+		// TODO: use a renderpass descriptor
+		virtual tur_unique<Renderpass> CreateRenderpass() = 0;
 
 		virtual tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor&) = 0;
 	};

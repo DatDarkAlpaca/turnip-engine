@@ -1,8 +1,9 @@
 #pragma once
+#include <vulkan/vulkan.hpp>
 
-namespace tur
+namespace tur::vulkan
 {
-	struct SwapchainFrame
+	struct Frame
 	{
 		vk::Image image;
 		vk::ImageView view;

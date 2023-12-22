@@ -7,8 +7,13 @@
 #include "Types/FrontFace.h"
 #include "Types/ColorBlending.h"
 
+#include "Renderpass.h"
+#include "Shader.h"
+
 namespace tur
 {
+	// If renderpass or layout are not defined, 
+	// the application must create defaults.
 	struct PipelineDescriptor
 	{
 		// Vertex Input:
@@ -56,6 +61,9 @@ namespace tur
 		bool enableLogicOp = false;
 		LogicOperation logicOperation = LogicOperation::COPY;
 		float blendConstants[4] = { 0.f, 0.f, 0.f, 0.f };
+
+		// Renderpass:
+		NON_OWNING Renderpass* renderpass = nullptr;
 
 		// Layout:
 		uint32_t layoutCount = 0;

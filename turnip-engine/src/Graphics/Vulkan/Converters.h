@@ -1,9 +1,17 @@
-#include "pch.h"
-#include "PipelineVulkan.h"
+#pragma once
+#include "Graphics/Types/PrimitiveTopology.h"
+#include "Graphics/Types/Viewport.h"
+#include "Graphics/Types/Scissor.h"
+#include "Graphics/Types/PolygonMode.h"
+#include "Graphics/Types/CullMode.h"
+#include "Graphics/Types/FrontFace.h"
+#include "Graphics/Types/ColorBlending.h"
+#include "Graphics/Types/AttachmentOperation.h"
+#include "Graphics/Types/ImageLayout.h"
 
-namespace tur
+namespace tur::vulkan
 {
-	static constexpr vk::PrimitiveTopology GetTopology(PrimitiveTopology topology)
+	inline constexpr vk::PrimitiveTopology GetTopology(PrimitiveTopology topology)
 	{
 		switch (topology)
 		{
@@ -48,7 +56,7 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::PolygonMode GetPolygonMode(PolygonMode polygonMode)
+	inline constexpr vk::PolygonMode GetPolygonMode(PolygonMode polygonMode)
 	{
 		switch (polygonMode)
 		{
@@ -72,7 +80,7 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::CullModeFlags GetCullMode(CullMode cullMode)
+	inline constexpr vk::CullModeFlags GetCullMode(CullMode cullMode)
 	{
 		switch (cullMode)
 		{
@@ -85,7 +93,7 @@ namespace tur
 			case CullMode::FRONT_AND_BACK:
 				return vk::CullModeFlagBits::eFrontAndBack;
 
-			default: 
+			default:
 			{
 				TUR_LOG_ERROR("Invalid Cull Mode. Using default: BACK");
 				return vk::CullModeFlagBits::eBack;
@@ -93,10 +101,10 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::FrontFace GetFrontFace(FrontFace frontFace)
+	inline constexpr vk::FrontFace GetFrontFace(FrontFace frontFace)
 	{
 		switch (frontFace)
-		{
+			{
 			case FrontFace::COUNTER_CLOCKWISE:
 				return vk::FrontFace::eCounterClockwise;
 
@@ -111,7 +119,7 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::SampleCountFlagBits GetSampleCount(uint32_t samples)
+	inline constexpr vk::SampleCountFlagBits GetSampleCount(uint32_t samples)
 	{
 		switch (samples)
 		{
@@ -137,7 +145,7 @@ namespace tur
 		}
 	}
 
-	static inline vk::ColorComponentFlags GetColorComponentFlags(ColorComponents components) 
+	inline inline vk::ColorComponentFlags GetColorComponentFlags(ColorComponents components)
 	{
 		vk::ColorComponentFlags flags;
 
@@ -156,7 +164,7 @@ namespace tur
 		return flags;
 	}
 
-	static constexpr vk::BlendFactor GetBlendFactor(BlendFactor blendFactor, BlendFactor fallback)
+	inline constexpr vk::BlendFactor GetBlendFactor(BlendFactor blendFactor, BlendFactor fallback)
 	{
 		switch (blendFactor)
 		{
@@ -207,14 +215,14 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::BlendOp GetBlendOperation(BlendOperation blendOperation)
+	inline constexpr vk::BlendOp GetBlendOperation(BlendOperation blendOperation)
 	{
 		switch (blendOperation)
 		{
 			case BlendOperation::ADD:
 				return vk::BlendOp::eAdd;
 
-			case BlendOperation::SUBTRACT: 
+			case BlendOperation::SUBTRACT:
 				return vk::BlendOp::eSubtract;
 
 			case BlendOperation::REVERSE_SUBTRACT:
@@ -372,7 +380,7 @@ namespace tur
 		}
 	}
 
-	static constexpr vk::LogicOp GetLogicOp(LogicOperation logicOp)
+	inline constexpr vk::LogicOp GetLogicOp(LogicOperation logicOp)
 	{
 		switch (logicOp)
 		{
@@ -431,245 +439,118 @@ namespace tur
 			} break;
 		}
 	}
-}
 
-namespace tur
-{
-    PipelineVulkan tur::PipelineBuilder::Build()
-    {
-		if (!m_DeviceSet)
-			TUR_LOG_CRITICAL("A valid device must be provided to build a pipeline");
-
-		if (!m_SwapchainSet)
-			TUR_LOG_CRITICAL("A valid swapchain must be provided to build a pipeline");
-
-		vk::GraphicsPipelineCreateInfo pipelineInfo = {};
-		pipelineInfo.flags = vk::PipelineCreateFlags();
-
-		std::vector<vk::PipelineShaderStageCreateInfo> shaderStages;
-
-		// Vertex Input:
-		vk::PipelineVertexInputStateCreateInfo vertexInputInfo = { };
-		vertexInputInfo.flags = vk::PipelineVertexInputStateCreateFlags();
-		vertexInputInfo.vertexBindingDescriptionCount = descriptor.vertexBindingDescriptionCount;
-		vertexInputInfo.vertexAttributeDescriptionCount = descriptor.vertexAttributeDescriptionCount;
-		pipelineInfo.pVertexInputState = &vertexInputInfo;
-
-		// Input Assembly
-		vk::PipelineInputAssemblyStateCreateInfo inputAssemblyInfo = { };
-		inputAssemblyInfo.flags = vk::PipelineInputAssemblyStateCreateFlags();
-		inputAssemblyInfo.topology = GetTopology(descriptor.topology);
-		pipelineInfo.pInputAssemblyState = &inputAssemblyInfo;
-
-		// Vertex Shader:
-		vk::ShaderModule vertexModule = static_cast<ShaderVulkan*>(descriptor.vertexShader)->GetModule();
-		vk::PipelineShaderStageCreateInfo vertexShaderInfo = { };
-		vertexShaderInfo.flags = vk::PipelineShaderStageCreateFlags();
-		vertexShaderInfo.stage = vk::ShaderStageFlagBits::eVertex;
-		vertexShaderInfo.module = vertexModule;
-		vertexShaderInfo.pName = "main";
-		shaderStages.push_back(vertexShaderInfo);
-
-		// Tesselation Control Shader:
-		vk::ShaderModule tessControlModule;
-		if (descriptor.tesselationControlShader)
+	inline constexpr vk::AttachmentLoadOp GetAttachmentLoadOp(AttachmentLoadOperation operation)
+	{
+		switch (operation)
 		{
-			tessControlModule = static_cast<ShaderVulkan*>(descriptor.tesselationControlShader)->GetModule();
-			vk::PipelineShaderStageCreateInfo tesselationControlCreateInfo = { };
-			tesselationControlCreateInfo.flags = vk::PipelineShaderStageCreateFlags();
-			tesselationControlCreateInfo.stage = vk::ShaderStageFlagBits::eTessellationControl;
-			tesselationControlCreateInfo.module = tessControlModule;
-			tesselationControlCreateInfo.pName = "main";
-			shaderStages.push_back(tesselationControlCreateInfo);
-		}
+			case AttachmentLoadOperation::NONE:
+				return vk::AttachmentLoadOp::eNoneEXT;
 
-		// Tesselation Evaluation Shader:
-		vk::ShaderModule tessEvalModule;
-		if (descriptor.tesselationEvaluationShader)
-		{
-			tessEvalModule = static_cast<ShaderVulkan*>(descriptor.tesselationEvaluationShader)->GetModule();
-			vk::PipelineShaderStageCreateInfo tesselationEvalCreateInfo = { };
-			tesselationEvalCreateInfo.flags = vk::PipelineShaderStageCreateFlags();
-			tesselationEvalCreateInfo.stage = vk::ShaderStageFlagBits::eTessellationEvaluation;
-			tesselationEvalCreateInfo.module = tessEvalModule;
-			tesselationEvalCreateInfo.pName = "main";
-			shaderStages.push_back(tesselationEvalCreateInfo);
-		}
+			case AttachmentLoadOperation::LOAD:
+				return vk::AttachmentLoadOp::eLoad;
 
-		// Geometry Shader:
-		vk::ShaderModule geometryModule;
-		if (descriptor.geometryShader)
-		{
-			geometryModule = static_cast<ShaderVulkan*>(descriptor.geometryShader)->GetModule();
-			vk::PipelineShaderStageCreateInfo geometryShaderCreateInfo = { };
-			geometryShaderCreateInfo.flags = vk::PipelineShaderStageCreateFlags();
-			geometryShaderCreateInfo.stage = vk::ShaderStageFlagBits::eGeometry;
-			geometryShaderCreateInfo.module = geometryModule;
-			geometryShaderCreateInfo.pName = "main";
-			shaderStages.push_back(geometryShaderCreateInfo);
-		}
-	
-		// Viewports:
-		std::vector<vk::Viewport> viewports;
-		viewports.reserve(descriptor.viewports.size());
-		if (descriptor.viewports.empty())
-		{
-			Viewport viewport;
+			case AttachmentLoadOperation::CLEAR:
+				return vk::AttachmentLoadOp::eClear;
+
+			case AttachmentLoadOperation::DONT_CARE:
+				return vk::AttachmentLoadOp::eDontCare;
+
+			default:
 			{
-				viewport.origin = glm::vec2(0.f);
-				viewport.dimensions.x = (float)m_SwapchainExtent.width;
-				viewport.dimensions.y = (float)m_SwapchainExtent.height;
-				viewport.minDepth = 0.f;
-				viewport.maxDepth = 1.f;
-			}
-			descriptor.viewports.push_back(viewport);
+				TUR_LOG_ERROR("Invalid Attachament Load Operation. Using default: DONT CARE");
+				return vk::AttachmentLoadOp::eDontCare;
+			} break;
 		}
+	}
 
-		for (const auto& viewport : descriptor.viewports)
+	inline constexpr vk::AttachmentStoreOp GetAttachmentStoreOp(AttachmentStoreOperation operation)
+	{
+		switch (operation)
 		{
-			vk::Viewport entry;
-			entry.width = viewport.dimensions.x;
-			entry.height = viewport.dimensions.y;
-			entry.minDepth = viewport.minDepth;
-			entry.maxDepth = viewport.maxDepth;
-			entry.x = viewport.origin.x;
-			entry.y = viewport.origin.y;
+			case AttachmentStoreOperation::NONE:
+				return vk::AttachmentStoreOp::eNoneEXT;
 
-			viewports.push_back(entry);
-		}
-		
-		// Scissors:
-		if (descriptor.scissors.empty())
-		{
-			Scissor scissor;
+			case AttachmentStoreOperation::STORE:
+				return vk::AttachmentStoreOp::eStore;
+
+			case AttachmentStoreOperation::DONT_CARE:
+				return vk::AttachmentStoreOp::eDontCare;
+
+			default:
 			{
-				scissor.offset = glm::vec2(0);
-				scissor.size.x = m_SwapchainExtent.width;
-				scissor.size.y = m_SwapchainExtent.height;
-			}
-			descriptor.scissors.push_back(scissor);
+				TUR_LOG_ERROR("Invalid Attachament Store Operation. Using default: DONT CARE");
+				return vk::AttachmentStoreOp::eDontCare;
+			} break;
 		}
+	}
 
-		std::vector<vk::Rect2D> scissors;
-		scissors.reserve(descriptor.scissors.size());
-		for (const auto& scissor : descriptor.scissors)
+	inline constexpr vk::ImageLayout GetImageLayout(ImageLayout layout)
+	{
+		switch (layout)
 		{
-			vk::Rect2D rect;
+			case ImageLayout::UNDEFINED:
+				return vk::ImageLayout::eUndefined;
+
+			case ImageLayout::GENERAL:
+				return vk::ImageLayout::eGeneral;
+
+			case ImageLayout::COLOR_ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eColorAttachmentOptimal;
+
+			case ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eStencilAttachmentOptimal;
+
+			case ImageLayout::DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eStencilReadOnlyOptimal;
+
+			case ImageLayout::SHADER_READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eShaderReadOnlyOptimal;
+
+			case ImageLayout::TRANSFER_SRC_OPTIMAL:
+				return vk::ImageLayout::eTransferSrcOptimal;
+
+			case ImageLayout::TRANSFER_DST_OPTIMAL:
+				return vk::ImageLayout::eTransferDstOptimal;
+
+			case ImageLayout::PREINITIALIZED:
+				return vk::ImageLayout::ePreinitialized;
+
+			case ImageLayout::DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eDepthReadOnlyStencilAttachmentOptimal;
+
+			case ImageLayout::DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eDepthAttachmentStencilReadOnlyOptimal;
+
+			case ImageLayout::DEPTH_ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eDepthAttachmentOptimal;
+
+			case ImageLayout::DEPTH_READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eDepthReadOnlyOptimal;
+
+			case ImageLayout::STENCIL_ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eStencilAttachmentOptimal;
+
+			case ImageLayout::STENCIL_READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eStencilReadOnlyOptimal;
+
+			case ImageLayout::READ_ONLY_OPTIMAL:
+				return vk::ImageLayout::eReadOnlyOptimal;
+
+			case ImageLayout::ATTACHMENT_OPTIMAL:
+				return vk::ImageLayout::eAttachmentOptimal;
+
+			case ImageLayout::PRESENT_SRC:
+				return vk::ImageLayout::ePresentSrcKHR;
+
+			case ImageLayout::SHARED_PRESENT:
+				return vk::ImageLayout::eSharedPresentKHR;
+
+			default:
 			{
-				rect.offset = vk::Offset2D(scissor.offset.x, scissor.offset.y);
-				rect.extent = vk::Extent2D(scissor.size.x, scissor.size.y);
-			}
-
-			scissors.push_back(rect);
+				TUR_LOG_ERROR("Invalid Image Layout. Using default: PRESENT_SRC_KHR");
+				return vk::ImageLayout::ePresentSrcKHR;
+			} break;
 		}
-
-		// TODO: Allow viewport and scissor to be dynamic states.
-
-		// Viewport State:
-		vk::PipelineViewportStateCreateInfo viewportState = { };
-		viewportState.flags = vk::PipelineViewportStateCreateFlags();
-		viewportState.viewportCount = static_cast<uint32_t>(viewports.size());
-		viewportState.pViewports = viewports.data();
-		viewportState.scissorCount = static_cast<uint32_t>(scissors.size());
-		viewportState.pScissors = scissors.data();
-		pipelineInfo.pViewportState = &viewportState;
-
-		// Rasterizer
-		vk::PipelineRasterizationStateCreateInfo rasterizer = { };
-		rasterizer.flags = vk::PipelineRasterizationStateCreateFlags();
-		rasterizer.depthClampEnable = descriptor.clampDepth;
-		rasterizer.rasterizerDiscardEnable = descriptor.discardFragments;
-		rasterizer.polygonMode = GetPolygonMode(descriptor.polygonMode);
-		rasterizer.lineWidth = descriptor.lineWidth;
-		rasterizer.cullMode = GetCullMode(descriptor.cullMode);
-		rasterizer.frontFace = GetFrontFace(descriptor.frontFace);
-		rasterizer.depthBiasEnable = descriptor.enableDepthBias;
-		pipelineInfo.pRasterizationState = &rasterizer;
-
-		// Fragment Shader:
-		vk::ShaderModule fragmentModule = static_cast<ShaderVulkan*>(descriptor.fragmentShader)->GetModule();
-		vk::PipelineShaderStageCreateInfo fragmentShaderInfo = { };
-		fragmentShaderInfo.flags = vk::PipelineShaderStageCreateFlags();
-		fragmentShaderInfo.stage = vk::ShaderStageFlagBits::eFragment;
-		fragmentShaderInfo.module = fragmentModule;
-		fragmentShaderInfo.pName = "main";
-		shaderStages.push_back(fragmentShaderInfo);
-
-		// Pipeline Shader Stages:
-		pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
-		pipelineInfo.pStages = shaderStages.data();
-
-		// Multisampling
-		vk::PipelineMultisampleStateCreateInfo multisampling = { };
-		multisampling.flags = vk::PipelineMultisampleStateCreateFlags();
-		multisampling.sampleShadingEnable = descriptor.enableMultisampling;
-		multisampling.rasterizationSamples = GetSampleCount(descriptor.sampleCount);
-		pipelineInfo.pMultisampleState = &multisampling;
-
-		// Color Blending:
-		vk::PipelineColorBlendAttachmentState colorBlendAttachment = { };
-		colorBlendAttachment.colorWriteMask = GetColorComponentFlags(descriptor.blendingWriteMask);
-		colorBlendAttachment.blendEnable = descriptor.enableColorBlending;
-		colorBlendAttachment.srcColorBlendFactor	= GetBlendFactor(descriptor.srcColorBlendFactor, BlendFactor::ONE);
-		colorBlendAttachment.dstColorBlendFactor	= GetBlendFactor(descriptor.dstColorBlendFactor, BlendFactor::ZERO);
-		colorBlendAttachment.colorBlendOp			= GetBlendOperation(descriptor.colorBlendOp);
-		colorBlendAttachment.srcAlphaBlendFactor	= GetBlendFactor(descriptor.srcAlphaColorBlendFactor, BlendFactor::ONE);
-		colorBlendAttachment.dstAlphaBlendFactor	= GetBlendFactor(descriptor.dstAlphaColorBlendFactor, BlendFactor::ZERO);
-		colorBlendAttachment.alphaBlendOp			= GetBlendOperation(descriptor.alphaBlendOp);
-
-		vk::PipelineColorBlendStateCreateInfo colorBlending = {};
-		colorBlending.flags = vk::PipelineColorBlendStateCreateFlags();
-		colorBlending.logicOpEnable = descriptor.enableLogicOp;
-		colorBlending.logicOp = GetLogicOp(descriptor.logicOperation);
-		colorBlending.attachmentCount = 1;
-		colorBlending.pAttachments = &colorBlendAttachment;
-		colorBlending.blendConstants[0] = descriptor.blendConstants[0];
-		colorBlending.blendConstants[1] = descriptor.blendConstants[1];
-		colorBlending.blendConstants[2] = descriptor.blendConstants[2];
-		colorBlending.blendConstants[3] = descriptor.blendConstants[3];
-		pipelineInfo.pColorBlendState = &colorBlending;
-
-		// Pipeline Layout:
-		vk::PipelineLayout pipelineLayout = CreateLayout();
-		pipelineInfo.layout = pipelineLayout;
-
-		// Renderpass:
-		vk::RenderPass renderpass = CreateRenderpass();
-		pipelineInfo.renderPass = renderpass;
-		pipelineInfo.subpass = 0;
-
-		pipelineInfo.basePipelineHandle = nullptr;
-
-		// Pipeline Creation:
-		vk::Pipeline graphicsPipeline;
-		try
-		{
-			// TODO: pipeline cache.
-			graphicsPipeline = (m_Device.createGraphicsPipeline(nullptr, pipelineInfo)).value;
-		}
-		catch (vk::SystemError err)
-		{
-			TUR_LOG_ERROR("Failed to create pipeline: {}", err.what());
-		}
-
-		// Cleanup
-		m_Device.destroyShaderModule(vertexModule);
-		if(tessControlModule)
-			m_Device.destroyShaderModule(tessControlModule);
-		if (tessEvalModule)
-			m_Device.destroyShaderModule(tessEvalModule);
-		if (geometryModule)
-			m_Device.destroyShaderModule(geometryModule);
-		m_Device.destroyShaderModule(fragmentModule);
-
-		// Output:
-		PipelineVulkan pipelineResult;
-		{
-			pipelineResult.pipeline = graphicsPipeline;
-			pipelineResult.layout = pipelineLayout;
-			pipelineResult.renderpass = renderpass;
-		}
-
-		return pipelineResult;
-    }
+	}
 }

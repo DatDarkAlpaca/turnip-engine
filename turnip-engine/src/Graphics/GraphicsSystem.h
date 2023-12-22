@@ -4,7 +4,7 @@
 #include "Graphics/GraphicsBackend.h"
 #include "Core/Window/WindowProperties.h"
 
-#include "Graphics/Vulkan/Initialization/VulkanInitializer.h"
+#include "Graphics/Vulkan/VulkanInitializer.h"
 
 namespace tur
 {

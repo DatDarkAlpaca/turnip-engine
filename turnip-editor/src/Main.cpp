@@ -2,8 +2,8 @@
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
 
-#include "Graphics/Vulkan/PipelineVulkan.h"
-#include "Graphics/Vulkan/Framebuffer.h"
+#include "Graphics/Vulkan/Objects/Pipeline.h"
+#include "Graphics/Vulkan/Builders/FramebufferBuilder.h"
 
 using namespace tur;
 
@@ -12,7 +12,7 @@ class MainView : public tur::View
 public:
 	void OnEngineInitialize() override
 	{
-		auto& graphics = GraphicsSystem::Get().GetBackend();
+		auto* graphics = (BackendVulkan*)GraphicsSystem::Get().GetBackend().get();
 
 		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
 		auto fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
@@ -22,27 +22,8 @@ public:
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
 		};
+
 		pipeline = graphics->CreatePipeline(descriptor);
-
-
-
-		FramebufferBuilder builder;
-		
-		// Command Pools are handled indirectly:
-		// commands = graphics->CreateCommandBuffer(ImmediateSubmit);
-
-		// commands->SetViewport()
-		// commands->SetVertexBuffer()
-		// commands->BeginRenderPass()
-			// commands->Clear();
-			// commands->SetPipeline(pipeline);
-			// commands->Draw(3, 0);
-		// commands->EndRenderPass()
-
-		// commands->Begin();
-
-		// commands->End();
-		// graphics->Present();
 	}
 
 	void OnEvent(tur::Event& event) override
@@ -55,18 +36,8 @@ public:
 		});
 	}
 
-	void OnRender() override
-	{
-		return;
-
-		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		GraphicsSystem::Get().GetBackend()->Present();
-	}
-
 private:
-	tur_unique<Pipeline> pipeline = nullptr;
+	tur_unique<Pipeline> pipeline;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -81,10 +52,7 @@ public:
 			DisplayCPUInfo();
 		}
 
-		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
-
-		Graphics().SelectGraphicsBackend(BackendType::OPENGL, {});
-		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
+		Graphics().SetupWindow({ "Turnip Engine v1.0", { 640, 480 } });
 
 		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
 		Graphics().InitializeBackend<DefaultVulkanInitializer>();

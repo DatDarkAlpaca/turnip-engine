@@ -31,8 +31,8 @@ namespace tur
 		void OnEvent(Event& event);
 		
 	public:
-		ViewSystem& View() const { return g_ViewSystem->Get(); }
-		GraphicsSystem& Graphics() const { return g_GraphicsSystem->Get(); }
+		ViewSystem& View() { return g_ViewSystem->Get(); }
+		GraphicsSystem& Graphics() { return g_GraphicsSystem->Get(); }
 
 	private:
 		LoggerSystem* g_LoggerSystem = nullptr;
