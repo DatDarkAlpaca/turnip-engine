@@ -45,6 +45,7 @@ public:
 
 	void OnRender() override
 	{
+		return;
 		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
