@@ -20,7 +20,7 @@ namespace tur
 	public:
 		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;
 
-		tur_unique<Renderpass> CreateRenderpass() override { TUR_LOG_WARN("NOT IMPLEMENTED: BackendOpenGL::CreateRenderpass"); return nullptr; };
+		tur_unique<Renderpass> CreateRenderpass(const RenderpassDescriptor& descriptor) override { TUR_LOG_WARN("NOT IMPLEMENTED: BackendOpenGL::CreateRenderpass"); return nullptr; };
 
 		tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
 

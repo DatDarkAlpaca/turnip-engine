@@ -11,6 +11,9 @@ namespace tur
 	public:
 		explicit PipelineOpenGL(const PipelineDescriptor& descriptor, Window* window);
 
+	public:
+		void Bind();
+
 	private:
 		void SetupShaders(const PipelineDescriptor& descriptor);
 

@@ -12,27 +12,29 @@ namespace tur::vulkan
 	class RenderpassBuilder
 	{
 	public:
+		RenderpassBuilder(const RenderpassDescriptor& descriptor);
+
+	public:
 		std::optional<RenderpassVulkan> Build();
 
 	public:
-		RenderpassBuilder& SetDevice(vk::Device device);
+		RenderpassBuilder& SetArguments(vk::Device device, const vulkan::Swapchain& swapchain);
 
-	public:
-		// TODO: add DataFormat and substitute SwpachainFormat
-		uint32_t AddAttachment(uint32_t sampleCount, const AttachmentOperations& operations, ImageLayout initialLayout, ImageLayout finalLayout);
+	private:
+		void AddSwapchainColorAttachment();
 
-		uint32_t AddAttachment(uint32_t sampleCount, const Swapchain& swapchain, const AttachmentOperations& operations, ImageLayout initialLayout, ImageLayout finalLayout);
-
-		uint32_t AddDefaultColorAttachment(const Swapchain& swapchain);
-
-		RenderpassBuilder& AddReference();
+		void PrepareDescriptor();
 
 	private:
 		vk::Device m_Device;
-		bool m_DeviceSet = false;
+		vulkan::Swapchain m_Swapchain;
+
+		bool m_ArgumentsSet = false;
 
 	private:
 		std::vector<vk::AttachmentDescription> m_Attachments;
+		std::vector<vk::AttachmentReference> m_AttachmentReferences;
 		std::vector<vk::SubpassDescription> m_Subpasses;
+		RenderpassDescriptor m_Descriptor;
 	};
 }

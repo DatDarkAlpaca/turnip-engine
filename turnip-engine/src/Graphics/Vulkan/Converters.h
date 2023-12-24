@@ -1,13 +1,5 @@
 #pragma once
-#include "Graphics/Types/PrimitiveTopology.h"
-#include "Graphics/Types/Viewport.h"
-#include "Graphics/Types/Scissor.h"
-#include "Graphics/Types/PolygonMode.h"
-#include "Graphics/Types/CullMode.h"
-#include "Graphics/Types/FrontFace.h"
-#include "Graphics/Types/ColorBlending.h"
-#include "Graphics/Types/AttachmentOperation.h"
-#include "Graphics/Types/ImageLayout.h"
+#include "Graphics/Types/Types.h"
 
 namespace tur::vulkan
 {
@@ -552,5 +544,214 @@ namespace tur::vulkan
 				return vk::ImageLayout::ePresentSrcKHR;
 			} break;
 		}
+	}
+
+	inline constexpr vk::Format GetFormat(DataFormat format)
+	{
+		switch (format)
+		{
+			case DataFormat::UNDEFINED:
+				return vk::Format::eUndefined;
+
+			case DataFormat::R8_UNORM:
+				return vk::Format::eR8Unorm;
+
+			case DataFormat::R8_SNORM:
+				return vk::Format::eR8Snorm;
+
+			case DataFormat::R8_UINT:
+				return vk::Format::eR8Uint;
+
+			case DataFormat::R8_SINT:
+				return vk::Format::eR8Sint;
+
+			case DataFormat::R8_SRGB:
+				return vk::Format::eR8Srgb;
+
+			case DataFormat::R8_G8_UNORM:
+				return vk::Format::eR8G8Unorm;
+
+			case DataFormat::R8_G8_SNORM:
+				return vk::Format::eR8G8Snorm;
+
+			case DataFormat::R8_G8_UINT:
+				return vk::Format::eR8G8Uint;
+
+			case DataFormat::R8_G8_SINT:
+				return vk::Format::eR8G8Sint;
+
+			case DataFormat::R8_G8_SRGB:
+				return vk::Format::eR8G8Srgb;
+
+			case DataFormat::R8_G8_B8_UNORM:
+				return vk::Format::eR8G8B8Unorm;
+
+			case DataFormat::R8_G8_B8_SNORM:
+				return vk::Format::eR8G8B8Snorm;
+
+			case DataFormat::R8_G8_B8_UINT:
+				return vk::Format::eR8G8B8Uint;
+
+			case DataFormat::R8_G8_B8_SINT:
+				return vk::Format::eR8G8B8Sint;
+
+			case DataFormat::R8_G8_B8_SRGB:
+				return vk::Format::eR8G8B8Srgb;
+
+			case DataFormat::R8_G8_B8_A8_UNORM:
+				return vk::Format::eR8G8B8A8Unorm;
+
+			case DataFormat::R8_G8_B8_A8_SNORM:
+				return vk::Format::eR8G8B8A8Snorm;
+
+			case DataFormat::R8_G8_B8_A8_UINT:
+				return vk::Format::eR8G8B8A8Uint;
+
+			case DataFormat::R8_G8_B8_A8_SINT:
+				return vk::Format::eR8G8B8A8Sint;
+
+			case DataFormat::R8_G8_B8_A8_SRGB:
+				return vk::Format::eR8G8B8A8Srgb;
+
+			case DataFormat::R16_UNORM:
+				return vk::Format::eR16Unorm;
+
+			case DataFormat::R16_SNORM:
+				return vk::Format::eR16Snorm;
+
+			case DataFormat::R16_UINT:
+				return vk::Format::eR16Uint;
+
+			case DataFormat::R16_SINT:
+				return vk::Format::eR16Sint;
+
+			case DataFormat::R16_SFLOAT:
+				return vk::Format::eR16Sfloat;
+
+			case DataFormat::R16_G16_UNORM:
+				return vk::Format::eR16G16Unorm;
+
+			case DataFormat::R16_G16_SNORM:
+				return vk::Format::eR16G16Snorm;
+
+			case DataFormat::R16_G16_UINT:
+				return vk::Format::eR16G16Uint;
+
+			case DataFormat::R16_G16_SINT:
+				return vk::Format::eR16G16Sint;
+
+			case DataFormat::R16_G16_SFLOAT:
+				return vk::Format::eR16G16Sfloat;
+
+			case DataFormat::R16_G16_B16_UNORM:
+				return vk::Format::eR16G16B16Unorm;
+
+			case DataFormat::R16_G16_B16_SNORM:
+				return vk::Format::eR16G16B16Snorm;
+
+			case DataFormat::R16_G16_B16_UINT:
+				return vk::Format::eR16G16B16Uint;
+
+			case DataFormat::R16_G16_B16_SINT:
+				return vk::Format::eR16G16B16Uint;
+
+			case DataFormat::R16_G16_B16_SFLOAT:
+				return vk::Format::eR16G16B16Sfloat;
+
+			case DataFormat::R16_G16_B16_A16UNORM:
+				return vk::Format::eR16G16B16A16Unorm;
+
+			case DataFormat::R16_G16_B16_A16_SNORM:
+				return vk::Format::eR16G16B16A16Snorm;
+
+			case DataFormat::R16_G16_B16_A16_UINT:
+				return vk::Format::eR16G16B16A16Uint;
+
+			case DataFormat::R16_G16_B16_A16_SINT:
+				return vk::Format::eR16G16B16A16Sint;
+
+			case DataFormat::R16_G16_B16_A16_SFLOAT:
+				return vk::Format::eR16G16B16A16Sfloat;
+
+			case DataFormat::R32_UINT:
+				return vk::Format::eR32Uint;
+
+			case DataFormat::R32_SINT:
+				return vk::Format::eR32Sint;
+
+			case DataFormat::R32_SFLOAT:
+				return vk::Format::eR32Sfloat;
+
+			case DataFormat::R32_G32_UINT:
+				return vk::Format::eR32G32Uint;
+
+			case DataFormat::R32_G32_SINT:
+				return vk::Format::eR32G32Sint;
+
+			case DataFormat::R32_G32_SFLOAT:
+				return vk::Format::eR32G32Sfloat;
+
+			case DataFormat::R32_G32_B32_UINT:
+				return vk::Format::eR32G32B32Uint;
+
+			case DataFormat::R32_G32_B32_SINT:
+				return vk::Format::eR32G32B32Sint;
+
+			case DataFormat::R32_G32_B32_SFLOAT:
+				return vk::Format::eR32G32B32Sfloat;
+
+			case DataFormat::R32_G32_B32_A32_UINT:
+				return vk::Format::eR32G32B32A32Uint;
+
+			case DataFormat::R32_G32_B32_A32_SINT:
+				return vk::Format::eR32G32B32A32Sint;
+
+			case DataFormat::R32_G32_B32_A32_SFLOAT:
+				return vk::Format::eR32G32B32A32Sfloat;
+
+			case DataFormat::R64_UINT:
+				return vk::Format::eR64Uint;
+
+			case DataFormat::R64_SINT:
+				return vk::Format::eR64Sint;
+
+			case DataFormat::R64_SFLOAT:
+				return vk::Format::eR64Sfloat;
+
+			case DataFormat::R64_G64_UINT:
+				return vk::Format::eR64G64Uint;
+
+			case DataFormat::R64_G64_SINT:
+				return vk::Format::eR64G64Sint;
+
+			case DataFormat::R64_G64_SFLOAT:
+				return vk::Format::eR64G64Sfloat;
+
+			case DataFormat::R64_G64_B64_UINT:
+				return vk::Format::eR64G64B64Uint;
+
+			case DataFormat::R64_G64_B64_SINT:
+				return vk::Format::eR64G64B64Sint;
+
+			case DataFormat::R64_G64_B64_SFLOAT:
+				return vk::Format::eR64G64B64Sfloat;
+
+			case DataFormat::R64_G64_B64_A64_UINT:
+				return vk::Format::eR64G64B64A64Uint;
+
+			case DataFormat::R64_G64_B64_A64_SINT:
+				return vk::Format::eR64G64B64A64Sint;
+
+			case DataFormat::R64_G64_B64_A64_SFLOAT:
+				return vk::Format::eR64G64B64A64Sfloat;
+
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Format. Using default: R32_UINT");
+				return vk::Format::eR32Uint;
+			} break;
+		}
+
+		return vk::Format::eR32Uint;
 	}
 }

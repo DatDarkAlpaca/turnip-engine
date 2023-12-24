@@ -8,6 +8,5 @@ namespace tur::vulkan
 	{
 		vk::Pipeline pipeline;
 		vk::PipelineLayout layout;
-		vk::RenderPass renderpass;
 	};
 }

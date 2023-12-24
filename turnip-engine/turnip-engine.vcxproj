@@ -134,11 +134,13 @@
     <ClInclude Include="src\Core\Window\WindowProperties.h" />
     <ClInclude Include="src\Entry.h" />
     <ClInclude Include="src\Graphics\BackendType.h" />
+    <ClInclude Include="src\Graphics\CommandBuffer.h" />
     <ClInclude Include="src\Graphics\Graphics.h" />
     <ClInclude Include="src\Graphics\GraphicsBackend.h" />
     <ClInclude Include="src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\CommonGL.h" />
+    <ClInclude Include="src\Graphics\OpenGL\Converters.h" />
     <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
     <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h" />
     <ClInclude Include="src\Graphics\Pipeline.h" />
@@ -147,11 +149,13 @@
     <ClInclude Include="src\Graphics\Types\AttachmentOperation.h" />
     <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
     <ClInclude Include="src\Graphics\Types\CullMode.h" />
+    <ClInclude Include="src\Graphics\Types\DataFormat.h" />
     <ClInclude Include="src\Graphics\Types\FrontFace.h" />
     <ClInclude Include="src\Graphics\Types\ImageLayout.h" />
     <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
     <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
     <ClInclude Include="src\Graphics\Types\Scissor.h" />
+    <ClInclude Include="src\Graphics\Types\Types.h" />
     <ClInclude Include="src\Graphics\Types\Viewport.h" />
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h" />
     <ClInclude Include="src\Graphics\Vulkan\Builders\FrameBuilder.h" />

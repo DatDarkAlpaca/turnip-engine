@@ -12,6 +12,11 @@
 
 namespace tur
 {
+	struct PipelineLayout
+	{
+
+	};
+
 	// If renderpass or layout are not defined, 
 	// the application must create defaults.
 	struct PipelineDescriptor

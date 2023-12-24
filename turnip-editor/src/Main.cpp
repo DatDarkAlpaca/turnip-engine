@@ -12,16 +12,18 @@ class MainView : public tur::View
 public:
 	void OnEngineInitialize() override
 	{
-		return;
 		auto& graphics = GraphicsSystem::Get().GetBackend();
 
 		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
 		auto fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
 
+		renderpass = graphics->CreateRenderpass({});
+
 		PipelineDescriptor descriptor;
 		{
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
+			descriptor.renderpass = renderpass.get();
 		};
 
 		pipeline = graphics->CreatePipeline(descriptor);
@@ -34,13 +36,13 @@ public:
 		subscriber.subscribe<WindowCloseEvent>([](const WindowCloseEvent& closeEvent) -> bool {
 			TUR_LOG_DEBUG("Window Closed.");
 			return true;
-		});
+			});
 
 		subscriber.subscribe<KeyPressedEvent>([](const KeyPressedEvent& keyEvent) -> bool {
 			keyEvent.key;
 			keyEvent.mods;
 			return true;
-		});
+			});
 	}
 
 	void OnRender() override
@@ -54,6 +56,7 @@ public:
 
 private:
 	tur_unique<Pipeline> pipeline;
+	tur_unique<Renderpass> renderpass;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -63,16 +66,13 @@ public:
 	{
 		// System Information:
 		{
-			DisplayMonitorInformation();
+			// DisplayMonitorInformation();
 
-			DisplayCPUInfo();
+			// DisplayCPUInfo();
 		}
 
 		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
-		Graphics().SelectGraphicsBackend(BackendType::OPENGL, {});
-
-		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
-	
+			
 		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
 		Graphics().InitializeBackend<DefaultVulkanInitializer>();
 
