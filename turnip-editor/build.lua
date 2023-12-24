@@ -10,9 +10,7 @@ project "turnip-editor"
     pchsource "src/pch.cpp"
 
     links {
-        "turnip-engine",
-        "shcore.lib",
-        "dxva2.lib"
+        "turnip-engine"
     }
 
     files {
@@ -33,16 +31,7 @@ project "turnip-editor"
     }
 
     -- Platform
-    defines {
-        "TUR_WINDOWING_WIN32",
-        "TUR_PLATFORM_WIN32",
-        "VK_USE_PLATFORM_WIN32_KHR"
-    }
-
-    files {
-        "src/Platform/WIN32/**.cpp",
-        "src/Platform/WIN32/**.h",
-    }
+    DetectPlatform()
 
     -- Configurations
     filter { "configurations:Debug" }

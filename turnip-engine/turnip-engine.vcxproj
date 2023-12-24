@@ -44,14 +44,14 @@
     <IntDir>..\build\intermediate\Debug-windows-x86_64\turnip-engine\</IntDir>
     <TargetName>turnip-engine</TargetName>
     <TargetExt>.lib</TargetExt>
-    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad2795ec90d739f\p\bin;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad2795ec90d739f\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\build\bin\Release-windows-x86_64\turnip-engine\</OutDir>
     <IntDir>..\build\intermediate\Release-windows-x86_64\turnip-engine\</IntDir>
     <TargetName>turnip-engine</TargetName>
     <TargetExt>.lib</TargetExt>
-    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\spdlo585c949eca222\p\bin;$(ProjectDir)..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\bin;$(ProjectDir)..\..\..\.conan2\p\glfweacdc550e8335\p\bin;$(ProjectDir)..\..\..\.conan2\p\fmt99c02610800b9\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad39715e4bdf27b\p\bin;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\spdlo585c949eca222\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad39715e4bdf27b\p\bin;$(ProjectDir)..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\bin;$(ProjectDir)..\..\..\.conan2\p\fmt99c02610800b9\p\bin;$(ProjectDir)..\..\..\.conan2\p\glfweacdc550e8335\p\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -59,7 +59,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;TUR_WINDOWING_WIN32;TUR_PLATFORM_WIN32;VK_USE_PLATFORM_WIN32_KHR;TUR_DEBUG;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;..\..\..\.conan2\p\b\glad2795ec90d739f\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\b\glad2795ec90d739f\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -70,8 +70,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>shcore.lib;dxva2.lib;spdlogd.lib;opengl32.lib;vulkan-1.lib;glfw3.lib;gdi32.lib;fmtd.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;..\..\..\.conan2\p\b\glad2795ec90d739f\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>shcore.lib;dxva2.lib;spdlogd.lib;glad.lib;vulkan-1.lib;opengl32.lib;fmtd.lib;glfw3.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\glad2795ec90d739f\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;TUR_WINDOWING_WIN32;TUR_PLATFORM_WIN32;VK_USE_PLATFORM_WIN32_KHR;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\spdlo585c949eca222\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\glfweacdc550e8335\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\fmt99c02610800b9\p\include;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;src;..\..\..\.conan2\p\spdlo585c949eca222\p\include;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\fmt99c02610800b9\p\include;..\..\..\.conan2\p\glfweacdc550e8335\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -96,8 +96,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>shcore.lib;dxva2.lib;spdlog.lib;opengl32.lib;vulkan-1.lib;glfw3.lib;gdi32.lib;fmt.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\.conan2\p\spdlo585c949eca222\p\lib;..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\lib;..\..\..\.conan2\p\glfweacdc550e8335\p\lib;..\..\..\.conan2\p\fmt99c02610800b9\p\lib;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>shcore.lib;dxva2.lib;spdlog.lib;glad.lib;vulkan-1.lib;opengl32.lib;fmt.lib;glfw3.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\spdlo585c949eca222\p\lib;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\lib;..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\lib;..\..\..\.conan2\p\fmt99c02610800b9\p\lib;..\..\..\.conan2\p\glfweacdc550e8335\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 require "scripts/clear"
+include "scripts/platform"
 include "dependencies/conandeps.premake5.lua"
 
 workspace "turnip-engine"
