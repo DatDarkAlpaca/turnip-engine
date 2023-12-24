@@ -55,8 +55,8 @@ public:
 	}
 
 private:
-	tur_unique<Pipeline> pipeline;
-	tur_unique<Renderpass> renderpass;
+	tur_unique<IPipeline> pipeline;
+	tur_unique<IRenderpass> renderpass;
 };
 
 class TurnipEditor : public TurnipEngine

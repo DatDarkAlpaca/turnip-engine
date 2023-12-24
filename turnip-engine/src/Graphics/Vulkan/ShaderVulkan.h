@@ -3,7 +3,7 @@
 
 namespace tur
 {
-	class ShaderVulkan : public Shader
+	class ShaderVulkan : public IShader
 	{
 	public:
 		explicit ShaderVulkan(const vk::Device& device, const ShaderDescriptor& descriptor);

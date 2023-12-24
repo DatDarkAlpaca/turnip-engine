@@ -39,11 +39,11 @@ namespace tur
 	{
 		// TODO: Allow compute shaders.
 
-		ShaderOpenGL* vertexShader = static_cast<ShaderOpenGL*>(descriptor.vertexShader);
+		ShaderOpenGL* vertexShader      = static_cast<ShaderOpenGL*>(descriptor.vertexShader);
 		ShaderOpenGL* tessControlShader = static_cast<ShaderOpenGL*>(descriptor.tesselationControlShader);
-		ShaderOpenGL* tessEvalShader = static_cast<ShaderOpenGL*>(descriptor.tesselationEvaluationShader);
-		ShaderOpenGL* geometryShader = static_cast<ShaderOpenGL*>(descriptor.geometryShader);
-		ShaderOpenGL* fragmentShader = static_cast<ShaderOpenGL*>(descriptor.fragmentShader);
+		ShaderOpenGL* tessEvalShader    = static_cast<ShaderOpenGL*>(descriptor.tesselationEvaluationShader);
+		ShaderOpenGL* geometryShader    = static_cast<ShaderOpenGL*>(descriptor.geometryShader);
+		ShaderOpenGL* fragmentShader    = static_cast<ShaderOpenGL*>(descriptor.fragmentShader);
 
 		GLID vertexShaderID = vertexShader->GetID();
 		GLID fragmentShaderID = fragmentShader->GetID();

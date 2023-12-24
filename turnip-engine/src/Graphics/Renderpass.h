@@ -85,9 +85,9 @@ namespace tur
 		std::vector<std::unordered_set<std::pair<AttachmentType, attachment_id>, attachment_pair_hash>> subpasses;
 	};
 
-	class Renderpass
+	class IRenderpass
 	{
 	public:
-		virtual ~Renderpass() = default;
+		virtual ~IRenderpass() = default;
 	};
 }

@@ -29,11 +29,11 @@ namespace tur
 		PrimitiveTopology topology = PrimitiveTopology::TRIANGLES;
 
 		// Shaders:
-		Shader* vertexShader = nullptr;
-		Shader* tesselationControlShader = nullptr;
-		Shader* tesselationEvaluationShader = nullptr;
-		Shader* geometryShader = nullptr;
-		Shader* fragmentShader = nullptr;
+		IShader* vertexShader = nullptr;
+		IShader* tesselationControlShader = nullptr;
+		IShader* tesselationEvaluationShader = nullptr;
+		IShader* geometryShader = nullptr;
+		IShader* fragmentShader = nullptr;
 
 		// Viewports:
 		std::vector<Viewport> viewports;
@@ -68,16 +68,16 @@ namespace tur
 		float blendConstants[4] = { 0.f, 0.f, 0.f, 0.f };
 
 		// Renderpass:
-		NON_OWNING Renderpass* renderpass = nullptr;
+		NON_OWNING IRenderpass* renderpass = nullptr;
 
 		// Layout:
 		uint32_t layoutCount = 0;
 		uint32_t pushConstantCount = 0;
 	};
 
-	class Pipeline
+	class IPipeline
 	{
 	public:
-		virtual ~Pipeline() = default;
+		virtual ~IPipeline() = default;
 	};
 }

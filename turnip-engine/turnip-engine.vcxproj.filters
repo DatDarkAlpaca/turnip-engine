@@ -325,7 +325,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Graphics\CommandBuffer.h" />
     <ClInclude Include="src\Graphics\Types\Types.h" />
     <ClInclude Include="src\Graphics\Types\DataFormat.h" />
     <ClInclude Include="src\Graphics\OpenGL\Converters.h" />

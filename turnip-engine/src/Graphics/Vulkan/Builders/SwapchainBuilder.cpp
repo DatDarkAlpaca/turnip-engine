@@ -170,11 +170,7 @@ namespace tur::vulkan
 	{
 		TUR_LOG_INFO("Supported Pixel Formats:");
 		for (vk::SurfaceFormatKHR supportedFormat : formats)
-			TUR_LOG_INFO("  * {}", vk::to_string(supportedFormat.format));
-
-		TUR_LOG_INFO("Supported Color Spaces:");
-		for (vk::SurfaceFormatKHR supportedFormat : formats)
-			TUR_LOG_INFO("  * {}", vk::to_string(supportedFormat.colorSpace));
+			TUR_LOG_INFO("  * {} | {}", vk::to_string(supportedFormat.format), vk::to_string(supportedFormat.colorSpace));
 	}
 
 	void DisplayPresentModes(const std::vector<vk::PresentModeKHR>& presentModes)

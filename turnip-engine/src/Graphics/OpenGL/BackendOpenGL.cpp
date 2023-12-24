@@ -44,12 +44,12 @@ namespace tur
 		platform::SwapBuffers(m_Window);
 	}
 
-	tur_unique<Shader> BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)
+	tur_unique<IShader> BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)
 	{
 		return tur::MakeUnique<ShaderOpenGL>(descriptor);
 	}
 
-	tur_unique<Pipeline> BackendOpenGL::CreatePipeline(const PipelineDescriptor& descriptor)
+	tur_unique<IPipeline> BackendOpenGL::CreatePipeline(const PipelineDescriptor& descriptor)
 	{
 		return tur::MakeUnique<PipelineOpenGL>(descriptor, m_Window);
 	}

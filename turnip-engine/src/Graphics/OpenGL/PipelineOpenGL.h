@@ -6,7 +6,7 @@
 
 namespace tur
 {
-	class PipelineOpenGL : public Pipeline
+	class PipelineOpenGL : public IPipeline
 	{
 	public:
 		explicit PipelineOpenGL(const PipelineDescriptor& descriptor, Window* window);

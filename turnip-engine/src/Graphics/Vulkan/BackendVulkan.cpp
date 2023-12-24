@@ -22,12 +22,12 @@ namespace tur
 		m_Window = window.get();
 	}
 
-	tur_unique<Shader> BackendVulkan::CreateShader(const ShaderDescriptor& descriptor)
+	tur_unique<IShader> BackendVulkan::CreateShader(const ShaderDescriptor& descriptor)
 	{
 		return tur::MakeUnique<ShaderVulkan>(m_Device, descriptor);
 	}
 
-	tur_unique<Renderpass> BackendVulkan::CreateRenderpass(const RenderpassDescriptor& descriptor)
+	tur_unique<IRenderpass> BackendVulkan::CreateRenderpass(const RenderpassDescriptor& descriptor)
 	{
 		vulkan::RenderpassBuilder builder(descriptor);
 		builder.SetArguments(m_Device, m_Swapchain);
@@ -43,7 +43,7 @@ namespace tur
 		return tur::MakeUnique<vulkan::RenderpassVulkan>(renderpass);
 	}
 
-	tur_unique<Pipeline> BackendVulkan::CreatePipeline(const PipelineDescriptor& descriptor)
+	tur_unique<IPipeline> BackendVulkan::CreatePipeline(const PipelineDescriptor& descriptor)
 	{
 		vulkan::PipelineBuilder builder(descriptor);
 

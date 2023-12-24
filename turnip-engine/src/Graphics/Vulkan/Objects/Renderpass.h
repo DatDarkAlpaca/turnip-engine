@@ -4,7 +4,7 @@
 
 namespace tur::vulkan
 {
-	class RenderpassVulkan : public Renderpass
+	class RenderpassVulkan : public IRenderpass
 	{
 	public:
 		vk::RenderPass renderpass;

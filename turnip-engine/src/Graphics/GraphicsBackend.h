@@ -28,11 +28,11 @@ namespace tur
 		virtual void Present() = 0;
 
 	public:
-		virtual tur_unique<Shader> CreateShader(const ShaderDescriptor&) = 0;
+		virtual tur_unique<IShader> CreateShader(const ShaderDescriptor&) = 0;
 
-		virtual tur_unique<Renderpass> CreateRenderpass(const RenderpassDescriptor& descriptor) = 0;
+		virtual tur_unique<IRenderpass> CreateRenderpass(const RenderpassDescriptor& descriptor) = 0;
 
-		virtual tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor&) = 0;
+		virtual tur_unique<IPipeline> CreatePipeline(const PipelineDescriptor&) = 0;
 	};
 
 	class IGraphicsBackendInitializer

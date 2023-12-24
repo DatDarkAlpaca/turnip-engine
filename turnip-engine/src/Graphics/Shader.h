@@ -55,9 +55,9 @@ namespace tur
 		ShaderType type;
 	};
 
-	class Shader
+	class IShader
 	{
 	public:
-		virtual ~Shader() = default;
+		virtual ~IShader() = default;
 	};
 }

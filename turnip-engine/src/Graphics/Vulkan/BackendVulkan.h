@@ -24,11 +24,11 @@ namespace tur
 		void Present() override { TUR_LOG_WARN("Present() not implemented on Vulkan"); }
 
 	public:
-		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;
+		tur_unique<IShader> CreateShader(const ShaderDescriptor& descriptor) override;
 
-		tur_unique<Renderpass> CreateRenderpass(const RenderpassDescriptor& descriptor) override;
+		tur_unique<IRenderpass> CreateRenderpass(const RenderpassDescriptor& descriptor) override;
 
-		tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
+		tur_unique<IPipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
 
 	public:
 		EXPOSE_PROPERTY(BackendProperties, Properties, m_Properties);

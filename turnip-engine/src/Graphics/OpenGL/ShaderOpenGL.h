@@ -6,7 +6,7 @@
 
 namespace tur
 {
-	class ShaderOpenGL : public Shader
+	class ShaderOpenGL : public IShader
 	{
 	public:
 		explicit ShaderOpenGL(const ShaderDescriptor& descriptor);

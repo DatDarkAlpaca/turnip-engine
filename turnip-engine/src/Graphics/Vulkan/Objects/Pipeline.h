@@ -4,7 +4,7 @@
 
 namespace tur::vulkan
 {
-	struct PipelineVulkan : public Pipeline
+	struct PipelineVulkan : public IPipeline
 	{
 		vk::Pipeline pipeline;
 		vk::PipelineLayout layout;
