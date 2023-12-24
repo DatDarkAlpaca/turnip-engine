@@ -33,14 +33,15 @@ namespace tur
 
 	void BackendOpenGL::FinishSetup(tur_unique<Window>& window)
 	{
-		platform::InitializeOpenGL(static_cast<GLFWwindow*>(window->GetHandle()));
-	
+		platform::InitializeOpenGL(window.get());
+		m_Window = window.get();
+
 		DisplayOpenGLInformation();
 	}
 
 	void BackendOpenGL::Present()
 	{
-		platform::SwapBuffers(static_cast<GLFWwindow*>(m_Window->GetHandle()));
+		platform::SwapBuffers(m_Window);
 	}
 
 	tur_unique<Shader> BackendOpenGL::CreateShader(const ShaderDescriptor& descriptor)

@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "Common.h"
-#include "Window_GLFW.h"
-#include "Monitor_GLFW.h"
 
+#include "Events_GLFW.h"
 #include "Core/Event/Events.h"
 #include "Core/Event/EventType.h"
+
+#include "Window_GLFW.h"
+#include "Monitor_GLFW.h"
 
 namespace tur
 {
@@ -40,6 +42,11 @@ namespace tur
 		// Window Data:
 		SetWindowDataPointer();
 		SetWindowCallbacks();
+	}
+
+	void WindowGLFW::Shutdown()
+	{
+		m_Window.reset();
 	}
 
 	void WindowGLFW::SetEventCallback(const FnEventCallback& callback)
@@ -165,19 +172,28 @@ namespace tur
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event((Key)key, KeyboardMods(mods));
+					Key convertedKey = TranslateKey(key);
+					KeyboardMods convertedMods = TranslateKeyMods(mods);
+
+					KeyPressedEvent event(convertedKey, convertedMods);
 					data->eventCallback(event);
 				} break;
 				
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event((Key)key, KeyboardMods(mods));
+					Key convertedKey = TranslateKey(key);
+					KeyboardMods convertedMods = TranslateKeyMods(mods);
+
+					KeyReleasedEvent event(convertedKey, convertedMods);
 					data->eventCallback(event);
 				} break;
 
 				case GLFW_REPEAT:
 				{
-					KeyRepeatEvent event((Key)key, KeyboardMods(mods));
+					Key convertedKey = TranslateKey(key);
+					KeyboardMods convertedMods = TranslateKeyMods(mods);
+
+					KeyRepeatEvent event(convertedKey, convertedMods);
 					data->eventCallback(event);	
 				} break;
 
@@ -203,13 +219,15 @@ namespace tur
 			{
 				case GLFW_PRESS:
 				{
-					MousePressedEvent event((MouseButton)button);
+					MouseButton convertedButton = TranslateMouseButton(button);
+					MousePressedEvent event(convertedButton);
 					data->eventCallback(event);
 				} break;
 
 				case GLFW_RELEASE:
 				{
-					MouseReleasedEvent event((MouseButton)button);
+					MouseButton convertedButton = TranslateMouseButton(button);
+					MouseReleasedEvent event(convertedButton);
 					data->eventCallback(event);
 				} break;
 

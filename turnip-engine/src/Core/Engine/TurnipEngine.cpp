@@ -44,35 +44,37 @@ namespace tur
 
 			OnRenderGUI();
 		}
+
+		window->Shutdown();
 	}
 
 	void TurnipEngine::OnEngineInitialize()
 	{
-		for (const auto& view : *g_ViewSystem)
+		for (const auto& view : g_ViewSystem->Get())
 			view->OnEngineInitialize();
 	}
 
 	void TurnipEngine::OnRender()
 	{
-		for (const auto& view : *g_ViewSystem)
+		for (const auto& view : g_ViewSystem->Get())
 			view->OnRender();
 	}
 
 	void TurnipEngine::OnRenderGUI()
 	{
-		for (const auto& view : *g_ViewSystem)
+		for (const auto& view : g_ViewSystem->Get())
 			view->OnRenderGUI();
 	}
 
 	void TurnipEngine::OnUpdate()
 	{
-		for (const auto& view : *g_ViewSystem)
+		for (const auto& view : g_ViewSystem->Get())
 			view->OnUpdate();
 	}
 
 	void TurnipEngine::OnEvent(Event& event)
 	{
-		for (const auto& view : *g_ViewSystem)
+		for (const auto& view : g_ViewSystem->Get())
 			view->OnEvent(event);
 	}
 }

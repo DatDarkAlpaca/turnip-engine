@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Event/Event.h"
 #include "Core/NonCopyable.h"
 #include "Core/Window/WindowProperties.h"
 
@@ -17,6 +18,11 @@ namespace tur
 		void Initialize(const WindowProperties& properties)
 		{
 			window.Initialize(properties);
+		}
+
+		void Shutdown()
+		{
+			window.Shutdown();
 		}
 
 		void SetEventCallback(const FnEventCallback& callback)
