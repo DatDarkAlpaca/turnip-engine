@@ -1,7 +1,10 @@
 #pragma once
 #include "Core/Defines.h"
 #include "Core/NonCopyable.h"
-#include <spdlog/spdlog.h>
+
+#pragma warning(push, 0)
+	#include <spdlog/spdlog.h>
+#pragma warning(pop)
 
 namespace tur
 {

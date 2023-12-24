@@ -9,9 +9,21 @@ project "turnip-engine"
     pchheader "pch.h"
     pchsource "src/pch.cpp"
 
+    links {
+        "shcore.lib",
+        "dxva2.lib"
+    }
+
     files {
-        "src/**.cpp",
-        "src/**.h"
+        "src/Core/**.cpp",
+        "src/Core/**.h",
+        "src/Graphics/**.cpp",
+        "src/Graphics/**.h",
+        "src/Util/**.cpp",
+        "src/Util/**.h",
+        "src/Platform/*.h",
+        "src/*.h",
+        "src/*.cpp",
     }
    
     defines {
@@ -24,6 +36,18 @@ project "turnip-engine"
         "%{prj.location}/src"
     }
 
+    -- Platform 
+    defines {
+        "TUR_WINDOWING_WIN32",
+        "TUR_PLATFORM_WIN32",
+    }
+
+    files {
+        "src/Platform/WIN32/**.cpp",
+        "src/Platform/WIN32/**.h",
+    }
+
+    -- Configurations
     filter { "configurations:Debug" }
         runtime "Debug"
         symbols "on"

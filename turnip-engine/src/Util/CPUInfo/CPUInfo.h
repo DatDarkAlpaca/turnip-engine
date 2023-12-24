@@ -280,7 +280,7 @@ namespace tur
 
 		// Function: [CPUID EAX=80000001h] - EDX
 	public:
-		bool HasFPU_AMD()				const { return m_Function_81h_EDX[0] || HasFPU_AMD(); };
+		bool HasFPU_AMD()				const { return m_Function_81h_EDX[0]; };
 		bool HasVME_AMD()				const { return m_Function_81h_EDX[1]; };
 		bool HasDebugExtensions_AMD()	const { return m_Function_81h_EDX[2]; };
 		bool HasPSE_AMD()				const { return m_Function_81h_EDX[3]; };

@@ -69,7 +69,7 @@ namespace tur
 
             // Surface:
             {
-                backend->SurfaceKHR() = platform::GetVulkanSurface(instanceOutput.instanceHandle, backend->GetWindow()->GetHandle());
+                backend->SurfaceKHR() = platform::GetVulkanSurface(instanceOutput.instanceHandle, backend->GetWindow());
             }
 
             // Physical Device:

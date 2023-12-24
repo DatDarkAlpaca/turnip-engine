@@ -42,6 +42,8 @@ namespace tur
 			{
 				TUR_LOG_ERROR("Failed to create pipeline layout: {}", err.what());
 			}
+
+			return nullptr;
 		}
 
 		vk::RenderPass CreateRenderpass() const

@@ -1,54 +1,51 @@
 #pragma once
-#include <GLFW/glfw3.h>
-
 #include "Common.h"
 #include "Core/Window/MonitorData.h"
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 namespace tur
 {
 	class Monitor
 	{
 	public:
-		static uint64_t GetMonitorAmount()
+		static uint32_t GetMonitorAmount()
 		{
-			int count;
+			int count = 0;
 			GLFWmonitor** _ = glfwGetMonitors(&count);
 
 			if (!count)
 				TUR_LOG_WARN("Failed to fetch monitor data.");
 
-			return static_cast<uint64_t>(count);
+			return static_cast<uint32_t>(count);
 		}
 	
-		static inline GLFWmonitor* GetMonitorPointer(uint64_t index)
+		static inline MonitorData FetchMonitorData(uint32_t index)
 		{
 			if (GetMonitorAmount() <= index)
-				TUR_LOG_CRITICAL("Invalid monitor index selected: {}.", index);
+			{
+				TUR_LOG_ERROR("Invalid monitor index selected: {}.", index);
+				return { };
+			}
 			
+			return ParseMonitorData(GetMonitorPointer(index));
+		}
+
+	private:
+		static inline GLFWmonitor* GetMonitorPointer(uint32_t index)
+		{
+			if (GetMonitorAmount() <= index)
+			{
+				TUR_LOG_ERROR("Invalid monitor index selected: {}.", index);
+				return nullptr;
+			}
+
 			int count = 0;
 			GLFWmonitor* glfwMonitor = glfwGetMonitors(&count)[index];
 			return glfwMonitor;
 		}
 
-		static inline GLFWmonitor* GetPrimaryMonitorPointer()
-		{
-			return glfwGetPrimaryMonitor();
-		}
-
-		static inline MonitorData FetchMonitorData(uint64_t index)
-		{
-			if (GetMonitorAmount() <= index)
-				TUR_LOG_CRITICAL("Invalid monitor index selected: {}.", index);
-			
-			return ParseMonitorData(GetMonitorPointer(index));
-		}
-
-		static MonitorData FetchPrimaryMonitor()
-		{
-			return ParseMonitorData(GetPrimaryMonitorPointer());
-		}
-
-	private:
 		static inline MonitorData ParseMonitorData(GLFWmonitor* glfwMonitor)
 		{
 			MonitorData monitorData;

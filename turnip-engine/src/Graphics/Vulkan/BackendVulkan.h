@@ -24,7 +24,7 @@ namespace tur
 	public:
 		void FinishSetup(tur_unique<Window>&) override;
 
-		void Present() override { TUR_LOG_WARN("Not implemented"); }
+		void Present() override { TUR_LOG_WARN("Present() not implemented on Vulkan"); }
 
 	public:
 		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;

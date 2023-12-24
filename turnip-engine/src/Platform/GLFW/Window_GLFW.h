@@ -1,10 +1,10 @@
 #pragma once
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
 #include "Common.h"
 #include "Core/Event/Event.h"
 #include "Core/Window/WindowBase.h"
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 namespace tur
 {
@@ -23,6 +23,8 @@ namespace tur
 	{
 	public:
 		void Initialize(const WindowProperties& properties);
+
+		void Shutdown();
 
 	public:
 		void SetEventCallback(const FnEventCallback& callback);
@@ -60,4 +62,6 @@ namespace tur
 			FnEventCallback eventCallback;
 		} m_WindowData;
 	};
+
+	using Window = WindowBase<WindowGLFW>;
 }

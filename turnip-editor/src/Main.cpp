@@ -11,6 +11,7 @@ class MainView : public tur::View
 public:
 	void OnEngineInitialize() override
 	{
+		return;
 		auto& graphics = GraphicsSystem::Get().GetBackend();
 
 		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
@@ -48,6 +49,12 @@ public:
 			TUR_LOG_DEBUG("Window Closed.");
 			return true;
 		});
+
+		subscriber.subscribe<KeyPressedEvent>([](const KeyPressedEvent& keyEvent) -> bool {
+			keyEvent.key;
+			keyEvent.mods;
+			return true;
+		});
 	}
 
 	void OnRender() override
@@ -76,8 +83,8 @@ public:
 			DisplayCPUInfo();
 		}
 
-		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
-
+		//Graphics().SetupWindow({ "Window Title", { 640, 480 } });
+		return;
 		Graphics().SelectGraphicsBackend(BackendType::OPENGL, {});
 		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
 
@@ -91,10 +98,10 @@ public:
 private:	
 	void DisplayMonitorInformation()
 	{
-		uint64_t monitors = Monitor::GetMonitorAmount();
-		TUR_LOG_INFO("Monitors Available: {}x", monitors);
+		uint32_t monitorAmount = Monitor::GetMonitorAmount();
+		TUR_LOG_INFO("Monitors Available: {}x", monitorAmount);
 
-		for (uint64_t index = 0; index < monitors; ++index)
+		for (uint32_t index = 0; index < monitorAmount; ++index)
 		{
 			MonitorData data = Monitor::FetchMonitorData(index);
 			TUR_LOG_INFO(" * {} - Size: [{}mm, {}mm] | Content Scale: [{}x, {}x]",

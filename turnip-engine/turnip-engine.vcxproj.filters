@@ -37,6 +37,9 @@
     <Filter Include="Graphics\OpenGL">
       <UniqueIdentifier>{8AE717A8-F672-856C-FF83-08616B8EE16C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Types">
+      <UniqueIdentifier>{3A8F5889-265D-4C8F-0FF1-BCB5FB5D28F4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\Vulkan">
       <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
     </Filter>
@@ -46,14 +49,14 @@
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\GLFW">
-      <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
+    <Filter Include="Platform\WIN32">
+      <UniqueIdentifier>{4C22C294-38F0-B59A-2184-26C10DF191FF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\GLFW\OpenGL">
-      <UniqueIdentifier>{BD3DCDD9-A9CC-56A3-52EB-6A9E3E596749}</UniqueIdentifier>
+    <Filter Include="Platform\WIN32\OpenGL">
+      <UniqueIdentifier>{00BEAF2A-6C2A-6B25-351E-0383A1498D8D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\GLFW\Vulkan">
-      <UniqueIdentifier>{09A27FEA-F530-09B4-9E4F-1DAF8ABD195A}</UniqueIdentifier>
+    <Filter Include="Platform\WIN32\Vulkan">
+      <UniqueIdentifier>{4C22623B-B88E-1D36-8182-B593EDAD3F9E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
@@ -164,17 +167,47 @@
     <ClInclude Include="src\Graphics\GraphicsBackend.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\GraphicsSystem.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\OpenGL\BackendOpenGL.h">
       <Filter>Graphics\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\OpenGL\CommonGL.h">
       <Filter>Graphics\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\OpenGL\ShaderOpenGL.h">
       <Filter>Graphics\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Pipeline.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Shader.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\ColorBlending.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\CullMode.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\FrontFace.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\PolygonMode.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\Scissor.h">
+      <Filter>Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Types\Viewport.h">
+      <Filter>Graphics\Types</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\BackendVulkan.h">
       <Filter>Graphics\Vulkan</Filter>
@@ -203,29 +236,35 @@
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\EventDebug_GLFW.h">
-      <Filter>Platform\GLFW</Filter>
+    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h">
+      <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h">
-      <Filter>Platform\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
-      <Filter>Platform\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupGL.h">
-      <Filter>Platform\GLFW\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
-      <Filter>Platform\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h">
-      <Filter>Platform\GLFW\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
-      <Filter>Platform\GLFW</Filter>
+    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h">
+      <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Platform.h">
       <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\Events_WIN32.h">
+      <Filter>Platform\WIN32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\Monitor_WIN32.h">
+      <Filter>Platform\WIN32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\OpenGL\SetupGL.h">
+      <Filter>Platform\WIN32\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\Setup_WIN32.h">
+      <Filter>Platform\WIN32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\Vulkan\SetupVulkan.h">
+      <Filter>Platform\WIN32\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\Window_WIN32.h">
+      <Filter>Platform\WIN32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIN32\WindowsHeader.h">
+      <Filter>Platform\WIN32</Filter>
     </ClInclude>
     <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h">
@@ -235,23 +274,13 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Graphics\Vulkan\ShaderVulkan.h" />
-    <ClInclude Include="src\Graphics\OpenGL\PipelineOpenGL.h" />
-    <ClInclude Include="src\Graphics\Vulkan\PipelineVulkan.h" />
-    <ClInclude Include="src\Graphics\Pipeline.h" />
-    <ClInclude Include="src\Graphics\Types\PrimitiveTopology.h" />
-    <ClInclude Include="src\Graphics\Types\Viewport.h" />
-    <ClInclude Include="src\Graphics\Types\Scissor.h" />
-    <ClInclude Include="src\Graphics\Types\PolygonMode.h" />
-    <ClInclude Include="src\Graphics\Types\CullMode.h" />
-    <ClInclude Include="src\Graphics\Types\FrontFace.h" />
-    <ClInclude Include="src\Graphics\Types\ColorBlending.h" />
-    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
-    <ClInclude Include="src\Graphics\OpenGL\OpenGLInitializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
       <Filter>Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Logger\Logger.cpp">
+      <Filter>Core\Logger</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\View\ViewSystem.cpp">
       <Filter>Core\View</Filter>
@@ -259,7 +288,13 @@
     <ClCompile Include="src\Graphics\GraphicsBackend.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\GraphicsSystem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\OpenGL\BackendOpenGL.cpp">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp">
       <Filter>Graphics\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp">
@@ -274,17 +309,18 @@
     <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
-      <Filter>Platform\GLFW</Filter>
+    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\WIN32\Window_WIN32.cpp">
+      <Filter>Platform\WIN32</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp">
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Graphics\Vulkan\ShaderVulkan.cpp" />
-    <ClCompile Include="src\Graphics\OpenGL\PipelineOpenGL.cpp" />
-    <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp" />
-    <ClCompile Include="src\Core\Logger\Logger.cpp" />
-    <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
   </ItemGroup>
 </Project>

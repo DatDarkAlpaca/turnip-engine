@@ -1,9 +1,11 @@
 #pragma once
+#include "Common.h"
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include "Core/Defines.h"
+#include "Platform/GLFW/Window_GLFW.h"
 
 namespace tur::platform
 {
@@ -18,9 +20,9 @@ namespace tur::platform
 #endif
 	}
 
-	inline void InitializeOpenGL(GLFWwindow* window)
+	inline void InitializeOpenGL(Window* window)
 	{
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(static_cast<GLFWwindow*>(window->GetHandle()));
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 			TUR_LOG_CRITICAL("Failed to initialize a valid OpenGL context");
@@ -31,8 +33,8 @@ namespace tur::platform
 		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
 
-	inline void SwapBuffers(GLFWwindow* window)
+	inline void SwapBuffers(Window* window)
 	{
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(static_cast<GLFWwindow*>(window->GetHandle()));
 	}
 }
