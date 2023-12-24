@@ -5,7 +5,6 @@
 #include "Shader.h"
 #include "Pipeline.h"
 #include "Renderpass.h"
-#include "CommandQueue.h"
 
 namespace tur
 {

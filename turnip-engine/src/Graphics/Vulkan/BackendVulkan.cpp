@@ -7,6 +7,7 @@
 #include "Objects/Pipeline.h"
 #include "Builders/PipelineBuilder.h"
 #include "Builders/RenderpassBuilder.h"
+#include "Builders/FramebufferBuilder.h"
 
 namespace tur
 {
@@ -29,15 +30,16 @@ namespace tur
 	tur_unique<Renderpass> BackendVulkan::CreateRenderpass(const RenderpassDescriptor& descriptor)
 	{
 		vulkan::RenderpassBuilder builder(descriptor);
-		builder.SetDevice(m_Device);
-		builder.AddSwapchainColorAttachment(m_Swapchain); // Remove.
+		builder.SetArguments(m_Device, m_Swapchain);
 
 		auto renderpassResult = builder.Build();
 		if (!renderpassResult.has_value())
-			TUR_LOG_CRITICAL("Failed to create rendepass.");
+		{
+			TUR_LOG_ERROR("Failed to create renderpass.");
+			return nullptr;
+		}
 
 		vulkan::RenderpassVulkan renderpass = renderpassResult.value();
-
 		return tur::MakeUnique<vulkan::RenderpassVulkan>(renderpass);
 	}
 
@@ -45,21 +47,17 @@ namespace tur
 	{
 		vulkan::PipelineBuilder builder(descriptor);
 
+		// Default Renderpass:
 		vulkan::RenderpassVulkan renderpassFinal;
 
 		if (!descriptor.renderpass)
 		{
-			// TODO: Create default graphics pipeline renderpass using the swapchain
-			vulkan::RenderpassBuilder builder;
-			builder.SetDevice(m_Device);
-			builder.AddSwapchainColorAttachment(m_Swapchain);
-
-			renderpassFinal = builder.Build().value();
+			vulkan::RenderpassBuilder renderpassBuilder({});
+			renderpassBuilder.SetArguments(m_Device, m_Swapchain);
+			renderpassFinal = renderpassBuilder.Build().value();
 		}
 		else
-		{
 			renderpassFinal = *(vulkan::RenderpassVulkan*)descriptor.renderpass;
-		}
 
 		builder.SetArguments(m_Device, m_Swapchain, renderpassFinal);
 

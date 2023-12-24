@@ -67,6 +67,16 @@ namespace tur::vulkan
 		swapchainAttachment.finalLayout = vk::ImageLayout::ePresentSrcKHR;
 
 		m_Attachments.push_back(swapchainAttachment);
+
+		vk::AttachmentReference swapchainAttachmentRef = { };
+		swapchainAttachmentRef.attachment = 0;
+		swapchainAttachmentRef.layout = vk::ImageLayout::eColorAttachmentOptimal;
+
+		vk::SubpassDescription mainSubpass = { };
+		mainSubpass.flags = vk::SubpassDescriptionFlags();
+		mainSubpass.pipelineBindPoint = vk::PipelineBindPoint::eGraphics;
+
+		m_Subpasses.push_back(mainSubpass);
 	}
 	
 	void RenderpassBuilder::PrepareDescriptor()
@@ -112,15 +122,19 @@ namespace tur::vulkan
 				{
 					case AttachmentType::INPUT:
 						inputAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						break;
 
 					case AttachmentType::COLOR:
 						colorAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						break;
 
 					case AttachmentType::RESOLVE:
 						resolveAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						break;
 
 					case AttachmentType::DEPTH_STENCIL:
 						depthStencilAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						break;
 
 					default:
 					{

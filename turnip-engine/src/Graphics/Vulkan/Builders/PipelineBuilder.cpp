@@ -232,7 +232,6 @@ namespace tur::vulkan
 		{
 			pipelineResult.pipeline = graphicsPipeline;
 			pipelineResult.layout = pipelineLayout;
-			pipelineResult.renderpass = m_Renderpass.renderpass;
 		}
 
 		return pipelineResult;
