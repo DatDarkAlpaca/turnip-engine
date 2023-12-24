@@ -9,7 +9,6 @@ namespace tur
 {
 	static void DisplayOpenGLInformation()
 	{
-		return;
 		TUR_LOG_DEBUG("Selected Graphics Backend: OpenGL {}", reinterpret_cast<char const*>(glGetString(GL_VERSION)));
 		TUR_LOG_DEBUG(" * Vendor: {}", reinterpret_cast<char const*>(glGetString(GL_VENDOR)));
 		TUR_LOG_DEBUG(" * Renderer: {}", reinterpret_cast<char const*>(glGetString(GL_RENDERER)));
@@ -35,7 +34,8 @@ namespace tur
 	void BackendOpenGL::FinishSetup(tur_unique<Window>& window)
 	{
 		platform::InitializeOpenGL(window.get());
-	
+		m_Window = window.get();
+
 		DisplayOpenGLInformation();
 	}
 

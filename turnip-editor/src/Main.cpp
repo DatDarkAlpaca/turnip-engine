@@ -59,8 +59,6 @@ public:
 
 	void OnRender() override
 	{
-		return;
-
 		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -83,13 +81,13 @@ public:
 			DisplayCPUInfo();
 		}
 
-		//Graphics().SetupWindow({ "Window Title", { 640, 480 } });
-		return;
+		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
 		Graphics().SelectGraphicsBackend(BackendType::OPENGL, {});
-		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
 
-		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
-		Graphics().InitializeBackend<DefaultVulkanInitializer>();
+		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
+	
+		//Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
+		//Graphics().InitializeBackend<DefaultVulkanInitializer>();
 
 		// Views:
 		View().Add(MakeUnique<MainView>());
