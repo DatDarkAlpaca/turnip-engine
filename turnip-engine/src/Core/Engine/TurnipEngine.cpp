@@ -45,6 +45,8 @@ namespace tur
 
 			OnRenderGUI();
 		}
+
+		window->Shutdown();
 	}
 
 	void TurnipEngine::OnEngineInitialize()

@@ -22,6 +22,6 @@ namespace tur
 		MOUSE_PRESSED,
 		MOUSE_RELEASED,
 		MOUSE_SCROLL,
-		MOUSE_MOVED
+		MOUSE_MOVE
 	};
 }

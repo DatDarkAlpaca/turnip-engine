@@ -72,11 +72,7 @@ namespace tur
 
             // Surface:
             {
-                auto surfaceResult = platform::GetVulkanSurface(instanceOutput.instanceHandle, backend->GetWindow()->GetHandle());
-                if (!surfaceResult.has_value())
-                    TUR_LOG_CRITICAL("Vulkan Initializer: Failed to initialize surface");
-
-                backend->SurfaceKHR() = surfaceResult.value();
+                backend->SurfaceKHR() = platform::GetVulkanSurface(instanceOutput.instanceHandle, backend->GetWindow());
             }
 
             // Physical Device:

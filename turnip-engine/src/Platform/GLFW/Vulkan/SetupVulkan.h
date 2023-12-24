@@ -1,11 +1,14 @@
 #pragma once
-#include <optional>
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan.hpp>
-#include <GLFW/glfw3.h>
-
 #include "Core/Defines.h"
 #include "Core/Logger/Logger.h"
+
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+#include "Platform/GLFW/Window_GLFW.h"
 
 namespace tur::platform
 {
@@ -27,10 +30,10 @@ namespace tur::platform
 		return extensions;
 	}
 
-	inline std::optional<VkSurfaceKHR> GetVulkanSurface(vk::Instance instance, void* window)
+	inline VkSurfaceKHR GetVulkanSurface(vk::Instance instance, Window* window)
 	{
 		VkSurfaceKHR surface;
-		VkResult result = glfwCreateWindowSurface(instance, static_cast<GLFWwindow*>(window), nullptr, &surface);
+		VkResult result = glfwCreateWindowSurface(instance, static_cast<GLFWwindow*>(window->GetHandle()), nullptr, &surface);
 
 		if (result == VK_SUCCESS)
 			return surface;

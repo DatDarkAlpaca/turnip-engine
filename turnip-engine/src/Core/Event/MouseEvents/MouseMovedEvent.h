@@ -5,7 +5,7 @@ namespace tur
 {
 	struct MouseMovedEvent : public Event
 	{
-		DEFINE_EVENT(EventType::MOUSE_MOVED);
+		DEFINE_EVENT(EventType::MOUSE_MOVE);
 
 	public:
 		MouseMovedEvent(double x, double y)
