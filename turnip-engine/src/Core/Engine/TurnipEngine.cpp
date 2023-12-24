@@ -15,7 +15,8 @@ namespace tur
 		g_LoggerSystem->Get().Initialize();
 
 		// View system:
-		g_ViewSystem = new ViewSystem();
+		g_ViewSystem = new ViewSystem;
+		g_ViewSystem->Get();
 
 		// Graphics system:
 		g_GraphicsSystem = new GraphicsSystem;

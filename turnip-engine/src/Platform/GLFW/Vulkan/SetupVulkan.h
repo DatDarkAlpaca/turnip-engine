@@ -35,9 +35,10 @@ namespace tur::platform
 		VkSurfaceKHR surface;
 		VkResult result = glfwCreateWindowSurface(instance, static_cast<GLFWwindow*>(window->GetHandle()), nullptr, &surface);
 
-		if (result != VK_SUCCESS)
-			TUR_LOG_ERROR("Failed to create window surface using GLFW and Vulkan");
-
-		return surface;
+		if (result == VK_SUCCESS)
+			return surface;
+		
+		TUR_LOG_ERROR("Failed to create window surface using GLFW and Vulkan");
+		return std::nullopt;
 	}
 }

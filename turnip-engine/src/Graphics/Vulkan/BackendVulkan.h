@@ -4,11 +4,8 @@
 #include "Platform/Platform.h"
 
 #include "Common.h"
-#include "Initialization/Instance.h"
-#include "Initialization/PhysicalDevice.h"
-#include "Initialization/LogicalDevice.h"
-#include "Initialization/Queues.h"
-#include "Initialization/Swapchain.h"
+#include "Objects/Queue.h"
+#include "Objects/Swapchain.h"
 
 #define VULKAN_BACKEND(IBackend) static_cast<BackendVulkan*>(IBackend)
 
@@ -29,6 +26,8 @@ namespace tur
 	public:
 		tur_unique<Shader> CreateShader(const ShaderDescriptor& descriptor) override;
 
+		tur_unique<Renderpass> CreateRenderpass() override;
+
 		tur_unique<Pipeline> CreatePipeline(const PipelineDescriptor& descriptor) override;
 
 	public:
@@ -39,8 +38,8 @@ namespace tur
 		EXPOSE_PROPERTY(vk::SurfaceKHR, SurfaceKHR, m_Surface);
 		EXPOSE_PROPERTY(vk::PhysicalDevice, PhysicalDevice, m_PhysicalDevice);
 		EXPOSE_PROPERTY(vk::Device, Device, m_Device);
-		EXPOSE_PROPERTY(vulkan::QueueInformation, Queues, m_Queues);
-		EXPOSE_PROPERTY(vulkan::SwapchainData, SwapchainData, m_SwapchainData);
+		EXPOSE_PROPERTY(vulkan::QueueCluster, Queues, m_Queues);
+		EXPOSE_PROPERTY(vulkan::Swapchain, Swapchain, m_Swapchain);
 
 	public:
 		Window* GetWindow() const { return m_Window; }
@@ -51,8 +50,8 @@ namespace tur
 		vk::SurfaceKHR m_Surface;
 		vk::PhysicalDevice m_PhysicalDevice;
 		vk::Device m_Device;
-		vulkan::QueueInformation m_Queues;
-		vulkan::SwapchainData m_SwapchainData;
+		vulkan::QueueCluster m_Queues;
+		vulkan::Swapchain m_Swapchain;
 
 	private:
 		BackendProperties m_Properties;

@@ -215,22 +215,22 @@
     <ClInclude Include="src\Graphics\Vulkan\Constants.h">
       <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\Frame.h">
+    <ClInclude Include="src\Graphics\Vulkan\Builders\InstanceBuilder.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\Instance.h">
+    <ClInclude Include="src\Graphics\Vulkan\Builders\LogicalDeviceBuilder.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\LogicalDevice.h">
+    <ClInclude Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Queue.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\Queues.h">
+    <ClInclude Include="src\Graphics\Vulkan\Builders\SwapchainBuilder.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Vulkan\Initialization\Swapchain.h">
+    <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Vulkan\Initialization\VulkanInitializer.h">
@@ -300,13 +300,10 @@
     <ClCompile Include="src\Graphics\OpenGL\ShaderOpenGL.cpp">
       <Filter>Graphics\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Shader.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Vulkan\BackendVulkan.cpp">
       <Filter>Graphics\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Vulkan\Initialization\PhysicalDevice.cpp">
+    <ClCompile Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.cpp">
       <Filter>Graphics\Vulkan\Initialization</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Vulkan\PipelineVulkan.cpp">

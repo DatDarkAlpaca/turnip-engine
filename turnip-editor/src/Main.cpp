@@ -2,7 +2,8 @@
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
 
-#include "Graphics/Vulkan/PipelineVulkan.h"
+#include "Graphics/Vulkan/Objects/Pipeline.h"
+#include "Graphics/Vulkan/Builders/FramebufferBuilder.h"
 
 using namespace tur;
 
@@ -22,23 +23,8 @@ public:
 			descriptor.vertexShader = vertexShader.get();
 			descriptor.fragmentShader = fragShader.get();
 		};
+
 		pipeline = graphics->CreatePipeline(descriptor);
-		
-		// Command Pools are handled indirectly:
-		// commands = graphics->CreateCommandBuffer(ImmediateSubmit);
-
-		// commands->SetViewport()
-		// commands->SetVertexBuffer()
-		// commands->BeginRenderPass()
-			// commands->Clear();
-			// commands->SetPipeline(pipeline);
-			// commands->Draw(3, 0);
-		// commands->EndRenderPass()
-
-		// commands->Begin();
-
-		// commands->End();
-		// graphics->Present();
 	}
 
 	void OnEvent(tur::Event& event) override
@@ -66,7 +52,7 @@ public:
 	}
 
 private:
-	tur_unique<Pipeline> pipeline = nullptr;
+	tur_unique<Pipeline> pipeline;
 };
 
 class TurnipEditor : public TurnipEngine
