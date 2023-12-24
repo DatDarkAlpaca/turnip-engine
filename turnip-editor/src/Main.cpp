@@ -86,8 +86,8 @@ public:
 
 		Graphics().SelectGraphicsBackend(BackendType::OPENGL, { 4, 5 });
 	
-		//Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
-		//Graphics().InitializeBackend<DefaultVulkanInitializer>();
+		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
+		Graphics().InitializeBackend<DefaultVulkanInitializer>();
 
 		// Views:
 		View().Add(MakeUnique<MainView>());

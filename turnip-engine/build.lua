@@ -28,7 +28,7 @@ project "turnip-engine"
    
     defines {
         "GLFW_STATIC",
-        "GLFW_VULKAN_STATIC"
+        "GLFW_VULKAN_STATIC",
     }
 
     includedirs {
@@ -40,6 +40,7 @@ project "turnip-engine"
     defines {
         "TUR_WINDOWING_WIN32",
         "TUR_PLATFORM_WIN32",
+        "VK_USE_PLATFORM_WIN32_KHR"
     }
 
     files {
