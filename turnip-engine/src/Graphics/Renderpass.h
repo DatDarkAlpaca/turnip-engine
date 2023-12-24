@@ -37,13 +37,13 @@ namespace tur
 		uint32_t AddAttachment(const RenderpassAttachment& attachment)
 		{
 			attachments.push_back(attachment);
-			return defaultSwapchainAttachment ? attachments.size() : attachments.size() - 1;
+			return defaultSwapchainAttachment ? (uint32_t)attachments.size() : (uint32_t)attachments.size() - 1;
 		}
 
 		uint32_t AddSubpass()
 		{
 			subpasses.push_back({});
-			return defaultSwapchainAttachment ? subpasses.size() : subpasses.size() - 1;
+			return defaultSwapchainAttachment ? (uint32_t)subpasses.size() : (uint32_t)subpasses.size() - 1;
 		}
 
 		void AddSubpassMapping(subpass_id subpassIndex, attachment_id attachmentIndex, AttachmentType type = AttachmentType::COLOR)
@@ -75,7 +75,7 @@ namespace tur
 			inline std::size_t operator() (const std::pair<AttachmentType, attachment_id>& value) const
 			{
 				// https://stackoverflow.com/questions/15160889/how-can-i-make-an-unordered-set-of-pairs-of-integers-in-c
-				return static_cast<uint32_t>(value.first) * 31 + value.second;
+				return static_cast<std::size_t>(static_cast<uint32_t>(value.first) * 31 + value.second);
 			}
 		};
 

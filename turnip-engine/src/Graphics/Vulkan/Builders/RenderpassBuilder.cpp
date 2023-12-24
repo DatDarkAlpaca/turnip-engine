@@ -25,9 +25,9 @@ namespace tur::vulkan
 		// Renderpass
 		vk::RenderPassCreateInfo renderpassInfo = { };
 		renderpassInfo.flags = vk::RenderPassCreateFlags();
-		renderpassInfo.attachmentCount = m_Attachments.size();
+		renderpassInfo.attachmentCount = (uint32_t)m_Attachments.size();
 		renderpassInfo.pAttachments = m_Attachments.data();
-		renderpassInfo.subpassCount = m_Subpasses.size();
+		renderpassInfo.subpassCount = (uint32_t)m_Subpasses.size();
 		renderpassInfo.pSubpasses = m_Subpasses.data();
 
 		RenderpassVulkan renderpass;
@@ -98,7 +98,7 @@ namespace tur::vulkan
 			m_Attachments.push_back(attachment);
 
 			vk::AttachmentReference attachmentRef = { };
-			attachmentRef.attachment = m_Attachments.size() - 1;
+			attachmentRef.attachment = (uint32_t)m_Attachments.size() - 1;
 			attachmentRef.layout = GetImageLayout(descriptorAttachment.attachmentLayout);
 
 			m_AttachmentReferences.push_back(attachmentRef);
@@ -144,10 +144,10 @@ namespace tur::vulkan
 				
 			}
 
-			subpass.inputAttachmentCount = inputAttachments.size();
+			subpass.inputAttachmentCount = (uint32_t)inputAttachments.size();
 			subpass.pInputAttachments = inputAttachments.data();
 
-			subpass.colorAttachmentCount = colorAttachments.size();
+			subpass.colorAttachmentCount = (uint32_t)colorAttachments.size();
 			subpass.pColorAttachments = colorAttachments.data();
 
 			subpass.pResolveAttachments = resolveAttachments.data();

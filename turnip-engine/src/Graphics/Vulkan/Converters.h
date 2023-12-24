@@ -137,7 +137,7 @@ namespace tur::vulkan
 		}
 	}
 
-	inline inline vk::ColorComponentFlags GetColorComponentFlags(ColorComponents components)
+	inline vk::ColorComponentFlags GetColorComponentFlags(ColorComponents components)
 	{
 		vk::ColorComponentFlags flags;
 

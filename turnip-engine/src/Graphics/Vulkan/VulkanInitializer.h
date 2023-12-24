@@ -88,7 +88,7 @@ namespace tur
             }
 
             // Queue Selection:
-            uint32_t presentQueueIndex, graphicsQueueIndex;
+            uint32_t presentQueueIndex = InvalidQueueIndex, graphicsQueueIndex = InvalidQueueIndex;
             {
                 for (const auto& queueFamily : physicalDeviceOutput.queueFamilyInformation)
                 {
