@@ -22,7 +22,7 @@ namespace tur
 
 	void TurnipEngine::Run()
 	{
-		OnEngineInitialize();
+		OnEngineStartup();
 
 		//auto& window = Graphics().GetWindow();
 		//window->Show();
@@ -41,13 +41,15 @@ namespace tur
 			OnRenderGUI();
 		}*/
 
+		OnEngineShutdown();
+
 		//window->Shutdown();
 	}
 
-	void TurnipEngine::OnEngineInitialize()
+	void TurnipEngine::OnEngineStartup()
 	{
 		for (const auto& view : g_ViewSystem->Get())
-			view->OnEngineInitialize();
+			view->OnEngineStartup();
 	}
 
 	void TurnipEngine::OnRender()
@@ -72,5 +74,11 @@ namespace tur
 	{
 		for (const auto& view : g_ViewSystem->Get())
 			view->OnEvent(event);
+	}
+
+	void TurnipEngine::OnEngineShutdown()
+	{
+		for (const auto& view : g_ViewSystem->Get())
+			view->OnEngineShutdown();
 	}
 }

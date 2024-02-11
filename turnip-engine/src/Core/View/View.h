@@ -18,9 +18,9 @@ namespace tur
 		virtual ~View() = default;
 
 	public:
-		virtual void OnEngineInitialize() { };
+		virtual void OnEngineStartup() { };
 
-		virtual void OnInstantiated() { };
+		virtual void OnViewInstantiated() { };
 
 		virtual void OnRender() { };
 
@@ -30,7 +30,9 @@ namespace tur
 
 		virtual void OnEvent(Event& event) { };
 
-		virtual void OnRemoved() { };
+		virtual void OnViewRemoved() { };
+
+		virtual void OnEngineShutdown() { };
 
 	public:
 		void SetHandler(ViewSystem* handler) { this->handler = handler; }

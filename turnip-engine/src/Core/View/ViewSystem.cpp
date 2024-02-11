@@ -5,7 +5,7 @@ namespace tur
 {
 	size_t ViewSystem::Add(tur_unique<View> view)
 	{
-		view->OnInstantiated();
+		view->OnViewInstantiated();
 		view->SetHandler(this);
 
 		m_Views.push_back(std::move(view));
@@ -16,7 +16,7 @@ namespace tur
 	void ViewSystem::Remove(size_t index)
 	{
 		auto it = m_Views.begin() + index;
-		it->get()->OnRemoved();
+		it->get()->OnViewRemoved();
 
 		m_Views.erase(it);
 	}

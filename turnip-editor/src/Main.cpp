@@ -8,25 +8,18 @@ using namespace tur;
 class MainView : public tur::View
 {
 public:
-	void OnEngineInitialize() override
+	void OnApplicationStartup() override
 	{
-		
+		TUR_LOG_INFO("Application initialized");
 	}
 
 	void OnEvent(tur::Event& event) override
 	{
-		Subscriber subscriber(event);
+	}
 
-		subscriber.subscribe<WindowCloseEvent>([](const WindowCloseEvent& closeEvent) -> bool {
-			TUR_LOG_DEBUG("Window Closed.");
-			return true;
-			});
-
-		subscriber.subscribe<KeyPressedEvent>([](const KeyPressedEvent& keyEvent) -> bool {
-			keyEvent.key;
-			keyEvent.mods;
-			return true;
-		});
+	void OnApplicationShutdown() override
+	{
+		TUR_LOG_INFO("Application shutdown");
 	}
 };
 

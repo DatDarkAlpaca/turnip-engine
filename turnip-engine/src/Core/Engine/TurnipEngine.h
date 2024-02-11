@@ -16,7 +16,7 @@ namespace tur
 		void Run();
 
 	private:
-		void OnEngineInitialize();
+		void OnEngineStartup();
 
 		void OnRender();
 
@@ -25,6 +25,8 @@ namespace tur
 		void OnUpdate();
 
 		void OnEvent(Event& event);
+
+		void OnEngineShutdown();
 		
 	public:
 		ViewSystem& View() { return g_ViewSystem->Get(); }
