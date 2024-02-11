@@ -16,5 +16,5 @@ binaries_path       = "%{wks.location}/build/bin/" .. "%{output_path}"
 intermediate_path   = "%{wks.location}/build/intermediate/" .. "%{output_path}"
 vendor_path         = "%{wks.location}/vendor/"
 
-include "turnip-engine/build.lua"
-include "turnip-editor/build.lua"
+include "turnip-engine/engine.lua"
+include "turnip-editor/editor.lua"

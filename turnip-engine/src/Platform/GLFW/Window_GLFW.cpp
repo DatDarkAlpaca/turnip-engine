@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "Common.h"
 
-#include "Events_GLFW.h"
 #include "Core/Event/Events.h"
-#include "Core/Event/EventType.h"
+#include "Events_GLFW.h"
 
 #include "Window_GLFW.h"
 #include "Monitor_GLFW.h"
@@ -18,7 +17,7 @@ namespace tur
 
 namespace tur
 {
-	void WindowGLFW::Initialize(const WindowProperties& properties)
+	void Window::Initialize(const WindowProperties& properties)
 	{
 		m_Properties = properties;
 
@@ -44,17 +43,17 @@ namespace tur
 		SetWindowCallbacks();
 	}
 
-	void WindowGLFW::Shutdown()
+	void Window::Shutdown()
 	{
 		m_Window.reset();
 	}
 
-	void WindowGLFW::SetEventCallback(const FnEventCallback& callback)
+	void Window::SetEventCallback(const FnEventCallback& callback)
 	{
 		m_WindowData.eventCallback = callback;
 	}
 
-	inline void WindowGLFW::SetProperties(const WindowProperties& properties)
+	inline void Window::SetProperties(const WindowProperties& properties)
 	{
 		auto* window = m_Window.get();
 		m_Properties = properties;
@@ -84,32 +83,32 @@ namespace tur
 		glfwSetWindowTitle(window, properties.windowTitle.c_str());
 	}
 
-	void WindowGLFW::PollEvents()
+	void Window::PollEvents()
 	{
 		glfwPollEvents();
 	}
 
-	void WindowGLFW::Hide()
+	void Window::Hide()
 	{
 		glfwHideWindow(m_Window.get());
 	}
 
-	void WindowGLFW::Show()
+	void Window::Show()
 	{
 		glfwShowWindow(m_Window.get());
 	}
 
-	bool WindowGLFW::IsOpen() const
+	bool Window::IsOpen() const
 	{
 		return !glfwWindowShouldClose(m_Window.get());
 	}
 	
-	void WindowGLFW::SetWindowDataPointer()
+	void Window::SetWindowDataPointer()
 	{
 		glfwSetWindowUserPointer(m_Window.get(), &m_WindowData);
 	}
 
-	void WindowGLFW::SetWindowCallbacks()
+	void Window::SetWindowCallbacks()
 	{
 		// Status:
 		glfwSetWindowCloseCallback(m_Window.get(), [](GLFWwindow* window) {

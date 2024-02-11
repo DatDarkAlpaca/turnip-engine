@@ -6,7 +6,7 @@
 #include "Core/View/ViewSystem.h"
 #include "Core/Window/WindowProperties.h"
 #include "Core/Window/MonitorData.h"
-#include "Core/Window/WindowBase.h"
+#include "Core/Window/WindowProperties.h"
 
 #include "Platform/Platform.h"
 #include "Common.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 #include "Core/Event/Event.h"
-#include "Core/Window/WindowBase.h"
+#include "Core/Window/WindowProperties.h"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -19,7 +19,7 @@ namespace tur
 
 namespace tur
 {
-	class WindowGLFW
+	class Window
 	{
 	public:
 		void Initialize(const WindowProperties& properties);
@@ -62,6 +62,4 @@ namespace tur
 			FnEventCallback eventCallback;
 		} m_WindowData;
 	};
-
-	using Window = WindowBase<WindowGLFW>;
 }

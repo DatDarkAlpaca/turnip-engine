@@ -37,12 +37,6 @@
     <Filter Include="Platform\WIN32">
       <UniqueIdentifier>{4C22C294-38F0-B59A-2184-26C10DF191FF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\WIN32\OpenGL">
-      <UniqueIdentifier>{00BEAF2A-6C2A-6B25-351E-0383A1498D8D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platform\WIN32\Vulkan">
-      <UniqueIdentifier>{4C22623B-B88E-1D36-8182-B593EDAD3F9E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
     </Filter>
@@ -136,9 +130,6 @@
     <ClInclude Include="src\Core\Window\MonitorData.h">
       <Filter>Core\Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Window\WindowBase.h">
-      <Filter>Core\Window</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\Window\WindowProperties.h">
       <Filter>Core\Window</Filter>
     </ClInclude>
@@ -152,14 +143,8 @@
     <ClInclude Include="src\Platform\WIN32\Monitor_WIN32.h">
       <Filter>Platform\WIN32</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\OpenGL\SetupGL.h">
-      <Filter>Platform\WIN32\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\WIN32\Setup_WIN32.h">
       <Filter>Platform\WIN32</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Vulkan\SetupVulkan.h">
-      <Filter>Platform\WIN32\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\WIN32\Window_WIN32.h">
       <Filter>Platform\WIN32</Filter>
