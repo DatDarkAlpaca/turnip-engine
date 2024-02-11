@@ -25,12 +25,12 @@ namespace tur
 		// Name:
 		NameComponent& nameComp = entity.AddComponent<NameComponent>();
 		{
-			nameComp.name = entityName.empty() ? "Entity " + std::to_string(m_EntityCount) : entityName;
+			nameComp.name = entityName.empty() ? "Entity " + std::to_string(m_Diagnostics.entityCount) : entityName;
 		}
 
 		// Record:
 		m_EntityMap[uuidComp.uuid] = entity;
-		m_EntityCount++;
+		m_Diagnostics.entityCount++;
 
 		return entity;
 	}

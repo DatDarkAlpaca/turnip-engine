@@ -26,10 +26,16 @@ namespace tur
 		std::optional<Entity> FindEntityByUUID(UUID uuid) const;
 		std::vector<Entity> FindEntitiesByName(const std::string& name);
 
+	public:
+		uint32_t EntityCount() const { return m_Diagnostics.entityCount; }
+
 	private:
 		entt::registry m_Registry;
 		std::unordered_map<UUID, Entity> m_EntityMap;
 
-		uint32_t m_EntityCount = 0;
+		struct Diagnostics
+		{
+			uint32_t entityCount = 0;
+		} m_Diagnostics;
 	};
 }
