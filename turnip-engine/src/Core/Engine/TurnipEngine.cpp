@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "TurnipEngine.h"
 
-#include "Graphics/Graphics.h"
 #include "Platform/Platform.h"
 
 namespace tur
@@ -18,10 +17,6 @@ namespace tur
 		g_ViewSystem = new ViewSystem;
 		g_ViewSystem->Get();
 
-		// Graphics system:
-		g_GraphicsSystem = new GraphicsSystem;
-		g_GraphicsSystem->Get().Initialize(BIND(&TurnipEngine::OnEvent, this));
-
 		m_Initialized = true;
 	}
 
@@ -29,13 +24,13 @@ namespace tur
 	{
 		OnEngineInitialize();
 
-		auto& window = Graphics().GetWindow();
-		window->Show();
+		//auto& window = Graphics().GetWindow();
+		//window->Show();
 
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
-		while (window->IsOpen())
+		/*while (window->IsOpen())
 		{
 			window->PollEvents();
 
@@ -44,9 +39,9 @@ namespace tur
 			OnRender();
 
 			OnRenderGUI();
-		}
+		}*/
 
-		window->Shutdown();
+		//window->Shutdown();
 	}
 
 	void TurnipEngine::OnEngineInitialize()

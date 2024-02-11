@@ -8,8 +8,6 @@
 #include "Core/Window/MonitorData.h"
 #include "Core/Window/WindowBase.h"
 
-#include "Graphics/Graphics.h"
-
 #include "Platform/Platform.h"
 #include "Common.h"
 #include "Entry.h"

@@ -3,10 +3,6 @@
 #include "Core/Event/Event.h"
 #include "Core/View/ViewSystem.h"
 
-#include "Graphics/Graphics.h"
-
-#define BACKEND(BackendClass) static_cast<BackendClass*>(Graphics());
-
 namespace tur
 {
 	class TurnipEngine
@@ -32,12 +28,10 @@ namespace tur
 		
 	public:
 		ViewSystem& View() { return g_ViewSystem->Get(); }
-		GraphicsSystem& Graphics() { return g_GraphicsSystem->Get(); }
 
 	private:
 		LoggerSystem* g_LoggerSystem = nullptr;
 		ViewSystem* g_ViewSystem = nullptr;
-		GraphicsSystem* g_GraphicsSystem = nullptr;
 
 		bool m_Initialized = false;
 	};

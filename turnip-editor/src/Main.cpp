@@ -2,8 +2,6 @@
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
 
-#include "Graphics/Vulkan/Objects/Pipeline.h"
-#include "Graphics/Vulkan/Builders/FramebufferBuilder.h"
 
 using namespace tur;
 
@@ -12,21 +10,7 @@ class MainView : public tur::View
 public:
 	void OnEngineInitialize() override
 	{
-		auto& graphics = GraphicsSystem::Get().GetBackend();
-
-		auto vertexShader = graphics->CreateShader({ "res/shaders/vertex.spv", ShaderType::VERTEX });
-		auto fragShader = graphics->CreateShader({ "res/shaders/fragment.spv", ShaderType::FRAGMENT });
-
-		renderpass = graphics->CreateRenderpass({});
-
-		PipelineDescriptor descriptor;
-		{
-			descriptor.vertexShader = vertexShader.get();
-			descriptor.fragmentShader = fragShader.get();
-			descriptor.renderpass = renderpass.get();
-		};
-
-		pipeline = graphics->CreatePipeline(descriptor);
+		
 	}
 
 	void OnEvent(tur::Event& event) override
@@ -42,21 +26,8 @@ public:
 			keyEvent.key;
 			keyEvent.mods;
 			return true;
-			});
+		});
 	}
-
-	void OnRender() override
-	{
-		return;
-		glClearColor(0.24f, 0.23f, 0.32f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		GraphicsSystem::Get().GetBackend()->Present();
-	}
-
-private:
-	tur_unique<IPipeline> pipeline;
-	tur_unique<IRenderpass> renderpass;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -66,15 +37,10 @@ public:
 	{
 		// System Information:
 		{
-			// DisplayMonitorInformation();
+			DisplayMonitorInformation();
 
-			// DisplayCPUInfo();
+			DisplayCPUInfo();
 		}
-
-		Graphics().SetupWindow({ "Window Title", { 640, 480 } });
-			
-		Graphics().SelectGraphicsBackend(BackendType::VULKAN, { });
-		Graphics().InitializeBackend<DefaultVulkanInitializer>();
 
 		// Views:
 		View().Add(MakeUnique<MainView>());
