@@ -166,6 +166,11 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Core\Scene\Scene.h" />
+    <ClInclude Include="src\Util\UUID\UUID.h" />
+    <ClInclude Include="src\Core\Scene\Entity.h" />
+    <ClInclude Include="src\Core\Scene\CommonComponents.h" />
+    <ClInclude Include="src\Util\Random\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -184,5 +189,6 @@
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Core\Scene\Scene.cpp" />
   </ItemGroup>
 </Project>

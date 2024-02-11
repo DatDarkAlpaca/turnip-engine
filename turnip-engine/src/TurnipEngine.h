@@ -8,6 +8,10 @@
 #include "Core/Window/MonitorData.h"
 #include "Core/Window/WindowProperties.h"
 
+#include "Core/Scene/CommonComponents.h"
+#include "Core/Scene/Entity.h"
+#include "Core/Scene/Scene.h"
+
 #include "Platform/Platform.h"
 #include "Common.h"
 #include "Entry.h"
