@@ -6,31 +6,19 @@ namespace tur
 	template<typename T>
 	class Singleton
 	{
-	private:
-		Singleton& operator= (const Singleton&) = delete;
-		Singleton& operator= (Singleton&&) = delete;
-
 	protected:
 		Singleton() = default;
 
-	public:
-		static T& Get() 
-		{
-			if (!s_Instance)
-				s_Instance = new SingletonInstance;
-			return *s_Instance;
-		}
-
 	private:
-		struct SingletonInstance : public T
-		{
-			SingletonInstance()
-				: T() 
-			{
-			}
-		};
+		Singleton& operator= (const Singleton&) = delete;
+		Singleton(const Singleton&) = delete;
 
-		static inline T* s_Instance = nullptr;
+	public:
+		static T& Get()
+		{
+			static T instance;	
+			return instance;
+		}
 	};
 
 	class NonCopyable

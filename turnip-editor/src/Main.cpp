@@ -2,13 +2,12 @@
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
 
-
 using namespace tur;
 
-class MainView : public tur::View
+class MainView : public View
 {
 public:
-	void OnApplicationStartup() override
+	void OnEngineStartup() override
 	{
 		TUR_LOG_INFO("Application initialized");
 	}
@@ -17,7 +16,7 @@ public:
 	{
 	}
 
-	void OnApplicationShutdown() override
+	void OnEngineShutdown() override
 	{
 		TUR_LOG_INFO("Application shutdown");
 	}
@@ -57,7 +56,6 @@ private:
 			TUR_LOG_INFO(" * Monitor Work Area: [{}, {} - x: {}, y: {}]",
 				data.workWidth, data.workHeight, data.workX, data.workY);
 		}
-		TUR_LOG_INFO(' ');
 	}
 
 	void DisplayCPUInfo()
