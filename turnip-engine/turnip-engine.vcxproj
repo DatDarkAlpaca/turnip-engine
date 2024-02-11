@@ -102,6 +102,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Assert\Assert.h" />
     <ClInclude Include="src\Core\Defines.h" />
     <ClInclude Include="src\Core\Engine\TurnipEngine.h" />
     <ClInclude Include="src\Core\Event\Event.h" />

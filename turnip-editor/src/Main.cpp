@@ -16,6 +16,11 @@ public:
 	{
 	}
 
+	void OnRender() override
+	{
+
+	}
+
 	void OnEngineShutdown() override
 	{
 		TUR_LOG_INFO("Application shutdown");
