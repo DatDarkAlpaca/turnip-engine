@@ -4,6 +4,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Assert">
+      <UniqueIdentifier>{0FBB976A-7B70-1060-0465-0A3770190764}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\Engine">
       <UniqueIdentifier>{F35E8B73-5F14-0469-E808-FE3F54BDFA6C}</UniqueIdentifier>
     </Filter>
@@ -46,6 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Core\Assert\Assert.h">
+      <Filter>Core\Assert</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Defines.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -160,7 +166,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Core\Assert\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">

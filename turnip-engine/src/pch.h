@@ -18,4 +18,6 @@
 
 	#include <glm/glm.hpp>
 	#include <spdlog/spdlog.h>
+
+	#include <entt/entt.hpp>
 #pragma warning(pop)
