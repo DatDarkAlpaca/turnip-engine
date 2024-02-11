@@ -128,6 +128,9 @@
     <ClInclude Include="src\Core\Logger\Logger.h" />
     <ClInclude Include="src\Core\Memory\Memory.h" />
     <ClInclude Include="src\Core\NonCopyable.h" />
+    <ClInclude Include="src\Core\Scene\CommonComponents.h" />
+    <ClInclude Include="src\Core\Scene\Entity.h" />
+    <ClInclude Include="src\Core\Scene\Scene.h" />
     <ClInclude Include="src\Core\View\View.h" />
     <ClInclude Include="src\Core\View\ViewSystem.h" />
     <ClInclude Include="src\Core\Window\MonitorData.h" />
@@ -143,10 +146,13 @@
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h" />
     <ClInclude Include="src\Util\File.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Util\Random\Random.h" />
+    <ClInclude Include="src\Util\UUID\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp" />
     <ClCompile Include="src\Core\Logger\Logger.cpp" />
+    <ClCompile Include="src\Core\Scene\Scene.cpp" />
     <ClCompile Include="src\Core\View\ViewSystem.cpp" />
     <ClCompile Include="src\Platform\WIN32\Window_WIN32.cpp" />
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp" />
