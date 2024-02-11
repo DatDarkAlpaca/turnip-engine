@@ -9,76 +9,82 @@ namespace tur
 	{
 		tur::platform::Setup();
 
-		// Logger system:
-		g_LoggerSystem = new LoggerSystem;
-		g_LoggerSystem->Get().Initialize();
+		g_LoggerSystem.Get().Initialize();
 
-		// View system:
-		g_ViewSystem = new ViewSystem;
-		g_ViewSystem->Get();
-
+		g_Window.Initialize({});
+		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		
 		m_Initialized = true;
 	}
 
 	void TurnipEngine::Run()
 	{
-		OnEngineStartup();
-
-		//auto& window = Graphics().GetWindow();
-		//window->Show();
+		Initialize();
 
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
-		/*while (window->IsOpen())
+		while (g_Window.IsOpen())
 		{
-			window->PollEvents();
+			g_Window.PollEvents();
 
 			OnUpdate();
 
 			OnRender();
 
 			OnRenderGUI();
-		}*/
+		}
 
+		Shutdown();
+	}
+
+	void TurnipEngine::Initialize()
+	{
+		OnEngineStartup();
+	
+		g_Window.Show();
+	}
+
+	void TurnipEngine::Shutdown()
+	{
 		OnEngineShutdown();
 
-		//window->Shutdown();
+		g_Window.Shutdown();
 	}
 
 	void TurnipEngine::OnEngineStartup()
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnEngineStartup();
 	}
 
 	void TurnipEngine::OnRender()
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnRender();
 	}
 
 	void TurnipEngine::OnRenderGUI()
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnRenderGUI();
 	}
 
 	void TurnipEngine::OnUpdate()
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnUpdate();
 	}
 
 	void TurnipEngine::OnEvent(Event& event)
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnEvent(event);
 	}
 
 	void TurnipEngine::OnEngineShutdown()
 	{
-		for (const auto& view : g_ViewSystem->Get())
+		for (const auto& view : g_ViewSystem.Get())
 			view->OnEngineShutdown();
 	}
 }

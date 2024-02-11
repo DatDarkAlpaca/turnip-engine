@@ -1,7 +1,9 @@
 #pragma once
 #include "Common.h"
-#include "Core/Event/Event.h"
+
 #include "Core/View/ViewSystem.h"
+#include "Core/Event/Event.h"
+#include "Platform/Platform.h"
 
 namespace tur
 {
@@ -14,6 +16,11 @@ namespace tur
 
 	public:
 		void Run();
+
+	private:
+		void Initialize();
+
+		void Shutdown();
 
 	private:
 		void OnEngineStartup();
@@ -29,12 +36,14 @@ namespace tur
 		void OnEngineShutdown();
 		
 	public:
-		ViewSystem& View() { return g_ViewSystem->Get(); }
+		ViewSystem& View() { return g_ViewSystem.Get(); }
 
 	private:
-		LoggerSystem* g_LoggerSystem = nullptr;
-		ViewSystem* g_ViewSystem = nullptr;
+		LoggerSystem g_LoggerSystem;
+		ViewSystem g_ViewSystem;
+		Window g_Window;
 
+	private:
 		bool m_Initialized = false;
 	};
 }
