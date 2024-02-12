@@ -28,6 +28,9 @@
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{D62B9585-42E1-0D7B-CBD5-0752378A047F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Scene">
+      <UniqueIdentifier>{CB0B2ACE-B7C3-6B1B-20CB-44770CA2060C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\View">
       <UniqueIdentifier>{58F5C415-C45F-798C-0D9E-2A32794757E1}</UniqueIdentifier>
     </Filter>
@@ -37,14 +40,23 @@
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\WIN32">
-      <UniqueIdentifier>{4C22C294-38F0-B59A-2184-26C10DF191FF}</UniqueIdentifier>
+    <Filter Include="Platform\GLFW">
+      <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util\CPUInfo">
       <UniqueIdentifier>{46D4A41A-3237-34BF-DBBC-6C75C7FEFF41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Random">
+      <UniqueIdentifier>{735F1D63-DF14-9658-6809-902FD4BD8C5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\UUID">
+      <UniqueIdentifier>{2924553F-958E-09B6-DECC-BA5B4A76E70A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +139,15 @@
     <ClInclude Include="src\Core\NonCopyable.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Scene\CommonComponents.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\Entity.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\Scene.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\View\View.h">
       <Filter>Core\View</Filter>
     </ClInclude>
@@ -140,23 +161,26 @@
       <Filter>Core\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Platform.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Events_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\GraphicsAPI.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Monitor_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Setup_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Window_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\WindowsHeader.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\RenderingSystem.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h">
@@ -165,12 +189,15 @@
     <ClInclude Include="src\Util\File.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\Random\Random.h">
+      <Filter>Util\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\UUID\UUID.h">
+      <Filter>Util\UUID</Filter>
+    </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Core\Scene\Scene.h" />
-    <ClInclude Include="src\Util\UUID\UUID.h" />
-    <ClInclude Include="src\Core\Scene\Entity.h" />
-    <ClInclude Include="src\Core\Scene\CommonComponents.h" />
-    <ClInclude Include="src\Util\Random\Random.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupOpenGL.h" />
+    <ClInclude Include="src\Rendering\OpenGL\Diagnostics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -179,16 +206,22 @@
     <ClCompile Include="src\Core\Logger\Logger.cpp">
       <Filter>Core\Logger</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Scene\Scene.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\View\ViewSystem.cpp">
       <Filter>Core\View</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WIN32\Window_WIN32.cpp">
-      <Filter>Platform\WIN32</Filter>
+    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\RenderingSystem.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp">
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Core\Scene\Scene.cpp" />
+    <ClCompile Include="src\Platform\GLFW\OpenGL\SetupOpenGL.cpp" />
   </ItemGroup>
 </Project>

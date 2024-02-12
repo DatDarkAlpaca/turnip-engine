@@ -5,13 +5,15 @@
 
 namespace tur
 {
-	TurnipEngine::TurnipEngine()
+	TurnipEngine::TurnipEngine(const WindowProperties& properties)
 	{
 		tur::platform::Setup();
 
+		// Logger:
 		g_LoggerSystem.Get().Initialize();
 
-		g_Window.Initialize({});
+		// Window:
+		g_Window.Initialize(properties);
 		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 		
 		m_Initialized = true;
@@ -42,6 +44,10 @@ namespace tur
 	{
 		OnEngineStartup();
 	
+		// Default rendering system:
+		if (RenderingSystem::API() == GraphicsAPI::NONE)
+			g_RenderingSystem.Get().Configure(g_Window, { GraphicsAPI::OPENGL, 3, 3 });
+
 		g_Window.Show();
 	}
 
@@ -86,5 +92,10 @@ namespace tur
 	{
 		for (const auto& view : g_ViewSystem.Get())
 			view->OnEngineShutdown();
+	}
+
+	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification)
+	{
+		g_RenderingSystem.Get().Configure(g_Window, specification);
 	}
 }

@@ -4,6 +4,7 @@
 #include "Core/View/ViewSystem.h"
 #include "Core/Event/Event.h"
 #include "Platform/Platform.h"
+#include "Rendering/RenderingSystem.h"
 
 namespace tur
 {
@@ -12,7 +13,8 @@ namespace tur
 		friend class GraphicsEngineWrapper;
 
 	public:
-		TurnipEngine();
+		// TODO: engine configuration
+		TurnipEngine(const WindowProperties& properties = {});
 
 	public:
 		void Run();
@@ -36,11 +38,19 @@ namespace tur
 		void OnEngineShutdown();
 		
 	public:
+		void ConfigureRenderer(const GraphicsSpecification& specification);
+
+	public:
 		ViewSystem& View() { return g_ViewSystem.Get(); }
+
+		RenderingSystem& Renderer() { return g_RenderingSystem.Get(); }
+
+		Window& GetWindow() { return g_Window; }
 
 	private:
 		LoggerSystem g_LoggerSystem;
 		ViewSystem g_ViewSystem;
+		RenderingSystem g_RenderingSystem;
 		Window g_Window;
 
 	private:

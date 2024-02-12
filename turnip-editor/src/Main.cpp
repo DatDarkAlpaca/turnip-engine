@@ -7,24 +7,38 @@ using namespace tur;
 class MainView : public View
 {
 public:
+	MainView(NON_OWNING TurnipEngine* engine)
+		: r_Engine(engine)
+	{
+
+	}
+
+public:
 	void OnEngineStartup() override
 	{
 		TUR_LOG_INFO("Application initialized");
-	}
-
-	void OnEvent(tur::Event& event) override
-	{
+		glClearColor(154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f);
 	}
 
 	void OnRender() override
 	{
+		// renderer.setViewport()
+		// renderer.set
+		// renderer.submit(whatever);
 
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glfwSwapBuffers(std::any_cast<GLFWwindow*>(r_Engine->GetWindow().GetHandle()));
 	}
 
 	void OnEngineShutdown() override
 	{
 		TUR_LOG_INFO("Application shutdown");
 	}
+
+private:
+	// renderer
+	NON_OWNING TurnipEngine* r_Engine = nullptr;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -32,15 +46,20 @@ class TurnipEditor : public TurnipEngine
 public:
 	TurnipEditor()
 	{
+		// Rendering options:
+		ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
+
 		// System Information:
 		{
 			DisplayMonitorInformation();
 
 			DisplayCPUInfo();
+
+			DisplayRenderInfo();
 		}
 
 		// Views:
-		View().Add(MakeUnique<MainView>());
+		View().Add(MakeUnique<MainView>(this));
 	}
 
 private:	
@@ -67,6 +86,12 @@ private:
 	{
 		TUR_LOG_DEBUG("Processor Information:");
 		DisplayCPUInformation();
+	}
+
+	void DisplayRenderInfo()
+	{
+		TUR_LOG_DEBUG("Graphics API Information:");
+		Renderer().DisplayVersion();
 	}
 };
 

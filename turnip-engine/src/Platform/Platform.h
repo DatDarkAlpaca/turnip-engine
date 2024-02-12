@@ -16,4 +16,5 @@
 	#include "Platform/GLFW/Window_GLFW.h"
 	#include "Platform/GLFW/Setup_GLFW.h"
 
+	#include "Platform/GLFW/OpenGL/SetupOpenGL.h"
 #endif

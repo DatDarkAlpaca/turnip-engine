@@ -12,8 +12,8 @@ project "turnip-engine"
     files {
         "src/Core/**.cpp",
         "src/Core/**.h",
-        "src/Graphics/**.cpp",
-        "src/Graphics/**.h",
+        "src/Rendering/**.cpp",
+        "src/Rendering/**.h",
         "src/Util/**.cpp",
         "src/Util/**.h",
         "src/Platform/*.h",

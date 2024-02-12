@@ -1,13 +1,17 @@
 function DetectPlatform()
     filter { "system:Windows" }
         defines {
-            "TUR_WINDOWING_WIN32",
-            "TUR_PLATFORM_WIN32",
+            -- "TUR_WINDOWING_WIN32",
+            "TUR_WINDOWING_GLFW",
+            --"TUR_PLATFORM_WIN32",
+            "TUR_PLATFORM_GLFW",
             "VK_USE_PLATFORM_WIN32_KHR"
         }
         files {
-            "src/Platform/WIN32/**.cpp",
-            "src/Platform/WIN32/**.h",
+            "src/Platform/GLFW/**.cpp",
+            "src/Platform/GLFW/**.h",
+            --"src/Platform/WIN32/**.cpp",
+            --"src/Platform/WIN32/**.h",
         }
         links {
             "shcore.lib",
