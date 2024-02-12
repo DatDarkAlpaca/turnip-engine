@@ -6,7 +6,7 @@
 	#define TUR_RELEASE
 #endif
 
-#ifdef _WIN32
+#ifdef TUR_PLATFORM_WIN32
 	#define TUR_BREAKPOINT() __debugbreak()
 #elif defined(__linux__)
 	#define TUR_PLATFORM_LINUX

@@ -43,8 +43,14 @@
     <Filter Include="Platform\GLFW">
       <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\GLFW\OpenGL">
+      <UniqueIdentifier>{BD3DCDD9-A9CC-56A3-52EB-6A9E3E596749}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Rendering">
       <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\OpenGL">
+      <UniqueIdentifier>{B75AACE2-A353-CB34-CC85-B0B9B8DDAA40}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
@@ -167,6 +173,9 @@
     <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
       <Filter>Platform\GLFW</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupOpenGL.h">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
       <Filter>Platform\GLFW</Filter>
     </ClInclude>
@@ -178,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="src\Rendering\GraphicsAPI.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\OpenGL\Diagnostics.h">
+      <Filter>Rendering\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\RenderingSystem.h">
       <Filter>Rendering</Filter>
@@ -196,8 +208,6 @@
       <Filter>Util\UUID</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupOpenGL.h" />
-    <ClInclude Include="src\Rendering\OpenGL\Diagnostics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -212,6 +222,9 @@
     <ClCompile Include="src\Core\View\ViewSystem.cpp">
       <Filter>Core\View</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\OpenGL\SetupOpenGL.cpp">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
       <Filter>Platform\GLFW</Filter>
     </ClCompile>
@@ -222,6 +235,5 @@
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Platform\GLFW\OpenGL\SetupOpenGL.cpp" />
   </ItemGroup>
 </Project>

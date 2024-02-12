@@ -3,8 +3,7 @@ function DetectPlatform()
         defines {
             -- "TUR_WINDOWING_WIN32",
             "TUR_WINDOWING_GLFW",
-            --"TUR_PLATFORM_WIN32",
-            "TUR_PLATFORM_GLFW",
+            "TUR_PLATFORM_WIN32",
             "VK_USE_PLATFORM_WIN32_KHR"
         }
         files {
