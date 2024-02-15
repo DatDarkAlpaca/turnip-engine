@@ -59,7 +59,7 @@ namespace tur
 					layout.componentAmount,
 					gl::GetInputLayoutType(layout.valueType),
 					false,
-					stride,
+					(int)stride,
 					(void*)offset
 				);
 

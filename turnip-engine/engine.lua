@@ -9,11 +9,17 @@ project "turnip-engine"
     pchheader "pch.h"
     pchsource "src/pch.cpp"
 
+    functionlevellinking "on"
+
     files {
         "src/Core/**.cpp",
         "src/Core/**.h",
         "src/Rendering/**.cpp",
         "src/Rendering/**.h",
+        "src/Platform/OpenGL/**.h",
+        "src/Platform/OpenGL/**.cpp",
+        "src/Platform/Vulkan/**.h",
+        "src/Platform/Vulkan/**.cpp",
         "src/Util/**.cpp",
         "src/Util/**.h",
         "src/Platform/*.h",

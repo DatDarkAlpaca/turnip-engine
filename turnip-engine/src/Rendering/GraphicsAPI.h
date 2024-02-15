@@ -6,7 +6,8 @@ namespace tur
 	enum class GraphicsAPI
 	{
 		NONE = 0,
-		OPENGL
+		OPENGL,
+		VULKAN
 	};
 
 	struct GraphicsSpecification

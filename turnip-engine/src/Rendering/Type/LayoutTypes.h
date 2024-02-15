@@ -23,12 +23,6 @@ namespace tur
     {
         switch (type)
         {
-            case LayoutType::NONE:
-            {
-                TUR_LOG_WARN("Invalid layout type used: NONE. Input Layout may be ");
-                return 0;
-            } break;
-
             case LayoutType::INT_8: 
                 return sizeof(int8_t);
 
@@ -58,6 +52,14 @@ namespace tur
 
             case LayoutType::FLOAT_64: 
                 return sizeof(double_t);
+
+            default:
+            {
+                TUR_LOG_WARN("Invalid layout type used. Input Layout may be invalid.");
+                return 0;
+            } break;
         }
+
+        return 0;
     }
 }

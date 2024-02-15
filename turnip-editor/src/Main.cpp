@@ -20,8 +20,6 @@ public:
 
 		auto& device = r_Engine->Device();
 
-		// TODO: allow creation of buffers on scope, without interfering with the bound VAO.
-
 		// Pipeline:
 		{
 			ShaderDescriptor shaderDesc[2];
@@ -124,7 +122,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
+		// ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
 
 		// System Information:
 		{

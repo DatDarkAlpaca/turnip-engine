@@ -25,7 +25,7 @@ namespace tur::gl
     struct PipelineGL
     {
         PipelineStateDescriptor state;
-        uint32_t id;
+        uint32_t id = InvalidHandle;
     };
 
     inline void SetupPipelineShaders(gl::PipelineGL& pipeline, const std::vector<ShaderGL>& shaders)
