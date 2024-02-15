@@ -33,6 +33,7 @@ namespace tur
 			glGenBuffers(1, &buffer.id);
 			glBindBuffer(target, buffer.id);
 			glBufferData(target, bufferDescription.dataSize, bufferDescription.data, usage);
+			glBindBuffer(target, 0);
 
 			m_Buffers.push_back(buffer);
 			return BufferHandle(m_Buffers.size() - 1);

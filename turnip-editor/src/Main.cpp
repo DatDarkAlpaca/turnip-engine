@@ -48,6 +48,7 @@ public:
 				0.0f, 0.0f, 0.0f,
 				0.5f, 0.0f, 0.0f,
 				0.5f, 0.5f, 0.0f,
+				0.0f, 0.5f, 0.0f,
 			};
 
 			BufferDescriptor bufferDesc = {};
@@ -60,6 +61,25 @@ public:
 
 			vbo = device->CreateBuffer(bufferDesc);
 		}
+
+		// EBO:
+		{
+			unsigned int data[] = { 0, 1, 2, 2, 3, 0 };
+
+			BufferDescriptor bufferDesc = {};
+			{
+				bufferDesc.bindingFlag = BindingFlag::ELEMENT_ARRAY_BUFFER;
+				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
+				bufferDesc.dataSize = sizeof(data);
+				bufferDesc.data = data;
+			}
+
+			ebo = device->CreateBuffer(bufferDesc);
+		}
+
+		// Initialization:
+		auto& graphics = r_Engine->GraphicsContext();
+		graphics->SetClearColor({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 	}
 
 	void OnRender() override
@@ -68,17 +88,16 @@ public:
 		auto& device = r_Engine->Device();
 
 		graphics->Begin();
-
 		{
-			graphics->Clear({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
+			graphics->Clear();
+
+			graphics->SetVertexBuffer(vbo);
+			graphics->SetIndexBuffer(ebo);
 
 			graphics->SetPipeline(pso);
 
-			graphics->SetVertexBuffer(vbo);
-
-			graphics->Draw(0, 3);
+			graphics->DrawIndexed(6);
 		}
-
 		graphics->End();
 		
 		device->Present();
@@ -91,6 +110,7 @@ public:
 
 private:
 	BufferHandle vbo = BufferHandle::INVALID;
+	BufferHandle ebo = BufferHandle::INVALID;
 	PipelineStateHandle pso = PipelineStateHandle::INVALID;
 
 	// renderer

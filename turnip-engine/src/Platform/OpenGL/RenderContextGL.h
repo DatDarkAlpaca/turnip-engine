@@ -16,18 +16,21 @@ namespace tur
 			: r_RenderContext(renderContext)
 		{
 			glGenVertexArrays(1, &VAO);
-			glBindVertexArray(VAO);
 		}
 
 	public:
 		void Begin() override
 		{
-			
+			glBindVertexArray(VAO);
 		}
 
-		void Clear(const glm::vec4& color) override
+		void SetClearColor(const glm::vec4& color) override
 		{
 			glClearColor(color.r, color.g, color.b, color.a);
+		}
+
+		void Clear() override
+		{
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
@@ -114,7 +117,8 @@ namespace tur
 
 		void SetIndexBuffer(BufferHandle handle) override
 		{
-
+			auto [target, id] = r_RenderContext->GetBuffer(handle);
+			glBindBuffer(gl::GetBufferBindingFlag(target), id);
 		}
 
 		void Draw(uint32_t first, uint32_t count) override
@@ -122,9 +126,14 @@ namespace tur
 			glDrawArrays(gl::GetPrimitiveTopology(m_PrivitiveTopology), first, count);
 		}
 
+		void DrawIndexed(uint32_t count) override
+		{
+			glDrawElements(gl::GetPrimitiveTopology(m_PrivitiveTopology), count, GL_UNSIGNED_INT, nullptr);
+		}
+
 		void End() override
 		{
-
+			glBindVertexArray(0);
 		}
 
 	private:
