@@ -14,5 +14,8 @@ namespace tur
 		virtual ShaderHandle CreateShader(const ShaderDescriptor& shaderDescriptor) = 0;
 
 		virtual PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) = 0;
+
+	public:
+		virtual void Present() = 0;
 	};
 }

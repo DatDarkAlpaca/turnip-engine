@@ -2,6 +2,8 @@
 #include "RenderingSystem.h"
 
 #include "Platform/OpenGL/Diagnostics.h"
+#include "Platform/OpenGL/RenderDeviceGL.h"
+#include "Platform/OpenGL/RenderContextGL.h"
 
 namespace tur
 {
@@ -14,7 +16,8 @@ namespace tur
             case GraphicsAPI::OPENGL:
             {
                 platform::SetupOpenGL(window, specification);
-                m_RenderDevice = tur::MakeUnique<RenderDeviceGL>();
+                m_RenderDevice = tur::MakeUnique<RenderDeviceGL>(&window);
+                m_GraphicsContext = tur::MakeUnique<GraphicsRenderContextGL>(static_cast<RenderDeviceGL*>(m_RenderDevice.get()));
             } break;
 
             default: 

@@ -233,6 +233,10 @@
     <ClInclude Include="src\Rendering\Resource\Shader.h" />
     <ClInclude Include="src\Platform\OpenGL\ShaderGL.h" />
     <ClInclude Include="src\Platform\OpenGL\PipelineGL.h" />
+    <ClInclude Include="src\Platform\OpenGL\RenderContextGL.h" />
+    <ClInclude Include="src\Rendering\Context.h" />
+    <ClInclude Include="src\Platform\OpenGL\Converters.h" />
+    <ClInclude Include="src\Platform\GLFW\OpenGL\PresentGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">

@@ -17,9 +17,10 @@ public:
 	void OnEngineStartup() override
 	{
 		TUR_LOG_INFO("Application initialized");
-		glClearColor(154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f);
 
 		auto& device = r_Engine->Device();
+
+		// TODO: allow creation of buffers on scope, without interfering with the bound VAO.
 
 		// Pipeline:
 		{
@@ -35,12 +36,11 @@ public:
 			{
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
+				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
+				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 0, 3, LayoutType::FLOAT_32, false });
 			}
 			pso = device->CreatePipeline(pipelineDesc);
 		}
-
-		glGenVertexArrays(1, &vao);
-		//glBindVertexArray(vao);
 
 		// VBO:
 		{
@@ -50,7 +50,7 @@ public:
 				0.5f, 0.5f, 0.0f,
 			};
 
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.bindingFlag = BindingFlag::ARRAY_BUFFER;
 				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
@@ -60,41 +60,28 @@ public:
 
 			vbo = device->CreateBuffer(bufferDesc);
 		}
-		return;
-		// EBO:
-		{
-			unsigned int data[] = { 0, 1, 2	};
-
-			BufferDescriptor bufferDesc;
-			{
-				bufferDesc.bindingFlag = BindingFlag::ARRAY_BUFFER;
-				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
-				bufferDesc.dataSize = sizeof(data);
-				bufferDesc.data = data;
-			}
-
-			ebo = device->CreateBuffer(bufferDesc);
-		}
 	}
 
 	void OnRender() override
 	{
-		auto* device = r_Engine->Device().get();
+		auto& graphics = r_Engine->GraphicsContext();
+		auto& device = r_Engine->Device();
 
-		glClear(GL_COLOR_BUFFER_BIT);
-		auto id = (static_cast<RenderDeviceGL*>(device))->GetPipeline(pso).id;
-		glUseProgram(id);
+		graphics->Begin();
 
-		glBindVertexArray(vao);
+		{
+			graphics->Clear({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
+
+			graphics->SetPipeline(pso);
+
+			graphics->SetVertexBuffer(vbo);
+
+			graphics->Draw(0, 3);
+		}
+
+		graphics->End();
 		
-		auto vboid = (static_cast<RenderDeviceGL*>(device))->GetBuffer(vbo).id;
-		glBindBuffer(GL_ARRAY_BUFFER, vboid);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glfwSwapBuffers(std::any_cast<GLFWwindow*>(r_Engine->GetWindow().GetHandle()));
+		device->Present();
 	}
 
 	void OnEngineShutdown() override
@@ -103,9 +90,7 @@ public:
 	}
 
 private:
-	uint32_t vao;
 	BufferHandle vbo = BufferHandle::INVALID;
-	BufferHandle ebo = BufferHandle::INVALID;
 	PipelineStateHandle pso = PipelineStateHandle::INVALID;
 
 	// renderer

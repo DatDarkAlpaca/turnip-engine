@@ -8,6 +8,7 @@ namespace tur::gl
 {
 	struct BufferGL
 	{
+		BindingFlag bindingFlag;
 		uint32_t id;
 	};
 

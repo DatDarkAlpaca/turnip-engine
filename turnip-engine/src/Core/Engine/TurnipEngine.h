@@ -47,6 +47,8 @@ namespace tur
 
 		tur_unique<RenderDevice>& Device() { return g_RenderingSystem.Get().Device(); }
 
+		tur_unique<GraphicsRenderContext>& GraphicsContext() { return g_RenderingSystem.Get().GraphicsContext(); }
+
 		Window& GetWindow() { return g_Window; }
 
 	private:

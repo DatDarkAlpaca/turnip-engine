@@ -8,10 +8,19 @@
 #include "ShaderGL.h"
 #include "PipelineGL.h"
 
+#include "Platform/Platform.h"
+
 namespace tur
 {
 	class RenderDeviceGL : public RenderDevice
 	{
+	public:
+		RenderDeviceGL(NON_OWNING Window* window)
+			: r_Window(window)
+		{
+
+		}
+
 	public:
 		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override
 		{
@@ -19,6 +28,8 @@ namespace tur
 			uint32_t usage = gl::TranslateUsageFlag(bufferDescription.usageFlag);
 
 			gl::BufferGL buffer;
+			buffer.bindingFlag = bufferDescription.bindingFlag;
+
 			glGenBuffers(1, &buffer.id);
 			glBindBuffer(target, buffer.id);
 			glBufferData(target, bufferDescription.dataSize, bufferDescription.data, usage);
@@ -72,6 +83,12 @@ namespace tur
 		}
 
 	public:
+		void Present() override
+		{
+			platform::SwapBuffers(r_Window);
+		}
+
+	public:
 		inline gl::BufferGL GetBuffer(BufferHandle handle) const
 		{
 			return m_Buffers[static_cast<uint32_t>(handle)];
@@ -91,5 +108,8 @@ namespace tur
 		std::vector<gl::BufferGL> m_Buffers;
 		std::vector<gl::ShaderGL> m_Shaders;
 		std::vector<gl::PipelineGL> m_Pipelines;
+
+	private:
+		NON_OWNING Window* r_Window = nullptr;
 	};
 }
