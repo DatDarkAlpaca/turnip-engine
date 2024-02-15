@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RenderingSystem.h"
 
-#include "OpenGL/Diagnostics.h"
+#include "Platform/OpenGL/Diagnostics.h"
 
 namespace tur
 {
@@ -14,6 +14,7 @@ namespace tur
             case GraphicsAPI::OPENGL:
             {
                 platform::SetupOpenGL(window, specification);
+                m_RenderDevice = tur::MakeUnique<RenderDeviceGL>();
             } break;
 
             default: 

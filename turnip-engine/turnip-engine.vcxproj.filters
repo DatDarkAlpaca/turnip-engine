@@ -208,6 +208,31 @@
       <Filter>Util\UUID</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Rendering\RenderContext.h" />
+    <ClInclude Include="src\Rendering\Resource\PipelineState.h" />
+    <ClInclude Include="src\Rendering\Type\PolygonMode.h" />
+    <ClInclude Include="src\Rendering\Resource\Pipeline.h" />
+    <ClInclude Include="src\Rendering\Type\Viewport.h" />
+    <ClInclude Include="src\Rendering\Type\AttachmentOperation.h" />
+    <ClInclude Include="src\Rendering\Type\ColorBlending.h" />
+    <ClInclude Include="src\Rendering\Type\CullMode.h" />
+    <ClInclude Include="src\Rendering\Type\DataFormat.h" />
+    <ClInclude Include="src\Rendering\Type\FrontFace.h" />
+    <ClInclude Include="src\Rendering\Type\ImageLayout.h" />
+    <ClInclude Include="src\Rendering\Type\PrimitiveTopology.h" />
+    <ClInclude Include="src\Rendering\Type\Scissor.h" />
+    <ClInclude Include="src\Rendering\Type\Types.h" />
+    <ClInclude Include="src\Rendering\Resource\InputLayout.h" />
+    <ClInclude Include="src\Rendering\Type\LayoutTypes.h" />
+    <ClInclude Include="src\Rendering\Resource\Buffer.h" />
+    <ClInclude Include="src\Rendering\Resource\Resources.h" />
+    <ClInclude Include="src\Rendering\RenderDevice.h" />
+    <ClInclude Include="src\Platform\OpenGL\Diagnostics.h" />
+    <ClInclude Include="src\Platform\OpenGL\BufferGL.h" />
+    <ClInclude Include="src\Platform\OpenGL\RenderDeviceGL.h" />
+    <ClInclude Include="src\Rendering\Resource\Shader.h" />
+    <ClInclude Include="src\Platform\OpenGL\ShaderGL.h" />
+    <ClInclude Include="src\Platform\OpenGL\PipelineGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">

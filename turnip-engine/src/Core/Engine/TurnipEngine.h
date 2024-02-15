@@ -45,6 +45,8 @@ namespace tur
 
 		RenderingSystem& Renderer() { return g_RenderingSystem.Get(); }
 
+		tur_unique<RenderDevice>& Device() { return g_RenderingSystem.Get().Device(); }
+
 		Window& GetWindow() { return g_Window; }
 
 	private:
