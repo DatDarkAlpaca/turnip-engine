@@ -38,6 +38,7 @@ public:
 				pipelineDesc.fragmentShader = fragShader;
 				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
 				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 0, 3, LayoutType::FLOAT_32, false });
+				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 1, 2, LayoutType::FLOAT_32, false });
 			}
 			pso = device->CreatePipeline(pipelineDesc);
 		}
@@ -45,10 +46,10 @@ public:
 		// VBO:
 		{
 			float data[] = {
-				0.0f, 0.0f, 0.0f,
-				0.5f, 0.0f, 0.0f,
-				0.5f, 0.5f, 0.0f,
-				0.0f, 0.5f, 0.0f,
+				0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+				0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+				0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+				0.0f, 0.5f, 0.0f, 0.0f, 1.0f,
 			};
 
 			BufferDescriptor bufferDesc = {};
