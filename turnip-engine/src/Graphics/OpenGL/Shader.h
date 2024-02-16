@@ -50,7 +50,7 @@ namespace tur::gl
         return InvalidHandle;
     }
 
-	struct ShaderGL
+	struct Shader
 	{
 		uint32_t id;
 	};

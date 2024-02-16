@@ -1,14 +1,14 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "Rendering/Context.h"
+#include "Rendering/RenderCommands.h"
 #include "Resource/Resources.h"
 
 namespace tur
 {
-	class GraphicsRenderContext : public Context
+	class GraphicsRenderCommands : public RenderCommands
 	{
 	public:
-		virtual ~GraphicsRenderContext() = default;
+		virtual ~GraphicsRenderCommands() = default;
 
 	public:
 		virtual void SetClearColor(const glm::vec4& color) = 0;

@@ -4,12 +4,12 @@
 
 #include "Rendering/Resource/Resources.h"
 #include "Rendering/RenderDevice.h"
-#include "Rendering/RenderContext.h"
+#include "Rendering/GraphicsCommands.h"
 #include "Platform/Platform.h"
 
 namespace tur
 {
-	class RenderingSystem : public Singleton<RenderingSystem>
+	class RenderingSystem
 	{
 	public:
 		void Configure(Window& window, const GraphicsSpecification& specification);
@@ -17,15 +17,16 @@ namespace tur
 		void DisplayVersion();
 
 	public:
-		static inline GraphicsAPI API() { return s_API; }
+		static inline GraphicsSpecification API() { return s_API; }
 
 		tur_unique<RenderDevice>& Device() { return m_RenderDevice; }
 
-		tur_unique<GraphicsRenderContext>& GraphicsContext() { return m_GraphicsContext; }
+		tur_unique<GraphicsRenderCommands>& GraphicsContext() { return m_GraphicsContext; }
 
 	private:
-		static inline GraphicsAPI s_API = GraphicsAPI::NONE;
+		static inline GraphicsSpecification s_API = {};
+
 		tur_unique<RenderDevice> m_RenderDevice = nullptr;
-		tur_unique<GraphicsRenderContext> m_GraphicsContext = nullptr;
+		tur_unique<GraphicsRenderCommands> m_GraphicsContext = nullptr;
 	};
 }

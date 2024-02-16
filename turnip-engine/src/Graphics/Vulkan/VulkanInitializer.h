@@ -1,6 +1,6 @@
 #pragma once
 #include "Common.h"
-#include "Platform/Vulkan/RenderDeviceVk.h"
+#include "RenderDeviceVK.h"
 
 #include "Builders/InstanceBuilder.h"
 #include "Builders/PhysicalDeviceBuilder.h"
@@ -8,7 +8,7 @@
 #include "Builders/SwapchainBuilder.h"
 #include "Builders/FrameBuilder.h"
 
-namespace tur
+namespace tur::vulkan
 {
     class VulkanInitializer
     {
@@ -22,11 +22,11 @@ namespace tur
         NON_OWNING RenderDeviceVK* device = nullptr;
 
     protected:
-        vulkan::VulkanInstanceBuilder instanceBuilder;
-        vulkan::PhysicalDeviceSelector physicalDeviceSelector;
-        vulkan::LogicalDeviceBuilder logicalDeviceBuilder;
-        vulkan::SwapchainBuilder swapchainBuilder;
-        vulkan::SwapchainFrameBuilder swapchainFrameBuilder;
+        VulkanInstanceBuilder instanceBuilder;
+        PhysicalDeviceSelector physicalDeviceSelector;
+        LogicalDeviceBuilder logicalDeviceBuilder;
+        SwapchainBuilder swapchainBuilder;
+        SwapchainFrameBuilder swapchainFrameBuilder;
     };
 
     class DefaultVulkanInitializer : public VulkanInitializer

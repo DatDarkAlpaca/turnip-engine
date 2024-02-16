@@ -1,5 +1,6 @@
 #pragma once
 #include "Resource/Resources.h"
+#include "RenderCommands.h"
 
 namespace tur
 {
@@ -16,6 +17,10 @@ namespace tur
 		virtual PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) = 0;
 
 	public:
+		virtual Barrier Submit(RenderCommands* context) { return {}; /* TODO: CommandList */ }
+
+		virtual void WaitBarrier(const Barrier& barrier) { /* TODO: CommandList */ }
+
 		virtual void Present() = 0;
 	};
 }

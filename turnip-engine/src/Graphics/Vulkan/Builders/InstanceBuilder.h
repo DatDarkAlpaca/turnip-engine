@@ -3,8 +3,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "Common.h"
-
-#include "Platform/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/Objects/Objects.h"
 
 namespace
 {

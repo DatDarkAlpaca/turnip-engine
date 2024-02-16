@@ -5,7 +5,7 @@
 
 namespace tur
 {
-	class ViewSystem : public Singleton<ViewSystem>
+	class ViewSystem
 	{
 		using ViewContainer = std::vector<tur_unique<View>>;
 

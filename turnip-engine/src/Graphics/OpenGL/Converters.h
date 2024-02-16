@@ -587,6 +587,45 @@ namespace tur::gl
 		}
 	}
 
+	inline constexpr uint32_t GetBufferUsageFlag(UsageFlag flag)
+	{
+		switch (flag)
+		{
+			case UsageFlag::STREAM_DRAW:
+				return GL_STREAM_DRAW;
+
+			case UsageFlag::STREAM_READ:
+				return GL_STREAM_READ;
+
+			case UsageFlag::STREAM_COPY:
+				return GL_STREAM_COPY;
+
+			case UsageFlag::STATIC_DRAW:
+				return GL_STATIC_DRAW;
+
+			case UsageFlag::STATIC_READ:
+				return GL_STATIC_READ;
+
+			case UsageFlag::STATIC_COPY:
+				return GL_STATIC_COPY;
+
+			case UsageFlag::DYNAMIC_DRAW:
+				return GL_DYNAMIC_DRAW;
+
+			case UsageFlag::DYNAMIC_READ:
+				return GL_DYNAMIC_READ;
+
+			case UsageFlag::DYNAMIC_COPY:
+				return GL_DYNAMIC_COPY;
+
+			default:
+				TUR_LOG_CRITICAL("Invalid buffer usage flag.");
+				break;
+		}
+
+		return 0xFFFFFFFF;
+	}
+
 	inline constexpr uint32_t GetInputLayoutType(LayoutType layoutType)
 	{
 		switch (layoutType)

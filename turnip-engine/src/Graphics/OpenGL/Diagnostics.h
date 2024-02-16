@@ -2,7 +2,7 @@
 #include "Common.h"
 #include <glad/glad.h>
 
-namespace tur
+namespace tur::gl
 {
 	inline void ShowOpenGLVersion()
 	{

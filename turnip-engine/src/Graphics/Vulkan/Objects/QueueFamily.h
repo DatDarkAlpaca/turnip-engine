@@ -2,7 +2,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "QueueOperation.h"
-#include "Platform/Vulkan/Constants.h"
+#include "Graphics/Vulkan/Constants.h"
 
 namespace tur::vulkan
 {

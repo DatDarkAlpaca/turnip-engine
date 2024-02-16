@@ -206,73 +206,73 @@
     <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
       <Filter>Platform\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\BufferGL.h">
+    <ClInclude Include="src\Graphics\OpenGL\Buffer.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\Converters.h">
+    <ClInclude Include="src\Graphics\OpenGL\Converters.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\Diagnostics.h">
+    <ClInclude Include="src\Graphics\OpenGL\Diagnostics.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\PipelineGL.h">
+    <ClInclude Include="src\Graphics\OpenGL\Pipeline.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\RenderContextGL.h">
+    <ClInclude Include="src\Graphics\OpenGL\RenderContextGL.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\RenderDeviceGL.h">
+    <ClInclude Include="src\Graphics\OpenGL\RenderDeviceGL.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\ShaderGL.h">
+    <ClInclude Include="src\Graphics\OpenGL\Shader.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Platform.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Constants.h">
+    <ClInclude Include="src\Graphics\Vulkan\Constants.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Converters.h">
+    <ClInclude Include="src\Graphics\Vulkan\Converters.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\Instance.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Instance.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\LogicalDevice.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\LogicalDevice.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\Objects.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Objects.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\PhysicalDevice.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\PhysicalDevice.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\Queue.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Queue.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\QueueFamily.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\QueueFamily.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\QueueOperation.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\QueueOperation.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Objects\Swapchain.h">
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Swapchain.h">
       <Filter>Platform\Vulkan\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\RenderDeviceVK.h">
+    <ClInclude Include="src\Graphics\Vulkan\RenderDeviceVK.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\VulkanInitializer.h">
+    <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\Context.h">
+    <ClInclude Include="src\Rendering\RenderCommands.h">
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\GraphicsAPI.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\RenderContext.h">
+    <ClInclude Include="src\Rendering\GraphicsCommands.h">
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\RenderDevice.h">
@@ -346,11 +346,13 @@
       <Filter>Util\UUID</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Platform\Vulkan\Builders\FrameBuilder.h" />
-    <ClInclude Include="src\Platform\Vulkan\Builders\InstanceBuilder.h" />
-    <ClInclude Include="src\Platform\Vulkan\Builders\LogicalDeviceBuilder.h" />
-    <ClInclude Include="src\Platform\Vulkan\Builders\PhysicalDeviceBuilder.h" />
-    <ClInclude Include="src\Platform\Vulkan\Builders\SwapchainBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Builders\FrameBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Builders\InstanceBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Builders\LogicalDeviceBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\Builders\SwapchainBuilder.h" />
+    <ClInclude Include="src\Graphics\Vulkan\RenderContextVK.h" />
+    <ClInclude Include="src\Rendering\Resource\Barrier.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -381,10 +383,10 @@
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Builders\FrameBuilder.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Builders\InstanceBuilder.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Builders\LogicalDeviceBuilder.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Builders\PhysicalDeviceBuilder.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Builders\SwapchainBuilder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Builders\FrameBuilder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Builders\InstanceBuilder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Builders\LogicalDeviceBuilder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.cpp" />
+    <ClCompile Include="src\Graphics\Vulkan\Builders\SwapchainBuilder.cpp" />
   </ItemGroup>
 </Project>

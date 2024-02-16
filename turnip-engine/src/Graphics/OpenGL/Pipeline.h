@@ -3,7 +3,7 @@
 #include <numeric>
 
 #include "Rendering/Resource/Pipeline.h"
-#include "ShaderGL.h"
+#include "Shader.h"
 
 namespace tur::gl
 {
@@ -22,13 +22,13 @@ namespace tur::gl
         }
     }
 
-    struct PipelineGL
+    struct Pipeline
     {
         PipelineStateDescriptor state;
         uint32_t id = InvalidHandle;
     };
 
-    inline void SetupPipelineShaders(gl::PipelineGL& pipeline, const std::vector<ShaderGL>& shaders)
+    inline void SetupPipelineShaders(gl::Pipeline& pipeline, const std::vector<Shader>& shaders)
     {
         pipeline.id = glCreateProgram();
 

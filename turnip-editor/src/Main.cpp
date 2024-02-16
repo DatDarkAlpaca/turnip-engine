@@ -124,6 +124,9 @@ public:
 		// Rendering options:
 		// ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
 
+		// Views:
+		View().Add(MakeUnique<MainView>(this));
+
 		// System Information:
 		{
 			DisplayMonitorInformation();
@@ -132,9 +135,6 @@ public:
 
 			DisplayRenderInfo();
 		}
-
-		// Views:
-		View().Add(MakeUnique<MainView>(this));
 	}
 
 private:	

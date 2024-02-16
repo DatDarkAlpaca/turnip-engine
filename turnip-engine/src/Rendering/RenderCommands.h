@@ -2,10 +2,10 @@
 
 namespace tur
 {
-	struct Context
+	struct RenderCommands
 	{
 	public:
-		virtual ~Context() = default;
+		virtual ~RenderCommands() = default;
 
 	public:
 		virtual void Begin() = 0;

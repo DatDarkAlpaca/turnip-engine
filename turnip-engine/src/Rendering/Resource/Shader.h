@@ -26,13 +26,27 @@ namespace tur
 	{
 		switch (type)
 		{
-			case ShaderType::NONE: return "INVALID";
-			case ShaderType::VERTEX: return "VERTEX";
-			case ShaderType::TESSELATION_CONTROL: return "TESSELATION_CONTROL";
-			case ShaderType::TESSELATION_EVALUATION: return "TESSELATION_EVALUATION";
-			case ShaderType::GEOMETRY: return "GEOMETRY";
-			case ShaderType::FRAGMENT: return "FRAGMENT";
-			case ShaderType::COMPUTE: return "COMPUTE";
+			case ShaderType::NONE: 
+				return "INVALID";
+
+			case ShaderType::VERTEX: 
+				return "VERTEX";
+
+			case ShaderType::TESSELATION_CONTROL: 
+				return "TESSELATION_CONTROL";
+
+			case ShaderType::TESSELATION_EVALUATION: 
+				return "TESSELATION_EVALUATION";
+
+			case ShaderType::GEOMETRY: 
+				return "GEOMETRY";
+
+			case ShaderType::FRAGMENT: 
+				return "FRAGMENT";
+
+			case ShaderType::COMPUTE: 
+				return "COMPUTE";
+
 			default:
 				return "UNKNOWN";
 		}

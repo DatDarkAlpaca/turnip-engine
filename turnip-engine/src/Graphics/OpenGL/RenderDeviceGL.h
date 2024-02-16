@@ -2,15 +2,15 @@
 #include <glad/glad.h>
 
 #include "Rendering/RenderDevice.h"
+#include "Platform/Platform.h"
 #include "Util/File.h"
 
-#include "BufferGL.h"
-#include "ShaderGL.h"
-#include "PipelineGL.h"
+#include "Converters.h"
+#include "Pipeline.h"
+#include "Buffer.h"
+#include "Shader.h"
 
-#include "Platform/Platform.h"
-
-namespace tur
+namespace tur::gl
 {
 	class RenderDeviceGL : public RenderDevice
 	{
@@ -24,10 +24,10 @@ namespace tur
 	public:
 		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override
 		{
-			uint32_t target = gl::TranslateBindingFlag(bufferDescription.bindingFlag);
-			uint32_t usage = gl::TranslateUsageFlag(bufferDescription.usageFlag);
+			uint32_t target = gl::GetBufferBindingFlag(bufferDescription.bindingFlag);
+			uint32_t usage = gl::GetBufferUsageFlag(bufferDescription.usageFlag);
 
-			gl::BufferGL buffer;
+			gl::Buffer buffer = {};
 			buffer.bindingFlag = bufferDescription.bindingFlag;
 
 			glGenBuffers(1, &buffer.id);
@@ -44,7 +44,7 @@ namespace tur
 			auto shaderContents = ReadFile(shaderDescriptor.filepath);
 			const char* cShaderCode = shaderContents.c_str();
 
-			gl::ShaderGL shader;
+			gl::Shader shader = {};
 			shader.id = glCreateShader(gl::GetShaderTypeValue(shaderDescriptor.type));
 
 			glShaderSource(shader.id, 1, &cShaderCode, NULL);
@@ -58,7 +58,7 @@ namespace tur
 
 		PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) override
 		{
-			std::vector<gl::ShaderGL> shaders;
+			std::vector<gl::Shader> shaders;
 			shaders.reserve(5);
 			{
 				shaders.push_back(GetShader(pipelineDescriptor.vertexShader));
@@ -74,10 +74,10 @@ namespace tur
 					shaders.push_back(GetShader(pipelineDescriptor.geometryShader));
 			}
 
-			gl::PipelineGL pipeline;
+			gl::Pipeline pipeline;
 			pipeline.state = pipelineDescriptor;
 
-			SetupPipelineShaders(pipeline, shaders);
+			gl::SetupPipelineShaders(pipeline, shaders);
 
 			m_Pipelines.push_back(pipeline);
 			return PipelineStateHandle(m_Pipelines.size() - 1);
@@ -90,25 +90,25 @@ namespace tur
 		}
 
 	public:
-		inline gl::BufferGL GetBuffer(BufferHandle handle) const
+		inline gl::Buffer GetBuffer(BufferHandle handle) const
 		{
 			return m_Buffers[static_cast<uint32_t>(handle)];
 		}
 
-		inline gl::ShaderGL GetShader(ShaderHandle handle) const
+		inline gl::Shader GetShader(ShaderHandle handle) const
 		{
 			return m_Shaders[static_cast<uint32_t>(handle)];
 		}
 
-		inline gl::PipelineGL GetPipeline(PipelineStateHandle handle) const
+		inline gl::Pipeline GetPipeline(PipelineStateHandle handle) const
 		{
 			return m_Pipelines[static_cast<uint32_t>(handle)];
 		}
 
 	private:
-		std::vector<gl::BufferGL> m_Buffers;
-		std::vector<gl::ShaderGL> m_Shaders;
-		std::vector<gl::PipelineGL> m_Pipelines;
+		std::vector<gl::Buffer> m_Buffers;
+		std::vector<gl::Shader> m_Shaders;
+		std::vector<gl::Pipeline> m_Pipelines;
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;

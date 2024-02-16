@@ -16,6 +16,10 @@ namespace tur
 		g_Window.Initialize(properties);
 		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 		
+		// Default rendering system:
+		if (g_RenderingSystem.API().api == GraphicsAPI::NONE)
+			g_RenderingSystem.Configure(g_Window, { GraphicsAPI::OPENGL, 3, 3 });
+
 		m_Initialized = true;
 	}
 
@@ -43,10 +47,6 @@ namespace tur
 	void TurnipEngine::Initialize()
 	{
 		OnEngineStartup();
-	
-		// Default rendering system:
-		if (RenderingSystem::API() == GraphicsAPI::NONE)
-			g_RenderingSystem.Get().Configure(g_Window, { GraphicsAPI::OPENGL, 3, 3 });
 
 		g_Window.Show();
 	}
@@ -60,42 +60,42 @@ namespace tur
 
 	void TurnipEngine::OnEngineStartup()
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnEngineStartup();
 	}
 
 	void TurnipEngine::OnRender()
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnRender();
 	}
 
 	void TurnipEngine::OnRenderGUI()
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnRenderGUI();
 	}
 
 	void TurnipEngine::OnUpdate()
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnUpdate();
 	}
 
 	void TurnipEngine::OnEvent(Event& event)
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnEvent(event);
 	}
 
 	void TurnipEngine::OnEngineShutdown()
 	{
-		for (const auto& view : g_ViewSystem.Get())
+		for (const auto& view : g_ViewSystem)
 			view->OnEngineShutdown();
 	}
 
 	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification)
 	{
-		g_RenderingSystem.Get().Configure(g_Window, specification);
+		g_RenderingSystem.Configure(g_Window, specification);
 	}
 }

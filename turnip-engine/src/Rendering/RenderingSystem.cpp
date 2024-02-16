@@ -2,26 +2,26 @@
 #include "RenderingSystem.h"
 
 #include "Platform/GLFW/OpenGL/SetupOpenGL.h"
-#include "Platform/OpenGL/Diagnostics.h"
-#include "Platform/OpenGL/RenderDeviceGL.h"
-#include "Platform/OpenGL/RenderContextGL.h"
+#include "Graphics/OpenGL/Diagnostics.h"
+#include "Graphics/OpenGL/RenderDeviceGL.h"
+#include "Graphics/OpenGL/RenderContextGL.h"
 
-#include "Platform/Vulkan/RenderDeviceVK.h"
+#include "Graphics/Vulkan/RenderDeviceVK.h"
 #include "Platform/GLFW/Vulkan/SetupVulkan.h"
 
 namespace tur
 {
     void RenderingSystem::Configure(Window& window, const GraphicsSpecification& specification)
     {
-        s_API = specification.api;
+        s_API = specification;
 
-        switch (specification.api)
+        switch (s_API.api)
         {
             case GraphicsAPI::OPENGL:
             {
                 platform::SetupOpenGL(window, specification);
-                m_RenderDevice = tur::MakeUnique<RenderDeviceGL>(&window);
-                m_GraphicsContext = tur::MakeUnique<GraphicsRenderContextGL>(static_cast<RenderDeviceGL*>(m_RenderDevice.get()));
+                m_RenderDevice = tur::MakeUnique<gl::RenderDeviceGL>(&window);
+                m_GraphicsContext = tur::MakeUnique<gl::GraphicsRenderContextGL>(static_cast<gl::RenderDeviceGL*>(m_RenderDevice.get()));
             } break;
 
             case GraphicsAPI::VULKAN:
@@ -38,11 +38,11 @@ namespace tur
 
     void RenderingSystem::DisplayVersion()
     {
-        switch (s_API)
+        switch (s_API.api)
         {
             case GraphicsAPI::OPENGL:
             {
-                ShowOpenGLVersion();
+                gl::ShowOpenGLVersion();
             } break;
 
             default:

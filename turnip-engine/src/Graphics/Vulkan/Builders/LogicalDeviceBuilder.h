@@ -2,7 +2,7 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Platform/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/Objects/Objects.h"
 
 namespace tur::vulkan
 {

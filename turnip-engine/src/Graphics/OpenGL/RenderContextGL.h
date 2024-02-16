@@ -1,15 +1,15 @@
 #pragma once
 #include "Common.h"
 
-#include "Rendering/RenderContext.h"
+#include "Rendering/GraphicsCommands.h"
 #include "RenderDeviceGL.h"
 #include "Converters.h"
 
 #include <glad/glad.h>
 
-namespace tur
+namespace tur::gl
 {
-	class GraphicsRenderContextGL : public GraphicsRenderContext
+	class GraphicsRenderContextGL : public GraphicsRenderCommands
 	{
 	public:
 		explicit GraphicsRenderContextGL(NON_OWNING RenderDeviceGL* renderContext)

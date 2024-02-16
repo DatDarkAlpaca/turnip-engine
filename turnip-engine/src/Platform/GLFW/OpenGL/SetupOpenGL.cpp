@@ -7,7 +7,7 @@
 
 namespace tur::platform
 {
-	inline void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int, const char* message, const void*)
+	static void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int, const char* message, const void*)
 	{
 		switch (severity)
 		{
@@ -63,9 +63,12 @@ namespace tur::platform
 #ifdef TUR_DEBUG
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(OpenGLCallback, nullptr);
 
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+		if (specification.major >= 4 && specification.minor >= 3)
+		{
+			glDebugMessageCallback(OpenGLCallback, nullptr);
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+		}
 #endif
 	}
 }

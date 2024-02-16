@@ -5,6 +5,7 @@
 #include "Core/Event/Event.h"
 #include "Platform/Platform.h"
 #include "Rendering/RenderingSystem.h"
+#include "Rendering/GraphicsCommands.h"
 
 namespace tur
 {
@@ -41,13 +42,13 @@ namespace tur
 		void ConfigureRenderer(const GraphicsSpecification& specification);
 
 	public:
-		ViewSystem& View() { return g_ViewSystem.Get(); }
+		ViewSystem& View() { return g_ViewSystem; }
 
-		RenderingSystem& Renderer() { return g_RenderingSystem.Get(); }
+		RenderingSystem& Renderer() { return g_RenderingSystem; }
 
-		tur_unique<RenderDevice>& Device() { return g_RenderingSystem.Get().Device(); }
+		tur_unique<RenderDevice>& Device() { return g_RenderingSystem.Device(); }
 
-		tur_unique<GraphicsRenderContext>& GraphicsContext() { return g_RenderingSystem.Get().GraphicsContext(); }
+		tur_unique<GraphicsRenderCommands>& GraphicsContext() { return g_RenderingSystem.GraphicsContext(); }
 
 		Window& GetWindow() { return g_Window; }
 
