@@ -6,6 +6,11 @@
 *.sln.docstates
 *.userprefs
 
+# Visual studio files:
+*.sln
+*.filters
+*.vcxproj
+
 # Visual studio cache/options:
 .vs/
 
