@@ -16,7 +16,7 @@ namespace tur
 	public:
 		static T& Get()
 		{
-			static T instance;	
+			static T instance;
 			return instance;
 		}
 	};

@@ -1,10 +1,12 @@
 #pragma once
-#include "Common.h"
-#include "Core/Event/Event.h"
-#include "Core/Window/WindowProperties.h"
+#include <any>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#include "Common.h"
+#include "Core/Event/Event.h"
+#include "Core/Window/WindowProperties.h"
 
 namespace tur
 {
@@ -43,7 +45,7 @@ namespace tur
 
 		bool IsOpen() const;
 
-		void* GetHandle() const
+		std::any GetHandle() const
 		{
 			return m_Window.get();
 		}

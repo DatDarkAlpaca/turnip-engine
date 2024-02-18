@@ -28,23 +28,65 @@
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{D62B9585-42E1-0D7B-CBD5-0752378A047F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Scene">
+      <UniqueIdentifier>{CB0B2ACE-B7C3-6B1B-20CB-44770CA2060C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\View">
       <UniqueIdentifier>{58F5C415-C45F-798C-0D9E-2A32794757E1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Window">
       <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\OpenGL">
+      <UniqueIdentifier>{8AE717A8-F672-856C-FF83-08616B8EE16C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan">
+      <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan\Builders">
+      <UniqueIdentifier>{1FF55B2C-0B1A-ABAC-3465-903C20E9A9CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan\Objects">
+      <UniqueIdentifier>{8F608BC5-FB97-D35C-04A2-37807058FA55}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\WIN32">
-      <UniqueIdentifier>{4C22C294-38F0-B59A-2184-26C10DF191FF}</UniqueIdentifier>
+    <Filter Include="Platform\GLFW">
+      <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW\ImGUI">
+      <UniqueIdentifier>{5318046B-BF79-E178-48E7-272BB4471838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW\OpenGL">
+      <UniqueIdentifier>{BD3DCDD9-A9CC-56A3-52EB-6A9E3E596749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW\Vulkan">
+      <UniqueIdentifier>{09A27FEA-F530-09B4-9E4F-1DAF8ABD195A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Resource">
+      <UniqueIdentifier>{5A0007D6-46E4-C72B-AF44-C27E9B47B2AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Type">
+      <UniqueIdentifier>{D41522DE-C0E3-15E4-A977-860A95E4F148}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{23A78D7C-0FDE-8E0D-B8CA-7410A4E00A0F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util\CPUInfo">
       <UniqueIdentifier>{46D4A41A-3237-34BF-DBBC-6C75C7FEFF41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Random">
+      <UniqueIdentifier>{735F1D63-DF14-9658-6809-902FD4BD8C5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\UUID">
+      <UniqueIdentifier>{2924553F-958E-09B6-DECC-BA5B4A76E70A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +169,15 @@
     <ClInclude Include="src\Core\NonCopyable.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Scene\CommonComponents.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\Entity.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\Scene.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\View\View.h">
       <Filter>Core\View</Filter>
     </ClInclude>
@@ -140,23 +191,206 @@
       <Filter>Core\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Entry.h" />
+    <ClInclude Include="src\Graphics\OpenGL\Buffer.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\Converters.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\Diagnostics.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\GraphicsCommandsGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\Pipeline.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\RenderDeviceGL.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\Renderpass.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\OpenGL\Shader.h">
+      <Filter>Graphics\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\FrameBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\FramebufferBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\InstanceBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\LogicalDeviceBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\PipelineBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\RenderpassBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Builders\SwapchainBuilder.h">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Constants.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Converters.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\GraphicsCommandsVK.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Frame.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Instance.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\LogicalDevice.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Objects.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\PhysicalDevice.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Pipeline.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Queue.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\QueueFamily.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\QueueOperation.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Renderpass.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Shader.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\Objects\Swapchain.h">
+      <Filter>Graphics\Vulkan\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\RenderDeviceVK.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Vulkan\VulkanInitializer.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Events_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\ImGUI\ImGUI.h">
+      <Filter>Platform\GLFW\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\ImGUI\ViewImGUI_GLFW.h">
+      <Filter>Platform\GLFW\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Monitor_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\OpenGL\PresentGL.h">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\OpenGL\SetupOpenGL.h">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Setup_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Vulkan\SetupVulkan.h">
+      <Filter>Platform\GLFW\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\Window_GLFW.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Platform.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Events_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\GraphicsAPI.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Monitor_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\GraphicsCommands.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Setup_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\RenderCommands.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\Window_WIN32.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\RenderDevice.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIN32\WindowsHeader.h">
-      <Filter>Platform\WIN32</Filter>
+    <ClInclude Include="src\Rendering\RenderingSystem.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Barrier.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Buffer.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\InputLayout.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Pipeline.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Renderpass.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Resources.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Resource\Shader.h">
+      <Filter>Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\AttachmentOperation.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\ColorBlending.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\CullMode.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\DataFormat.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\FrontFace.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\ImageLayout.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\LayoutTypes.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\PolygonMode.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\PrimitiveTopology.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\Scissor.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\Types.h">
+      <Filter>Rendering\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Type\Viewport.h">
+      <Filter>Rendering\Type</Filter>
     </ClInclude>
     <ClInclude Include="src\TurnipEngine.h" />
     <ClInclude Include="src\Util\CPUInfo\CPUInfo.h">
@@ -165,12 +399,13 @@
     <ClInclude Include="src\Util\File.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\Random\Random.h">
+      <Filter>Util\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\UUID\UUID.h">
+      <Filter>Util\UUID</Filter>
+    </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Core\Scene\Scene.h" />
-    <ClInclude Include="src\Util\UUID\UUID.h" />
-    <ClInclude Include="src\Core\Scene\Entity.h" />
-    <ClInclude Include="src\Core\Scene\CommonComponents.h" />
-    <ClInclude Include="src\Util\Random\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Engine\TurnipEngine.cpp">
@@ -179,16 +414,54 @@
     <ClCompile Include="src\Core\Logger\Logger.cpp">
       <Filter>Core\Logger</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Scene\Scene.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\View\ViewSystem.cpp">
       <Filter>Core\View</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WIN32\Window_WIN32.cpp">
-      <Filter>Platform\WIN32</Filter>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\FrameBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\FramebufferBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\InstanceBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\LogicalDeviceBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\PhysicalDeviceBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\PipelineBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\RenderpassBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\Builders\SwapchainBuilder.cpp">
+      <Filter>Graphics\Vulkan\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Vulkan\RenderDeviceVK.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\OpenGL\SetupOpenGL.cpp">
+      <Filter>Platform\GLFW\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\Vulkan\SetupVulkan.cpp">
+      <Filter>Platform\GLFW\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\Window_GLFW.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\RenderingSystem.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\CPUInfo\CPUInfo.cpp">
       <Filter>Util\CPUInfo</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Core\Scene\Scene.cpp" />
   </ItemGroup>
 </Project>

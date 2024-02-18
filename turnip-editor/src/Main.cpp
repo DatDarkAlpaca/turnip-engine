@@ -7,24 +7,125 @@ using namespace tur;
 class MainView : public View
 {
 public:
+	MainView(NON_OWNING TurnipEngine* engine)
+		: r_Engine(engine)
+	{
+
+	}
+
+public:
 	void OnEngineStartup() override
 	{
 		TUR_LOG_INFO("Application initialized");
-	}
 
-	void OnEvent(tur::Event& event) override
-	{
+		auto& graphics = r_Engine->GraphicsContext();
+		auto& device = r_Engine->Device();
+		
+		// Pipeline:
+		{
+			ShaderDescriptor shaderDesc[2];
+			{
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
+			}
+			auto vertexShader = device->CreateShader(shaderDesc[0]);
+			auto fragShader = device->CreateShader(shaderDesc[1]);
+
+			PipelineStateDescriptor pipelineDesc;
+			{
+				pipelineDesc.vertexShader = vertexShader;
+				pipelineDesc.fragmentShader = fragShader;
+				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
+				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 0, 3, LayoutType::FLOAT_32, false });
+				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 1, 2, LayoutType::FLOAT_32, false });
+			}
+			pso = device->CreatePipeline(pipelineDesc);
+		}
+
+		// VBO:
+		{
+			float data[] = {
+				0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+				0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+				0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+				0.0f, 0.5f, 0.0f, 0.0f, 1.0f,
+			};
+
+			BufferDescriptor bufferDesc = {};
+			{
+				bufferDesc.bindingFlag = BindingFlag::ARRAY_BUFFER;
+				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
+				bufferDesc.dataSize = sizeof(data);
+				bufferDesc.data = data;
+			}
+
+			vbo = device->CreateBuffer(bufferDesc);
+		}
+
+		// EBO:
+		{
+			unsigned int data[] = { 0, 1, 2, 2, 3, 0 };
+
+			BufferDescriptor bufferDesc = {};
+			{
+				bufferDesc.bindingFlag = BindingFlag::ELEMENT_ARRAY_BUFFER;
+				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
+				bufferDesc.dataSize = sizeof(data);
+				bufferDesc.data = data;
+			}
+
+			ebo = device->CreateBuffer(bufferDesc);
+		}
+
+		device->FinishSetup();
+
+		// Initialization:
+		graphics->SetClearColor({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 	}
 
 	void OnRender() override
 	{
+		auto& graphics = r_Engine->GraphicsContext();
+		auto& device = r_Engine->Device();
 
+		graphics->Begin();
+		{
+			graphics->Clear();
+
+			graphics->SetVertexBuffer(vbo);
+			graphics->SetIndexBuffer(ebo);
+
+			graphics->SetPipeline(pso);
+
+			graphics->DrawIndexed(6);
+		}
+		graphics->End();
+
+		// ImGUI:
+		{
+			r_Engine->Renderer().BeginFrame();
+
+			ImGui::Begin("Hello");
+			ImGui::End();
+
+			r_Engine->Renderer().EndFrame();
+		}
+		
+		device->Present();
 	}
 
 	void OnEngineShutdown() override
 	{
 		TUR_LOG_INFO("Application shutdown");
 	}
+
+private:
+	BufferHandle vbo = BufferHandle::INVALID;
+	BufferHandle ebo = BufferHandle::INVALID;
+	PipelineStateHandle pso = PipelineStateHandle::INVALID;
+
+	// renderer
+	NON_OWNING TurnipEngine* r_Engine = nullptr;
 };
 
 class TurnipEditor : public TurnipEngine
@@ -32,15 +133,20 @@ class TurnipEditor : public TurnipEngine
 public:
 	TurnipEditor()
 	{
+		// Rendering options:
+		ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
+
+		// Views:
+		View().Add(MakeUnique<MainView>(this));
+
 		// System Information:
 		{
 			DisplayMonitorInformation();
 
 			DisplayCPUInfo();
-		}
 
-		// Views:
-		View().Add(MakeUnique<MainView>());
+			DisplayRenderInfo();
+		}
 	}
 
 private:	
@@ -67,6 +173,12 @@ private:
 	{
 		TUR_LOG_DEBUG("Processor Information:");
 		DisplayCPUInformation();
+	}
+
+	void DisplayRenderInfo()
+	{
+		TUR_LOG_DEBUG("Graphics API Information:");
+		Renderer().DisplayVersion();
 	}
 };
 

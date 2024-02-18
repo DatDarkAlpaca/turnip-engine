@@ -1,8 +1,9 @@
-#version 450
-layout(location = 0) in vec3 fragColor;
-layout(location = 0) out vec4 outColor;
+#version 450 core
+out vec4 out_color;
+
+in vec2 v_uvs;
 
 void main()
 {
-	outColor = vec4(fragColor, 1.0);
+	out_color = vec4(v_uvs, 1.0, 1.0);
 }

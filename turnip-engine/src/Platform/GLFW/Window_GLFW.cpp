@@ -33,11 +33,6 @@ namespace tur
 
 		m_Window.reset(glfwWindow);
 
-		// Default size limits:
-		glm::vec2 maximumSize =
-			properties.maxSize.x > 0 && properties.maxSize.y > 0
-			? properties.maxSize : glm::vec2(GLFW_DONT_CARE, GLFW_DONT_CARE);
-
 		// Window Data:
 		SetWindowDataPointer();
 		SetWindowCallbacks();
