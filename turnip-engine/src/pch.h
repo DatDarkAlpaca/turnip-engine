@@ -18,4 +18,5 @@
 	#include <spdlog/spdlog.h>
 
 	#include <entt/entt.hpp>
+	#include <imgui.h>
 #pragma warning(pop)

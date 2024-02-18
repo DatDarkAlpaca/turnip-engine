@@ -4,18 +4,20 @@
 
 #include "Common.h"
 #include "Rendering/Resource/Pipeline.h"
-#include "Platform/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/RenderDeviceVK.h"
+#include "Graphics/Vulkan/Objects/Objects.h"
 
 namespace tur::vulkan
 {
 	class PipelineBuilder
 	{
 	public:
-		explicit PipelineBuilder(const PipelineStateDescriptor& descriptor)
-			: descriptor(descriptor) { }
+		explicit PipelineBuilder(NON_OWNING RenderDeviceVK* renderDevice, const PipelineStateDescriptor& descriptor)
+			: r_RenderDevice(renderDevice)
+			, descriptor(descriptor) { }
 
 	public:
-		PipelineVulkan Build();
+		Pipeline Build();
 
 	private:
 		vk::PipelineLayout CreateLayout() const;
@@ -35,5 +37,8 @@ namespace tur::vulkan
 		vk::Format m_SwapchainFormat = vk::Format::eUndefined;
 
 		PipelineStateDescriptor descriptor;
+
+	private:
+		NON_OWNING RenderDeviceVK* r_RenderDevice = nullptr;
 	};
 }

@@ -10,7 +10,8 @@ project "turnip-editor"
     pchsource "src/pch.cpp"
 
     links {
-        "turnip-engine"
+        "turnip-engine",
+        "imgui"
     }
 
     files {
@@ -28,6 +29,8 @@ project "turnip-editor"
         "%{prj.location}/src",
         "%{wks.location}/turnip-engine/",
         "%{wks.location}/turnip-engine/src",
+        "%{vendor_path}/imgui",
+        "%{vendor_path}/imgui/backends",
     }
 
     -- Platform

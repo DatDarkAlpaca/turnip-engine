@@ -1,11 +1,13 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
-#include "Graphics/Renderpass.h"
 
 namespace tur::vulkan
 {
-	class RenderpassVulkan : public IRenderpass
+	class RenderpassVulkan
 	{
+	public:
+		operator vk::RenderPass() { return renderpass; }
+
 	public:
 		vk::RenderPass renderpass;
 	};

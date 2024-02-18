@@ -17,6 +17,19 @@ namespace tur
 		void DisplayVersion();
 
 	public:
+		void BeginFrame()
+		{
+			platform::BeginFrame();
+			ImGui::NewFrame();
+		}
+
+		void EndFrame()
+		{
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		}
+
+	public:
 		static inline GraphicsSpecification API() { return s_API; }
 
 		tur_unique<RenderDevice>& Device() { return m_RenderDevice; }

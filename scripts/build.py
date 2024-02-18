@@ -7,7 +7,7 @@ def execute_conan(build_types: str):
 
     for build_type in build_type_list:
         subprocess.run(['conan', 'install', '.', '--build', 'missing',
-                    '-of', './dependencies', f"--settings=build_type={build_type}"])
+                    '-of', './vendor/dependencies', f"--settings=build_type={build_type}"])
 
 
 def execute_premake(action: str):

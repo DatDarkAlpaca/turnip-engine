@@ -3,6 +3,7 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
+#include "Rendering/Resource/Renderpass.h"
 #include "Graphics/Vulkan/Converters.h"
 #include "Graphics/Vulkan/Objects/Swapchain.h"
 #include "Graphics/Vulkan/Objects/Renderpass.h"

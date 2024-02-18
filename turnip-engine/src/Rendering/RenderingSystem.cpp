@@ -4,10 +4,11 @@
 #include "Platform/GLFW/OpenGL/SetupOpenGL.h"
 #include "Graphics/OpenGL/Diagnostics.h"
 #include "Graphics/OpenGL/RenderDeviceGL.h"
-#include "Graphics/OpenGL/RenderContextGL.h"
+#include "Graphics/OpenGL/GraphicsCommandsGL.h"
 
-#include "Graphics/Vulkan/RenderDeviceVK.h"
 #include "Platform/GLFW/Vulkan/SetupVulkan.h"
+#include "Graphics/Vulkan/RenderDeviceVK.h"
+#include "Graphics/Vulkan/GraphicsCommandsVK.h"
 
 namespace tur
 {
@@ -21,13 +22,14 @@ namespace tur
             {
                 platform::SetupOpenGL(window, specification);
                 m_RenderDevice = tur::MakeUnique<gl::RenderDeviceGL>(&window);
-                m_GraphicsContext = tur::MakeUnique<gl::GraphicsRenderContextGL>(static_cast<gl::RenderDeviceGL*>(m_RenderDevice.get()));
+                m_GraphicsContext = tur::MakeUnique<gl::GraphicsRenderCommandsGL>(static_cast<gl::RenderDeviceGL*>(m_RenderDevice.get()));
             } break;
 
             case GraphicsAPI::VULKAN:
             {
                 platform::SetupVulkan();
-                m_RenderDevice = tur::MakeUnique<RenderDeviceVK>(&window);
+                m_RenderDevice = tur::MakeUnique<vulkan::RenderDeviceVK>(&window);
+                m_GraphicsContext = tur::MakeUnique<vulkan::GraphicsRenderCommandsVK>(static_cast<vulkan::RenderDeviceVK*>(m_RenderDevice.get()));
             } break;
 
             default: 

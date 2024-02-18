@@ -11,6 +11,8 @@ namespace tur
 		virtual ~GraphicsRenderCommands() = default;
 
 	public:
+		virtual void SetRenderpass(RenderpassHandle handle) = 0;
+
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 
 		virtual void Clear() = 0;

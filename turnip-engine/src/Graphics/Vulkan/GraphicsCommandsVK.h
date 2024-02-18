@@ -7,10 +7,10 @@
 
 namespace tur::vulkan
 {
-	class GraphicsRenderContextVK : public GraphicsRenderCommands
+	class GraphicsRenderCommandsVK : public GraphicsRenderCommands
 	{
 	public:
-		explicit GraphicsRenderContextVK(NON_OWNING RenderDeviceVK* renderContext)
+		explicit GraphicsRenderCommandsVK(NON_OWNING RenderDeviceVK* renderContext)
 			: r_RenderContext(renderContext)
 		{
 
@@ -21,6 +21,8 @@ namespace tur::vulkan
 		{
 			
 		}
+
+		void SetRenderpass(RenderpassHandle handle) override { }
 
 		void SetClearColor(const glm::vec4& color) override
 		{

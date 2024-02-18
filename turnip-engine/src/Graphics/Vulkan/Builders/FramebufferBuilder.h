@@ -1,6 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
-#include "Platform/Vulkan/Objects/Swapchain.h"
+#include "Graphics/Vulkan/Objects/Swapchain.h"
 
 namespace tur::vulkan
 {

@@ -1,53 +1,44 @@
 #pragma once
 #include <glad/glad.h>
 
+#include "Graphics/Vulkan/Objects/Objects.h"
 #include "Rendering/RenderDevice.h"
 #include "Platform/Platform.h"
-#include "Util/File.h"
 
-#include "Graphics/Vulkan/Objects/Objects.h"
-
-namespace tur
+namespace tur::vulkan
 {
 	class RenderDeviceVK : public RenderDevice
 	{
 	public:
-		RenderDeviceVK(NON_OWNING Window* window)
-			: r_Window(window)
-		{
+		RenderDeviceVK(NON_OWNING Window* window);
 
+	public:
+		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription) override;
+
+		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override;
+
+		ShaderHandle CreateShader(const ShaderDescriptor& shaderDescriptor) override;
+
+		PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) override;
+
+	public:
+		void FinishSetup() override;
+
+	public:
+		Barrier Submit(RenderCommands* context) override;
+
+		void WaitBarrier(const Barrier& barrier);
+
+		void Present() override;
+
+	public:
+		inline vulkan::Shader GetShader(ShaderHandle handle)
+		{
+			return m_Shaders[static_cast<uint32_t>(handle)];
 		}
 
 	public:
-		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override
-		{
-			// TODO: implement
-			return BufferHandle::INVALID;
-		}
-
-		ShaderHandle CreateShader(const ShaderDescriptor& shaderDescriptor) override
-		{
-			// TODO: implement
-			return ShaderHandle::INVALID;
-		}
-
-		PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) override
-		{
-			// TODO: implement
-			return PipelineStateHandle::INVALID;
-		}
-
-	public:
-		void Present() override
-		{
-			// TODO: implement
-		}
-
-	public:
-		Window* GetWindow() const { return r_Window; }
-
-	private:
-		NON_OWNING Window* r_Window = nullptr;
+		inline Window* GetWindow() const { return r_Window; }
 
 	public:
 		vk::Instance instance;
@@ -57,5 +48,15 @@ namespace tur
 		vk::Device logicalDevice;
 		vulkan::QueueCluster queues;
 		vulkan::Swapchain swapchain;
+
+	private:
+		std::vector<vulkan::RenderpassVulkan> m_Renderpasses;
+		std::vector<vulkan::Shader> m_Shaders;
+		std::vector<vulkan::Pipeline> m_Pipelines;
+
+		RenderpassHandle m_DefaultRenderpassHandle;
+
+	private:
+		NON_OWNING Window* r_Window = nullptr;
 	};
 }

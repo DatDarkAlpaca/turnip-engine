@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0098A80F-6CAC-D0C0-352E-7420A101CDF1}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>imgui</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\build\bin\Debug-windows-x86_64\imgui\</OutDir>
+    <IntDir>..\build\intermediate\Debug-windows-x86_64\imgui\</IntDir>
+    <TargetName>imgui</TargetName>
+    <TargetExt>.lib</TargetExt>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad2795ec90d739f\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\bin;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\build\bin\Release-windows-x86_64\imgui\</OutDir>
+    <IntDir>..\build\intermediate\Release-windows-x86_64\imgui\</IntDir>
+    <TargetName>imgui</TargetName>
+    <TargetExt>.lib</TargetExt>
+    <ExecutablePath>$(ProjectDir)..\..\..\.conan2\p\spdlo585c949eca222\p\bin;$(ProjectDir)..\..\..\.conan2\p\glfweacdc550e8335\p\bin;$(ProjectDir)..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\bin;$(ProjectDir)..\..\..\.conan2\p\b\glad39715e4bdf27b\p\bin;$(ProjectDir)..\..\..\.conan2\p\fmt99c02610800b9\p\bin;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;imgui;..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\include;..\..\..\.conan2\p\enttb1832d5c14fb1\p\include;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\glad2795ec90d739f\p\include;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>spdlogd.lib;glfw3.lib;gdi32.lib;opengl32.lib;vulkan-1.lib;glad.lib;fmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\b\spdlod49c576bb8ed4\p\lib;..\..\..\.conan2\p\b\glfwd8ea506b6cd31\p\lib;..\..\..\.conan2\p\b\vulka10836cc8f98e6\p\lib;..\..\..\.conan2\p\b\glad2795ec90d739f\p\lib;..\..\..\.conan2\p\b\fmtdc8a7747e5b99\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>GLFW_STATIC;GLFW_VULKAN_STATIC;SPDLOG_FMT_EXTERNAL;SPDLOG_COMPILED_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;imgui;..\..\..\.conan2\p\spdlo585c949eca222\p\include;..\..\..\.conan2\p\enttb1832d5c14fb1\p\include;..\..\..\.conan2\p\glfweacdc550e8335\p\include;..\..\..\.conan2\p\glmb8583f8d3b716\p\include;..\..\..\.conan2\p\vulka7665c156c662b\p\res\vulkan\registry;..\..\..\.conan2\p\vulka7665c156c662b\p\include;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\include;..\..\..\.conan2\p\fmt99c02610800b9\p\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>spdlog.lib;glfw3.lib;gdi32.lib;opengl32.lib;vulkan-1.lib;glad.lib;fmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\.conan2\p\spdlo585c949eca222\p\lib;..\..\..\.conan2\p\glfweacdc550e8335\p\lib;..\..\..\.conan2\p\vulka87c4cb44a1bb4\p\lib;..\..\..\.conan2\p\b\glad39715e4bdf27b\p\lib;..\..\..\.conan2\p\fmt99c02610800b9\p\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

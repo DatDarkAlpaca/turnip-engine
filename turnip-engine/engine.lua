@@ -11,11 +11,17 @@ project "turnip-engine"
 
     functionlevellinking "on"
 
+    links {
+        "imgui"
+    }
+
     files {
         "src/Core/**.cpp",
         "src/Core/**.h",
         "src/Rendering/**.cpp",
         "src/Rendering/**.h",
+        "src/Graphics/**.cpp",
+        "src/Graphics/**.h",
         "src/Platform/OpenGL/**.h",
         "src/Platform/OpenGL/**.cpp",
         "src/Platform/Vulkan/**.h",
@@ -34,7 +40,9 @@ project "turnip-engine"
 
     includedirs {
         "%{prj.location}",
-        "%{prj.location}/src"
+        "%{prj.location}/src",
+        "%{vendor_path}/imgui",
+        "%{vendor_path}/imgui/backends",
     }
 
     -- Platform 

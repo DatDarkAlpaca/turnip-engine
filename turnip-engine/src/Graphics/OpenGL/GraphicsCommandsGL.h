@@ -9,11 +9,11 @@
 
 namespace tur::gl
 {
-	class GraphicsRenderContextGL : public GraphicsRenderCommands
+	class GraphicsRenderCommandsGL : public GraphicsRenderCommands
 	{
 	public:
-		explicit GraphicsRenderContextGL(NON_OWNING RenderDeviceGL* renderContext)
-			: r_RenderContext(renderContext)
+		explicit GraphicsRenderCommandsGL(NON_OWNING RenderDeviceGL* renderContext)
+			: r_RenderDevice(renderContext)
 		{
 			glGenVertexArrays(1, &VAO);
 		}
@@ -22,6 +22,12 @@ namespace tur::gl
 		void Begin() override
 		{
 			glBindVertexArray(VAO);
+		}
+
+		void SetRenderpass(RenderpassHandle handle) override 
+		{
+			auto renderpass = r_RenderDevice->GetRenderpass(handle);
+			glBindFramebuffer(GL_FRAMEBUFFER, renderpass.framebufferID);
 		}
 
 		void SetClearColor(const glm::vec4& color) override
@@ -36,7 +42,7 @@ namespace tur::gl
 
 		void SetPipeline(PipelineStateHandle handle) override
 		{
-			auto [pipeline, id] = r_RenderContext->GetPipeline(handle);
+			auto [pipeline, id] = r_RenderDevice->GetPipeline(handle);
 			glUseProgram(id);
 
 			if (m_CurrentPipelineID == handle)
@@ -111,13 +117,13 @@ namespace tur::gl
 
 		void SetVertexBuffer(BufferHandle handle) override
 		{
-			auto [target, id] = r_RenderContext->GetBuffer(handle);
+			auto [target, id] = r_RenderDevice->GetBuffer(handle);
 			glBindBuffer(gl::GetBufferBindingFlag(target), id);
 		}
 
 		void SetIndexBuffer(BufferHandle handle) override
 		{
-			auto [target, id] = r_RenderContext->GetBuffer(handle);
+			auto [target, id] = r_RenderDevice->GetBuffer(handle);
 			glBindBuffer(gl::GetBufferBindingFlag(target), id);
 		}
 
@@ -137,7 +143,7 @@ namespace tur::gl
 		}
 
 	private:
-		NON_OWNING RenderDeviceGL* r_RenderContext = nullptr;
+		NON_OWNING RenderDeviceGL* r_RenderDevice = nullptr;
 
 	private:
 		PipelineStateHandle m_CurrentPipelineID = PipelineStateHandle::INVALID;

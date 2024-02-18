@@ -18,8 +18,9 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
+		auto& graphics = r_Engine->GraphicsContext();
 		auto& device = r_Engine->Device();
-
+		
 		// Pipeline:
 		{
 			ShaderDescriptor shaderDesc[2];
@@ -76,8 +77,9 @@ public:
 			ebo = device->CreateBuffer(bufferDesc);
 		}
 
+		device->FinishSetup();
+
 		// Initialization:
-		auto& graphics = r_Engine->GraphicsContext();
 		graphics->SetClearColor({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 	}
 
@@ -98,6 +100,16 @@ public:
 			graphics->DrawIndexed(6);
 		}
 		graphics->End();
+
+		// ImGUI:
+		{
+			r_Engine->Renderer().BeginFrame();
+
+			ImGui::Begin("Hello");
+			ImGui::End();
+
+			r_Engine->Renderer().EndFrame();
+		}
 		
 		device->Present();
 	}
@@ -122,7 +134,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		// ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
+		ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

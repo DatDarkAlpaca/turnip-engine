@@ -6,6 +6,7 @@
 #include "Util/File.h"
 
 #include "Converters.h"
+#include "Renderpass.h"
 #include "Pipeline.h"
 #include "Buffer.h"
 #include "Shader.h"
@@ -22,6 +23,13 @@ namespace tur::gl
 		}
 
 	public:
+		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription)
+		{
+			
+			/* TODO: Implementation required, but not necessary */
+			return RenderpassHandle::INVALID;
+		}
+
 		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override
 		{
 			uint32_t target = gl::GetBufferBindingFlag(bufferDescription.bindingFlag);
@@ -90,6 +98,11 @@ namespace tur::gl
 		}
 
 	public:
+		inline gl::Renderpass GetRenderpass(RenderpassHandle handle) const
+		{
+			return m_Renderpasses[static_cast<uint32_t>(handle)];
+		}
+
 		inline gl::Buffer GetBuffer(BufferHandle handle) const
 		{
 			return m_Buffers[static_cast<uint32_t>(handle)];
@@ -106,6 +119,7 @@ namespace tur::gl
 		}
 
 	private:
+		std::vector<gl::Renderpass> m_Renderpasses;
 		std::vector<gl::Buffer> m_Buffers;
 		std::vector<gl::Shader> m_Shaders;
 		std::vector<gl::Pipeline> m_Pipelines;
