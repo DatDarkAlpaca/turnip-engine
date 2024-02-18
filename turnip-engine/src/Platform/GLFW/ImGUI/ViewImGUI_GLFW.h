@@ -31,6 +31,8 @@ namespace tur
 			// TODO: Configure ImGUI settings
 			ImGui::StyleColorsDark();
 			ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
+
+			// TODO: Implement in the rendering system
 			ImGui_ImplOpenGL3_Init("#version 330");
 		}
 	};
