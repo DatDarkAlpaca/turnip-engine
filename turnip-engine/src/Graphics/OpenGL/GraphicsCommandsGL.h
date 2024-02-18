@@ -71,7 +71,6 @@ namespace tur::gl
 
 				offset += layout.componentAmount * GetLayoutTypeSize(layout.valueType);
 			}
-			return;
 
 			// Rasterizer:
 			{

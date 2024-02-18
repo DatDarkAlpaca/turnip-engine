@@ -35,6 +35,7 @@ public:
 			{
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
+				pipelineDesc.frontFace = FrontFace::COUNTER_CLOCKWISE;
 				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
 				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 0, 3, LayoutType::FLOAT_32, false });
 				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 1, 2, LayoutType::FLOAT_32, false });
