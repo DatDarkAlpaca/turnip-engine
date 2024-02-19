@@ -24,7 +24,7 @@ namespace tur
 		AttachmentLoadOperation stencilLoadOperation = AttachmentLoadOperation::DONT_CARE;
 		AttachmentStoreOperation stencilStoreOperation = AttachmentStoreOperation::DONT_CARE;
 
-		DataFormat imageFormat = DataFormat::R8_G8_B8_A8_UNORM;
+		DataFormat imageFormat = DataFormat::B8_G8_R8_A8_UNORM;
 		ImageLayout initialLayout = ImageLayout::UNDEFINED;
 		ImageLayout finalLayout = ImageLayout::PRESENT_SRC;
 		ImageLayout attachmentLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL;
@@ -50,14 +50,32 @@ namespace tur
 	public:
 		uint32_t AddAttachment(const RenderpassAttachment& attachment)
 		{
-			attachments.push_back(attachment);
-			return defaultSwapchainAttachment ? (uint32_t)attachments.size() : (uint32_t)attachments.size() - 1;
+			if (defaultSwapchainAttachment)
+			{
+				if(attachments.size() == 0)
+					attachments.push_back(attachment);
+				else
+					attachments[0] = attachment;
+			}
+			else
+				attachments.push_back(attachment);
+
+			return (uint32_t)attachments.size() - 1;
 		}
 
 		uint32_t AddSubpass()
 		{
-			subpasses.push_back({});
-			return defaultSwapchainAttachment ? (uint32_t)subpasses.size() : (uint32_t)subpasses.size() - 1;
+			if (defaultSwapchainAttachment)
+			{
+				if (subpasses.size() == 0)
+					subpasses.push_back({});
+				else
+					subpasses[0] = {};
+			}
+			else
+				subpasses.push_back({});
+
+			return (uint32_t)subpasses.size() - 1;
 		}
 
 		void AddSubpassMapping(subpass_id subpassIndex, attachment_id attachmentIndex, AttachmentType type = AttachmentType::COLOR)
@@ -69,7 +87,7 @@ namespace tur
 	public:
 		std::optional<uint32_t> GetMainSubpass() const
 		{
-			if (defaultSwapchainAttachment)
+			if (defaultSwapchainAttachment && attachments.size() > 0)
 				return 0;
 
 			return std::nullopt;
@@ -77,7 +95,7 @@ namespace tur
 
 		std::optional<uint32_t> GetSwapchainAttachmentIndex() const
 		{
-			if (defaultSwapchainAttachment)
+			if (defaultSwapchainAttachment && subpasses.size() > 0)
 				return 0;
 
 			return std::nullopt;

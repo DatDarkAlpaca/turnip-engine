@@ -8,9 +8,7 @@
 	#include "Platform/WIN32/Window_WIN32.h"
 	#include "Platform/WIN32/Setup_WIN32.h"
 
-#elif defined(TUR_WINDOWING_GLFW)
-	#include <GLFW/glfw3.h>
- 
+#elif defined(TUR_WINDOWING_GLFW) 
 	#include "Platform/GLFW/Events_GLFW.h"
 	#include "Platform/GLFW/Monitor_GLFW.h"
 	#include "Platform/GLFW/Window_GLFW.h"

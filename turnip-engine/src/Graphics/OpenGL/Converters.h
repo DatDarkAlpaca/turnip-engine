@@ -271,6 +271,9 @@ namespace tur::gl
 			case DataFormat::R8_SRGB:
 				return GL_SRGB8;
 
+			case DataFormat::B8_G8_R8_A8_UNORM:
+				return GL_BGRA;
+
 			case DataFormat::R8_G8_UNORM:
 				return GL_RG8;
 

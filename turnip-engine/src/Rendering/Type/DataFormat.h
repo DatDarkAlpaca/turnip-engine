@@ -25,6 +25,7 @@ namespace tur
         R8_G8_B8_SINT,
         R8_G8_B8_SRGB,
 
+        B8_G8_R8_A8_UNORM,
         R8_G8_B8_A8_UNORM,
         R8_G8_B8_A8_SNORM,
         R8_G8_B8_A8_UINT,

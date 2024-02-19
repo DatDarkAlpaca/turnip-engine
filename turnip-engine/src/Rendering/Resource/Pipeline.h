@@ -60,7 +60,7 @@ namespace tur
 		float blendConstants[4] = { 0.f, 0.f, 0.f, 0.f };
 
 		// Renderpass:
-		RenderpassHandle renderpass;
+		RenderpassHandle renderpass = RenderpassHandle::INVALID;
 
 		// Layout:
 		uint32_t layoutCount = 0;

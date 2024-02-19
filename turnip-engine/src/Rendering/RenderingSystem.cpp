@@ -27,7 +27,7 @@ namespace tur
 
             case GraphicsAPI::VULKAN:
             {
-                platform::SetupVulkan();
+                platform::SetupVulkan(window);
                 m_RenderDevice = tur::MakeUnique<vulkan::RenderDeviceVK>(&window);
                 m_GraphicsContext = tur::MakeUnique<vulkan::GraphicsRenderCommandsVK>(static_cast<vulkan::RenderDeviceVK*>(m_RenderDevice.get()));
             } break;
@@ -45,6 +45,11 @@ namespace tur
             case GraphicsAPI::OPENGL:
             {
                 gl::ShowOpenGLVersion();
+            } break;
+
+            case GraphicsAPI::VULKAN:
+            {
+                // TODO: Implement
             } break;
 
             default:

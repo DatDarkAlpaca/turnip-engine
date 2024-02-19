@@ -5,7 +5,7 @@ namespace tur
 {
 	inline void __tur_assert(const char* condition, const char* message, const char* file, uint64_t line)
 	{
-		TUR_LOG_CRITICAL("[Assert]: '{}' failed. [{}]\nFile: {} [{}]", condition, message, file, line);
+ 		TUR_LOG_CRITICAL("[Assert]: '{}' failed. [{}]\nFile: {} [{}]", condition, message, file, line);
 	}
 
 #define TUR_ASSERT(condition, message)									\

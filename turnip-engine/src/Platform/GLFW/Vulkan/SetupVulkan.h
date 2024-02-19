@@ -7,7 +7,7 @@
 
 namespace tur::platform
 {
-	void SetupVulkan();
+	void SetupVulkan(Window& window);
 
 	std::vector<const char*> GetWindowingVulkanExtensions();
 

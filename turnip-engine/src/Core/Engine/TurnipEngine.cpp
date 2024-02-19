@@ -47,7 +47,7 @@ namespace tur
 	void TurnipEngine::Initialize()
 	{
 		// ImGUI View:
-		g_ViewSystem.Add(tur::MakeUnique<ViewImGUI>(g_Window));
+		// g_ViewSystem.Add(tur::MakeUnique<ViewImGUI>(g_Window));
 		
 		// Engine Startup:
 		OnEngineStartup();

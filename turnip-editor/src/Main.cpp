@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <vulkan/vulkan.h>
 #include <TurnipEngine.h>
+#include "Graphics/Vulkan/VulkanInitializer.h"
 
 using namespace tur;
 
@@ -25,8 +26,8 @@ public:
 		{
 			ShaderDescriptor shaderDesc[2];
 			{
-				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
-				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
@@ -104,12 +105,12 @@ public:
 
 		// ImGUI:
 		{
-			r_Engine->Renderer().BeginFrame();
+			/*r_Engine->Renderer().BeginFrame();
 
 			ImGui::Begin("Hello");
 			ImGui::End();
 
-			r_Engine->Renderer().EndFrame();
+			r_Engine->Renderer().EndFrame();*/
 		}
 		
 		device->Present();
@@ -135,7 +136,8 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::OPENGL, 4, 5 });
+		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
+		vulkan::DefaultVulkanInitializer initializer { static_cast<vulkan::RenderDeviceVK*>(Device().get()) };
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

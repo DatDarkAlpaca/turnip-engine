@@ -17,31 +17,7 @@ namespace tur::vulkan
 			return std::nullopt;
 		}
 
-		if (m_Descriptor.defaultSwapchainAttachment)
-			AddSwapchainColorAttachment();
-
-		PrepareDescriptor();
-
-		// Renderpass
-		vk::RenderPassCreateInfo renderpassInfo = { };
-		renderpassInfo.flags = vk::RenderPassCreateFlags();
-		renderpassInfo.attachmentCount = (uint32_t)m_Attachments.size();
-		renderpassInfo.pAttachments = m_Attachments.data();
-		renderpassInfo.subpassCount = (uint32_t)m_Subpasses.size();
-		renderpassInfo.pSubpasses = m_Subpasses.data();
-
-		RenderpassVulkan renderpass;
-		try
-		{
-			renderpass.renderpass = m_Device.createRenderPass(renderpassInfo);
-			return renderpass;
-		}
-		catch (vk::SystemError err)
-		{
-			TUR_LOG_ERROR("Failed to create renderpass. {}", err.what());
-		}
-
-		return std::nullopt;
+		return ConfigureRenderpass();
 	}
 
 	RenderpassBuilder& RenderpassBuilder::SetArguments(vk::Device device, const vulkan::Swapchain& swapchain)
@@ -78,8 +54,8 @@ namespace tur::vulkan
 
 		m_Subpasses.push_back(mainSubpass);
 	}
-	
-	void RenderpassBuilder::PrepareDescriptor()
+
+	std::optional<RenderpassVulkan> RenderpassBuilder::ConfigureRenderpass()
 	{
 		// Descriptors and references:
 		for (const auto& descriptorAttachment : m_Descriptor.attachments)
@@ -104,6 +80,12 @@ namespace tur::vulkan
 			m_AttachmentReferences.push_back(attachmentRef);
 		}
 
+		// TODO: brother of christ
+		std::vector<std::vector<vk::AttachmentReference>> inputAttachments(8);
+		std::vector<std::vector<vk::AttachmentReference>> colorAttachments(8);
+		std::vector<std::vector<vk::AttachmentReference>> resolveAttachments(8);
+		std::vector<std::vector<vk::AttachmentReference>> depthStencilAttachments(8);
+
 		// Subpasses:
 		for (size_t i = 0; i < m_Descriptor.subpasses.size(); ++i)
 		{
@@ -111,29 +93,26 @@ namespace tur::vulkan
 			subpass.flags = vk::SubpassDescriptionFlags();
 			subpass.pipelineBindPoint = vk::PipelineBindPoint::eGraphics;
 
-			std::vector<vk::AttachmentReference> inputAttachments;
-			std::vector<vk::AttachmentReference> colorAttachments;
-			std::vector<vk::AttachmentReference> resolveAttachments;
-			std::vector<vk::AttachmentReference> depthStencilAttachments;
+			// TODO: convert resolve and depth refs into stack arrays
 
 			for (const auto& [subpassReferenceType, subpassReferenceIndex] : m_Descriptor.subpasses[i])
 			{
 				switch (subpassReferenceType)
 				{
 					case AttachmentType::INPUT:
-						inputAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						inputAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
 						break;
 
 					case AttachmentType::COLOR:
-						colorAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						colorAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
 						break;
 
 					case AttachmentType::RESOLVE:
-						resolveAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						resolveAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
 						break;
 
 					case AttachmentType::DEPTH_STENCIL:
-						depthStencilAttachments.push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						depthStencilAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
 						break;
 
 					default:
@@ -144,18 +123,39 @@ namespace tur::vulkan
 				
 			}
 
-			subpass.inputAttachmentCount = (uint32_t)inputAttachments.size();
-			subpass.pInputAttachments = inputAttachments.data();
+			subpass.inputAttachmentCount = (uint32_t)inputAttachments[i].size();
+			subpass.pInputAttachments = inputAttachments[i].data();
 
-			subpass.colorAttachmentCount = (uint32_t)colorAttachments.size();
-			subpass.pColorAttachments = colorAttachments.data();
+			subpass.colorAttachmentCount = (uint32_t)colorAttachments[i].size();
+			subpass.pColorAttachments = colorAttachments[i].data();
 
-			subpass.pResolveAttachments = resolveAttachments.data();
-			subpass.pDepthStencilAttachment = depthStencilAttachments.data();
+			subpass.pResolveAttachments = resolveAttachments[i].data();
+			subpass.pDepthStencilAttachment = depthStencilAttachments[i].data();
 
 			// TODO: Implement preserve attachments.
 
 			m_Subpasses.push_back(subpass);
+		}		
+	
+		// Renderpass Creation:
+		vk::RenderPassCreateInfo renderpassInfo = { };
+		renderpassInfo.flags = vk::RenderPassCreateFlags();
+		renderpassInfo.attachmentCount = (uint32_t)m_Attachments.size();
+		renderpassInfo.pAttachments = m_Attachments.data();
+		renderpassInfo.subpassCount = (uint32_t)m_Subpasses.size();
+		renderpassInfo.pSubpasses = m_Subpasses.data();
+
+		RenderpassVulkan renderpass;
+		try
+		{
+			renderpass.renderpass = m_Device.createRenderPass(renderpassInfo);
+			return renderpass;
 		}
+		catch (vk::SystemError err)
+		{
+			TUR_LOG_ERROR("Failed to create renderpass. {}", err.what());
+		}
+
+		return std::nullopt;
 	}
 }

@@ -24,7 +24,7 @@ namespace tur::vulkan
 	private:
 		void AddSwapchainColorAttachment();
 
-		void PrepareDescriptor();
+		std::optional<RenderpassVulkan> ConfigureRenderpass();
 
 	private:
 		vk::Device m_Device;

@@ -600,6 +600,9 @@ namespace tur::vulkan
 			case DataFormat::R8_G8_B8_SRGB:
 				return vk::Format::eR8G8B8Srgb;
 
+			case DataFormat::B8_G8_R8_A8_UNORM:
+				return vk::Format::eB8G8R8A8Unorm;
+
 			case DataFormat::R8_G8_B8_A8_UNORM:
 				return vk::Format::eR8G8B8A8Unorm;
 

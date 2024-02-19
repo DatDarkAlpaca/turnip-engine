@@ -6,12 +6,14 @@
 
 namespace tur::platform
 {
-	void SetupVulkan()
+	void SetupVulkan(Window& window)
 	{
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		if (!glfwVulkanSupported())
 			TUR_LOG_CRITICAL("Vulkan is not supported in this machine");
+
+		window.Initialize(window.GetProperties());
 	}
 
 	std::vector<const char*> GetWindowingVulkanExtensions()
