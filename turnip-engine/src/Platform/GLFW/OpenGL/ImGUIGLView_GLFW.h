@@ -1,23 +1,23 @@
 #pragma once
 #include <imgui_impl_glfw.h>	
 #include <imgui_impl_opengl3.h>
-#include <imgui_impl_vulkan.h>
 
 #include "Core/View/View.h"
 #include "Rendering/RenderingSystem.h"
+#include "Rendering/GUI/ImGuiView.h"
 
 namespace tur
 {
-	class ViewImGUI : public View
+	class ImGUIGLView : public ImGuiView
 	{
 	public:
-		ViewImGUI(Window& window)
+		ImGUIGLView(Window& window, const GUIOptions& options)
 		{
-			Initialize(window);
+			Initialize(window, options);
 		}
 
 	private:
-		void Initialize(Window& window)
+		void Initialize(Window& window, const GUIOptions& options)
 		{
 			auto* glfwWindow = std::any_cast<GLFWwindow*>(window.GetHandle());
 
@@ -28,7 +28,7 @@ namespace tur
 			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 			io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-			// TODO: Configure ImGUI settings
+			// TODO: Configure ImGUI settings using GUIOptions
 			ImGui::StyleColorsDark();
 			ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
 

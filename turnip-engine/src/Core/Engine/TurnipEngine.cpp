@@ -17,9 +17,9 @@ namespace tur
 		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 		
 		// Default rendering system:
-		if (g_RenderingSystem.API().api == GraphicsAPI::NONE)
-			g_RenderingSystem.Configure(g_Window, { GraphicsAPI::OPENGL, 3, 3 });
-
+		if (!g_RenderDevice)
+			ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
+	
 		m_Initialized = true;
 	}
 
@@ -45,10 +45,7 @@ namespace tur
 	}
 
 	void TurnipEngine::Initialize()
-	{
-		// ImGUI View:
-		// g_ViewSystem.Add(tur::MakeUnique<ViewImGUI>(g_Window));
-		
+	{	
 		// Engine Startup:
 		OnEngineStartup();
 		g_Window.Show();
@@ -97,8 +94,8 @@ namespace tur
 			view->OnEngineShutdown();
 	}
 
-	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification)
+	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification, RenderInitializer* initializer)
 	{
-		g_RenderingSystem.Configure(g_Window, specification);
+		g_RenderDevice = std::move(RenderDevice::Create(g_Window, specification, initializer));
 	}
 }

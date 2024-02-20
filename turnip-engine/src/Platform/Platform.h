@@ -17,7 +17,4 @@
 	#include "Platform/GLFW/OpenGL/PresentGL.h"
 	#include "Platform/GLFW/OpenGL/SetupOpenGL.h"
 	#include "Platform/GLFW/Vulkan/SetupVulkan.h"
-
-	#include "Platform/GLFW/ImGUI/ImGUI.h"
-	#include "Platform/GLFW/ImGUI/ViewImGUI_GLFW.h"
 #endif

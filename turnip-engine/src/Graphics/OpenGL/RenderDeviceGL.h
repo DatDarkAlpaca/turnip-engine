@@ -5,6 +5,8 @@
 #include "Platform/Platform.h"
 #include "Util/File.h"
 
+#include "GraphicsCommandsGL.h"
+#include "Diagnostics.h"
 #include "Converters.h"
 #include "Renderpass.h"
 #include "Pipeline.h"
@@ -92,9 +94,21 @@ namespace tur::gl
 		}
 
 	public:
+		tur_unique<GraphicsRenderCommands> CreateGraphicsCommands() override
+		{
+			return tur::MakeUnique<gl::GraphicsRenderCommandsGL>(this);
+		}
+
+	public:
 		void Present() override
 		{
 			platform::SwapBuffers(r_Window);
+		}
+
+	public:
+		void DisplayVersion() override
+		{
+			gl::ShowOpenGLVersion();
 		}
 
 	public:

@@ -11,7 +11,7 @@ public:
 	MainView(NON_OWNING TurnipEngine* engine)
 		: r_Engine(engine)
 	{
-
+		graphics = r_Engine->Device()->CreateGraphicsCommands();
 	}
 
 public:
@@ -19,15 +19,16 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
-		auto& graphics = r_Engine->GraphicsContext();
 		auto& device = r_Engine->Device();
 		
 		// Pipeline:
 		{
 			ShaderDescriptor shaderDesc[2];
 			{
-				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
-				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
+				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
+				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
@@ -79,15 +80,12 @@ public:
 			ebo = device->CreateBuffer(bufferDesc);
 		}
 
-		device->FinishSetup();
-
 		// Initialization:
 		graphics->SetClearColor({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 	}
 
 	void OnRender() override
 	{
-		auto& graphics = r_Engine->GraphicsContext();
 		auto& device = r_Engine->Device();
 
 		graphics->Begin();
@@ -97,22 +95,12 @@ public:
 			graphics->SetVertexBuffer(vbo);
 			graphics->SetIndexBuffer(ebo);
 
-			graphics->SetPipeline(pso);
+			graphics->BindPipeline(pso);
 
 			graphics->DrawIndexed(6);
 		}
 		graphics->End();
 
-		// ImGUI:
-		{
-			/*r_Engine->Renderer().BeginFrame();
-
-			ImGui::Begin("Hello");
-			ImGui::End();
-
-			r_Engine->Renderer().EndFrame();*/
-		}
-		
 		device->Present();
 	}
 
@@ -122,6 +110,8 @@ public:
 	}
 
 private:
+	tur_unique<GraphicsRenderCommands> graphics;
+
 	BufferHandle vbo = BufferHandle::INVALID;
 	BufferHandle ebo = BufferHandle::INVALID;
 	PipelineStateHandle pso = PipelineStateHandle::INVALID;
@@ -136,8 +126,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
-		vulkan::DefaultVulkanInitializer initializer { static_cast<vulkan::RenderDeviceVK*>(Device().get()) };
+		ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));
@@ -181,7 +170,7 @@ private:
 	void DisplayRenderInfo()
 	{
 		TUR_LOG_DEBUG("Graphics API Information:");
-		Renderer().DisplayVersion();
+		Device()->DisplayVersion();
 	}
 };
 

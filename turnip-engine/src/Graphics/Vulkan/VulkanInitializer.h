@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.h"
 #include "RenderDeviceVK.h"
+#include "Rendering/RenderInitializer.h"
 
 #include "Builders/InstanceBuilder.h"
 #include "Builders/PhysicalDeviceBuilder.h"
@@ -10,17 +11,11 @@
 
 namespace tur::vulkan
 {
-    class VulkanInitializer
+    class VulkanInitializer : public RenderInitializer
     {
     public:
-        VulkanInitializer(NON_OWNING RenderDeviceVK* device)
-            : device(device) { }
-
         virtual ~VulkanInitializer() = default;
-
-    protected:
-        NON_OWNING RenderDeviceVK* device = nullptr;
-
+        
     protected:
         VulkanInstanceBuilder instanceBuilder;
         PhysicalDeviceSelector physicalDeviceSelector;
@@ -29,24 +24,23 @@ namespace tur::vulkan
         SwapchainFrameBuilder swapchainFrameBuilder;
     };
 
-    class DefaultVulkanInitializer : public VulkanInitializer
+    class DefaultVulkanInitializer final : public VulkanInitializer
     {
     public:
-        DefaultVulkanInitializer(NON_OWNING RenderDeviceVK* device)
-            : VulkanInitializer(device)
+        DefaultVulkanInitializer()
         {
             instanceBuilder
                 .SetAppName("") /* TODO: Set Application Name */
                 .SetEngineName("TurnipEngine")
                 .SetAPIVersion(1, 0, 0);
-
-            Configure();
         }
 
-    private:
-        void Configure()
+    public:
+        void Initialize(NON_OWNING RenderDevice* _device) override
         {
             using namespace vulkan;
+
+            RenderDeviceVK* device = static_cast<RenderDeviceVK*>(_device);
 
             // Instance:
             Instance instanceOutput;
@@ -158,6 +152,9 @@ namespace tur::vulkan
                 // Image & Image Views:
                 swapchainFrameBuilder.Build(logicalDevice, device->swapchain);
             }
+
+            // Framebuffer & Default Renderpass for Swapchain Frames:
+            device->FinishSetup();
         }
     };
 }

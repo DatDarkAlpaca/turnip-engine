@@ -2,11 +2,12 @@
 #include "Common.h"
 
 #include "Rendering/GraphicsCommands.h"
-#include "RenderDeviceVK.h"
 #include "Converters.h"
 
 namespace tur::vulkan
 {
+	class RenderDeviceVK;
+
 	class GraphicsRenderCommandsVK : public GraphicsRenderCommands
 	{
 	public:
@@ -34,7 +35,7 @@ namespace tur::vulkan
 			
 		}
 
-		void SetPipeline(PipelineStateHandle handle) override
+		void BindPipeline(PipelineStateHandle handle) override
 		{
 			
 		}

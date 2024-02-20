@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 
 #include "Graphics/Vulkan/Objects/Objects.h"
+#include "GraphicsCommandsVK.h"
+
 #include "Rendering/RenderDevice.h"
 #include "Platform/Platform.h"
 
@@ -22,7 +24,10 @@ namespace tur::vulkan
 		PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) override;
 
 	public:
-		void FinishSetup() override;
+		tur_unique<GraphicsRenderCommands> CreateGraphicsCommands() override
+		{
+			return tur::MakeUnique<vulkan::GraphicsRenderCommandsVK>(this);
+		}
 
 	public:
 		Barrier Submit(RenderCommands* context) override;
@@ -30,6 +35,9 @@ namespace tur::vulkan
 		void WaitBarrier(const Barrier& barrier);
 
 		void Present() override;
+
+	public:
+		void FinishSetup();
 
 	public:
 		inline vulkan::Shader GetShader(ShaderHandle handle)
@@ -53,8 +61,6 @@ namespace tur::vulkan
 		std::vector<vulkan::RenderpassVulkan> m_Renderpasses;
 		std::vector<vulkan::Shader> m_Shaders;
 		std::vector<vulkan::Pipeline> m_Pipelines;
-
-		RenderpassHandle m_DefaultRenderpassHandle;
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;

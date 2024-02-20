@@ -40,6 +40,8 @@ namespace tur
 		{
 			RenderpassDescriptor descriptor;
 			descriptor.defaultSwapchainAttachment = true;
+			descriptor.pipelineType = PipelineType::GRAPHICS;
+
 			auto attachmentID = descriptor.AddAttachment(RenderpassAttachment{});
 			auto subpassID = descriptor.AddSubpass();
 			descriptor.AddSubpassMapping(subpassID, attachmentID, AttachmentType::COLOR);
@@ -113,6 +115,8 @@ namespace tur
 
 	public:
 		bool defaultSwapchainAttachment = false;
+		PipelineType pipelineType = PipelineType::GRAPHICS;
+
 		std::vector<RenderpassAttachment> attachments;
 		std::vector<std::unordered_set<std::pair<AttachmentType, attachment_id>, attachment_pair_hash>> subpasses;
 	};

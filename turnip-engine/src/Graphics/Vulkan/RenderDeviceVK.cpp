@@ -22,17 +22,13 @@ namespace tur::vulkan
 
 		if (!renderpass.has_value())
 		{
-			TUR_LOG_WARN("Attempted to create an invalid renderpass.");
+			TUR_LOG_WARN("Attempted to create renderpass with invalid arguments.");
 			return RenderpassHandle::INVALID;
 		}
 
 		auto renderpassData = renderpass.value();
 
-		m_Renderpasses.push_back(renderpassData);
-		
-		if (renderpassDescription.defaultSwapchainAttachment)
-			m_DefaultRenderpassHandle = RenderpassHandle(m_Renderpasses.size() - 1);
-		
+		m_Renderpasses.push_back(renderpassData);		
 		return RenderpassHandle(m_Renderpasses.size() - 1);
 	}
 
@@ -67,35 +63,35 @@ namespace tur::vulkan
 
 	PipelineStateHandle RenderDeviceVK::CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor)
 	{
-		vulkan::PipelineBuilder builder(this, pipelineDescriptor);
-
 		// Default Renderpass:
 		vulkan::RenderpassVulkan renderpass;
-
 		if (pipelineDescriptor.renderpass == RenderpassHandle::INVALID)
-		{
-			vulkan::RenderpassBuilder renderpassBuilder(RenderpassDescriptor::CreateDefaultRenderpass());
-			renderpassBuilder.SetArguments(logicalDevice, swapchain);
-			renderpass = renderpassBuilder.Build().value();
-			m_Renderpasses.push_back(renderpass);
-
-			m_DefaultRenderpassHandle = RenderpassHandle(m_Renderpasses.size() - 1);
-		}
+			renderpass = m_Renderpasses[0];
 		else
 			renderpass = m_Renderpasses[(uint32_t)pipelineDescriptor.renderpass];
 
+		vulkan::PipelineBuilder builder(this, pipelineDescriptor);
 		builder.SetArguments(logicalDevice, swapchain, renderpass);
 
 		vulkan::Pipeline pipeline = builder.Build();
-
 		m_Pipelines.push_back(pipeline);
+
 		return PipelineStateHandle(m_Pipelines.size() - 1);
 	}
 
 	void RenderDeviceVK::FinishSetup()
 	{
+		// Default renderpass:
+		vulkan::RenderpassVulkan renderpass;
+
+		vulkan::RenderpassBuilder renderpassBuilder(RenderpassDescriptor::CreateDefaultRenderpass());
+		renderpassBuilder.SetArguments(logicalDevice, swapchain);
+		renderpass = renderpassBuilder.Build().value();
+		m_Renderpasses.push_back(renderpass);
+
+		// Framebuffers:
 		vulkan::FramebufferBuilder frameBuilder;
-		frameBuilder.SetArguments(logicalDevice, m_Renderpasses[(uint32_t)m_DefaultRenderpassHandle]);
+		frameBuilder.SetArguments(logicalDevice, renderpass);
 
 		for (auto& frame : swapchain.frames)
 			frame.framebuffer = frameBuilder.Create(frame.view, swapchain);

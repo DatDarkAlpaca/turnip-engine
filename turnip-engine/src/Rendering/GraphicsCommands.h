@@ -17,7 +17,7 @@ namespace tur
 
 		virtual void Clear() = 0;
 
-		virtual void SetPipeline(PipelineStateHandle handle) = 0;
+		virtual void BindPipeline(PipelineStateHandle handle) = 0;
 
 		virtual void SetVertexBuffer(BufferHandle handle) = 0;
 

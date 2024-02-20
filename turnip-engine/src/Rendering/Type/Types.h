@@ -5,6 +5,8 @@
 #include "DataFormat.h"
 #include "FrontFace.h"
 #include "ImageLayout.h"
+#include "LayoutTypes.h"
+#include "PipelineType.h"
 #include "PolygonMode.h"
 #include "PrimitiveTopology.h"
 #include "Scissor.h"
