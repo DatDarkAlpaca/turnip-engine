@@ -21,10 +21,5 @@ project "imgui"
         "imgui/backends/imgui_impl_vulkan.h",
         "imgui/backends/imgui_impl_vulkan.cpp",
     }
-   
-    defines {
-        "GLFW_STATIC",
-        "GLFW_VULKAN_STATIC",
-    }
 
     conan_setup()

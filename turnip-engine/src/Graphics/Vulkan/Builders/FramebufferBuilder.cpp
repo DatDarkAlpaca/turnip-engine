@@ -25,7 +25,7 @@ namespace tur::vulkan
 		vk::FramebufferCreateInfo framebufferInfo = { };
 		framebufferInfo.flags = vk::FramebufferCreateFlags();
 		framebufferInfo.renderPass = m_Renderpass;
-		framebufferInfo.attachmentCount = attachments.size();
+		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
 		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = swapchain.extent.width;
 		framebufferInfo.height = swapchain.extent.height;

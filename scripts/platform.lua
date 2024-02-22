@@ -4,7 +4,9 @@ function DetectPlatform()
             -- "TUR_WINDOWING_WIN32",
             "TUR_WINDOWING_GLFW",
             "TUR_PLATFORM_WIN32",
-            "VK_USE_PLATFORM_WIN32_KHR"
+            "VK_USE_PLATFORM_WIN32_KHR",
+            "GLFW_STATIC",
+            "GLFW_VULKAN_STATIC"
         }
         files {
             "src/Platform/GLFW/**.cpp",
@@ -22,6 +24,8 @@ function DetectPlatform()
         defines {
             "TUR_WINDOWING_GLFW",
             "TUR_PLATFORM_GLFW",
+            "GLFW_STATIC",
+            "GLFW_VULKAN_STATIC"
         }
         files {
             "src/Platform/GLFW/**.cpp",

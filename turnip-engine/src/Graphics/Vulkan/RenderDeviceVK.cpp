@@ -28,7 +28,7 @@ namespace tur::vulkan
 			return RenderpassHandle::INVALID;
 		}
 
-		auto renderpassData = renderpass.value();
+		auto& renderpassData = renderpass.value();
 
 		m_Renderpasses.push_back(renderpassData);		
 		return RenderpassHandle(m_Renderpasses.size() - 1);

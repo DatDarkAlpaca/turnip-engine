@@ -1,5 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
+
+#include "Common.h"
 #include "QueueOperation.h"
 
 namespace tur::vulkan
@@ -22,6 +24,8 @@ namespace tur::vulkan
 				if ((uint32_t)(supportedOperations & operation))
 					return queue;
 			}
+
+			return nullptr;
 		}
 
 		inline uint32_t GetFamily(QueueOperation operation) const
@@ -31,6 +35,8 @@ namespace tur::vulkan
 				if ((uint32_t)(supportedOperations & operation))
 					return index;
 			}
+
+			return InvalidHandle;
 		}
 
 		inline void Add(vk::Queue queue, QueueOperation operation, uint32_t index)

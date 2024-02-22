@@ -10,18 +10,12 @@ project "turnip-editor"
     pchsource "src/pch.cpp"
 
     links {
-        "turnip-engine",
-        "imgui"
+        "turnip-engine"
     }
 
     files {
         "src/**.cpp",
         "src/**.h"
-    }
-
-    defines {
-        "GLFW_STATIC",
-        "GLFW_VULKAN_STATIC"
     }
     
     includedirs {

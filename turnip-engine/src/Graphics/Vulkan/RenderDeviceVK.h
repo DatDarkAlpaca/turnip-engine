@@ -1,5 +1,6 @@
 #pragma once
 #include <glad/glad.h>
+#include <vk_mem_alloc.h>
 
 #include "Graphics/Vulkan/Objects/Objects.h"
 #include "GraphicsCommandsVK.h"
@@ -64,6 +65,7 @@ namespace tur::vulkan
 		vk::SurfaceKHR surface;
 		vk::PhysicalDevice physicalDevice;
 		vk::Device logicalDevice;
+		VmaAllocator allocator;
 		vulkan::QueueCluster queues;
 		vulkan::Swapchain swapchain;
 		vk::CommandPool commandPool;

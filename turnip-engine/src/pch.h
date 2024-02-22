@@ -1,4 +1,5 @@
 #pragma once
+#undef APIENTRY
 
 #pragma warning(push, 0)
 	#include <unordered_set>
@@ -18,5 +19,5 @@
 	#include <spdlog/spdlog.h>
 
 	#include <entt/entt.hpp>
-	#include <imgui.h>
+
 #pragma warning(pop)

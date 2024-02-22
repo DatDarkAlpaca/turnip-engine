@@ -470,7 +470,7 @@ namespace tur::vulkan
 
 		if (queueIndices.size() > 1)
 		{
-			createInfo.queueFamilyIndexCount = queueIndices.size();
+			createInfo.queueFamilyIndexCount = static_cast<uint32_t>(queueIndices.size());
 			createInfo.pQueueFamilyIndices = queueIndices.data();
 		}
 		else

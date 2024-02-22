@@ -18,8 +18,8 @@ namespace tur::vulkan
 		auto& currentFrame = swapchain.currentFrame;
 
 		// Frame fence:
-		device.waitForFences(1, &frames[currentFrame].inFlightFence, VK_TRUE, UINT64_MAX);
-		device.resetFences(1, &frames[currentFrame].inFlightFence);
+		auto _ = device.waitForFences(1, &frames[currentFrame].inFlightFence, VK_TRUE, UINT64_MAX);
+		_ = device.resetFences(1, &frames[currentFrame].inFlightFence);
 
 		// Fetch current frame information:
 		uint32_t imageIndex = 0;
