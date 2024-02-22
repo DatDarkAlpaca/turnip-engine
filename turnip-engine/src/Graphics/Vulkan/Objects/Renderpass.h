@@ -10,5 +10,7 @@ namespace tur::vulkan
 
 	public:
 		vk::RenderPass renderpass;
+		vk::Extent2D extent;
+		vk::Offset2D offset;
 	};
 }

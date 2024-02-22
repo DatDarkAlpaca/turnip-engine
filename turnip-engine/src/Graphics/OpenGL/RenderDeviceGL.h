@@ -21,13 +21,12 @@ namespace tur::gl
 		RenderDeviceGL(NON_OWNING Window* window)
 			: r_Window(window)
 		{
-
+			CreateSwapchainRenderpass();
 		}
 
 	public:
 		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription)
 		{
-			
 			/* TODO: Implementation required, but not necessary */
 			return RenderpassHandle::INVALID;
 		}
@@ -130,6 +129,21 @@ namespace tur::gl
 		inline gl::Pipeline GetPipeline(PipelineStateHandle handle) const
 		{
 			return m_Pipelines[static_cast<uint32_t>(handle)];
+		}
+
+	public:
+		void CreateSwapchainRenderpass()
+		{
+			gl::Renderpass renderpass;
+
+			RenderpassDescriptor desc = RenderpassDescriptor::CreateDefaultRenderpass();
+			desc.extent = Extent {
+				(uint32_t)r_Window->GetProperties().dimensions.x,
+				(uint32_t)r_Window->GetProperties().dimensions.y,
+			};
+
+			SetupRenderpass(renderpass, desc);
+			m_Renderpasses.push_back(renderpass);
 		}
 
 	private:

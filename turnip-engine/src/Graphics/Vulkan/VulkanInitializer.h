@@ -14,6 +14,13 @@ namespace tur::vulkan
     class VulkanInitializer : public RenderInitializer
     {
     public:
+        VulkanInitializer(const GraphicsSpecification& specification)
+            : specification(specification)
+        {
+
+        }
+
+    public:
         virtual ~VulkanInitializer() = default;
         
     protected:
@@ -22,17 +29,22 @@ namespace tur::vulkan
         LogicalDeviceBuilder logicalDeviceBuilder;
         SwapchainBuilder swapchainBuilder;
         SwapchainFrameBuilder swapchainFrameBuilder;
+
+    protected:
+        GraphicsSpecification specification;
     };
 
     class DefaultVulkanInitializer final : public VulkanInitializer
     {
     public:
-        DefaultVulkanInitializer()
+        DefaultVulkanInitializer(const GraphicsSpecification& specification)
+            : VulkanInitializer(specification)
         {
             instanceBuilder
                 .SetAppName("") /* TODO: Set Application Name */
                 .SetEngineName("TurnipEngine")
-                .SetAPIVersion(1, 0, 0);
+                .SetAPIVersion(specification.major, specification.minor, 
+                               specification.patch, specification.variant);
         }
 
     public:

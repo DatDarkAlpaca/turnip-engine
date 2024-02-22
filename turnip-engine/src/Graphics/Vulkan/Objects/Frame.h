@@ -9,5 +9,8 @@ namespace tur::vulkan
 		vk::ImageView view;
 		vk::Framebuffer framebuffer;
 		vk::CommandBuffer commandBuffer;
+
+		vk::Fence inFlightFence;
+		vk::Semaphore imageAvailableSemaphore, renderFinishedSemaphore;
 	};
 }

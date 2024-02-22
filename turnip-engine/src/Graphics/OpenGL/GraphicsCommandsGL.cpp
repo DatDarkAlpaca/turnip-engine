@@ -15,19 +15,28 @@ namespace tur::gl
 		glBindVertexArray(VAO);
 	}
 
-	void GraphicsRenderCommandsGL::SetRenderpass(RenderpassHandle handle)
+	void GraphicsRenderCommandsGL::BeginRenderpass(RenderpassHandle handle)
 	{
 		auto renderpass = r_RenderDevice->GetRenderpass(handle);
+
+		glViewport(
+			renderpass.offset.x, 
+			renderpass.offset.y,
+			renderpass.extent.width, 
+			renderpass.extent.height
+		);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, renderpass.framebufferID);
 	}
 
-	void GraphicsRenderCommandsGL::SetClearColor(const glm::vec4& color)
+	void GraphicsRenderCommandsGL::EndRenderpass()
 	{
-		glClearColor(color.r, color.g, color.b, color.a);
+		/* Implement */
 	}
 
-	void GraphicsRenderCommandsGL::Clear()
+	void GraphicsRenderCommandsGL::Clear(const glm::vec4& color)
 	{
+		glClearColor(color.r, color.g, color.b, color.a);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 

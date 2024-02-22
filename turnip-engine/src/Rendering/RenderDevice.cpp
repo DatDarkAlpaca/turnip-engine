@@ -34,7 +34,7 @@ namespace tur
                     break;
                 }
 
-                vulkan::DefaultVulkanInitializer vulkanInitializer;
+                vulkan::DefaultVulkanInitializer vulkanInitializer(specification);
                 vulkanInitializer.Initialize(renderDevice.get());
             } break;
 

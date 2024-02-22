@@ -13,6 +13,6 @@ namespace tur
 	struct GraphicsSpecification
 	{
 		GraphicsAPI api;
-		uint16_t major = 0, minor = 0, patch = 0, detail = 0;
+		uint16_t major = 0, minor = 0, patch = 0, variant = 0;
 	};
 }

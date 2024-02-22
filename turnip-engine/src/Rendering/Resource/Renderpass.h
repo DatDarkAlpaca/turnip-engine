@@ -117,9 +117,14 @@ namespace tur
 		bool defaultSwapchainAttachment = false;
 		PipelineType pipelineType = PipelineType::GRAPHICS;
 
+	public:
 		std::vector<RenderpassAttachment> attachments;
 		std::vector<std::unordered_set<std::pair<AttachmentType, attachment_id>, attachment_pair_hash>> subpasses;
+
+	public:
+		Offset offset = Offset{ 0,0 };
+		Extent extent = { 0, 0 };
 	};
 
-	enum class RenderpassHandle : uint32_t { INVALID = InvalidHandle };
+	enum class RenderpassHandle : uint32_t { SCREEN_PASS = 0, INVALID = InvalidHandle };
 }

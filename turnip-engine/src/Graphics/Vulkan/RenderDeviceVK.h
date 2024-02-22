@@ -45,6 +45,16 @@ namespace tur::vulkan
 			return m_Shaders[static_cast<uint32_t>(handle)];
 		}
 
+		inline vulkan::Pipeline GetPipeline(PipelineStateHandle handle)
+		{
+			return m_Pipelines[static_cast<uint32_t>(handle)];
+		}
+
+		inline vulkan::RenderpassVulkan GetRenderpass(RenderpassHandle handle)
+		{
+			return m_Renderpasses[static_cast<uint32_t>(handle)];
+		}
+
 	public:
 		inline Window* GetWindow() const { return r_Window; }
 
@@ -56,6 +66,7 @@ namespace tur::vulkan
 		vk::Device logicalDevice;
 		vulkan::QueueCluster queues;
 		vulkan::Swapchain swapchain;
+		vk::CommandPool commandPool;
 
 	private:
 		std::vector<vulkan::RenderpassVulkan> m_Renderpasses;

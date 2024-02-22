@@ -25,10 +25,11 @@ public:
 		{
 			ShaderDescriptor shaderDesc[2];
 			{
-				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
-				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
-				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
-				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
+				
+				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
+				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
@@ -79,9 +80,6 @@ public:
 
 			ebo = device->CreateBuffer(bufferDesc);
 		}
-
-		// Initialization:
-		graphics->SetClearColor({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 	}
 
 	void OnRender() override
@@ -90,7 +88,9 @@ public:
 
 		graphics->Begin();
 		{
-			graphics->Clear();
+			graphics->BeginRenderpass();
+
+			graphics->Clear({ 154.f / 255.f, 230.f / 255.f, 243.f / 255.f, 1.f });
 
 			graphics->SetVertexBuffer(vbo);
 			graphics->SetIndexBuffer(ebo);
@@ -98,9 +98,12 @@ public:
 			graphics->BindPipeline(pso);
 
 			graphics->DrawIndexed(6);
+
+			graphics->EndRenderpass();
 		}
 		graphics->End();
 
+		device->Submit(graphics.get());
 		device->Present();
 	}
 
@@ -126,7 +129,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
+		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

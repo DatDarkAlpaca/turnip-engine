@@ -18,11 +18,11 @@ namespace tur::gl
 	public:
 		void Begin() override;
 
-		void SetRenderpass(RenderpassHandle handle) override;
+		void BeginRenderpass(RenderpassHandle handle) override;
+		
+		void EndRenderpass() override;
 
-		void SetClearColor(const glm::vec4& color) override;
-
-		void Clear() override;
+		void Clear(const glm::vec4& color) override;
 
 		void BindPipeline(PipelineStateHandle handle) override;
 

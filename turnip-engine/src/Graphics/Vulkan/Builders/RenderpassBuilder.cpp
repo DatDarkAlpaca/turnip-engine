@@ -146,6 +146,9 @@ namespace tur::vulkan
 		renderpassInfo.pSubpasses = m_Subpasses.data();
 
 		RenderpassVulkan renderpass;
+		renderpass.offset = vk::Offset2D(m_Descriptor.offset.x, m_Descriptor.offset.y);
+		renderpass.extent = vk::Extent2D(m_Descriptor.extent.width, m_Descriptor.extent.height);
+		
 		try
 		{
 			renderpass.renderpass = m_Device.createRenderPass(renderpassInfo);

@@ -5,6 +5,8 @@
 #include "Builders/FramebufferBuilder.h"
 #include "Builders/RenderpassBuilder.h"
 #include "Builders/PipelineBuilder.h"
+#include "Builders/SyncBuilder.h"
+#include "Builders/CommandBuilder.h"
 
 namespace tur::vulkan
 {
@@ -81,24 +83,86 @@ namespace tur::vulkan
 
 	void RenderDeviceVK::FinishSetup()
 	{
-		// Default renderpass:
-		vulkan::RenderpassVulkan renderpass;
+		// Clear renderpasses for safety:
+		m_Renderpasses.clear();
+		
+		vulkan::RenderpassVulkan vulkanRenderpass;
 
-		vulkan::RenderpassBuilder renderpassBuilder(RenderpassDescriptor::CreateDefaultRenderpass());
-		renderpassBuilder.SetArguments(logicalDevice, swapchain);
-		renderpass = renderpassBuilder.Build().value();
-		m_Renderpasses.push_back(renderpass);
+		// Swapchain renderpass:
+		{
+			RenderpassDescriptor desc = RenderpassDescriptor::CreateDefaultRenderpass();
+			desc.extent = Extent{ swapchain.extent.width, swapchain.extent.height };
 
-		// Framebuffers:
+			vulkan::RenderpassBuilder renderpassBuilder(desc);
+			renderpassBuilder.SetArguments(logicalDevice, swapchain);
+			vulkanRenderpass = renderpassBuilder.Build().value();
+			m_Renderpasses.push_back(vulkanRenderpass);
+			swapchain.renderpass = vulkanRenderpass;
+		}
+		
+		// Commands:
+		CommandPoolBuilder poolBuilder;
+		poolBuilder.SetArguments(logicalDevice, queues);
+		commandPool = poolBuilder.Build().value(); // TODO: check value
+		
+		vulkan::CommandBufferBuilder commandBuilder;
+		commandBuilder.SetArguments(logicalDevice, commandPool);
+
+		// Frames:
 		vulkan::FramebufferBuilder frameBuilder;
-		frameBuilder.SetArguments(logicalDevice, renderpass);
+		frameBuilder.SetArguments(logicalDevice, swapchain.renderpass);
 
 		for (auto& frame : swapchain.frames)
+		{
 			frame.framebuffer = frameBuilder.Create(frame.view, swapchain);
+			frame.commandBuffer = commandBuilder.Build().value(); // TODO: check value
+
+			SemaphoreBuilder semaphoreBuilder;
+			FenceBuilder fenceBuilder;
+
+			// Sync objects:
+			frame.inFlightFence = fenceBuilder.Build(logicalDevice);
+			frame.renderFinishedSemaphore = semaphoreBuilder.Build(logicalDevice);
+			frame.imageAvailableSemaphore = semaphoreBuilder.Build(logicalDevice);
+		}
 	}
 
 	Barrier RenderDeviceVK::Submit(RenderCommands* context)
 	{
+		// TODO: Accept other render command types.
+
+		auto& currentFrame = swapchain.frames[swapchain.currentFrame];
+		auto& graphicsQueue = queues.Get(vulkan::QueueOperation::GRAPHICS);
+
+		vk::SubmitInfo submitInfo = { };
+
+		vk::Semaphore waitSemaphores[] = { currentFrame.imageAvailableSemaphore };
+		vk::PipelineStageFlags waitStages[] = { 
+			vk::PipelineStageFlagBits::eColorAttachmentOutput 
+		};
+
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = waitSemaphores;
+		submitInfo.pWaitDstStageMask = waitStages;
+
+		// Command Buffers:
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &currentFrame.commandBuffer;
+
+		// Signal Semaphores:
+		vk::Semaphore signalSemaphores[] = { currentFrame.renderFinishedSemaphore };
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = signalSemaphores;
+
+		try
+		{
+			graphicsQueue.submit(submitInfo, currentFrame.inFlightFence);
+		}
+		catch (vk::SystemError err)
+		{
+			TUR_LOG_ERROR("Failed to submit draw command buffer: {}", err.what());
+		}
+
 		return Barrier();
 	}
 
@@ -108,5 +172,22 @@ namespace tur::vulkan
 
 	void RenderDeviceVK::Present()
 	{
+		auto& currentFrame = swapchain.frames[swapchain.currentFrame];
+
+		vk::Semaphore signalSemaphores[] = { currentFrame.renderFinishedSemaphore };
+
+		vk::PresentInfoKHR presentInfo = { };
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = signalSemaphores;
+
+		vk::SwapchainKHR swapChains[] = { swapchain.swapchain };
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = swapChains;
+
+		presentInfo.pImageIndices = &swapchain.currentFrame;
+
+		queues.Get(vulkan::QueueOperation::PRESENT).presentKHR(presentInfo);
+		++swapchain.currentFrame;
+		swapchain.currentFrame %= swapchain.frames.size();
 	}
 }

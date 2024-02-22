@@ -11,11 +11,11 @@ namespace tur
 		virtual ~GraphicsRenderCommands() = default;
 
 	public:
-		virtual void SetRenderpass(RenderpassHandle handle) = 0;
+		virtual void BeginRenderpass(RenderpassHandle handle = RenderpassHandle::SCREEN_PASS) = 0;
 
-		virtual void SetClearColor(const glm::vec4& color) = 0;
+		virtual void EndRenderpass() = 0;
 
-		virtual void Clear() = 0;
+		virtual void Clear(const glm::vec4& color) = 0;
 
 		virtual void BindPipeline(PipelineStateHandle handle) = 0;
 
