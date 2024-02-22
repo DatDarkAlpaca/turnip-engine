@@ -15,7 +15,9 @@ namespace tur
 
 		virtual void EndRenderpass() = 0;
 
-		virtual void Clear(const glm::vec4& color) = 0;
+		virtual void SetClearColor(const glm::vec4& color) = 0;
+
+		virtual void Clear(ClearFlags flags) = 0;
 
 		virtual void BindPipeline(PipelineStateHandle handle) = 0;
 

@@ -78,9 +78,14 @@ namespace tur::vulkan
 		m_CurrentBuffer.endRenderPass();
 	}
 
-	void GraphicsRenderCommandsVK::Clear(const glm::vec4& color)
+	void GraphicsRenderCommandsVK::SetClearColor(const glm::vec4& color)
 	{
 		m_ClearColor = color;
+	}
+
+	void GraphicsRenderCommandsVK::Clear(ClearFlags flags)
+	{
+		/* TODO: Implement explicly */
 	}
 
 	void GraphicsRenderCommandsVK::BindPipeline(PipelineStateHandle handle)

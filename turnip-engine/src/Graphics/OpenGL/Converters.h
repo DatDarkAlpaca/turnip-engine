@@ -535,6 +535,37 @@ namespace tur::gl
 		}
 	}
 
+	// Flags:
+	inline constexpr uint32_t GetClearFlag(ClearFlags flags)
+	{
+		switch (flags)
+		{
+			case ClearFlags::COLOR:
+				return GL_COLOR_BUFFER_BIT;
+
+			case ClearFlags::DEPTH:
+				return GL_DEPTH_BUFFER_BIT;
+
+			case ClearFlags::STENCIL:
+				return GL_STENCIL_BUFFER_BIT;
+
+			case ClearFlags::COLOR_DEPTH:
+				return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+
+			case ClearFlags::DEPTH_STENCIL:
+				return GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+
+			case ClearFlags::ALL:
+				return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Clear Flag. Using default: GL_COLOR_BUFFER_BIT");
+				return GL_COLOR_BUFFER_BIT;
+			} break;
+		}
+	}
+
 	// Buffer:
 	inline constexpr uint32_t GetBufferBindingFlag(BindingFlag bindingFlag)
 	{

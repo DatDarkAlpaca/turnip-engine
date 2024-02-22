@@ -34,10 +34,14 @@ namespace tur::gl
 		/* Implement */
 	}
 
-	void GraphicsRenderCommandsGL::Clear(const glm::vec4& color)
+	void GraphicsRenderCommandsGL::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
-		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void GraphicsRenderCommandsGL::Clear(ClearFlags flags)
+	{
+		glClear(gl::GetClearFlag(flags));
 	}
 
 	void GraphicsRenderCommandsGL::BindPipeline(PipelineStateHandle handle)

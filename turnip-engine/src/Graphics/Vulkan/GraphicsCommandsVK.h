@@ -20,7 +20,9 @@ namespace tur::vulkan
 
 		void EndRenderpass() override;
 		
-		void Clear(const glm::vec4& color) override;
+		void SetClearColor(const glm::vec4& color) override;
+
+		void Clear(ClearFlags flags) override;
 
 		void BindPipeline(PipelineStateHandle handle) override;
 
