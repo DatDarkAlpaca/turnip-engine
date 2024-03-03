@@ -70,12 +70,12 @@ public:
 public:
 	auto operator[] (T position)
 	{
-		return m_Bitset[Bit(position)];
+		return m_Bitset.test(Bit(position));
 	}
 
 	const auto operator[] (T position) const
 	{
-		return m_Bitset[Bit(position)];
+		return m_Bitset.test(Bit(position));
 	}
 
 	auto operator[] (uint64_t position)
@@ -109,7 +109,7 @@ private:
 
 	inline uint64_t Bit(T value) const
 	{
-		return static_cast<uint64_t>(value) >> 1;
+		return static_cast<uint64_t>(value);
 	}
 
 private:

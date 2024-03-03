@@ -78,7 +78,7 @@ namespace tur::gl
 				(void*)offset
 			);
 
-			offset += formatInfo.componentSize;
+			offset += formatInfo.componentSize * formatInfo.componentAmount;
 		}
 
 		// Rasterizer:

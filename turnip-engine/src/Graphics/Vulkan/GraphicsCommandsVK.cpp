@@ -96,12 +96,20 @@ namespace tur::vulkan
 
 	void GraphicsRenderCommandsVK::SetVertexBuffer(BufferHandle handle)
 	{
-		/* TODO: IMPLEMENT */
+		// TODO: make it flexible.
+		auto buffer = r_Device->GetBuffer(handle);
+
+		std::vector<vk::Buffer> buffers = { buffer };
+		float offsets = { 0 };
+
+		m_CurrentBuffer.bindVertexBuffers(0, buffers, offsets);
 	}
 
 	void GraphicsRenderCommandsVK::SetIndexBuffer(BufferHandle handle)
 	{
-		/* TODO: IMPLEMENT */
+		// TODO: make it flexible.
+		auto buffer = r_Device->GetBuffer(handle);
+		m_CurrentBuffer.bindIndexBuffer(buffer, 0, vk::IndexType::eUint16);
 	}
 
 	void GraphicsRenderCommandsVK::Draw(uint32_t first, uint32_t count)
@@ -111,7 +119,8 @@ namespace tur::vulkan
 
 	void GraphicsRenderCommandsVK::DrawIndexed(uint32_t count)
 	{
-		/* TODO: IMPLEMENT */
+		// TODO: make it flexible.
+		m_CurrentBuffer.drawIndexed(count, 1, 0, 0, 0);
 	}
 
 	void GraphicsRenderCommandsVK::End()

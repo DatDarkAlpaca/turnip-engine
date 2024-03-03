@@ -17,7 +17,7 @@ namespace tur::vulkan
 
 		VmaAllocationCreateInfo vmaAllocCreateInfo = {};
 		vmaAllocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
-		vmaAllocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		vmaAllocCreateInfo.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
 
 		Buffer buffer;
 		VkResult resul = vmaCreateBuffer(

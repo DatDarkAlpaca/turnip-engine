@@ -991,41 +991,24 @@ namespace tur::gl
 	}
 
 	// Buffer:
-	inline uint32_t GetBufferUsageFlags(const State<UsageFlag>& usageFlags)
+	inline uint32_t GetBufferUsageFlags(const State<UsageFlag>& flags)
 	{
 		uint32_t results = 0;
 
-		for (uint64_t i = 0; i < usageFlags.Count(); ++i)
-		{
-			switch (usageFlags.TypeAt(i))
-			{
-				case UsageFlag::ARRAY_BUFFER:
-					results |= GL_ARRAY_BUFFER;
-					break;
+		if (flags[UsageFlag::ARRAY_BUFFER])
+			results |= GL_ARRAY_BUFFER;
 
-				case UsageFlag::INDEX_BUFFER:
-					results |= GL_ELEMENT_ARRAY_BUFFER;
-					break;
+		if (flags[UsageFlag::INDEX_BUFFER])
+			results |= GL_ELEMENT_ARRAY_BUFFER;
 
-				case UsageFlag::UNIFORM_BUFFER:
-					results |= GL_UNIFORM_BUFFER;
-					break;
+		if (flags[UsageFlag::UNIFORM_BUFFER])
+			results |= GL_UNIFORM_BUFFER;
 
-				case UsageFlag::TRANSFER_DST:
-				{
-					TUR_LOG_WARN("Usage of TRANSFER_DST is not supported by OpenGL. Ignoring value.");
-					results |= GL_NONE;
-					break;
-				}
+		if (flags[UsageFlag::TRANSFER_DST])
+			TUR_LOG_WARN("Usage of TRANSFER_DST is not supported by OpenGL. Ignoring value.");
 
-				case UsageFlag::TRANSFER_SRC:
-				{
-					TUR_LOG_WARN("Usage of TRANSFER_DST is not supported by OpenGL. Ignoring value.");
-					results |= GL_NONE;
-					break;
-				}
-			}
-		}
+		if (flags[UsageFlag::TRANSFER_SRC])
+			TUR_LOG_WARN("Usage of TRANSFER_SRC is not supported by OpenGL. Ignoring value.");
 
 		return results;
 	}

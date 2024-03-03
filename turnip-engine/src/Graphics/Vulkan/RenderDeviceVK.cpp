@@ -7,6 +7,7 @@
 #include "Builders/PipelineBuilder.h"
 #include "Builders/SyncBuilder.h"
 #include "Builders/CommandBuilder.h"
+#include "Builders/BufferBuilder.h"
 
 namespace tur::vulkan
 {
@@ -36,7 +37,11 @@ namespace tur::vulkan
 
 	BufferHandle RenderDeviceVK::CreateBuffer(const BufferDescriptor& bufferDescription)
 	{
-		return BufferHandle::INVALID;
+		vulkan::BufferBuilder builder;
+		vulkan::Buffer buffer = builder.Build(allocator, bufferDescription);
+
+		m_Buffers.push_back(buffer);
+		return BufferHandle(m_Buffers.size() - 1);
 	}
 
 	ShaderHandle RenderDeviceVK::CreateShader(const ShaderDescriptor& shaderDescriptor)

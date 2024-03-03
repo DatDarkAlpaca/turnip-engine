@@ -991,31 +991,20 @@ namespace tur::vulkan
 	{
 		vk::BufferUsageFlags results;
 
-		for (uint64_t i = 0; i < flags.Bitset().count(); ++i)
-		{
-			switch (flags.TypeAt(i))
-			{
-				case UsageFlag::ARRAY_BUFFER:
-					results |= vk::BufferUsageFlagBits::eVertexBuffer;
-					break;
+		if (flags[UsageFlag::ARRAY_BUFFER])
+			results |= vk::BufferUsageFlagBits::eVertexBuffer;
 
-				case UsageFlag::INDEX_BUFFER:
-					results |= vk::BufferUsageFlagBits::eIndexBuffer;
-					break;
+		if (flags[UsageFlag::INDEX_BUFFER])
+			results |= vk::BufferUsageFlagBits::eIndexBuffer;
 
-				case UsageFlag::UNIFORM_BUFFER:
-					results |= vk::BufferUsageFlagBits::eUniformBuffer;
-					break;
+		if (flags[UsageFlag::UNIFORM_BUFFER])
+			results |= vk::BufferUsageFlagBits::eUniformBuffer;
 
-				case UsageFlag::TRANSFER_DST:
-					results |= vk::BufferUsageFlagBits::eTransferDst;
-					break;
+		if (flags[UsageFlag::TRANSFER_DST])
+			results |= vk::BufferUsageFlagBits::eTransferDst;
 
-				case UsageFlag::TRANSFER_SRC:
-					results |= vk::BufferUsageFlagBits::eTransferSrc;
-					break;
-			}
-		}
+		if (flags[UsageFlag::TRANSFER_SRC])
+			results |= vk::BufferUsageFlagBits::eTransferSrc;
 		
 		return results;
 	}

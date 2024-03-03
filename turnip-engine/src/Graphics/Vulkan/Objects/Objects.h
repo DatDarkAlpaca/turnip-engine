@@ -1,4 +1,5 @@
 #pragma once
+#include "Buffer.h"
 #include "Frame.h"
 #include "Instance.h"
 #include "LogicalDevice.h"

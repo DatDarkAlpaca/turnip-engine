@@ -54,6 +54,11 @@ namespace tur::vulkan
 			return m_Pipelines[static_cast<uint32_t>(handle)];
 		}
 
+		inline vulkan::Buffer GetBuffer(BufferHandle handle)
+		{
+			return m_Buffers[static_cast<uint32_t>(handle)];
+		}
+
 		inline vulkan::RenderpassVulkan GetRenderpass(RenderpassHandle handle)
 		{
 			return m_Renderpasses[static_cast<uint32_t>(handle)];
@@ -77,6 +82,7 @@ namespace tur::vulkan
 		std::vector<vulkan::RenderpassVulkan> m_Renderpasses;
 		std::vector<vulkan::Shader> m_Shaders;
 		std::vector<vulkan::Pipeline> m_Pipelines;
+		std::vector<vulkan::Buffer> m_Buffers;
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;
