@@ -24,10 +24,9 @@ namespace tur::vulkan
 			vertexInputInfo.flags = vk::PipelineVertexInputStateCreateFlags();
 
 			// TODO: input bindings, input rate, instance divisor
-			// TODO: use vertex format stride
 			{
 				bindingDescription.binding = 0;
-				bindingDescription.stride = descriptor.vertexFormat.attributes[0].stride;
+				bindingDescription.stride = descriptor.vertexFormat.stride;
 				bindings.push_back(bindingDescription);
 			}
 

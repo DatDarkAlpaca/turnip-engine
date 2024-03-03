@@ -56,29 +56,41 @@ namespace tur::gl
 		m_PrivitiveTopology = pipeline.primitiveTopology;
 
 		// Input Layout:
-		uint64_t stride = 0;
-		for (const auto& attribute : pipeline.vertexFormat.attributes)
+		uint64_t stride = pipeline.vertexFormat.stride;
 		{
-			auto formatInfo = gl::GetFormat(attribute.layoutFormat);
-			stride += formatInfo.componentSize * formatInfo.componentAmount;
+			if (pipeline.vertexFormat.stride == VertexFormat::Auto)
+			{
+				for (const auto& attribute : pipeline.vertexFormat.attributes)
+				{
+					auto formatInfo = gl::GetFormat(attribute.layoutFormat);
+					stride += formatInfo.componentSize * formatInfo.componentAmount;
+				}
+			}
 		}
-
+		
 		uint64_t offset = 0;
-		for (const auto& attribute : pipeline.vertexFormat.attributes)
 		{
-			auto formatInfo = gl::GetFormat(attribute.layoutFormat);
+			for (const auto& attribute : pipeline.vertexFormat.attributes)
+			{
+				auto formatInfo = gl::GetFormat(attribute.layoutFormat);
 
-			glEnableVertexAttribArray(attribute.location);
-			glVertexAttribPointer(
-				attribute.location,
-				formatInfo.componentAmount,
-				gl::GetAttributeFormat(attribute.layoutFormat),
-				false,
-				(int)stride,
-				(void*)offset
-			);
+				glEnableVertexAttribArray(attribute.location);
 
-			offset += formatInfo.componentSize * formatInfo.componentAmount;
+				if (attribute.offset != VertexAttribute::Auto)
+					offset = attribute.offset;
+
+				glVertexAttribPointer(
+					attribute.location,
+					formatInfo.componentAmount,
+					gl::GetAttributeFormat(attribute.layoutFormat),
+					false,
+					(int)stride,
+					(void*)offset
+				);
+
+				if (attribute.offset == VertexAttribute::Auto)
+					offset += formatInfo.componentSize * formatInfo.componentAmount;
+			}
 		}
 
 		// Rasterizer:
@@ -91,9 +103,14 @@ namespace tur::gl
 
 			if (pipeline.cullMode != CullMode::NONE)
 			{
-				glEnable(GL_CULL_FACE);
-				glCullFace(cullFace);
-				glFrontFace(frontFace);
+				glDisable(GL_CULL_FACE);
+
+				if (cullFace != GL_NONE)
+				{
+					glEnable(GL_CULL_FACE);
+					glCullFace(cullFace);
+					glFrontFace(frontFace);
+				}
 			}
 		}
 

@@ -5,10 +5,10 @@ namespace tur
 {
 	enum class CullMode : uint32_t
 	{
-		NONE				= 0,
-		FRONT				= 1 << 0,
-		BACK				= 1 << 1,
-		FRONT_AND_BACK		= 1 << 2
+		NONE				= 1 << 0,
+		FRONT				= 1 << 1,
+		BACK				= 1 << 2,
+		FRONT_AND_BACK		= 1 << 3
 	};
 
 	inline uint32_t operator& (CullMode lhs, CullMode rhs)

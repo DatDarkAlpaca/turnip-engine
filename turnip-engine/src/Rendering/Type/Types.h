@@ -4,7 +4,7 @@
 #include "CullMode.h"
 #include "DataFormat.h"
 #include "Extent.h"
-#include "Flags.h"
+#include "ClearFlags.h"
 #include "FrontFace.h"
 #include "ImageLayout.h"
 #include "Offset.h"

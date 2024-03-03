@@ -12,20 +12,20 @@ namespace tur::gl
 	{
 		switch (polygonMode)
 		{
-		case PolygonMode::POINT:
-			return GL_POINT;
+			case PolygonMode::POINT:
+				return GL_POINT;
 
-		case PolygonMode::LINE:
-			return GL_LINE;
+			case PolygonMode::LINE:
+				return GL_LINE;
 
-		case PolygonMode::FILL:
-			return GL_FILL;
+			case PolygonMode::FILL:
+				return GL_FILL;
 
-		default:
-		{
-			TUR_LOG_ERROR("Invalid Polygon Mode. Using default: FILL");
-			return GL_FILL;
-		} break;
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Polygon Mode. Using default: FILL");
+				return GL_FILL;
+			} break;
 		}
 
 		return 0;
@@ -36,20 +36,23 @@ namespace tur::gl
 	{
 		switch (cullMode)
 		{
-		case CullMode::FRONT:
-			return GL_FRONT;
+			case CullMode::NONE:
+				return GL_NONE;
 
-		case CullMode::BACK:
-			return GL_BACK;
+			case CullMode::FRONT:
+				return GL_FRONT;
 
-		case CullMode::FRONT_AND_BACK:
-			return GL_FRONT_AND_BACK;
+			case CullMode::BACK:
+				return GL_BACK;
 
-		default:
-		{
-			TUR_LOG_ERROR("Invalid Polygon Mode. Using default: FRONT");
-			return GL_BACK;
-		}
+			case CullMode::FRONT_AND_BACK:
+				return GL_FRONT_AND_BACK;
+
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Cull Mode. Using default: FRONT");
+				return GL_BACK;
+			}
 		}
 
 		return 0;
@@ -1005,11 +1008,9 @@ namespace tur::gl
 		if (flags[UsageFlag::UNIFORM_BUFFER])
 			results |= GL_UNIFORM_BUFFER;
 
-		if (flags[UsageFlag::TRANSFER_DST])
-			TUR_LOG_WARN("Usage of TRANSFER_DST is not supported by OpenGL. Ignoring value.");
+		if (flags[UsageFlag::TRANSFER_DST]) { }
 
-		if (flags[UsageFlag::TRANSFER_SRC])
-			TUR_LOG_WARN("Usage of TRANSFER_SRC is not supported by OpenGL. Ignoring value.");
+		if (flags[UsageFlag::TRANSFER_SRC]) { }
 
 		return results;
 	}

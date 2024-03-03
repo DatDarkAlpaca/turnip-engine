@@ -65,22 +65,25 @@ public:
 				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
 				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
 
-				//shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
-				//shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
+				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
+				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
+
+			VertexFormat vertexFormat;
+			vertexFormat.stride = 5 * sizeof(float);
+			vertexFormat.Add(VertexAttribute{ 0, Format::R32G32B32_SFLOAT, 0 * sizeof(float) });
+			vertexFormat.Add(VertexAttribute{ 1, Format::R32G32_SFLOAT   , 3 * sizeof(float) });
 
 			PipelineStateDescriptor pipelineDesc;
 			{
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
 				pipelineDesc.frontFace = FrontFace::CLOCKWISE;
-				pipelineDesc.cullMode = CullMode::NONE;
+				pipelineDesc.cullMode = CullMode::FRONT;
 				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
-
-				pipelineDesc.vertexFormat.Add(VertexAttribute{ 0, Format::R32G32B32_SFLOAT, 5 * sizeof(float), 0 });
-				pipelineDesc.vertexFormat.Add(VertexAttribute{ 1, Format::R32G32_SFLOAT   , 5 * sizeof(float), 3 * sizeof(float)});
+				pipelineDesc.vertexFormat = vertexFormat;
 			}
 			pso = device->CreatePipeline(pipelineDesc);
 		}
