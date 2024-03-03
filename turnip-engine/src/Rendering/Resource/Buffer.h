@@ -6,11 +6,11 @@ namespace tur
 {
 	enum class UsageFlag : uint32_t
 	{
-		ARRAY_BUFFER			= 0,
-		INDEX_BUFFER			= 1,
-		UNIFORM_BUFFER			= 2,
-		TRANSFER_DST			= 3,
-		TRANSFER_SRC			= 4,
+		VERTEX_BUFFER			= 1 << 0,
+		INDEX_BUFFER			= 1 << 1,
+		UNIFORM_BUFFER			= 1 << 2,
+		TRANSFER_DST			= 1 << 3,
+		TRANSFER_SRC			= 1 << 4,
 
 		MAX_ITEMS				= 5
 	};

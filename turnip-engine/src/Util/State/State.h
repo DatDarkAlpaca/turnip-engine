@@ -47,22 +47,30 @@ public:
 	}
 
 public:
-	State& Set(T position, bool value = true)
+	State& Set(T states, bool value = true)
 	{
-		m_Bitset.set(Bit(position), value);
+		auto number = Numeric(states);
+
+		for (uint64_t i = 0; i < Count(); ++i)
+		{
+			auto bitValue = ((1 << i) & number);
+			if (bitValue)
+				m_Bitset.set(BitIndex(bitValue), value);
+		}
+
 		return *this;
 	}
-	
-	T TypeAt(uint64_t position) const
+
+	T TypeAt(uint64_t states) const
 	{
-		auto value = m_Bitset[position];
+		auto value = m_Bitset[states];
 		if (value == 0)
 			return T{ 0 };
 
-		return static_cast<T>(1 << value * position);
+		return static_cast<T>(1 << value * states);
 	}
 
-	uint64_t Count() const 
+	uint64_t Count() const
 	{
 		return static_cast<uint64_t>(StateTraits<T>::max);
 	}
@@ -70,19 +78,19 @@ public:
 public:
 	auto operator[] (T position)
 	{
-		return m_Bitset.test(Bit(position));
+		return m_Bitset.test(BitIndex(position));
 	}
 
 	const auto operator[] (T position) const
 	{
-		return m_Bitset.test(Bit(position));
+		return m_Bitset.test(BitIndex(position));
 	}
 
 	auto operator[] (uint64_t position)
 	{
 		return m_Bitset[position];
 	}
-	
+
 	const auto operator[] (uint64_t position) const
 	{
 		return m_Bitset[position];
@@ -107,9 +115,29 @@ private:
 		return static_cast<StateType>(value);
 	}
 
-	inline uint64_t Bit(T value) const
+	inline uint64_t Numeric(T value) const
 	{
 		return static_cast<uint64_t>(value);
+	}
+
+	inline uint64_t BitIndex(T value) const
+	{
+		uint64_t number = static_cast<uint64_t>(value);
+		uint64_t index = 0;
+
+		while (number >>= 1)
+			++index;
+
+		return index;
+	}
+
+	inline uint64_t BitIndex(uint64_t value) const
+	{
+		uint64_t index = 0;
+		while (value >>= 1)
+			++index;
+
+		return index;
 	}
 
 private:

@@ -191,7 +191,8 @@ namespace tur::vulkan
 
 		presentInfo.pImageIndices = &swapchain.currentFrame;
 
-		queues.Get(vulkan::QueueOperation::PRESENT).presentKHR(presentInfo);
+		// TODO: error handling
+		vk::Result _ = queues.Get(vulkan::QueueOperation::PRESENT).presentKHR(presentInfo);
 		++swapchain.currentFrame;
 		swapchain.currentFrame %= swapchain.frames.size();
 	}

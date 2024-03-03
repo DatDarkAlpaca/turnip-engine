@@ -32,7 +32,11 @@ public:
 
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.usageFlags = UsageFlag::ARRAY_BUFFER;
+				auto a = UsageFlag::VERTEX_BUFFER;
+				auto b = UsageFlag::TRANSFER_DST;
+				auto c = a | b;
+
+				bufferDesc.usageFlags = UsageFlag::VERTEX_BUFFER | UsageFlag::TRANSFER_DST;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
@@ -46,7 +50,7 @@ public:
 
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.usageFlags = UsageFlag::INDEX_BUFFER;
+				bufferDesc.usageFlags = UsageFlag::INDEX_BUFFER | UsageFlag::TRANSFER_DST;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
@@ -72,10 +76,11 @@ public:
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
 				pipelineDesc.frontFace = FrontFace::CLOCKWISE;
+				pipelineDesc.cullMode = CullMode::NONE;
 				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
 
 				pipelineDesc.vertexFormat.Add(VertexAttribute{ 0, Format::R32G32B32_SFLOAT, 5 * sizeof(float), 0 });
-				pipelineDesc.vertexFormat.Add(VertexAttribute{ 1, Format::R32G32_SFLOAT   , 5 * sizeof(float), 3 });
+				pipelineDesc.vertexFormat.Add(VertexAttribute{ 1, Format::R32G32_SFLOAT   , 5 * sizeof(float), 3 * sizeof(float)});
 			}
 			pso = device->CreatePipeline(pipelineDesc);
 		}
@@ -129,7 +134,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
+		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 1 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

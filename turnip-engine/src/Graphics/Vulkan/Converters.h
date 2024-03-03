@@ -81,6 +81,9 @@ namespace tur::vulkan
 	{
 		switch (cullMode)
 		{
+			case CullMode::NONE:
+				return vk::CullModeFlagBits::eNone;
+
 			case CullMode::FRONT:
 				return vk::CullModeFlagBits::eFront;
 
@@ -991,7 +994,7 @@ namespace tur::vulkan
 	{
 		vk::BufferUsageFlags results;
 
-		if (flags[UsageFlag::ARRAY_BUFFER])
+		if (flags[UsageFlag::VERTEX_BUFFER])
 			results |= vk::BufferUsageFlagBits::eVertexBuffer;
 
 		if (flags[UsageFlag::INDEX_BUFFER])

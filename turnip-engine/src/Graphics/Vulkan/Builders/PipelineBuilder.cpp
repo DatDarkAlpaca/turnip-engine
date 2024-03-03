@@ -185,6 +185,18 @@ namespace tur::vulkan
 			pipelineInfo.pViewportState = &viewportState;
 		}
 		
+		// Dynamic Info:
+		// TODO: provide dynamic scissor and viewports;
+		/*{
+			vk::DynamicState dynamicStates[] = { vk::DynamicState::eViewport, vk::DynamicState::eScissor };
+
+			vk::PipelineDynamicStateCreateInfo dynamicInfo = { };
+			dynamicInfo.flags = vk::PipelineDynamicStateCreateFlags();
+			dynamicInfo.pDynamicStates = &dynamicStates[0];
+			dynamicInfo.dynamicStateCount = 2;
+			pipelineInfo.pDynamicState = &dynamicInfo;
+		}*/
+
 		// Rasterizer:
 		{
 			vk::PipelineRasterizationStateCreateInfo rasterizer = { };
@@ -278,6 +290,7 @@ namespace tur::vulkan
 		}
 
 		// Cleanup
+		// TODO: remove shaders from renderdevice.
 		m_Device.destroyShaderModule(vertexModule);
 
 		if(tessControlModule)

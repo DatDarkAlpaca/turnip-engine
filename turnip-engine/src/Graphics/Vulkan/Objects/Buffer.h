@@ -10,6 +10,9 @@ namespace tur::vulkan
 		operator vk::Buffer() { return buffer; }
 
 	public:
+		void* data;
+		uint32_t dataSize;
+
 		vk::Buffer buffer;
 		VmaAllocation allocation = {};
 		VmaAllocationInfo info = {};

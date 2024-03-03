@@ -20,6 +20,9 @@ namespace tur::vulkan
 		vmaAllocCreateInfo.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
 
 		Buffer buffer;
+		buffer.data = bufferDescriptor.data;
+		buffer.dataSize = bufferDescriptor.dataSize;
+
 		VkResult resul = vmaCreateBuffer(
 			allocator,
 			&bufferCreateInfo,

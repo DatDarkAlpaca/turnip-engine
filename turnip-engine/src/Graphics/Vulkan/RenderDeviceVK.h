@@ -73,7 +73,7 @@ namespace tur::vulkan
 		vk::SurfaceKHR surface;
 		vk::PhysicalDevice physicalDevice;
 		vk::Device logicalDevice;
-		VmaAllocator allocator;
+		VmaAllocator allocator = nullptr;
 		vulkan::QueueCluster queues;
 		vulkan::Swapchain swapchain;
 		vk::CommandPool commandPool;

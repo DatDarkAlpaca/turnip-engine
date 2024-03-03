@@ -255,6 +255,7 @@ namespace tur::gl
 	// return GL_RG32UI;
 
 #define UNDEFINED_FORMAT(FormatName, Default) TUR_LOG_WARN("{} is not defined in OpenGL. Using {}", ##FormatName, ##Default); [[fallthrough]];
+#define UNDEFINED_FORMAT_END(FormatName, Default) TUR_LOG_WARN("{} is not defined in OpenGL. Using {}", ##FormatName, ##Default);
 
 	struct FormatInfo
 	{
@@ -269,572 +270,572 @@ namespace tur::gl
 		{
 			// Misc
 			{
-		case Format::R4G4_UNORM_PACK8:
-			UNDEFINED_FORMAT("R4G4_UNORM_PACK8", "GL_NONE");
+				case Format::R4G4_UNORM_PACK8:
+					UNDEFINED_FORMAT("R4G4_UNORM_PACK8", "GL_NONE");
 
-		case Format::R4G4B4A4_UNORM_PACK16:
-			UNDEFINED_FORMAT("R4G4B4A4_UNORM_PACK16", "GL_NONE");
+				case Format::R4G4B4A4_UNORM_PACK16:
+					UNDEFINED_FORMAT("R4G4B4A4_UNORM_PACK16", "GL_NONE");
 
-		case Format::B4G4R4A4_UNORM_PACK16:
-			UNDEFINED_FORMAT("B4G4R4A4_UNORM_PACK16", "GL_NONE");
+				case Format::B4G4R4A4_UNORM_PACK16:
+					UNDEFINED_FORMAT("B4G4R4A4_UNORM_PACK16", "GL_NONE");
 
-		case Format::R5G6B5_UNORM_PACK16:
-			UNDEFINED_FORMAT("R5G6B5_UNORM_PACK16", "GL_NONE");
+				case Format::R5G6B5_UNORM_PACK16:
+					UNDEFINED_FORMAT("R5G6B5_UNORM_PACK16", "GL_NONE");
 
-		case Format::B5G6R5_UNORM_PACK16:
-			UNDEFINED_FORMAT("B5G6R5_UNORM_PACK16", "GL_NONE");
+				case Format::B5G6R5_UNORM_PACK16:
+					UNDEFINED_FORMAT("B5G6R5_UNORM_PACK16", "GL_NONE");
 
-		case Format::R5G5B5A1_UNORM_PACK16:
-			UNDEFINED_FORMAT("R5G5B5A1_UNORM_PACK16", "GL_NONE");
+				case Format::R5G5B5A1_UNORM_PACK16:
+					UNDEFINED_FORMAT("R5G5B5A1_UNORM_PACK16", "GL_NONE");
 
-		case Format::B5G5R5A1_UNORM_PACK16:
-			UNDEFINED_FORMAT("B5G5R5A1_UNORM_PACK16", "GL_NONE");
+				case Format::B5G5R5A1_UNORM_PACK16:
+					UNDEFINED_FORMAT("B5G5R5A1_UNORM_PACK16", "GL_NONE");
 
-		case Format::A1R5G5B5_UNORM_PACK16:
-			return { GL_NONE, sizeof(int), 1 };
+				case Format::A1R5G5B5_UNORM_PACK16:
+					return { GL_NONE, sizeof(int), 1 };
 			}
 
 			// R (8):
 			{
-		case Format::R8:
-			return { GL_R8, sizeof(uint8_t), 1 };
+				case Format::R8:
+					return { GL_R8, sizeof(uint8_t), 1 };
 
-		case Format::R8_UNORM:
-			UNDEFINED_FORMAT("R8_UNORM", "GL_R8_SNORM");
+				case Format::R8_UNORM:
+					UNDEFINED_FORMAT("R8_UNORM", "GL_R8_SNORM");
 
-		case Format::R8_SNORM:
-			return { GL_R8_SNORM, sizeof(uint8_t), 1 };
+				case Format::R8_SNORM:
+					return { GL_R8_SNORM, sizeof(uint8_t), 1 };
 
-		case Format::R8_USCALED:
-			UNDEFINED_FORMAT("R8_USCALED", "GL_R8UI");
+				case Format::R8_USCALED:
+					UNDEFINED_FORMAT("R8_USCALED", "GL_R8UI");
 
-		case Format::R8_SSCALED:
-			UNDEFINED_FORMAT("R8_SSCALED", "GL_R8UI");
+				case Format::R8_SSCALED:
+					UNDEFINED_FORMAT("R8_SSCALED", "GL_R8UI");
 
-		case Format::R8_UINT:
-			return { GL_R8UI, sizeof(uint8_t), 1 };
+				case Format::R8_UINT:
+					return { GL_R8UI, sizeof(uint8_t), 1 };
 
-		case Format::R8_SINT:
-			return { GL_R8_SNORM, sizeof(uint8_t), 1 };
+				case Format::R8_SINT:
+					return { GL_R8_SNORM, sizeof(uint8_t), 1 };
 
-		case Format::R8_SRGB:
-			return { GL_SRGB8, sizeof(uint8_t), 1 };
+				case Format::R8_SRGB:
+					return { GL_SRGB8, sizeof(uint8_t), 1 };
 			}
 
 			// RG (8):
 			{
-		case Format::R8G8:
-			return { GL_RG8, sizeof(uint8_t), 2 };
+				case Format::R8G8:
+					return { GL_RG8, sizeof(uint8_t), 2 };
 
-		case Format::R8G8_UNORM:
-			UNDEFINED_FORMAT("R8G8_UNORM", "GL_RG8_SNORM");
+				case Format::R8G8_UNORM:
+					UNDEFINED_FORMAT("R8G8_UNORM", "GL_RG8_SNORM");
 
-		case Format::R8G8_SNORM:
-			return { GL_RG8_SNORM, sizeof(uint8_t), 2 };
+				case Format::R8G8_SNORM:
+					return { GL_RG8_SNORM, sizeof(uint8_t), 2 };
 
-		case Format::R8G8_USCALED:
-			UNDEFINED_FORMAT("R8G8_USCALED", "GL_RG8UI");
+				case Format::R8G8_USCALED:
+					UNDEFINED_FORMAT("R8G8_USCALED", "GL_RG8UI");
 
-		case Format::R8G8_SSCALED:
-			UNDEFINED_FORMAT("R8G8_SSCALED", "GL_RG8UI");
+				case Format::R8G8_SSCALED:
+					UNDEFINED_FORMAT("R8G8_SSCALED", "GL_RG8UI");
 
-		case Format::R8G8_UINT:
-			return { GL_RG8UI, sizeof(uint8_t), 2 };
+				case Format::R8G8_UINT:
+					return { GL_RG8UI, sizeof(uint8_t), 2 };
 
-		case Format::R8G8_SINT:
-			return { GL_RG8_SNORM, sizeof(uint8_t), 2 };
+				case Format::R8G8_SINT:
+					return { GL_RG8_SNORM, sizeof(uint8_t), 2 };
 
-		case Format::R8G8_SRGB:
-			return { GL_SRGB8, sizeof(uint8_t), 2 };
+				case Format::R8G8_SRGB:
+					return { GL_SRGB8, sizeof(uint8_t), 2 };
 			}
 
 			// RGB (8):
 			{
-		case Format::R8G8B8:
-			return { GL_RGB8, sizeof(uint8_t), 3 };
+				case Format::R8G8B8:
+					return { GL_RGB8, sizeof(uint8_t), 3 };
 
-		case Format::R8G8B8_UNORM:
-			UNDEFINED_FORMAT("R8G8B8_UNORM", "GL_RGB8_SNORM");
+				case Format::R8G8B8_UNORM:
+					UNDEFINED_FORMAT("R8G8B8_UNORM", "GL_RGB8_SNORM");
 
-		case Format::R8G8B8_SNORM:
-			return { GL_RGB8_SNORM, sizeof(uint8_t), 3 };
+				case Format::R8G8B8_SNORM:
+					return { GL_RGB8_SNORM, sizeof(uint8_t), 3 };
 
-		case Format::R8G8B8_USCALED:
-			UNDEFINED_FORMAT("R8G8B8_USCALED", "GL_RGB8UI");
+				case Format::R8G8B8_USCALED:
+					UNDEFINED_FORMAT("R8G8B8_USCALED", "GL_RGB8UI");
 
-		case Format::R8G8B8_SSCALED:
-			UNDEFINED_FORMAT("R8G8B8_SSCALED", "GL_RGB8UI");
+				case Format::R8G8B8_SSCALED:
+					UNDEFINED_FORMAT("R8G8B8_SSCALED", "GL_RGB8UI");
 
-		case Format::R8G8B8_UINT:
-			return { GL_RGB8UI, sizeof(uint8_t), 3 };
+				case Format::R8G8B8_UINT:
+					return { GL_RGB8UI, sizeof(uint8_t), 3 };
 
-		case Format::R8G8B8_SINT:
-			return { GL_RGB8_SNORM, sizeof(uint8_t), 3 };
+				case Format::R8G8B8_SINT:
+					return { GL_RGB8_SNORM, sizeof(uint8_t), 3 };
 
-		case Format::R8G8B8_SRGB:
-			return { GL_SRGB8, sizeof(uint8_t), 3 };
+				case Format::R8G8B8_SRGB:
+					return { GL_SRGB8, sizeof(uint8_t), 3 };
 			}
 
 			// BGR (8):
 			{
-		case Format::B8G8R8:
-			return { GL_BGR, sizeof(uint8_t), 3 };
+				case Format::B8G8R8:
+					return { GL_BGR, sizeof(uint8_t), 3 };
 
-		case Format::B8G8R8_UNORM:
-			UNDEFINED_FORMAT("B8G8R8_UNORM", "GL_BGR");
+				case Format::B8G8R8_UNORM:
+					UNDEFINED_FORMAT("B8G8R8_UNORM", "GL_BGR");
 
-		case Format::B8G8R8_SNORM:
-			UNDEFINED_FORMAT("B8G8R8_SNORM", "GL_BGR");
+				case Format::B8G8R8_SNORM:
+					UNDEFINED_FORMAT("B8G8R8_SNORM", "GL_BGR");
 
-		case Format::B8G8R8_USCALED:
-			UNDEFINED_FORMAT("B8G8R8_USCALED", "GL_BGR");
+				case Format::B8G8R8_USCALED:
+					UNDEFINED_FORMAT("B8G8R8_USCALED", "GL_BGR");
 
-		case Format::B8G8R8_SSCALED:
-			UNDEFINED_FORMAT("B8G8R8_SSCALED", "GL_BGR");
+				case Format::B8G8R8_SSCALED:
+					UNDEFINED_FORMAT("B8G8R8_SSCALED", "GL_BGR");
 
-		case Format::B8G8R8_UINT:
-			UNDEFINED_FORMAT("B8G8R8_UINT", "GL_BGR");
+				case Format::B8G8R8_UINT:
+					UNDEFINED_FORMAT("B8G8R8_UINT", "GL_BGR");
 
-		case Format::B8G8R8_SINT:
-			UNDEFINED_FORMAT("B8G8R8_SINT", "GL_BGR");
+				case Format::B8G8R8_SINT:
+					UNDEFINED_FORMAT("B8G8R8_SINT", "GL_BGR");
 
-		case Format::B8G8R8_SRGB:
-		{
-			UNDEFINED_FORMAT("B8G8R8_SINT", "GL_BGR");
-			return { GL_BGR, sizeof(uint8_t), 3 };
-		}
+				case Format::B8G8R8_SRGB:
+				{
+					UNDEFINED_FORMAT_END("B8G8R8_SINT", "GL_BGR");
+					return { GL_BGR, sizeof(uint8_t), 3 };
+				}
 			}
 
 			// RGBA (8):
 			{
-		case Format::R8G8B8A8:
-			return { GL_RGBA8, sizeof(uint8_t), 4 };
+				case Format::R8G8B8A8:
+					return { GL_RGBA8, sizeof(uint8_t), 4 };
 
-		case Format::R8G8B8A8_UNORM:
-			return { GL_RGBA8, sizeof(uint8_t), 4 };
+				case Format::R8G8B8A8_UNORM:
+					return { GL_RGBA8, sizeof(uint8_t), 4 };
 
-		case Format::R8G8B8A8_SNORM:
-			return { GL_RGBA8_SNORM, sizeof(uint8_t), 4 };
+				case Format::R8G8B8A8_SNORM:
+					return { GL_RGBA8_SNORM, sizeof(uint8_t), 4 };
 
-		case Format::R8G8B8A8_USCALED:
-			UNDEFINED_FORMAT("R8G8B8A8_USCALED", "GL_RGBA8UI");
+				case Format::R8G8B8A8_USCALED:
+					UNDEFINED_FORMAT("R8G8B8A8_USCALED", "GL_RGBA8UI");
 
-		case Format::R8G8B8A8_SSCALED:
-			UNDEFINED_FORMAT("R8G8B8A8_SSCALED", "GL_RGBA8UI");
+				case Format::R8G8B8A8_SSCALED:
+					UNDEFINED_FORMAT("R8G8B8A8_SSCALED", "GL_RGBA8UI");
 
-		case Format::R8G8B8A8_UINT:
-			return { GL_RGBA8UI, sizeof(uint8_t), 4 };
+				case Format::R8G8B8A8_UINT:
+					return { GL_RGBA8UI, sizeof(uint8_t), 4 };
 
-		case Format::R8G8B8A8_SINT:
-			UNDEFINED_FORMAT("R8G8B8A8_SINT", "GL_BGRA");
+				case Format::R8G8B8A8_SINT:
+					UNDEFINED_FORMAT("R8G8B8A8_SINT", "GL_BGRA");
 
-		case Format::R8G8B8A8_SRGB:
-			UNDEFINED_FORMAT("R8G8B8A8_SRGB", "GL_BGRA");
-			return { GL_BGRA, sizeof(uint8_t), 4 };
+				case Format::R8G8B8A8_SRGB:
+					UNDEFINED_FORMAT_END("R8G8B8A8_SRGB", "GL_BGRA");
+					return { GL_BGRA, sizeof(uint8_t), 4 };
 			}
 
 			// BGRA (8):
 			{
-		case Format::B8G8R8A8:
-			UNDEFINED_FORMAT("B8G8R8A8", "GL_BGRA");
+				case Format::B8G8R8A8:
+					UNDEFINED_FORMAT("B8G8R8A8", "GL_BGRA");
 
-		case Format::B8G8R8A8_UNORM:
-			UNDEFINED_FORMAT("B8G8R8A8_UNORM", "GL_BGRA");
+				case Format::B8G8R8A8_UNORM:
+					UNDEFINED_FORMAT("B8G8R8A8_UNORM", "GL_BGRA");
 
-		case Format::B8G8R8A8_SNORM:
-			UNDEFINED_FORMAT("B8G8R8A8_SNORM", "GL_BGRA");
+				case Format::B8G8R8A8_SNORM:
+					UNDEFINED_FORMAT("B8G8R8A8_SNORM", "GL_BGRA");
 
-		case Format::B8G8R8A8_USCALED:
-			UNDEFINED_FORMAT("B8G8R8A8_USCALED", "GL_BGRA");
+				case Format::B8G8R8A8_USCALED:
+					UNDEFINED_FORMAT("B8G8R8A8_USCALED", "GL_BGRA");
 
-		case Format::B8G8R8A8_SSCALED:
-			UNDEFINED_FORMAT("B8G8R8A8_SSCALED", "GL_BGRA");
+				case Format::B8G8R8A8_SSCALED:
+					UNDEFINED_FORMAT("B8G8R8A8_SSCALED", "GL_BGRA");
 
-		case Format::B8G8R8A8_UINT:
-			UNDEFINED_FORMAT("B8G8R8A8_UINT", "GL_BGRA");
+				case Format::B8G8R8A8_UINT:
+					UNDEFINED_FORMAT("B8G8R8A8_UINT", "GL_BGRA");
 
-		case Format::B8G8R8A8_SINT:
-			UNDEFINED_FORMAT("B8G8R8A8_SINT", "GL_BGRA");
+				case Format::B8G8R8A8_SINT:
+					UNDEFINED_FORMAT("B8G8R8A8_SINT", "GL_BGRA");
 
-		case Format::B8G8R8A8_SRGB:
-		{
-			UNDEFINED_FORMAT("B8G8R8A8_SRGB", "GL_BGRA");
-			return { GL_BGRA, sizeof(uint8_t), 4 };
-		}
+				case Format::B8G8R8A8_SRGB:
+				{
+					UNDEFINED_FORMAT_END("B8G8R8A8_SRGB", "GL_BGRA");
+					return { GL_BGRA, sizeof(uint8_t), 4 };
+				}
 			}
 
 			// ABGR (8):
 			{
-		case Format::A8B8G8R8_UNORM_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_UNORM_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_UNORM_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_UNORM_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_SNORM_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_SNORM_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_SNORM_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_SNORM_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_USCALED_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_USCALED_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_USCALED_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_USCALED_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_SSCALED_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_SSCALED_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_SSCALED_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_SSCALED_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_UINT_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_UINT_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_UINT_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_UINT_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_SINT_PACK32:
-			UNDEFINED_FORMAT("A8B8G8R8_SINT_PACK32", "GL_BGRA");
+				case Format::A8B8G8R8_SINT_PACK32:
+					UNDEFINED_FORMAT("A8B8G8R8_SINT_PACK32", "GL_BGRA");
 
-		case Format::A8B8G8R8_SRGB_PACK32:
-		{
-			UNDEFINED_FORMAT("A8B8G8R8_SRGB_PACK32", "GL_BGRA");
-			return { GL_BGRA, sizeof(uint8_t), 4 };
-		}
+				case Format::A8B8G8R8_SRGB_PACK32:
+				{
+					UNDEFINED_FORMAT_END("A8B8G8R8_SRGB_PACK32", "GL_BGRA");
+					return { GL_BGRA, sizeof(uint8_t), 4 };
+				}
 			}
 
 			// A2 RGB (10):
 			{
-		case Format::A2R10G10B10_UNORM_PACK32:
-			UNDEFINED_FORMAT("A2R10G10B10_UNORM_PACK32", "GL_BGRA");
+				case Format::A2R10G10B10_UNORM_PACK32:
+					UNDEFINED_FORMAT("A2R10G10B10_UNORM_PACK32", "GL_BGRA");
 
-		case Format::A2R10G10B10_SNORM_PACK32:
-			UNDEFINED_FORMAT("A2R10G10B10_SNORM_PACK32", "GL_BGRA");
+				case Format::A2R10G10B10_SNORM_PACK32:
+					UNDEFINED_FORMAT("A2R10G10B10_SNORM_PACK32", "GL_BGRA");
 
-		case Format::A2R10G10B10_USCALED_PACK32:
-			UNDEFINED_FORMAT("A2R10G10B10_USCALED_PACK32", "GL_BGRA");
+				case Format::A2R10G10B10_USCALED_PACK32:
+					UNDEFINED_FORMAT("A2R10G10B10_USCALED_PACK32", "GL_BGRA");
 
-		case Format::A2R10G10B10_SSCALED_PACK32:
-			UNDEFINED_FORMAT("A2R10G10B10_SSCALED_PACK32", "GL_BGRA");
+				case Format::A2R10G10B10_SSCALED_PACK32:
+					UNDEFINED_FORMAT("A2R10G10B10_SSCALED_PACK32", "GL_BGRA");
 
-		case Format::A2R10G10B10_UINT_PACK32:
-			UNDEFINED_FORMAT("A2R10G10B10_UINT_PACK32", "GL_BGRA");
+				case Format::A2R10G10B10_UINT_PACK32:
+					UNDEFINED_FORMAT("A2R10G10B10_UINT_PACK32", "GL_BGRA");
 
-		case Format::A2R10G10B10_SINT_PACK32:
-		{
-			UNDEFINED_FORMAT("A2R10G10B10_SINT_PACK32", "GL_BGRA");
-			return { GL_BGRA, sizeof(uint8_t), 4 };
-		}
+				case Format::A2R10G10B10_SINT_PACK32:
+				{
+					UNDEFINED_FORMAT_END("A2R10G10B10_SINT_PACK32", "GL_BGRA");
+					return { GL_BGRA, sizeof(uint8_t), 4 };
+				}
 			}
 
 			// A2 BGR (10):
 			{
-		case Format::A2B10G10R10_UNORM_PACK32:
-			UNDEFINED_FORMAT("A2B10G10R10_UNORM_PACK32", "GL_BGRA");
+				case Format::A2B10G10R10_UNORM_PACK32:
+					UNDEFINED_FORMAT("A2B10G10R10_UNORM_PACK32", "GL_BGRA");
 
-		case Format::A2B10G10R10_SNORM_PACK32:
-			UNDEFINED_FORMAT("A2B10G10R10_SNORM_PACK32", "GL_BGRA");
+				case Format::A2B10G10R10_SNORM_PACK32:
+					UNDEFINED_FORMAT("A2B10G10R10_SNORM_PACK32", "GL_BGRA");
 
-		case Format::A2B10G10R10_USCALED_PACK32:
-			UNDEFINED_FORMAT("A2B10G10R10_USCALED_PACK32", "GL_BGRA");
+				case Format::A2B10G10R10_USCALED_PACK32:
+					UNDEFINED_FORMAT("A2B10G10R10_USCALED_PACK32", "GL_BGRA");
 
-		case Format::A2B10G10R10_SSCALED_PACK32:
-			UNDEFINED_FORMAT("A2B10G10R10_SSCALED_PACK32", "GL_BGRA");
+				case Format::A2B10G10R10_SSCALED_PACK32:
+					UNDEFINED_FORMAT("A2B10G10R10_SSCALED_PACK32", "GL_BGRA");
 
-		case Format::A2B10G10R10_UINT_PACK32:
-			UNDEFINED_FORMAT("A2B10G10R10_UINT_PACK32", "GL_BGRA");
+				case Format::A2B10G10R10_UINT_PACK32:
+					UNDEFINED_FORMAT("A2B10G10R10_UINT_PACK32", "GL_BGRA");
 
-		case Format::A2B10G10R10_SINT_PACK32:
-		{
-			UNDEFINED_FORMAT("A2B10G10R10_SINT_PACK32", "GL_BGRA");
-			return { GL_BGRA, sizeof(uint8_t), 4 };
-		}
+				case Format::A2B10G10R10_SINT_PACK32:
+				{
+					UNDEFINED_FORMAT_END("A2B10G10R10_SINT_PACK32", "GL_BGRA");
+					return { GL_BGRA, sizeof(uint8_t), 4 };
+				}
 			}
 
 			// R (16):
 			{
-		case Format::R16:
-			return { GL_R16, sizeof(uint16_t), 1 };
+				case Format::R16:
+					return { GL_R16, sizeof(uint16_t), 1 };
 
-		case Format::R16_UNORM:
-			return { GL_R16, sizeof(uint16_t), 1 };
+				case Format::R16_UNORM:
+					return { GL_R16, sizeof(uint16_t), 1 };
 
-		case Format::R16_SNORM:
-			return { GL_R16_SNORM, sizeof(uint16_t), 1 };
+				case Format::R16_SNORM:
+					return { GL_R16_SNORM, sizeof(uint16_t), 1 };
 
-		case Format::R16_USCALED:
-			UNDEFINED_FORMAT("R16_USCALED", "GL_R16UI");
+				case Format::R16_USCALED:
+					UNDEFINED_FORMAT("R16_USCALED", "GL_R16UI");
 
-		case Format::R16_SSCALED:
-			UNDEFINED_FORMAT("R16_SSCALED", "GL_R16UI");
+				case Format::R16_SSCALED:
+					UNDEFINED_FORMAT("R16_SSCALED", "GL_R16UI");
 
-		case Format::R16_UINT:
-			return { GL_R16UI, sizeof(uint16_t), 1 };
+				case Format::R16_UINT:
+					return { GL_R16UI, sizeof(uint16_t), 1 };
 
-		case Format::R16_SINT:
-			return { GL_R16_SNORM, sizeof(uint16_t), 1 };
+				case Format::R16_SINT:
+					return { GL_R16_SNORM, sizeof(uint16_t), 1 };
 
-		case Format::R16_SFLOAT:
-			return { GL_R16F, sizeof(uint16_t), 1 };
+				case Format::R16_SFLOAT:
+					return { GL_R16F, sizeof(uint16_t), 1 };
 			}
 
 			// RG (16):
 			{
-		case Format::R16G16:
-			return { GL_RG16, sizeof(uint16_t), 2 };
+				case Format::R16G16:
+					return { GL_RG16, sizeof(uint16_t), 2 };
 
-		case Format::R16G16_UNORM:
-			return { GL_RG16, sizeof(uint16_t), 2 };
+				case Format::R16G16_UNORM:
+					return { GL_RG16, sizeof(uint16_t), 2 };
 
-		case Format::R16G16_SNORM:
-			return { GL_RG16_SNORM, sizeof(uint16_t), 2 };
+				case Format::R16G16_SNORM:
+					return { GL_RG16_SNORM, sizeof(uint16_t), 2 };
 
-		case Format::R16G16_USCALED:
-			UNDEFINED_FORMAT("R16G16_USCALED", "GL_RG16UI");
+				case Format::R16G16_USCALED:
+					UNDEFINED_FORMAT("R16G16_USCALED", "GL_RG16UI");
 
-		case Format::R16G16_SSCALED:
-			UNDEFINED_FORMAT("R16G16_SSCALED", "GL_RG16UI");
+				case Format::R16G16_SSCALED:
+					UNDEFINED_FORMAT("R16G16_SSCALED", "GL_RG16UI");
 
-		case Format::R16G16_UINT:
-			return { GL_RG16UI, sizeof(uint16_t), 2 };
+				case Format::R16G16_UINT:
+					return { GL_RG16UI, sizeof(uint16_t), 2 };
 
-		case Format::R16G16_SINT:
-			return { GL_RG16_SNORM, sizeof(uint16_t), 2 };
+				case Format::R16G16_SINT:
+					return { GL_RG16_SNORM, sizeof(uint16_t), 2 };
 
-		case Format::R16G16_SFLOAT:
-			return { GL_RG16F, sizeof(uint16_t), 2 };
+				case Format::R16G16_SFLOAT:
+					return { GL_RG16F, sizeof(uint16_t), 2 };
 			}
 
 			// RGB (16):
 			{
-		case Format::R16G16B16:
-			return { GL_RGB16, sizeof(uint16_t), 3 };
+				case Format::R16G16B16:
+					return { GL_RGB16, sizeof(uint16_t), 3 };
 
-		case Format::R16G16B16_UNORM:
-			return { GL_RGB16, sizeof(uint16_t), 3 };
+				case Format::R16G16B16_UNORM:
+					return { GL_RGB16, sizeof(uint16_t), 3 };
 
-		case Format::R16G16B16_SNORM:
-			return { GL_RGB16_SNORM, sizeof(uint16_t), 3 };
+				case Format::R16G16B16_SNORM:
+					return { GL_RGB16_SNORM, sizeof(uint16_t), 3 };
 
-		case Format::R16G16B16_USCALED:
-			UNDEFINED_FORMAT("R16G16B16_USCALED", "GL_RGB16UI");
+				case Format::R16G16B16_USCALED:
+					UNDEFINED_FORMAT("R16G16B16_USCALED", "GL_RGB16UI");
 
-		case Format::R16G16B16_SSCALED:
-			UNDEFINED_FORMAT("R16G16B16_SSCALED", "GL_RGB16UI");
+				case Format::R16G16B16_SSCALED:
+					UNDEFINED_FORMAT("R16G16B16_SSCALED", "GL_RGB16UI");
 
-		case Format::R16G16B16_UINT:
-			return { GL_RGB16UI, sizeof(uint16_t), 3 };
+				case Format::R16G16B16_UINT:
+					return { GL_RGB16UI, sizeof(uint16_t), 3 };
 
-		case Format::R16G16B16_SINT:
-			return { GL_RGB16_SNORM, sizeof(uint16_t), 3 };
+				case Format::R16G16B16_SINT:
+					return { GL_RGB16_SNORM, sizeof(uint16_t), 3 };
 
-		case Format::R16G16B16_SFLOAT:
-			return { GL_RGB16F, sizeof(uint16_t), 3 };
+				case Format::R16G16B16_SFLOAT:
+					return { GL_RGB16F, sizeof(uint16_t), 3 };
 			}
 
 			// RGBA (16):
 			{
-		case Format::R16G16B16A16:
-			return { GL_RGBA16, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16:
+					return { GL_RGBA16, sizeof(uint16_t), 4 };
 
-		case Format::R16G16B16A16_UNORM:
-			return { GL_RGBA16, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16_UNORM:
+					return { GL_RGBA16, sizeof(uint16_t), 4 };
 
-		case Format::R16G16B16A16_SNORM:
-			return { GL_RGBA16_SNORM, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16_SNORM:
+					return { GL_RGBA16_SNORM, sizeof(uint16_t), 4 };
 
-		case Format::R16G16B16A16_USCALED:
-			UNDEFINED_FORMAT("R16G16B16A16_USCALED", "GL_RGBA16UI");
+				case Format::R16G16B16A16_USCALED:
+					UNDEFINED_FORMAT("R16G16B16A16_USCALED", "GL_RGBA16UI");
 
-		case Format::R16G16B16A16_SSCALED:
-			UNDEFINED_FORMAT("R16G16B16A16_SSCALED", "GL_RGBA16UI");
+				case Format::R16G16B16A16_SSCALED:
+					UNDEFINED_FORMAT("R16G16B16A16_SSCALED", "GL_RGBA16UI");
 
-		case Format::R16G16B16A16_UINT:
-			return { GL_RGBA16UI, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16_UINT:
+					return { GL_RGBA16UI, sizeof(uint16_t), 4 };
 
-		case Format::R16G16B16A16_SINT:
-			return { GL_RGBA16_SNORM, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16_SINT:
+					return { GL_RGBA16_SNORM, sizeof(uint16_t), 4 };
 
-		case Format::R16G16B16A16_SFLOAT:
-			return { GL_RGBA16F, sizeof(uint16_t), 4 };
+				case Format::R16G16B16A16_SFLOAT:
+					return { GL_RGBA16F, sizeof(uint16_t), 4 };
 			}
 
 			// R (32):
 			{
-		case Format::R32:
-			return { GL_R32I, sizeof(uint32_t), 1 };
+				case Format::R32:
+					return { GL_R32I, sizeof(uint32_t), 1 };
 
-		case Format::R32_UINT:
-			return { GL_R32UI, sizeof(uint32_t), 1 };
+				case Format::R32_UINT:
+					return { GL_R32UI, sizeof(uint32_t), 1 };
 
-		case Format::R32_SINT:
-		{
-			UNDEFINED_FORMAT("R32_SINT", "GL_R32UI");
-			return { GL_R32UI, sizeof(uint32_t), 1 };
-		}
+				case Format::R32_SINT:
+				{
+					UNDEFINED_FORMAT_END("R32_SINT", "GL_R32UI");
+					return { GL_R32UI, sizeof(uint32_t), 1 };
+				}
 
-		case Format::R32_SFLOAT:
-			return { GL_R32F, sizeof(uint32_t), 1 };
+				case Format::R32_SFLOAT:
+					return { GL_R32F, sizeof(uint32_t), 1 };
 			}
 
 			// RG (32):
 			{
-		case Format::R32G32:
-			return { GL_RG32I, sizeof(uint32_t), 2 };
+				case Format::R32G32:
+					return { GL_RG32I, sizeof(uint32_t), 2 };
 
-		case Format::R32G32_UINT:
-			return { GL_RG32UI, sizeof(uint32_t), 2 };
+				case Format::R32G32_UINT:
+					return { GL_RG32UI, sizeof(uint32_t), 2 };
 
-		case Format::R32G32_SINT:
-		{
-			UNDEFINED_FORMAT("R32G32_SINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint32_t), 2 };
-		}
+				case Format::R32G32_SINT:
+				{
+					UNDEFINED_FORMAT_END("R32G32_SINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint32_t), 2 };
+				}
 
-		case Format::R32G32_SFLOAT:
-			return { GL_RG32F, sizeof(uint32_t), 2 };
+				case Format::R32G32_SFLOAT:
+					return { GL_RG32F, sizeof(uint32_t), 2 };
 			}
 
 			// RGB (32):
 			{
-		case Format::R32G32B32:
-			return { GL_RGB32I, sizeof(uint32_t), 3 };
+				case Format::R32G32B32:
+					return { GL_RGB32I, sizeof(uint32_t), 3 };
 
-		case Format::R32G32B32_UINT:
-			return { GL_RGB32I, sizeof(uint32_t), 3 };
+				case Format::R32G32B32_UINT:
+					return { GL_RGB32I, sizeof(uint32_t), 3 };
 
-		case Format::R32G32B32_SINT:
-		{
-			UNDEFINED_FORMAT("R32G32B32_SINT", "GL_RGB32I");
-			return { GL_RGB32I, sizeof(uint32_t), 3 };
-		}
+				case Format::R32G32B32_SINT:
+				{
+					UNDEFINED_FORMAT("R32G32B32_SINT", "GL_RGB32I");
+					return { GL_RGB32I, sizeof(uint32_t), 3 };
+				}
 
-		case Format::R32G32B32_SFLOAT:
-			return { GL_RGB32F, sizeof(uint32_t), 3 };
+				case Format::R32G32B32_SFLOAT:
+					return { GL_RGB32F, sizeof(uint32_t), 3 };
 			}
 
 			// RGB (32):
 			{
-		case Format::R32G32B32A32:
-			return { GL_RGBA32UI, sizeof(uint32_t), 3 };
+				case Format::R32G32B32A32:
+					return { GL_RGBA32UI, sizeof(uint32_t), 3 };
 
-		case Format::R32G32B32A32_UINT:
-			return { GL_RGBA32UI, sizeof(uint32_t), 3 };
+				case Format::R32G32B32A32_UINT:
+					return { GL_RGBA32UI, sizeof(uint32_t), 3 };
 
-		case Format::R32G32B32A32_SINT:
-			return { GL_RGBA32I, sizeof(uint32_t), 3 };
+				case Format::R32G32B32A32_SINT:
+					return { GL_RGBA32I, sizeof(uint32_t), 3 };
 
-		case Format::R32G32B32A32_SFLOAT:
-			return { GL_RGBA32F, sizeof(uint32_t), 3 };
+				case Format::R32G32B32A32_SFLOAT:
+					return { GL_RGBA32F, sizeof(uint32_t), 3 };
 			}
 
 			// R (64):
 			{
-		case Format::R64:
-		{
-			UNDEFINED_FORMAT("R64", "GL_R32UI");
-			return { GL_R32UI, sizeof(uint64_t), 1 };
-		}
+				case Format::R64:
+				{
+					UNDEFINED_FORMAT("R64", "GL_R32UI");
+					return { GL_R32UI, sizeof(uint64_t), 1 };
+				}
 
-		case Format::R64_UINT:
-		{
-			UNDEFINED_FORMAT("R64_UINT", "GL_R32UI");
-			return { GL_R32UI, sizeof(uint64_t), 1 };
-		}
+				case Format::R64_UINT:
+				{
+					UNDEFINED_FORMAT("R64_UINT", "GL_R32UI");
+					return { GL_R32UI, sizeof(uint64_t), 1 };
+				}
 
-		case Format::R64_SINT:
-		{
-			UNDEFINED_FORMAT("R64_SINT", "GL_R32UI");
-			return { GL_R32UI, sizeof(uint64_t), 1 };
-		}
+				case Format::R64_SINT:
+				{
+					UNDEFINED_FORMAT("R64_SINT", "GL_R32UI");
+					return { GL_R32UI, sizeof(uint64_t), 1 };
+				}
 
-		case Format::R64_SFLOAT:
-		{
-			UNDEFINED_FORMAT("R64_SFLOAT", "GL_R32F");
-			return { GL_R32F, sizeof(uint64_t), 1 };
-		}
+				case Format::R64_SFLOAT:
+				{
+					UNDEFINED_FORMAT_END("R64_SFLOAT", "GL_R32F");
+					return { GL_R32F, sizeof(uint64_t), 1 };
+				}
 			}
 
 			// RG (64):
 			{
-		case Format::R64G64:
-		{
-			UNDEFINED_FORMAT("R64G64", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 2 };
-		}
+				case Format::R64G64:
+				{
+					UNDEFINED_FORMAT("R64G64", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 2 };
+				}
 
-		case Format::R64G64_UINT:
-		{
-			UNDEFINED_FORMAT("R64G64_UINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 2 };
-		}
+				case Format::R64G64_UINT:
+				{
+					UNDEFINED_FORMAT("R64G64_UINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 2 };
+				}
 
-		case Format::R64G64_SINT:
-		{
-			UNDEFINED_FORMAT("R64G64_SINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 2 };
-		}
+				case Format::R64G64_SINT:
+				{
+					UNDEFINED_FORMAT("R64G64_SINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 2 };
+				}
 
-		case Format::R64G64_SFLOAT:
-		{
-			UNDEFINED_FORMAT("R64G64_SFLOAT", "GL_RG32F");
-			return { GL_RG32F, sizeof(uint64_t), 2 };
-		}
+				case Format::R64G64_SFLOAT:
+				{
+					UNDEFINED_FORMAT_END("R64G64_SFLOAT", "GL_RG32F");
+					return { GL_RG32F, sizeof(uint64_t), 2 };
+				}
 			}
 
 			// RGB (64):
 			{
-		case Format::R64G64B64:
-		{
-			UNDEFINED_FORMAT("R64G64B64", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 3 };
-		}
+				case Format::R64G64B64:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 3 };
+				}
 
-		case Format::R64G64B64_UINT:
-		{
-			UNDEFINED_FORMAT("R64G64B64_UINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 3 };
-		}
+				case Format::R64G64B64_UINT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64_UINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 3 };
+				}
 
-		case Format::R64G64B64_SINT:
-		{
-			UNDEFINED_FORMAT("R64G64B64_SINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 3 };
-		}
+				case Format::R64G64B64_SINT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64_SINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 3 };
+				}
 
-		case Format::R64G64B64_SFLOAT:
-		{
-			UNDEFINED_FORMAT("R64G64B64_SFLOAT", "GL_RG32F");
-			return { GL_RG32F, sizeof(uint64_t), 3 };
-		}
+				case Format::R64G64B64_SFLOAT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64_SFLOAT", "GL_RG32F");
+					return { GL_RG32F, sizeof(uint64_t), 3 };
+				}
 			}
 
 			// RGBA (64):
 			{
-		case Format::R64G64B64A64:
-		{
-			UNDEFINED_FORMAT("R64G64B64A64", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 4 };
-		}
+				case Format::R64G64B64A64:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64A64", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 4 };
+				}
 
-		case Format::R64G64B64A64_UINT:
-		{
-			UNDEFINED_FORMAT("R64G64B64A64_UINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 4 };
-		}
+				case Format::R64G64B64A64_UINT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64A64_UINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 4 };
+				}
 
-		case Format::R64G64B64A64_SINT:
-		{
-			UNDEFINED_FORMAT("R64G64B64A64_SINT", "GL_RG32UI");
-			return { GL_RG32UI, sizeof(uint64_t), 4 };
-		}
+				case Format::R64G64B64A64_SINT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64A64_SINT", "GL_RG32UI");
+					return { GL_RG32UI, sizeof(uint64_t), 4 };
+				}
 
-		case Format::R64G64B64A64_SFLOAT:
-		{
-			UNDEFINED_FORMAT("R64G64B64A64_SFLOAT", "GL_RG32F");
-			return { GL_RG32F, sizeof(uint64_t), 4 };
-		}
+				case Format::R64G64B64A64_SFLOAT:
+				{
+					UNDEFINED_FORMAT_END("R64G64B64A64_SFLOAT", "GL_RG32F");
+					return { GL_RG32F, sizeof(uint64_t), 4 };
+				}
 			}
 
 			// B10 GR (11) P32
-		case Format::B10G11R11_UFLOAT_PACK32:
-		{
-			UNDEFINED_FORMAT("B10G11R11_UFLOAT_PACK32", "GL_BGR");
-			return { GL_BGR, sizeof(uint32_t), 3 };
-		}
+			case Format::B10G11R11_UFLOAT_PACK32:
+			{
+				UNDEFINED_FORMAT_END("B10G11R11_UFLOAT_PACK32", "GL_BGR");
+				return { GL_BGR, sizeof(uint32_t), 3 };
+			}
 
-		default:
-		{
-			TUR_LOG_ERROR("Invalid Format. Using default: R32_UINT");
-			return { GL_R32UI, sizeof(uint32_t), 1 };
-		} break;
+			default:
+			{
+				TUR_LOG_ERROR("Invalid Format. Using default: R32_UINT");
+				return { GL_R32UI, sizeof(uint32_t), 1 };
+			} break;
 		}
 	}
 
@@ -995,7 +996,7 @@ namespace tur::gl
 	{
 		uint32_t results = 0;
 
-		if (flags[UsageFlag::ARRAY_BUFFER])
+		if (flags[UsageFlag::VERTEX_BUFFER])
 			results |= GL_ARRAY_BUFFER;
 
 		if (flags[UsageFlag::INDEX_BUFFER])
