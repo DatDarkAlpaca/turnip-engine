@@ -1,3 +1,7 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec020ba40c7b4754ab2975940e76f178)](https://app.codacy.com/gh/DatDarkAlpaca/turnip-engine/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/DatDarkAlpaca/turnip-engine.svg)](http://isitmaintained.com/project/DatDarkAlpaca/turnip-engine "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/DatDarkAlpaca/turnip-engine.svg)](http://isitmaintained.com/project/DatDarkAlpaca/turnip-engine "Percentage of issues still open")
+
 # Turnip Engine
 
 > Turnip is my toy game engine that follows the principles of the "yet another" mentality.
