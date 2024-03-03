@@ -33,11 +33,9 @@ static bool ValidateExtensions(const std::vector<const char*>& extensions)
 {
 	std::vector<vk::ExtensionProperties> supportedExtensions = vk::enumerateInstanceExtensionProperties();
 
-	bool found;
 	for (const char* extension : extensions)
 	{
-		found = CheckExtensionSupport(supportedExtensions, extension);
-		if (!found)
+		if (!CheckExtensionSupport(supportedExtensions, extension))
 		{
 			TUR_LOG_ERROR("Extension {} is not supported.", extension);
 			return false;
@@ -120,7 +118,7 @@ namespace tur::vulkan
 		{
 			output.instanceHandle = vk::createInstance(createInfo);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create vulkan instance: {}", err.what());
 			return std::nullopt;

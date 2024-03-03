@@ -23,7 +23,7 @@ namespace tur::vulkan
 			output.device = m_Device.physicalDevice.createDevice(deviceInfo);
 			return output;
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create logical device: {}", err.what());		
 		}

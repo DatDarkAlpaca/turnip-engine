@@ -154,7 +154,7 @@ namespace tur::vulkan
 			renderpass.renderpass = m_Device.createRenderPass(renderpassInfo);
 			return renderpass;
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create renderpass. {}", err.what());
 		}

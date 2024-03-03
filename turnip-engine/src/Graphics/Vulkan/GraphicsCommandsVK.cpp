@@ -38,7 +38,7 @@ namespace tur::vulkan
 		{
 			m_CurrentBuffer.begin(beginInfo);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to begin command buffer recording state: {}", err.what());
 		}
@@ -131,7 +131,7 @@ namespace tur::vulkan
 		{
 			m_CurrentBuffer.end();
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to end buffer recordings: {}", err.what());
 		}

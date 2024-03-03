@@ -272,7 +272,7 @@ namespace tur::vulkan
 			// TODO: pipeline cache.
 			graphicsPipeline = (m_Device.createGraphicsPipeline(nullptr, pipelineInfo)).value;
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create pipeline: {}", err.what());
 		}
@@ -312,7 +312,7 @@ namespace tur::vulkan
 		{
 			return m_Device.createPipelineLayout(layoutInfo);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create pipeline layout: {}", err.what());
 		}

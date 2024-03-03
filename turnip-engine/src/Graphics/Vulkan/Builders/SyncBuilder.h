@@ -17,7 +17,7 @@ namespace tur::vulkan
 			{
 				return device.createSemaphore(semaphoreInfo);
 			}
-			catch (vk::SystemError err)
+			catch (const vk::SystemError& err)
 			{
 				TUR_LOG_ERROR("Failed to create semaphore: {}", err.what());
 				return nullptr;
@@ -37,7 +37,7 @@ namespace tur::vulkan
 			{
 				return device.createFence(fenceInfo);
 			}
-			catch (vk::SystemError err)
+			catch (const vk::SystemError& err)
 			{
 				TUR_LOG_ERROR("Failed to create fence: {}", err.what());
 				return nullptr;

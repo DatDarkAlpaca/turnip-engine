@@ -251,7 +251,7 @@ namespace tur::vulkan
 		{
 			swapchainResult.swapchain = m_LogicalDevice.createSwapchainKHR(createInfo);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create swapchain: {}", err.what());
 			return std::nullopt;

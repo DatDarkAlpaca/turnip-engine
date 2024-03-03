@@ -27,7 +27,7 @@ namespace tur::vulkan
 			{
 				return m_Device.createCommandPool(poolInfo);
 			}
-			catch (vk::SystemError err)
+			catch (const vk::SystemError& err)
 			{
 				TUR_BREAKPOINT(); // TODO
 				return nullptr;
@@ -63,7 +63,7 @@ namespace tur::vulkan
 				vk::CommandBuffer commandBuffer = m_Device.allocateCommandBuffers(allocInfo)[0];
 				return commandBuffer;
 			}
-			catch (vk::SystemError err) 
+			catch (const vk::SystemError& err) 
 			{
 				TUR_LOG_ERROR("Failed to allocate command buffer: {}", err.what());
 				return nullptr;

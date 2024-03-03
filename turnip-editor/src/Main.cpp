@@ -10,8 +10,8 @@ class MainView : public View
 public:
 	MainView(NON_OWNING TurnipEngine* engine)
 		: r_Engine(engine)
-	{
-		graphics = r_Engine->Device()->CreateGraphicsCommands();
+	{ 
+		graphics = (r_Engine->Device()->CreateGraphicsCommands());
 	}
 
 public:
@@ -58,11 +58,11 @@ public:
 		{
 			ShaderDescriptor shaderDesc[2];
 			{
-				//shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
-				//shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
 
-				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
-				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
+				//shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
+				//shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
@@ -71,7 +71,7 @@ public:
 			{
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
-				pipelineDesc.frontFace = FrontFace::COUNTER_CLOCKWISE;
+				pipelineDesc.frontFace = FrontFace::CLOCKWISE;
 				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
 
 				pipelineDesc.vertexFormat.Add(VertexAttribute{ 0, Format::R32G32B32_SFLOAT, 5 * sizeof(float), 0 });
@@ -129,7 +129,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
+		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

@@ -59,7 +59,7 @@ namespace tur::vulkan
 		{
 			shader.shaderModule = logicalDevice.createShaderModule(moduleInfo);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to create shader module from filepath: {}. {}", shaderDescriptor.filepath, err.what());
 		}
@@ -163,7 +163,7 @@ namespace tur::vulkan
 		{
 			graphicsQueue.submit(submitInfo, currentFrame.inFlightFence);
 		}
-		catch (vk::SystemError err)
+		catch (const vk::SystemError& err)
 		{
 			TUR_LOG_ERROR("Failed to submit draw command buffer: {}", err.what());
 		}
