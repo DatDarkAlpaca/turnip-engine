@@ -1,5 +1,7 @@
 # Turnip Engine
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4237c333db9c4412a73fadfa2de405aa)](https://app.codacy.com/gh/DatDarkAlpaca/turnip-engine?utm_source=github.com&utm_medium=referral&utm_content=DatDarkAlpaca/turnip-engine&utm_campaign=Badge_Grade)
+
 > Turnip is my toy game engine that follows the principles of the "yet another" mentality.
 
 # Getting Started
