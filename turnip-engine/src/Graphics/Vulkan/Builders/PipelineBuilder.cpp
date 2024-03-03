@@ -15,11 +15,46 @@ namespace tur::vulkan
 		std::vector<vk::PipelineShaderStageCreateInfo> shaderStages;
 
 		// Vertex Input:
+		std::vector<vk::VertexInputBindingDescription> bindings;
+		std::vector<vk::VertexInputAttributeDescription> attributes;
+
+		vk::VertexInputBindingDescription bindingDescription;
+		vk::PipelineVertexInputStateCreateInfo vertexInputInfo = { };
 		{
-			vk::PipelineVertexInputStateCreateInfo vertexInputInfo = { };
 			vertexInputInfo.flags = vk::PipelineVertexInputStateCreateFlags();
-			vertexInputInfo.vertexBindingDescriptionCount = descriptor.vertexBindingDescriptionCount;
-			vertexInputInfo.vertexAttributeDescriptionCount = descriptor.vertexAttributeDescriptionCount;
+
+			// TODO: input bindings, input rate, instance divisor
+			// TODO: use vertex format stride
+			{
+				bindingDescription.binding = 0;
+				bindingDescription.stride = descriptor.vertexFormat.attributes[0].stride;
+				bindings.push_back(bindingDescription);
+			}
+
+			// TODO: link input bindings
+			uint32_t offset = 0;
+			for (const auto& attribute : descriptor.vertexFormat.attributes)
+			{
+				vk::VertexInputAttributeDescription attributeDescription;
+				attributeDescription.binding = 0;
+				attributeDescription.location = attribute.location;
+				attributeDescription.format = GetFormat(attribute.layoutFormat);
+
+				if (!attribute.offset)
+					attributeDescription.offset = attribute.offset;
+				else 
+					attributeDescription.offset = offset;
+
+				attributes.push_back(attributeDescription);
+			}
+
+			vertexInputInfo.pVertexBindingDescriptions = bindings.data();
+			vertexInputInfo.pVertexAttributeDescriptions = attributes.data();
+
+			// TODO: flexible binding descriptions
+			vertexInputInfo.vertexBindingDescriptionCount = 1;
+			vertexInputInfo.vertexAttributeDescriptionCount = (uint32_t)descriptor.vertexFormat.attributes.size();
+			
 			pipelineInfo.pVertexInputState = &vertexInputInfo;
 		}
 

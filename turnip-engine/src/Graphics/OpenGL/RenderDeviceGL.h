@@ -25,6 +25,9 @@ namespace tur::gl
 		}
 
 	public:
+		inline GraphicsAPI API() override { return GraphicsAPI::VULKAN; }
+
+	public:
 		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription)
 		{
 			/* TODO: Implementation required, but not necessary */
@@ -33,11 +36,11 @@ namespace tur::gl
 
 		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override
 		{
-			uint32_t target = gl::GetBufferBindingFlag(bufferDescription.bindingFlag);
-			uint32_t usage = gl::GetBufferUsageFlag(bufferDescription.usageFlag);
+			uint32_t target = gl::GetBufferUsageFlags(bufferDescription.usageFlags);
+			uint32_t usage = gl::GetBuferDataStorageType(bufferDescription.dataStorage);
 
-			gl::Buffer buffer = {};
-			buffer.bindingFlag = bufferDescription.bindingFlag;
+			gl::Buffer buffer;
+			buffer.usageFlags = bufferDescription.usageFlags;
 
 			glGenBuffers(1, &buffer.id);
 			glBindBuffer(target, buffer.id);

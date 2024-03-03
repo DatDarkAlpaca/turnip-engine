@@ -7,7 +7,6 @@
 #include "Flags.h"
 #include "FrontFace.h"
 #include "ImageLayout.h"
-#include "LayoutTypes.h"
 #include "Offset.h"
 #include "PipelineType.h"
 #include "PolygonMode.h"

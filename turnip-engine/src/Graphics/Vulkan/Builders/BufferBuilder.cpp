@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "BufferBuilder.h"
+#include "Graphics/Vulkan/Converters.h"
 
-#include <vk_mem_alloc.h>
 #define VMA_IMPLEMENTATION
+#include <vk_mem_alloc.h>
 
 namespace tur::vulkan
 {
@@ -12,10 +13,10 @@ namespace tur::vulkan
 		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		bufferCreateInfo.pNext = nullptr;
 		bufferCreateInfo.size = bufferDescriptor.dataSize;
-		bufferCreateInfo.usage = bufferDescriptor.usageFlag;
+		bufferCreateInfo.usage = static_cast<VkBufferUsageFlags>(GetBufferUsageFlags(bufferDescriptor.usageFlags));
 
 		VmaAllocationCreateInfo vmaAllocCreateInfo = {};
-		//vmaAllocCreateInfo.usage = bufferDescriptor.memoryUsage;
+		vmaAllocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
 		vmaAllocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
 		Buffer buffer;

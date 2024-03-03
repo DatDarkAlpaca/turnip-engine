@@ -16,6 +16,9 @@ namespace tur::vulkan
 		RenderDeviceVK(NON_OWNING Window* window);
 
 	public:
+		inline GraphicsAPI API() override { return GraphicsAPI::VULKAN; }
+
+	public:
 		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription) override;
 
 		BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) override;

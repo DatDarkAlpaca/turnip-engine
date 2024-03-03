@@ -20,45 +20,19 @@ public:
 		TUR_LOG_INFO("Application initialized");
 
 		auto& device = r_Engine->Device();
-		
-		// Pipeline:
-		{
-			ShaderDescriptor shaderDesc[2];
-			{
-				 shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
-				 shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
-				
-				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
-				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
-			}
-			auto vertexShader = device->CreateShader(shaderDesc[0]);
-			auto fragShader = device->CreateShader(shaderDesc[1]);
-
-			PipelineStateDescriptor pipelineDesc;
-			{
-				pipelineDesc.vertexShader = vertexShader;
-				pipelineDesc.fragmentShader = fragShader;
-				pipelineDesc.frontFace = FrontFace::COUNTER_CLOCKWISE;
-				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
-				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 0, 3, LayoutType::FLOAT_32, false });
-				pipelineDesc.inputLayouts.push_back(InputLayoutElement{ 1, 2, LayoutType::FLOAT_32, false });
-			}
-			pso = device->CreatePipeline(pipelineDesc);
-		}
 
 		// VBO:
 		{
 			float data[] = {
-				0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-				0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-				0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-				0.0f, 0.5f, 0.0f, 0.0f, 1.0f,
+				0.0f, 0.0f, 0.0f,      0.0f, 0.0f,
+				0.5f, 0.0f, 0.0f,      1.0f, 0.0f,
+				0.5f, 0.5f, 0.0f,      1.0f, 1.0f,
+				0.0f, 0.5f, 0.0f,      0.0f, 1.0f,
 			};
 
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.bindingFlag = BindingFlag::ARRAY_BUFFER;
-				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
+				bufferDesc.usageFlags = UsageFlag::ARRAY_BUFFER;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
@@ -72,13 +46,38 @@ public:
 
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.bindingFlag = BindingFlag::ELEMENT_ARRAY_BUFFER;
-				bufferDesc.usageFlag = UsageFlag::STATIC_DRAW;
+				bufferDesc.usageFlags = UsageFlag::INDEX_BUFFER;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
 
 			ebo = device->CreateBuffer(bufferDesc);
+		}
+
+		// Pipeline:
+		{
+			ShaderDescriptor shaderDesc[2];
+			{
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
+
+				//shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic.vert", ShaderType::VERTEX };
+				//shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic.frag", ShaderType::FRAGMENT };
+			}
+			auto vertexShader = device->CreateShader(shaderDesc[0]);
+			auto fragShader = device->CreateShader(shaderDesc[1]);
+
+			PipelineStateDescriptor pipelineDesc;
+			{
+				pipelineDesc.vertexShader = vertexShader;
+				pipelineDesc.fragmentShader = fragShader;
+				pipelineDesc.frontFace = FrontFace::COUNTER_CLOCKWISE;
+				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
+
+				pipelineDesc.vertexFormat.Add(VertexAttribute{ 0, Format::R32G32B32_SFLOAT, 5 * sizeof(float), 0 });
+				pipelineDesc.vertexFormat.Add(VertexAttribute{ 1, Format::R32G32_SFLOAT   , 5 * sizeof(float), 3 });
+			}
+			pso = device->CreatePipeline(pipelineDesc);
 		}
 	}
 
@@ -130,7 +129,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		// ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
+		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 0 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

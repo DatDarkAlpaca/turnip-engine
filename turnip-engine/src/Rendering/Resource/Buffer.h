@@ -4,45 +4,46 @@
 
 namespace tur
 {
-	enum class BindingFlag : uint32_t
-	{
-		ARRAY_BUFFER,
-		ATOMIC_COUNTER_BUFFER,
-		COPY_READ_BUFFER,
-		COPY_WRITE_BUFFER,
-		DISPATCH_INDIRECT_BUFFER,
-		DRAW_INDIRECT_BUFFER,
-		ELEMENT_ARRAY_BUFFER,
-		PIXEL_PACK_BUFFER,
-		PIXEL_UNPACK_BUFFER,
-		QUERY_BUFFER,
-		SHADER_STORAGE_BUFFER,
-		TEXTURE_BUFFER,
-		TRANSFORM_FEEDBACK_BUFFER,
-		UNIFORM_BUFFER
-	};
-
 	enum class UsageFlag : uint32_t
 	{
-		STREAM_DRAW, 
-		STREAM_READ, 
+		NONE					= 0 << 0,
+		ARRAY_BUFFER			= 1 << 0,
+		INDEX_BUFFER			= 1 << 1,
+		UNIFORM_BUFFER			= 1 << 2,
+		
+		TRANSFER_DST			= 1 << 3,
+		TRANSFER_SRC			= 1 << 4,
+
+		MAX_ITEMS				= 5
+	};
+	DECLARE_STATE(tur::UsageFlag);
+
+	enum class DataStorage : uint32_t
+	{
+		STREAM_DRAW,
+		STREAM_READ,
 		STREAM_COPY,
 
-		STATIC_DRAW, 
-		STATIC_READ, 
+		STATIC_DRAW,
+		STATIC_READ,
 		STATIC_COPY,
 
 		DYNAMIC_DRAW,
-		DYNAMIC_READ, 
+		DYNAMIC_READ,
 		DYNAMIC_COPY,
 	};
 
 	struct BufferDescriptor
 	{
-		BindingFlag bindingFlag;
-		UsageFlag usageFlag;
+		// TODO: Use an explicit standard for usage flags across apis.
+		State<UsageFlag> usageFlags = {};
+		
 		void* data;
 		uint32_t dataSize;
+
+		/* Optional: Only used in OpenGL.
+		*/
+		DataStorage dataStorage = DataStorage::STATIC_DRAW;
 	};
 
 	enum class BufferHandle : uint32_t { INVALID = InvalidHandle };

@@ -15,6 +15,9 @@ namespace tur
 		virtual ~RenderDevice() = default;
 
 	public:
+		virtual GraphicsAPI API() = 0;
+
+	public:
 		virtual RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription) = 0;
 
 		virtual BufferHandle CreateBuffer(const BufferDescriptor& bufferDescription) = 0;

@@ -9,6 +9,8 @@
 #include "Core/Logger/Logger.h"
 #include "Core/Assert/Assert.h"
 
+#include "Util/State/State.h"
+
 #define BIND(function, argument) std::bind(function, argument, std::placeholders::_1)
 
 #define EXPOSE_PROPERTY(ClassName, SetterName, PropertyName)						\

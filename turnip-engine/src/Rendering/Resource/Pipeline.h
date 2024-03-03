@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Rendering/Type/Types.h"
-#include "InputLayout.h"
+#include "VertexFormat.h"
 #include "Renderpass.h"
 #include "Shader.h"
 
@@ -11,8 +11,8 @@ namespace tur
 {
 	struct PipelineStateDescriptor
 	{
-		uint32_t vertexBindingDescriptionCount = 0;
-		uint32_t vertexAttributeDescriptionCount = 0;
+		// Vertex Format:
+		VertexFormat vertexFormat;
 
 		// Input Assembly:
 		PrimitiveTopology primitiveTopology = PrimitiveTopology::TRIANGLES;
@@ -42,9 +42,6 @@ namespace tur
 		// Multisample:
 		bool enableMultisampling = false;
 		uint32_t sampleCount = 1;
-
-		// Layout:
-		std::vector<InputLayoutElement> inputLayouts;
 
 		// Color Blending:
 		ColorComponents blendingWriteMask = ColorComponents::R | ColorComponents::G | ColorComponents::B | ColorComponents::A;

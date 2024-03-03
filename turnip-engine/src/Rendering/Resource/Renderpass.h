@@ -24,7 +24,7 @@ namespace tur
 		AttachmentLoadOperation stencilLoadOperation = AttachmentLoadOperation::DONT_CARE;
 		AttachmentStoreOperation stencilStoreOperation = AttachmentStoreOperation::DONT_CARE;
 
-		DataFormat imageFormat = DataFormat::B8_G8_R8_A8_UNORM;
+		Format imageFormat = Format::B8G8R8A8_UNORM;
 		ImageLayout initialLayout = ImageLayout::UNDEFINED;
 		ImageLayout finalLayout = ImageLayout::PRESENT_SRC;
 		ImageLayout attachmentLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL;

@@ -57,23 +57,28 @@ namespace tur::gl
 
 		// Input Layout:
 		uint64_t stride = 0;
-		for (const auto& layout : pipeline.inputLayouts)
-			stride += layout.componentAmount * GetLayoutTypeSize(layout.valueType);
+		for (const auto& attribute : pipeline.vertexFormat.attributes)
+		{
+			auto formatInfo = gl::GetFormat(attribute.layoutFormat);
+			stride += formatInfo.componentSize * formatInfo.componentAmount;
+		}
 
 		uint64_t offset = 0;
-		for (const auto& layout : pipeline.inputLayouts)
+		for (const auto& attribute : pipeline.vertexFormat.attributes)
 		{
-			glEnableVertexAttribArray(layout.location);
+			auto formatInfo = gl::GetFormat(attribute.layoutFormat);
+
+			glEnableVertexAttribArray(attribute.location);
 			glVertexAttribPointer(
-				layout.location,
-				layout.componentAmount,
-				gl::GetInputLayoutType(layout.valueType),
+				attribute.location,
+				formatInfo.componentAmount,
+				gl::GetAttributeFormat(attribute.layoutFormat),
 				false,
 				(int)stride,
 				(void*)offset
 			);
 
-			offset += layout.componentAmount * GetLayoutTypeSize(layout.valueType);
+			offset += formatInfo.componentSize;
 		}
 
 		// Rasterizer:
@@ -121,13 +126,13 @@ namespace tur::gl
 	void GraphicsRenderCommandsGL::SetVertexBuffer(BufferHandle handle)
 	{
 		auto [target, id] = r_RenderDevice->GetBuffer(handle);
-		glBindBuffer(gl::GetBufferBindingFlag(target), id);
+		glBindBuffer(gl::GetBufferUsageFlags(target), id);
 	}
 
 	void GraphicsRenderCommandsGL::SetIndexBuffer(BufferHandle handle)
 	{
 		auto [target, id] = r_RenderDevice->GetBuffer(handle);
-		glBindBuffer(gl::GetBufferBindingFlag(target), id);
+		glBindBuffer(gl::GetBufferUsageFlags(target), id);
 	}
 
 	void GraphicsRenderCommandsGL::Draw(uint32_t first, uint32_t count)
