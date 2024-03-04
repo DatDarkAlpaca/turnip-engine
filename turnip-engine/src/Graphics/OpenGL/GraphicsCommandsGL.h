@@ -13,7 +13,7 @@ namespace tur::gl
 	class GraphicsRenderCommandsGL : public GraphicsRenderCommands
 	{
 	public:
-		explicit GraphicsRenderCommandsGL(NON_OWNING RenderDeviceGL* renderContext);
+		explicit GraphicsRenderCommandsGL(NON_OWNING RenderDeviceGL* renderDevice);
 
 	public:
 		void Begin() override;

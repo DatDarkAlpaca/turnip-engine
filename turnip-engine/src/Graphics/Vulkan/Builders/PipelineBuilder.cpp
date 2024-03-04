@@ -31,7 +31,6 @@ namespace tur::vulkan
 			}
 
 			// TODO: link input bindings
-			uint32_t offset = 0;
 			for (const auto& attribute : descriptor.vertexFormat.attributes)
 			{
 				vk::VertexInputAttributeDescription attributeDescription;
@@ -39,10 +38,7 @@ namespace tur::vulkan
 				attributeDescription.location = attribute.location;
 				attributeDescription.format = GetFormat(attribute.layoutFormat);
 
-				if (!attribute.offset)
-					attributeDescription.offset = attribute.offset;
-				else 
-					attributeDescription.offset = offset;
+				attributeDescription.offset = attribute.offset;
 
 				attributes.push_back(attributeDescription);
 			}

@@ -25,7 +25,7 @@ namespace tur::gl
 		}
 
 	public:
-		inline GraphicsAPI API() override { return GraphicsAPI::VULKAN; }
+		inline GraphicsAPI API() override { return GraphicsAPI::OPENGL; }
 
 	public:
 		RenderpassHandle CreateRenderpass(const RenderpassDescriptor& renderpassDescription)

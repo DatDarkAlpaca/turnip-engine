@@ -36,8 +36,8 @@ namespace tur
 		bool enableDepthBias = false;
 		PolygonMode polygonMode = PolygonMode::FILL;
 		float lineWidth = 1.0f;
-		CullMode cullMode = CullMode::BACK;
-		FrontFace frontFace = FrontFace::CLOCKWISE;
+		CullMode cullMode = CullMode::FRONT;
+		FrontFace frontFace = FrontFace::COUNTER_CLOCKWISE;
 
 		// Multisample:
 		bool enableMultisampling = false;

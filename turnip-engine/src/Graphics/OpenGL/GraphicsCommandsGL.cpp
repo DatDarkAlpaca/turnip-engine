@@ -4,8 +4,8 @@
 
 namespace tur::gl
 {
-	GraphicsRenderCommandsGL::GraphicsRenderCommandsGL(NON_OWNING RenderDeviceGL* renderContext)
-		: r_RenderDevice(renderContext)
+	GraphicsRenderCommandsGL::GraphicsRenderCommandsGL(NON_OWNING RenderDeviceGL* renderDevice)
+		: r_RenderDevice(renderDevice)
 	{
 		glGenVertexArrays(1, &VAO);
 	}

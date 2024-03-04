@@ -23,7 +23,7 @@ namespace tur::vulkan
 		buffer.data = bufferDescriptor.data;
 		buffer.dataSize = bufferDescriptor.dataSize;
 
-		VkResult resul = vmaCreateBuffer(
+		VkResult result = vmaCreateBuffer(
 			allocator,
 			&bufferCreateInfo,
 			&vmaAllocCreateInfo,
@@ -31,6 +31,11 @@ namespace tur::vulkan
 			&buffer.allocation,
 			&buffer.info
 		);
+
+		void* data = nullptr;
+		vmaMapMemory(allocator, buffer.allocation, &data);
+		memcpy(data, buffer.data, buffer.dataSize);
+		vmaUnmapMemory(allocator, buffer.allocation);
 
 		return buffer;
 	}

@@ -109,7 +109,7 @@ namespace tur::vulkan
 	{
 		// TODO: make it flexible.
 		auto buffer = r_Device->GetBuffer(handle);
-		m_CurrentBuffer.bindIndexBuffer(buffer, 0, vk::IndexType::eUint16);
+		m_CurrentBuffer.bindIndexBuffer(buffer, 0, vk::IndexType::eUint32);
 	}
 
 	void GraphicsRenderCommandsVK::Draw(uint32_t first, uint32_t count)

@@ -36,7 +36,7 @@ public:
 				auto b = UsageFlag::TRANSFER_DST;
 				auto c = a | b;
 
-				bufferDesc.usageFlags = UsageFlag::VERTEX_BUFFER | UsageFlag::TRANSFER_DST;
+				bufferDesc.usageFlags = UsageFlag::VERTEX_BUFFER;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
@@ -50,7 +50,7 @@ public:
 
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.usageFlags = UsageFlag::INDEX_BUFFER | UsageFlag::TRANSFER_DST;
+				bufferDesc.usageFlags = UsageFlag::INDEX_BUFFER;
 				bufferDesc.dataSize = sizeof(data);
 				bufferDesc.data = data;
 			}
@@ -60,13 +60,18 @@ public:
 
 		// Pipeline:
 		{
+			// TODO: cross-compiling | transcompiling shaders.
 			ShaderDescriptor shaderDesc[2];
+
+			if (r_Engine->Device()->API() == GraphicsAPI::VULKAN)
 			{
 				shaderDesc[0] = ShaderDescriptor{ "res/shaders/vertex.spv", ShaderType::VERTEX };
 				shaderDesc[1] = ShaderDescriptor{ "res/shaders/fragment.spv", ShaderType::FRAGMENT };
-
-				// shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
-				// shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
+			}
+			else if (r_Engine->Device()->API() == GraphicsAPI::OPENGL)
+			{
+				shaderDesc[0] = ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX };
+				shaderDesc[1] = ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT };
 			}
 			auto vertexShader = device->CreateShader(shaderDesc[0]);
 			auto fragShader = device->CreateShader(shaderDesc[1]);
@@ -81,8 +86,7 @@ public:
 				pipelineDesc.vertexShader = vertexShader;
 				pipelineDesc.fragmentShader = fragShader;
 				pipelineDesc.frontFace = FrontFace::CLOCKWISE;
-				pipelineDesc.cullMode = CullMode::FRONT;
-				pipelineDesc.primitiveTopology = PrimitiveTopology::TRIANGLES;
+				pipelineDesc.cullMode = CullMode::NONE;
 				pipelineDesc.vertexFormat = vertexFormat;
 			}
 			pso = device->CreatePipeline(pipelineDesc);
