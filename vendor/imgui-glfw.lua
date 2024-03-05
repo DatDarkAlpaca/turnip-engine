@@ -1,4 +1,4 @@
-project "imgui"
+project "imgui-glfw"
 	kind "StaticLib"
     warnings "off"
     language "C++"
@@ -9,17 +9,14 @@ project "imgui"
 	targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 
+    includedirs {
+        vendor_include_dirs["imgui"],
+        vendor_include_dirs["glfw"]
+    }
+
     files {
-		"imgui/imconfig.h",
-		"imgui/imgui.h",
-		"imgui/imgui.cpp",
-		"imgui/imgui_draw.cpp",
-		"imgui/imgui_internal.h",
-		"imgui/imgui_widgets.cpp",
-		"imgui/imstb_rectpack.h",
-		"imgui/imstb_textedit.h",
-		"imgui/imstb_truetype.h",
-		"imgui/imgui_demo.cpp"
+		"imgui/backends/imgui_impl_glfw.h",
+		"imgui/backends/imgui_impl_glfw.cpp",
 	}
 
 	filter "system:linux"

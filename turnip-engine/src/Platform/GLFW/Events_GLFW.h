@@ -4,8 +4,6 @@
 #include "Core/Event/MouseEvents/MouseEvent.h"
 
 #define GLFW_INPUT
-
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 namespace tur

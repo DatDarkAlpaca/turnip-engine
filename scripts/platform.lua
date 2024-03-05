@@ -1,4 +1,4 @@
-function DetectPlatform()
+function detect_platform()
     filter { "system:Windows" }
         defines {
             -- "TUR_WINDOWING_WIN32",
@@ -32,4 +32,4 @@ function DetectPlatform()
             "src/Platform/GLFW/**.h",
         }
     filter { }
-end   
+end

@@ -27,7 +27,7 @@ namespace tur::vulkan
 			{
 				return m_Device.createCommandPool(poolInfo);
 			}
-			catch (const vk::SystemError& err)
+			catch (const vk::SystemError& _)
 			{
 				TUR_BREAKPOINT(); // TODO
 				return nullptr;

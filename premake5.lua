@@ -1,6 +1,6 @@
 require "scripts/clear"
-include "scripts/platform"
-include "vendor/dependencies/conandeps.premake5.lua"
+require "scripts/platform"
+require "vendor/dependencies"
 
 workspace "turnip-engine"
     architecture "x64"
@@ -20,6 +20,19 @@ binaries_path       = "%{wks.location}/build/bin/" .. "%{output_path}"
 intermediate_path   = "%{wks.location}/build/intermediate/" .. "%{output_path}"
 vendor_path         = "%{wks.location}/vendor/"
 
-include "vendor/imgui.lua"
+group "dependencies"
+    include "vendor/glfw.lua"
+    include "vendor/glad.lua"
+    include "vendor/imgui.lua"
+    include "vendor/vma.lua"
+
+    if os.host("windows") then
+        include "vendor/imgui-glfw.lua"
+    end
+
+    include "vendor/imgui-opengl.lua"
+
+group ""
+
 include "turnip-engine/engine.lua"
 include "turnip-editor/editor.lua"

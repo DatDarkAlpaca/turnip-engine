@@ -2,17 +2,14 @@ project "turnip-editor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
+    staticruntime "off"
 
     targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 
     pchheader "pch.h"
     pchsource "src/pch.cpp"
-
-    links {
-        "turnip-engine"
-    }
-
+    
     files {
         "src/**.cpp",
         "src/**.h"
@@ -23,14 +20,23 @@ project "turnip-editor"
         "%{prj.location}/src",
         "%{wks.location}/turnip-engine/",
         "%{wks.location}/turnip-engine/src",
-        "%{vendor_path}/imgui",
-        "%{vendor_path}/imgui/backends",
     }
 
+    links {
+        "turnip-engine"
+    }
+
+    -- Dependencies:
+    set_vendor_include_dirs()
+    set_vendor_defines()
+
     -- Platform
-    DetectPlatform()
+    detect_platform()
 
     -- Configurations
+    filter "system:windows"
+        systemversion "latest"
+
     filter { "configurations:Debug" }
         runtime "Debug"
         symbols "on"
@@ -42,5 +48,3 @@ project "turnip-editor"
         optimize "on"
         inlining "auto"
     filter { }
-
-    conan_setup()

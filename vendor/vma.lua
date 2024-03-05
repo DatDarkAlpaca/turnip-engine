@@ -1,4 +1,4 @@
-project "imgui"
+project "vma"
 	kind "StaticLib"
     warnings "off"
     language "C++"
@@ -9,17 +9,17 @@ project "imgui"
 	targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 
+	includedirs {
+		vendor_include_dirs["vulkan-headers"],
+		"VulkanMemoryAllocator/include",
+	}
+
     files {
-		"imgui/imconfig.h",
-		"imgui/imgui.h",
-		"imgui/imgui.cpp",
-		"imgui/imgui_draw.cpp",
-		"imgui/imgui_internal.h",
-		"imgui/imgui_widgets.cpp",
-		"imgui/imstb_rectpack.h",
-		"imgui/imstb_textedit.h",
-		"imgui/imstb_truetype.h",
-		"imgui/imgui_demo.cpp"
+		"VulkanMemoryAllocator/include/vk_mem_alloc*.h",
+		"VulkanMemoryAllocator/src/Common.cpp",
+		"VulkanMemoryAllocator/src/Common.h",
+		"VulkanMemoryAllocator/src/VmaUsage.cpp",
+		"VulkanMemoryAllocator/src/VmaUsage.h",
 	}
 
 	filter "system:linux"

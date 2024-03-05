@@ -1,3 +1,24 @@
 [submodule "vendor/imgui"]
 	path = vendor/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/glfw/glfw
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "vendor/glm"]
+	path = vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "vendor/entt"]
+	path = vendor/entt
+	url = https://github.com/skypjack/entt
+[submodule "vendor/VulkanMemoryAllocator"]
+	path = vendor/VulkanMemoryAllocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+[submodule "vendor/Vulkan-Headers"]
+	path = vendor/Vulkan-Headers
+	url = https://github.com/KhronosGroup/Vulkan-Headers
+[submodule "vendor/glad-premake"]
+	path = vendor/glad-premake
+	url = https://github.com/premake-libs/glad

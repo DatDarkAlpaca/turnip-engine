@@ -2,19 +2,23 @@ project "turnip-engine"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
+    staticruntime "off"
 
     targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
-
+	
     pchheader "pch.h"
     pchsource "src/pch.cpp"
 
-    functionlevellinking "on"
-
-    links {
-        "imgui"
+    libdirs {
+        os.getenv("VULKAN_SDK") .. '/Lib/'
     }
 
+    links {
+        "imgui",
+        "vulkan-1.lib"
+    }
+    
     files {
         "src/Core/**.cpp",
         "src/Core/**.h",
@@ -22,10 +26,6 @@ project "turnip-engine"
         "src/Rendering/**.h",
         "src/Graphics/**.cpp",
         "src/Graphics/**.h",
-        "src/Platform/OpenGL/**.h",
-        "src/Platform/OpenGL/**.cpp",
-        "src/Platform/Vulkan/**.h",
-        "src/Platform/Vulkan/**.cpp",
         "src/Util/**.cpp",
         "src/Util/**.h",
         "src/Platform/*.h",
@@ -33,22 +33,22 @@ project "turnip-engine"
         "src/*.cpp",
     }
    
-    defines {
-        "GLFW_STATIC",
-        "GLFW_VULKAN_STATIC",
-    }
-
     includedirs {
         "%{prj.location}",
         "%{prj.location}/src",
-        "%{vendor_path}/imgui",
-        "%{vendor_path}/imgui/backends",
     }
 
+    -- Dependencies:
+    setup_vendors()
+
     -- Platform 
-    DetectPlatform()
+    detect_platform()
 
     -- Configurations
+    filter "system:windows"
+        systemversion "latest"
+    filter { }
+
     filter { "configurations:Debug" }
         runtime "Debug"
         symbols "on"
@@ -60,5 +60,3 @@ project "turnip-engine"
         optimize "on"
         inlining "auto"
     filter { }
-
-    conan_setup()

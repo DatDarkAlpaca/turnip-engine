@@ -11,6 +11,7 @@ newaction {
         os.rmdir("./bin")
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
+        os.rmdir("./scripts/CMakeFiles")
         os.remove('**.sln')
         os.remove('**.vcxproj')
         os.remove('**.vcxproj.filters')
@@ -19,6 +20,10 @@ newaction {
         os.remove('**.targets')
         os.remove('**.Debug')
         os.remove('**.Release')
+        os.remove('**.log')
+        os.remove('**.ini')
+        os.remove('**.cmake')
+        os.remove('CMakeCache.txt')
     end
 }
 

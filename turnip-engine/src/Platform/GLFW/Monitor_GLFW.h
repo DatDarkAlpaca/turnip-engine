@@ -2,7 +2,6 @@
 #include "Common.h"
 #include "Core/Window/MonitorData.h"
 
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 namespace tur
