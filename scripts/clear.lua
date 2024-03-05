@@ -11,6 +11,7 @@ newaction {
         os.rmdir("./bin")
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
+        os.remove('*.sln')
         os.remove('turnip-editor/**.sln')
         os.remove('turnip-editor/**.vcxproj')
         os.remove('turnip-editor/**.vcxproj.filters')
