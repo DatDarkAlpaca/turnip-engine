@@ -34,7 +34,6 @@ namespace tur::platform
 		if (result == VK_SUCCESS)
 			return surface;
 
-		TUR_LOG_ERROR("Failed to create window surface using GLFW and Vulkan");
-		return nullptr;
+		TUR_LOG_CRITICAL("Failed to create window surface using GLFW and Vulkan");
 	}
 }

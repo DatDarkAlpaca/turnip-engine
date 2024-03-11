@@ -17,6 +17,51 @@ namespace tur::vulkan
 
 	}
 
+	RenderDeviceVK::~RenderDeviceVK()
+	{
+		logicalDevice.waitIdle();
+
+		// Main Command Pool:
+		logicalDevice.destroyCommandPool(commandPool);
+
+		// Graphics Pipelines:
+		{
+			for (const auto& pipeline : m_Pipelines)
+			{
+				logicalDevice.destroyPipeline(pipeline.pipeline);
+				logicalDevice.destroyPipelineLayout(pipeline.layout);
+			}
+
+			for (const auto& renderpass : m_Renderpasses)
+				logicalDevice.destroyRenderPass(renderpass.renderpass);
+		}
+	
+		// Frames:
+		{
+			for (const auto& frame : swapchain.frames) 
+			{
+				logicalDevice.destroyImageView(frame.view);
+				logicalDevice.destroyFramebuffer(frame.framebuffer);
+				logicalDevice.destroyFence(frame.inFlightFence);
+				logicalDevice.destroySemaphore(frame.imageAvailableSemaphore);
+				logicalDevice.destroySemaphore(frame.renderFinishedSemaphore);
+			}
+
+			logicalDevice.destroySwapchainKHR(swapchain.swapchain);
+		}
+		
+		// Buffers.
+		{
+			for (const auto& buffer : m_Buffers)
+				vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
+		}
+
+		logicalDevice.destroy();
+
+		instance.destroySurfaceKHR(surface);
+		instance.destroy();
+	}
+
 	RenderpassHandle RenderDeviceVK::CreateRenderpass(const RenderpassDescriptor& renderpassDescription)
 	{
 		RenderpassBuilder builder(renderpassDescription);
@@ -84,6 +129,11 @@ namespace tur::vulkan
 		m_Pipelines.push_back(pipeline);
 
 		return PipelineStateHandle(m_Pipelines.size() - 1);
+	}
+
+	tur_unique<GraphicsRenderCommands> RenderDeviceVK::CreateGraphicsCommands()
+	{
+		return tur::MakeUnique<vulkan::GraphicsRenderCommandsVK>(this);
 	}
 
 	void RenderDeviceVK::FinishSetup()

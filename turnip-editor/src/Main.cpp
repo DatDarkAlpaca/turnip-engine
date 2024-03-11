@@ -20,6 +20,8 @@ public:
 
 		auto& device = r_Engine->Device();
 
+		r_Engine->GetWindow().Show();
+
 		// VBO:
 		{
 			float data[] = {
@@ -92,6 +94,31 @@ public:
 		}
 	}
 
+	void OnEvent(Event& event) override
+	{
+		Subscriber subscriber(event);
+		subscriber.subscribe<KeyPressedEvent>([&](const KeyPressedEvent& keyPress) -> bool {
+			if (keyPress.key == Key::KEY_O && r_Engine->Device()->API() == GraphicsAPI::VULKAN)
+			{
+				r_Engine->ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
+
+				graphics.reset();
+				graphics = r_Engine->Device()->CreateGraphicsCommands();
+				OnEngineStartup();
+			}
+			else if (keyPress.key == Key::KEY_V && r_Engine->Device()->API() == GraphicsAPI::OPENGL)
+			{
+				r_Engine->ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 1 });
+			
+				graphics.reset();
+				graphics = r_Engine->Device()->CreateGraphicsCommands();
+				OnEngineStartup();
+			}
+
+			return false;
+		});
+	}
+
 	void OnRender() override
 	{
 		auto& device = r_Engine->Device();
@@ -140,7 +167,7 @@ public:
 	TurnipEditor()
 	{
 		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::VULKAN, 1, 1 });
+		ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
 
 		// Views:
 		View().Add(MakeUnique<MainView>(this));

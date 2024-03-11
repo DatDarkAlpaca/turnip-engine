@@ -96,7 +96,6 @@ namespace tur
 
 	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification, RenderInitializer* initializer)
 	{
-		g_RenderDevice.reset();
 		g_RenderDevice = std::move(RenderDevice::Create(g_Window, specification, initializer));
 	}
 }

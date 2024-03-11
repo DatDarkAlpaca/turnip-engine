@@ -15,6 +15,8 @@ namespace tur::vulkan
 	public:
 		RenderDeviceVK(NON_OWNING Window* window);
 
+		~RenderDeviceVK();
+
 	public:
 		inline GraphicsAPI API() override { return GraphicsAPI::VULKAN; }
 
@@ -28,10 +30,7 @@ namespace tur::vulkan
 		PipelineStateHandle CreatePipeline(const PipelineStateDescriptor& pipelineDescriptor) override;
 
 	public:
-		tur_unique<GraphicsRenderCommands> CreateGraphicsCommands() override
-		{
-			return tur::MakeUnique<vulkan::GraphicsRenderCommandsVK>(this);
-		}
+		tur_unique<GraphicsRenderCommands> CreateGraphicsCommands() override;
 
 	public:
 		Barrier Submit(RenderCommands* context) override;
@@ -62,6 +61,11 @@ namespace tur::vulkan
 		inline vulkan::RenderpassVulkan GetRenderpass(RenderpassHandle handle)
 		{
 			return m_Renderpasses[static_cast<uint32_t>(handle)];
+		}
+
+		inline void ClearShaders()
+		{
+			m_Shaders.clear();
 		}
 
 	public:

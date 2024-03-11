@@ -299,6 +299,8 @@ namespace tur::vulkan
 
 		m_Device.destroyShaderModule(fragmentModule);
 
+		r_RenderDevice->ClearShaders();
+
 		// Output:
 		Pipeline pipelineResult;
 		{
