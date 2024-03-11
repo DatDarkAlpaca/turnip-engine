@@ -254,11 +254,7 @@ namespace tur::gl
 
 namespace tur::gl
 {
-	// TUR_LOG_WARN("R32_G32_SINT is not defined in OpenGL. Using GL_RG32UI");
-	// return GL_RG32UI;
-
-#define UNDEFINED_FORMAT(FormatName, Default) TUR_LOG_WARN("{} is not defined in OpenGL. Using {}", ##FormatName, ##Default); [[fallthrough]];
-#define UNDEFINED_FORMAT_END(FormatName, Default) TUR_LOG_WARN("{} is not defined in OpenGL. Using {}", ##FormatName, ##Default);
+#define UNDEFINED_FORMAT(FormatName, Default) TUR_LOG_WARN("{} is not defined in OpenGL. Using {}", ##FormatName, ##Default);
 
 	struct FormatInfo
 	{
@@ -275,24 +271,31 @@ namespace tur::gl
 			{
 				case Format::R4G4_UNORM_PACK8:
 					UNDEFINED_FORMAT("R4G4_UNORM_PACK8", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::R4G4B4A4_UNORM_PACK16:
 					UNDEFINED_FORMAT("R4G4B4A4_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::B4G4R4A4_UNORM_PACK16:
 					UNDEFINED_FORMAT("B4G4R4A4_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::R5G6B5_UNORM_PACK16:
 					UNDEFINED_FORMAT("R5G6B5_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::B5G6R5_UNORM_PACK16:
 					UNDEFINED_FORMAT("B5G6R5_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::R5G5B5A1_UNORM_PACK16:
 					UNDEFINED_FORMAT("R5G5B5A1_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::B5G5R5A1_UNORM_PACK16:
 					UNDEFINED_FORMAT("B5G5R5A1_UNORM_PACK16", "GL_NONE");
+					[[fallthrough]];
 
 				case Format::A1R5G5B5_UNORM_PACK16:
 					return { GL_NONE, sizeof(int), 1 };
@@ -305,15 +308,18 @@ namespace tur::gl
 
 				case Format::R8_UNORM:
 					UNDEFINED_FORMAT("R8_UNORM", "GL_R8_SNORM");
+					[[fallthrough]];
 
 				case Format::R8_SNORM:
 					return { GL_R8_SNORM, sizeof(uint8_t), 1 };
 
 				case Format::R8_USCALED:
 					UNDEFINED_FORMAT("R8_USCALED", "GL_R8UI");
+					[[fallthrough]];
 
 				case Format::R8_SSCALED:
 					UNDEFINED_FORMAT("R8_SSCALED", "GL_R8UI");
+					[[fallthrough]];
 
 				case Format::R8_UINT:
 					return { GL_R8UI, sizeof(uint8_t), 1 };
@@ -332,15 +338,18 @@ namespace tur::gl
 
 				case Format::R8G8_UNORM:
 					UNDEFINED_FORMAT("R8G8_UNORM", "GL_RG8_SNORM");
+					[[fallthrough]];
 
 				case Format::R8G8_SNORM:
 					return { GL_RG8_SNORM, sizeof(uint8_t), 2 };
 
 				case Format::R8G8_USCALED:
 					UNDEFINED_FORMAT("R8G8_USCALED", "GL_RG8UI");
+					[[fallthrough]];
 
 				case Format::R8G8_SSCALED:
 					UNDEFINED_FORMAT("R8G8_SSCALED", "GL_RG8UI");
+					[[fallthrough]];
 
 				case Format::R8G8_UINT:
 					return { GL_RG8UI, sizeof(uint8_t), 2 };
@@ -359,15 +368,18 @@ namespace tur::gl
 
 				case Format::R8G8B8_UNORM:
 					UNDEFINED_FORMAT("R8G8B8_UNORM", "GL_RGB8_SNORM");
+					[[fallthrough]];
 
 				case Format::R8G8B8_SNORM:
 					return { GL_RGB8_SNORM, sizeof(uint8_t), 3 };
 
 				case Format::R8G8B8_USCALED:
 					UNDEFINED_FORMAT("R8G8B8_USCALED", "GL_RGB8UI");
+					[[fallthrough]];
 
 				case Format::R8G8B8_SSCALED:
 					UNDEFINED_FORMAT("R8G8B8_SSCALED", "GL_RGB8UI");
+					[[fallthrough]];
 
 				case Format::R8G8B8_UINT:
 					return { GL_RGB8UI, sizeof(uint8_t), 3 };
@@ -386,25 +398,31 @@ namespace tur::gl
 
 				case Format::B8G8R8_UNORM:
 					UNDEFINED_FORMAT("B8G8R8_UNORM", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_SNORM:
 					UNDEFINED_FORMAT("B8G8R8_SNORM", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_USCALED:
 					UNDEFINED_FORMAT("B8G8R8_USCALED", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_SSCALED:
 					UNDEFINED_FORMAT("B8G8R8_SSCALED", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_UINT:
 					UNDEFINED_FORMAT("B8G8R8_UINT", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_SINT:
 					UNDEFINED_FORMAT("B8G8R8_SINT", "GL_BGR");
+					[[fallthrough]];
 
 				case Format::B8G8R8_SRGB:
 				{
-					UNDEFINED_FORMAT_END("B8G8R8_SINT", "GL_BGR");
+					UNDEFINED_FORMAT("B8G8R8_SINT", "GL_BGR");
 					return { GL_BGR, sizeof(uint8_t), 3 };
 				}
 			}
@@ -422,18 +440,21 @@ namespace tur::gl
 
 				case Format::R8G8B8A8_USCALED:
 					UNDEFINED_FORMAT("R8G8B8A8_USCALED", "GL_RGBA8UI");
+					[[fallthrough]];
 
 				case Format::R8G8B8A8_SSCALED:
 					UNDEFINED_FORMAT("R8G8B8A8_SSCALED", "GL_RGBA8UI");
+					[[fallthrough]];
 
 				case Format::R8G8B8A8_UINT:
 					return { GL_RGBA8UI, sizeof(uint8_t), 4 };
 
 				case Format::R8G8B8A8_SINT:
 					UNDEFINED_FORMAT("R8G8B8A8_SINT", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::R8G8B8A8_SRGB:
-					UNDEFINED_FORMAT_END("R8G8B8A8_SRGB", "GL_BGRA");
+					UNDEFINED_FORMAT("R8G8B8A8_SRGB", "GL_BGRA");
 					return { GL_BGRA, sizeof(uint8_t), 4 };
 			}
 
@@ -441,28 +462,35 @@ namespace tur::gl
 			{
 				case Format::B8G8R8A8:
 					UNDEFINED_FORMAT("B8G8R8A8", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_UNORM:
 					UNDEFINED_FORMAT("B8G8R8A8_UNORM", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_SNORM:
 					UNDEFINED_FORMAT("B8G8R8A8_SNORM", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_USCALED:
 					UNDEFINED_FORMAT("B8G8R8A8_USCALED", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_SSCALED:
 					UNDEFINED_FORMAT("B8G8R8A8_SSCALED", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_UINT:
 					UNDEFINED_FORMAT("B8G8R8A8_UINT", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_SINT:
 					UNDEFINED_FORMAT("B8G8R8A8_SINT", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::B8G8R8A8_SRGB:
 				{
-					UNDEFINED_FORMAT_END("B8G8R8A8_SRGB", "GL_BGRA");
+					UNDEFINED_FORMAT("B8G8R8A8_SRGB", "GL_BGRA");
 					return { GL_BGRA, sizeof(uint8_t), 4 };
 				}
 			}
@@ -471,25 +499,31 @@ namespace tur::gl
 			{
 				case Format::A8B8G8R8_UNORM_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_UNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_SNORM_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_SNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_USCALED_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_USCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_SSCALED_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_SSCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_UINT_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_UINT_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_SINT_PACK32:
 					UNDEFINED_FORMAT("A8B8G8R8_SINT_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A8B8G8R8_SRGB_PACK32:
 				{
-					UNDEFINED_FORMAT_END("A8B8G8R8_SRGB_PACK32", "GL_BGRA");
+					UNDEFINED_FORMAT("A8B8G8R8_SRGB_PACK32", "GL_BGRA");
 					return { GL_BGRA, sizeof(uint8_t), 4 };
 				}
 			}
@@ -498,22 +532,27 @@ namespace tur::gl
 			{
 				case Format::A2R10G10B10_UNORM_PACK32:
 					UNDEFINED_FORMAT("A2R10G10B10_UNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2R10G10B10_SNORM_PACK32:
 					UNDEFINED_FORMAT("A2R10G10B10_SNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2R10G10B10_USCALED_PACK32:
 					UNDEFINED_FORMAT("A2R10G10B10_USCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2R10G10B10_SSCALED_PACK32:
 					UNDEFINED_FORMAT("A2R10G10B10_SSCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2R10G10B10_UINT_PACK32:
 					UNDEFINED_FORMAT("A2R10G10B10_UINT_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2R10G10B10_SINT_PACK32:
 				{
-					UNDEFINED_FORMAT_END("A2R10G10B10_SINT_PACK32", "GL_BGRA");
+					UNDEFINED_FORMAT("A2R10G10B10_SINT_PACK32", "GL_BGRA");
 					return { GL_BGRA, sizeof(uint8_t), 4 };
 				}
 			}
@@ -522,22 +561,27 @@ namespace tur::gl
 			{
 				case Format::A2B10G10R10_UNORM_PACK32:
 					UNDEFINED_FORMAT("A2B10G10R10_UNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2B10G10R10_SNORM_PACK32:
 					UNDEFINED_FORMAT("A2B10G10R10_SNORM_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2B10G10R10_USCALED_PACK32:
 					UNDEFINED_FORMAT("A2B10G10R10_USCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2B10G10R10_SSCALED_PACK32:
 					UNDEFINED_FORMAT("A2B10G10R10_SSCALED_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2B10G10R10_UINT_PACK32:
 					UNDEFINED_FORMAT("A2B10G10R10_UINT_PACK32", "GL_BGRA");
+					[[fallthrough]];
 
 				case Format::A2B10G10R10_SINT_PACK32:
 				{
-					UNDEFINED_FORMAT_END("A2B10G10R10_SINT_PACK32", "GL_BGRA");
+					UNDEFINED_FORMAT("A2B10G10R10_SINT_PACK32", "GL_BGRA");
 					return { GL_BGRA, sizeof(uint8_t), 4 };
 				}
 			}
@@ -555,9 +599,11 @@ namespace tur::gl
 
 				case Format::R16_USCALED:
 					UNDEFINED_FORMAT("R16_USCALED", "GL_R16UI");
+					[[fallthrough]];
 
 				case Format::R16_SSCALED:
 					UNDEFINED_FORMAT("R16_SSCALED", "GL_R16UI");
+					[[fallthrough]];
 
 				case Format::R16_UINT:
 					return { GL_R16UI, sizeof(uint16_t), 1 };
@@ -582,9 +628,11 @@ namespace tur::gl
 
 				case Format::R16G16_USCALED:
 					UNDEFINED_FORMAT("R16G16_USCALED", "GL_RG16UI");
+					[[fallthrough]];
 
 				case Format::R16G16_SSCALED:
 					UNDEFINED_FORMAT("R16G16_SSCALED", "GL_RG16UI");
+					[[fallthrough]];
 
 				case Format::R16G16_UINT:
 					return { GL_RG16UI, sizeof(uint16_t), 2 };
@@ -609,9 +657,11 @@ namespace tur::gl
 
 				case Format::R16G16B16_USCALED:
 					UNDEFINED_FORMAT("R16G16B16_USCALED", "GL_RGB16UI");
+					[[fallthrough]];
 
 				case Format::R16G16B16_SSCALED:
 					UNDEFINED_FORMAT("R16G16B16_SSCALED", "GL_RGB16UI");
+					[[fallthrough]];
 
 				case Format::R16G16B16_UINT:
 					return { GL_RGB16UI, sizeof(uint16_t), 3 };
@@ -636,9 +686,11 @@ namespace tur::gl
 
 				case Format::R16G16B16A16_USCALED:
 					UNDEFINED_FORMAT("R16G16B16A16_USCALED", "GL_RGBA16UI");
+					[[fallthrough]];
 
 				case Format::R16G16B16A16_SSCALED:
 					UNDEFINED_FORMAT("R16G16B16A16_SSCALED", "GL_RGBA16UI");
+					[[fallthrough]];
 
 				case Format::R16G16B16A16_UINT:
 					return { GL_RGBA16UI, sizeof(uint16_t), 4 };
@@ -660,7 +712,7 @@ namespace tur::gl
 
 				case Format::R32_SINT:
 				{
-					UNDEFINED_FORMAT_END("R32_SINT", "GL_R32UI");
+					UNDEFINED_FORMAT("R32_SINT", "GL_R32UI");
 					return { GL_R32UI, sizeof(uint32_t), 1 };
 				}
 
@@ -678,7 +730,7 @@ namespace tur::gl
 
 				case Format::R32G32_SINT:
 				{
-					UNDEFINED_FORMAT_END("R32G32_SINT", "GL_RG32UI");
+					UNDEFINED_FORMAT("R32G32_SINT", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint32_t), 2 };
 				}
 
@@ -741,7 +793,7 @@ namespace tur::gl
 
 				case Format::R64_SFLOAT:
 				{
-					UNDEFINED_FORMAT_END("R64_SFLOAT", "GL_R32F");
+					UNDEFINED_FORMAT("R64_SFLOAT", "GL_R32F");
 					return { GL_R32F, sizeof(uint64_t), 1 };
 				}
 			}
@@ -768,7 +820,7 @@ namespace tur::gl
 
 				case Format::R64G64_SFLOAT:
 				{
-					UNDEFINED_FORMAT_END("R64G64_SFLOAT", "GL_RG32F");
+					UNDEFINED_FORMAT("R64G64_SFLOAT", "GL_RG32F");
 					return { GL_RG32F, sizeof(uint64_t), 2 };
 				}
 			}
@@ -777,25 +829,25 @@ namespace tur::gl
 			{
 				case Format::R64G64B64:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 3 };
 				}
 
 				case Format::R64G64B64_UINT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64_UINT", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64_UINT", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 3 };
 				}
 
 				case Format::R64G64B64_SINT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64_SINT", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64_SINT", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 3 };
 				}
 
 				case Format::R64G64B64_SFLOAT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64_SFLOAT", "GL_RG32F");
+					UNDEFINED_FORMAT("R64G64B64_SFLOAT", "GL_RG32F");
 					return { GL_RG32F, sizeof(uint64_t), 3 };
 				}
 			}
@@ -804,25 +856,25 @@ namespace tur::gl
 			{
 				case Format::R64G64B64A64:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64A64", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64A64", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 4 };
 				}
 
 				case Format::R64G64B64A64_UINT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64A64_UINT", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64A64_UINT", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 4 };
 				}
 
 				case Format::R64G64B64A64_SINT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64A64_SINT", "GL_RG32UI");
+					UNDEFINED_FORMAT("R64G64B64A64_SINT", "GL_RG32UI");
 					return { GL_RG32UI, sizeof(uint64_t), 4 };
 				}
 
 				case Format::R64G64B64A64_SFLOAT:
 				{
-					UNDEFINED_FORMAT_END("R64G64B64A64_SFLOAT", "GL_RG32F");
+					UNDEFINED_FORMAT("R64G64B64A64_SFLOAT", "GL_RG32F");
 					return { GL_RG32F, sizeof(uint64_t), 4 };
 				}
 			}
@@ -830,7 +882,7 @@ namespace tur::gl
 			// B10 GR (11) P32
 			case Format::B10G11R11_UFLOAT_PACK32:
 			{
-				UNDEFINED_FORMAT_END("B10G11R11_UFLOAT_PACK32", "GL_BGR");
+				UNDEFINED_FORMAT("B10G11R11_UFLOAT_PACK32", "GL_BGR");
 				return { GL_BGR, sizeof(uint32_t), 3 };
 			}
 
@@ -903,8 +955,10 @@ namespace tur::gl
 			case Format::B10G11R11_UFLOAT_PACK32:
 				return GL_FLOAT;
 		}
-	}
 
+		TUR_LOG_CRITICAL("Invalid Format. Fetching AttributeFormat won't return defaults");
+		return GL_NONE;
+	}
 
 	inline constexpr uint32_t GetPrimitiveTopology(PrimitiveTopology topology)
 	{

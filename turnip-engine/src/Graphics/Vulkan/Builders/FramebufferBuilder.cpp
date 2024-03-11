@@ -35,7 +35,7 @@ namespace tur::vulkan
 		{
 			return m_Device.createFramebuffer(framebufferInfo);
 		}
-		catch (const vk::SystemError& err)
+		catch (const vk::SystemError&)
 		{
 			TUR_LOG_ERROR("Failed to create framebuffer");
 			return nullptr;
