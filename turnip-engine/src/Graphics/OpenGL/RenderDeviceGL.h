@@ -18,8 +18,9 @@ namespace tur::gl
 	class RenderDeviceGL : public RenderDevice
 	{
 	public:
-		RenderDeviceGL(NON_OWNING Window* window)
+		RenderDeviceGL(NON_OWNING Window* window, const GraphicsOptions& options)
 			: r_Window(window)
+			, m_Options(options)
 		{
 			CreateSwapchainRenderpass();
 		}
@@ -149,6 +150,11 @@ namespace tur::gl
 			m_Renderpasses.push_back(renderpass);
 		}
 
+	public:
+		inline Window* GetWindow() const { return r_Window; }
+
+		inline GraphicsOptions GetOptions() const { return m_Options; }
+
 	private:
 		std::vector<gl::Renderpass> m_Renderpasses;
 		std::vector<gl::Buffer> m_Buffers;
@@ -157,5 +163,6 @@ namespace tur::gl
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;
+		GraphicsOptions m_Options;
 	};
 }

@@ -11,8 +11,9 @@
 
 namespace tur::vulkan
 {
-	RenderDeviceVK::RenderDeviceVK(NON_OWNING Window* window)
+	RenderDeviceVK::RenderDeviceVK(NON_OWNING Window* window, const GraphicsOptions& options)
 		: r_Window(window)
+		, m_Options(options)
 	{
 
 	}
@@ -57,6 +58,10 @@ namespace tur::vulkan
 		}
 
 		logicalDevice.destroy();
+
+#ifdef TUR_DEBUG
+		instance.destroyDebugUtilsMessengerEXT(debugMessenger, nullptr, DLDI);
+#endif
 
 		instance.destroySurfaceKHR(surface);
 		instance.destroy();

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include <TurnipEngine.h>
-#include "Graphics/Vulkan/VulkanInitializer.h"
 
 using namespace tur;
 
@@ -10,7 +9,7 @@ public:
 	MainView(NON_OWNING TurnipEngine* engine)
 		: r_Engine(engine)
 	{ 
-		graphics = (r_Engine->Device()->CreateGraphicsCommands());
+		graphics = r_Engine->Device()->CreateGraphicsCommands();
 	}
 
 public:
@@ -127,6 +126,7 @@ public:
 		graphics->Begin();
 		{
 			graphics->BeginRenderpass();
+			graphics->SetViewport();
 
 			graphics->Clear(ClearFlags::COLOR);
 

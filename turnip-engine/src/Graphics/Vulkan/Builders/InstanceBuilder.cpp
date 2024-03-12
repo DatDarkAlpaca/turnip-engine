@@ -140,6 +140,7 @@ namespace tur::vulkan
 
 		vk::DispatchLoaderDynamic DLDI(output.instanceHandle, vkGetInstanceProcAddr);
 		output.debugMessenger = output.instanceHandle.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
+		output.DLDI = DLDI;
 
 		return output;
 	}

@@ -78,6 +78,38 @@ namespace tur::vulkan
 		m_CurrentBuffer.endRenderPass();
 	}
 
+	void GraphicsRenderCommandsVK::SetViewport()
+	{
+		vk::Viewport vulkanViewport { };
+
+		auto dimensions = r_Device->GetWindow()->GetProperties().dimensions;
+
+		vulkanViewport.width = dimensions.x;
+		vulkanViewport.height = dimensions.y;
+		vulkanViewport.x = 0;
+		vulkanViewport.y = dimensions.y;
+
+		if (r_Device->GetOptions().usingBottomLeftOrigin)
+			vulkanViewport.height *= -1;
+
+		m_CurrentBuffer.setViewport(0, { vulkanViewport });
+	}
+
+	void GraphicsRenderCommandsVK::SetViewport(const Viewport& viewport)
+	{
+		vk::Viewport vulkanViewport { };
+
+		vulkanViewport.width = viewport.dimensions.x;
+		vulkanViewport.height = viewport.dimensions.y;		
+		vulkanViewport.x = viewport.origin.x;
+		vulkanViewport.y = viewport.origin.y;
+
+		if (r_Device->GetOptions().usingBottomLeftOrigin)
+			vulkanViewport.height *= -1;
+
+		m_CurrentBuffer.setViewport(0, { vulkanViewport });
+	}
+
 	void GraphicsRenderCommandsVK::SetClearColor(const glm::vec4& color)
 	{
 		m_ClearColor = color;

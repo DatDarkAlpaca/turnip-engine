@@ -7,6 +7,8 @@ namespace tur::vulkan
 	{
 		vk::Instance instanceHandle;
 		vk::DebugUtilsMessengerEXT debugMessenger;
+		vk::DispatchLoaderDynamic DLDI;
+
 		bool enablePresentation = false;
 	};
 }

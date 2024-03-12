@@ -29,6 +29,17 @@ namespace tur::gl
 		glBindFramebuffer(GL_FRAMEBUFFER, renderpass.framebufferID);
 	}
 
+	void GraphicsRenderCommandsGL::SetViewport()
+	{
+		auto dimensions = r_RenderDevice->GetWindow()->GetProperties().dimensions;
+		glViewport(0, 0, dimensions.x, dimensions.y);
+	}
+
+	void GraphicsRenderCommandsGL::SetViewport(const Viewport& viewport)
+	{
+		glViewport(viewport.origin.x, viewport.origin.y, viewport.dimensions.x, viewport.dimensions.y);
+	}
+
 	void GraphicsRenderCommandsGL::EndRenderpass()
 	{
 		/* Implement */

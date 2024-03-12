@@ -40,6 +40,7 @@ namespace tur::vulkan
 
             device->instance = instanceOutput.instanceHandle;
             device->debugMessenger = instanceOutput.debugMessenger;
+            device->DLDI = instanceOutput.DLDI;
 
             instanceBuilder.DisplayVulkanAPIVersion();
             TUR_LOG_DEBUG("Initialized Vulkan Instance");

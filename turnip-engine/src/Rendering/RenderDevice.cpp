@@ -16,7 +16,7 @@ namespace tur
             case GraphicsAPI::OPENGL:
             {
                 platform::SetupOpenGL(window, specification);
-                renderDevice = tur::MakeUnique<gl::RenderDeviceGL>(&window);
+                renderDevice = tur::MakeUnique<gl::RenderDeviceGL>(&window, specification.options);
 
                 if (initializer)
                     initializer->Initialize(renderDevice.get());
@@ -26,7 +26,7 @@ namespace tur
             case GraphicsAPI::VULKAN:
             {
                 platform::SetupVulkan(window);
-                renderDevice = tur::MakeUnique<vulkan::RenderDeviceVK>(&window);
+                renderDevice = tur::MakeUnique<vulkan::RenderDeviceVK>(&window, specification.options);
 
                 if (initializer)
                 {

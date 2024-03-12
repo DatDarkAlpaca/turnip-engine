@@ -13,7 +13,7 @@ namespace tur::vulkan
 	class RenderDeviceVK : public RenderDevice
 	{
 	public:
-		RenderDeviceVK(NON_OWNING Window* window);
+		RenderDeviceVK(NON_OWNING Window* window, const GraphicsOptions& options);
 
 		~RenderDeviceVK();
 
@@ -71,9 +71,12 @@ namespace tur::vulkan
 	public:
 		inline Window* GetWindow() const { return r_Window; }
 
+		inline GraphicsOptions GetOptions() const { return m_Options; }
+
 	public:
 		vk::Instance instance;
 		vk::DebugUtilsMessengerEXT debugMessenger;
+		vk::DispatchLoaderDynamic DLDI;
 		vk::SurfaceKHR surface;
 		vk::PhysicalDevice physicalDevice;
 		vk::Device logicalDevice;
@@ -90,5 +93,6 @@ namespace tur::vulkan
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;
+		GraphicsOptions m_Options;
 	};
 }

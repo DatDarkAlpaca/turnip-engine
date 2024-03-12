@@ -15,6 +15,10 @@ namespace tur
 
 		virtual void EndRenderpass() = 0;
 
+		virtual void SetViewport() = 0;
+
+		virtual void SetViewport(const Viewport& viewport) = 0;
+
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 
 		virtual void Clear(ClearFlags flags) = 0;

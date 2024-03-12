@@ -10,9 +10,15 @@ namespace tur
 		VULKAN
 	};
 
+	struct GraphicsOptions
+	{
+		bool usingBottomLeftOrigin = true;
+	};
+
 	struct GraphicsSpecification
 	{
 		GraphicsAPI api;
 		uint16_t major = 0, minor = 0, patch = 0, variant = 0;
+		GraphicsOptions options = {};
 	};
 }

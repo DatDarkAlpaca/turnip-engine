@@ -181,16 +181,14 @@ namespace tur::vulkan
 		}
 		
 		// Dynamic Info:
-		// TODO: provide dynamic scissor and viewports;
-		/*{
-			vk::DynamicState dynamicStates[] = { vk::DynamicState::eViewport, vk::DynamicState::eScissor };
-
+		std::vector<vk::DynamicState> dynamicStates = { vk::DynamicState::eViewport };
+		{
 			vk::PipelineDynamicStateCreateInfo dynamicInfo = { };
 			dynamicInfo.flags = vk::PipelineDynamicStateCreateFlags();
-			dynamicInfo.pDynamicStates = &dynamicStates[0];
-			dynamicInfo.dynamicStateCount = 2;
+			dynamicInfo.pDynamicStates = dynamicStates.data();
+			dynamicInfo.dynamicStateCount = dynamicStates.size();
 			pipelineInfo.pDynamicState = &dynamicInfo;
-		}*/
+		}
 
 		// Rasterizer:
 		{

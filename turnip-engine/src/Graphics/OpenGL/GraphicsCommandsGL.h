@@ -20,6 +20,10 @@ namespace tur::gl
 
 		void BeginRenderpass(RenderpassHandle handle) override;
 		
+		void SetViewport() override;
+
+		void SetViewport(const Viewport& viewport) override;
+
 		void EndRenderpass() override;
 
 		void SetClearColor(const glm::vec4& color) override;
