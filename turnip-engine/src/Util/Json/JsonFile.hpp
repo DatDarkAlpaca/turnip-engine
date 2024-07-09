@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <fstream>
 
-namespace loaf
+namespace tur
 {
-	inline nlohmann::json readJson(const std::filesystem::path& filepath)
+	inline nlohmann::json ReadJson(const std::filesystem::path& filepath)
 	{
 		using namespace nlohmann;
 

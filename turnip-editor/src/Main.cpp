@@ -166,10 +166,6 @@ class TurnipEditor : public TurnipEngine
 public:
 	TurnipEditor()
 	{
-		// Rendering options:
-		ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
-
-		// Views:
 		View().Add(MakeUnique<MainView>(this));
 
 		// System Information:

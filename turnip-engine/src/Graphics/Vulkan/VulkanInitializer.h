@@ -1,8 +1,9 @@
 #pragma once
 #include "Common.h"
 #include "RenderDeviceVK.h"
-#include "Rendering/GraphicsAPI.h"
 #include "Rendering/RenderInitializer.h"
+
+#include "Graphics/GraphicsSpecification.h"
 
 #include "Builders/InstanceBuilder.h"
 #include "Builders/PhysicalDeviceBuilder.h"

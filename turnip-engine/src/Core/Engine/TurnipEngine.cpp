@@ -1,25 +1,26 @@
 #include "pch.h"
 #include "TurnipEngine.h"
-
 #include "Platform/Platform.h"
+#include "Core/Config/ConfigSystem.hpp"
 
 namespace tur
 {
-	TurnipEngine::TurnipEngine(const WindowProperties& properties)
+	TurnipEngine::TurnipEngine(const std::filesystem::path& configFilePath)
 	{
 		tur::platform::Setup();
+
+		ConfigSystem configSystem(configFilePath);
 
 		// Logger:
 		g_LoggerSystem.Get().Initialize();
 
 		// Window:
-		g_Window.Initialize(properties);
+		g_Window.Initialize(configSystem.GetWindowProperties());
 		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
-		
+
 		// Default rendering system:
-		if (!g_RenderDevice)
-			ConfigureRenderer({ GraphicsAPI::OPENGL, 3, 3 });
-	
+		ConfigureRenderer(configSystem.GetGraphicsSpecification());
+
 		m_Initialized = true;
 	}
 

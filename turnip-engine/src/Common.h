@@ -1,6 +1,7 @@
 #pragma once
 #include <numeric>
 #include <limits>
+#include <filesystem>
 
 #include "Core/Defines.h"
 #include "Core/NonCopyable.h"

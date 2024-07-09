@@ -17,7 +17,7 @@ namespace tur
 
 	public:
 		// TODO: engine configuration
-		TurnipEngine(const WindowProperties& properties = {});
+		TurnipEngine(const std::filesystem::path& configFilePath = "engine-config.json");
 
 	public:
 		void Run();
