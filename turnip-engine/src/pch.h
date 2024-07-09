@@ -19,4 +19,5 @@
 	#include <spdlog/spdlog.h>
 
 	#include <entt/entt.hpp>
+	#include <nlohmann/json.hpp>
 #pragma warning(pop)

@@ -9,6 +9,7 @@ vendor_include_dirs["imgui-opengl"]     = "%{vendor_path}/imgui/backends"
 vendor_include_dirs["spdlog"]           = "%{vendor_path}/spdlog/include"
 vendor_include_dirs["vulkan-headers"]   = "%{vendor_path}/Vulkan-Headers/include"
 vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/include"
+vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
 
 vendor_links = {}
 vendor_links[0] = "glad"

@@ -22,3 +22,6 @@
 [submodule "vendor/glad-premake"]
 	path = vendor/glad-premake
 	url = https://github.com/premake-libs/glad
+[submodule "vendor/json"]
+	path = vendor/json
+	url = https://github.com/nlohmann/json
