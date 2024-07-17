@@ -4,7 +4,10 @@
 
 namespace tur
 {
+	class TurnipEngine;
+
 	class ViewSystem;
+	class AssetLibrary;
 
 	class View
 	{
@@ -35,9 +38,15 @@ namespace tur
 		virtual void OnEngineShutdown() { };
 
 	public:
+		void SetEngine(TurnipEngine* engine) { this->engine = engine; }
+
 		void SetHandler(ViewSystem* handler) { this->handler = handler; }
 
+	public:
+		AssetLibrary& AssetLibrary() const;
+
 	protected:
+		NON_OWNING TurnipEngine* engine = nullptr;
 		NON_OWNING ViewSystem* handler = nullptr;
 	};
 }

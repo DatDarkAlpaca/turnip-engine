@@ -1,13 +1,15 @@
 #pragma once
 #include "Common.h"
 
+#include "Core/Assets/AssetLibrary.hpp"
 #include "Core/View/ViewSystem.h"
 #include "Core/Event/Event.h"
-#include "Platform/Platform.h"
 
 #include "Rendering/RenderDevice.h"
 #include "Rendering/GraphicsCommands.h"
 #include "Rendering/RenderInitializer.h"
+
+#include "Platform/Platform.h"
 
 namespace tur
 {
@@ -16,7 +18,6 @@ namespace tur
 		friend class GraphicsEngineWrapper;
 
 	public:
-		// TODO: engine configuration
 		TurnipEngine(const std::filesystem::path& configFilePath = "engine-config.json");
 
 	public:
@@ -26,6 +27,9 @@ namespace tur
 		void Initialize();
 
 		void Shutdown();
+
+	public:
+		void AddView(tur_unique<View> view);
 
 	private:
 		void OnEngineStartup();
@@ -44,16 +48,20 @@ namespace tur
 		void ConfigureRenderer(const GraphicsSpecification& specification, RenderInitializer* initializer = nullptr);
 
 	public:
-		ViewSystem& View() { return g_ViewSystem; }
+		AssetLibrary& GetAssetLibrary() { return g_AssetLibrary; }
 
-		tur_unique<RenderDevice>& Device() { return g_RenderDevice; }
+		ViewSystem& GetViewSystem() { return g_ViewSystem; }
 
 		Window& GetWindow() { return g_Window; }
 
+		tur_unique<RenderDevice>& Device() { return g_RenderDevice; }
+
 	private:
 		LoggerSystem g_LoggerSystem;
+		AssetLibrary g_AssetLibrary;
 		ViewSystem g_ViewSystem;
 		Window g_Window;
+		
 		tur_unique<RenderDevice> g_RenderDevice;
 
 	private:

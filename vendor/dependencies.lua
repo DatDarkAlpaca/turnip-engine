@@ -10,6 +10,7 @@ vendor_include_dirs["spdlog"]           = "%{vendor_path}/spdlog/include"
 vendor_include_dirs["vulkan-headers"]   = "%{vendor_path}/Vulkan-Headers/include"
 vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/include"
 vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
+vendor_include_dirs["stb"]         		= "%{vendor_path}/stb"
 
 vendor_links = {}
 vendor_links[0] = "glad"
