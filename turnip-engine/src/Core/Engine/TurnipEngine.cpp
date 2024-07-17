@@ -18,6 +18,9 @@ namespace tur
 		g_Window.Initialize(configSystem.GetWindowProperties());
 		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
+		// Asset Library:
+		g_AssetLibrary;
+
 		// Default rendering system:
 		ConfigureRenderer(configSystem.GetGraphicsSpecification());
 
@@ -57,6 +60,12 @@ namespace tur
 		OnEngineShutdown();
 
 		g_Window.Shutdown();
+	}
+
+	void TurnipEngine::AddView(tur_unique<View> view)
+	{
+		view->SetEngine(this);
+		g_ViewSystem.Add(std::move(view));
 	}
 
 	void TurnipEngine::OnEngineStartup()

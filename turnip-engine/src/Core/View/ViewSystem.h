@@ -5,16 +5,18 @@
 
 namespace tur
 {
+	using ViewHandle = size_t;
+
 	class ViewSystem
 	{
 		using ViewContainer = std::vector<tur_unique<View>>;
 
 	public:
-		size_t Add(tur_unique<View> view);
+		ViewHandle Add(tur_unique<View> view);
 
-		void Remove(size_t index);
+		void Remove(ViewHandle index);
 
-		View& GetView(size_t index);
+		View& GetView(ViewHandle index);
 
 	public:
 		ViewContainer::reverse_iterator rbegin() { return m_Views.rbegin(); }

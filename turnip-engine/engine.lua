@@ -21,16 +21,32 @@ project "turnip-engine"
     
     files {
         "src/Core/**.cpp",
+        "src/Core/**.hpp",
+		"src/Core/**.c",
         "src/Core/**.h",
+		
         "src/Rendering/**.cpp",
+        "src/Rendering/**.hpp",
+		"src/Rendering/**.c",
         "src/Rendering/**.h",
+		
         "src/Graphics/**.cpp",
+        "src/Graphics/**.hpp",
+        "src/Graphics/**.c",
         "src/Graphics/**.h",
+		
         "src/Util/**.cpp",
+		"src/Util/**.hpp",
         "src/Util/**.h",
-        "src/Platform/*.h",
-        "src/*.h",
-        "src/*.cpp",
+		"src/Util/**.c",
+		
+        "src/Platform/*.hpp",
+		"src/Platform/*.h",
+
+		"src/*.cpp",
+		"src/*.hpp",
+        "src/*.c",
+		"src/*.h",
     }
    
     includedirs {

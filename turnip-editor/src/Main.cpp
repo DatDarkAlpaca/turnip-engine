@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <TurnipEngine.h>
+#include "Core/Assets/TextureLoader.hpp"
 
 using namespace tur;
 
@@ -17,6 +18,11 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
+		// Texture loading:
+		auto textureAsset = TextureLoader::Load({ "mario_thick_ass.png" });
+		AssetLibrary().InsertTexture(textureAsset);
+
+		// The rest:
 		auto& device = r_Engine->Device();
 
 		r_Engine->GetWindow().Show();
@@ -166,7 +172,7 @@ class TurnipEditor : public TurnipEngine
 public:
 	TurnipEditor()
 	{
-		View().Add(MakeUnique<MainView>(this));
+		AddView(MakeUnique<MainView>(this));
 
 		// System Information:
 		{

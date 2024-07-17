@@ -12,6 +12,8 @@ project "turnip-editor"
     
     files {
         "src/**.cpp",
+        "src/**.hpp",
+		"src/**.c",
         "src/**.h"
     }
     
