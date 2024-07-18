@@ -13,12 +13,10 @@ namespace
 
 namespace tur::platform
 {
-	inline void Setup()
+	inline void InitializePlatform()
 	{
 		glfwSetErrorCallback(GLFWErrorCallback);
 		if (!glfwInit())
-			TUR_LOG_CRITICAL("Failed to initialize GLFW. Perhaps it has already been initialized before?");
-
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+			TUR_LOG_CRITICAL("Failed to initialize the platform system.");
 	}
 }

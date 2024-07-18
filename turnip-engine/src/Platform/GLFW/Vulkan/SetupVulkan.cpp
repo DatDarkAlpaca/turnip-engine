@@ -1,19 +1,19 @@
 #include "pch.h"
-#include "SetupVulkan.h"
+#include "SetupVulkan.hpp"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-namespace tur::platform
+namespace tur::platform::vulkan
 {
-	void SetupVulkan(Window& window)
+	void SetupVulkanWindowing(Window& window, const WindowProperties& properties)
 	{
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		if (!glfwVulkanSupported())
 			TUR_LOG_CRITICAL("Vulkan is not supported in this machine");
 
-		window.Initialize(window.GetProperties());
+		window.Initialize(properties);
 	}
 
 	std::vector<const char*> GetWindowingVulkanExtensions()
@@ -35,5 +35,6 @@ namespace tur::platform
 			return surface;
 
 		TUR_LOG_CRITICAL("Failed to create window surface using GLFW and Vulkan");
+		return nullptr;
 	}
 }

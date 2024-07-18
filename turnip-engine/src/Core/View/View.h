@@ -12,12 +12,6 @@ namespace tur
 	class View
 	{
 	public:
-		explicit View(ViewSystem* handler = nullptr)
-			: handler(handler)
-		{
-
-		}
-
 		virtual ~View() = default;
 
 	public:

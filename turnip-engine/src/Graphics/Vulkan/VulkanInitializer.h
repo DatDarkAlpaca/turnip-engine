@@ -14,7 +14,7 @@
 
 namespace tur::vulkan
 {
-    class VulkanInitializer : public RenderInitializer
+    class VulkanInitializer
     {
     public:
         VulkanInitializer(const GraphicsSpecification& specification);

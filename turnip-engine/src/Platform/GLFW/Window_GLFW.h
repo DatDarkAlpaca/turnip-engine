@@ -6,10 +6,8 @@
 #include "Core/Event/Event.h"
 #include "Core/Window/WindowProperties.h"
 
-namespace tur
+namespace tur::platform
 {
-	class Event;
-
 	class GLFWWindowDestroyer
 	{
 	public:
@@ -17,7 +15,7 @@ namespace tur
 	};
 }
 
-namespace tur
+namespace tur::platform
 {
 	class Window
 	{
@@ -27,7 +25,7 @@ namespace tur
 		void Shutdown();
 
 	public:
-		void SetEventCallback(const FnEventCallback& callback);
+		void SetEventCallback(const EventCallback& callback);
 
 		void SetProperties(const WindowProperties& properties);
 
@@ -38,15 +36,12 @@ namespace tur
 
 		void Show();
 
-	public:
-		WindowProperties GetProperties() const { return m_Properties; }
-
 		bool IsOpen() const;
 
-		std::any GetHandle() const
-		{
-			return m_Window.get();
-		}
+	public:
+		inline WindowProperties GetProperties() const { return m_Properties; }
+
+		inline GLFWwindow* GetHandle() const { return m_Window.get(); };
 
 	private:
 		void SetWindowDataPointer();
@@ -59,7 +54,7 @@ namespace tur
 
 		struct WindowData
 		{
-			FnEventCallback eventCallback;
+			EventCallback eventCallback;
 		} m_WindowData;
 	};
 }

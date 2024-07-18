@@ -1,43 +1,39 @@
 #include "pch.h"
-#include "SetupOpenGL.h"
+#include "SetupOpenGL.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-namespace tur::platform
+namespace
 {
 	static void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int, const char* message, const void*)
 	{
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
-			{
 				TUR_LOG_CRITICAL(message);
-			} break;
+				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:
-			{
 				TUR_LOG_ERROR(message);
-			} break;
+				break;
 
 			case GL_DEBUG_SEVERITY_LOW:
-			{
 				TUR_LOG_WARN(message);
-			} break;
+				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
-			{
 				TUR_LOG_INFO(message);
-			} break;
+				break;
 		}
 
-		TUR_LOG_INFO("[Unknown severity]: {}", message);
+		TUR_LOG_INFO("[OpenGL][Unknown severity]: {}", message);
 	}
 }
 
-namespace tur::platform
+namespace tur::platform::gl
 {
-	void SetupOpenGL(Window& window, const GraphicsSpecification& specification)
+	void SetupOpenGLWindowing(Window& window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
 #ifdef TUR_DEBUG
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
@@ -52,9 +48,13 @@ namespace tur::platform
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, specification.minor);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window.Initialize(window.GetProperties());
+		glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+		glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		GLFWwindow* glfwWindow = std::any_cast<GLFWwindow*>(window.GetHandle());
+		window.Initialize(properties);
+
+		GLFWwindow* glfwWindow = window.GetHandle();
 		glfwMakeContextCurrent(glfwWindow);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -70,5 +70,10 @@ namespace tur::platform
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		}
 #endif
+	}
+
+	void SwapBuffers(Window* window)
+	{
+		glfwSwapBuffers(std::any_cast<GLFWwindow*>(window->GetHandle()));
 	}
 }

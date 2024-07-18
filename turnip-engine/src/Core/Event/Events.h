@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Event/Subscriber.h"
 #include "Core/Event/EventType.h"
-#include "Core/Event/Events.h"
 
 #include "WindowEvents/WindowContentScaleEvent.h"
 #include "WindowEvents/WindowFramebufferEvent.h"

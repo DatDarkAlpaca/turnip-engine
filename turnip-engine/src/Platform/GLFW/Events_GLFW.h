@@ -6,7 +6,7 @@
 #define GLFW_INPUT
 #include <GLFW/glfw3.h>
 
-namespace tur
+namespace tur::platform
 {
 	inline constexpr Key TranslateKey(GLFW_INPUT uint32_t key)
 	{

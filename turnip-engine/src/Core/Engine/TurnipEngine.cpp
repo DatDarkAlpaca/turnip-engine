@@ -7,22 +7,19 @@ namespace tur
 {
 	TurnipEngine::TurnipEngine(const std::filesystem::path& configFilePath)
 	{
-		tur::platform::Setup();
-
 		ConfigSystem configSystem(configFilePath);
+			
+		platform::InitializePlatform();
 
-		// Logger:
+		// Logger System:
 		g_LoggerSystem.Get().Initialize();
 
-		// Window:
-		g_Window.Initialize(configSystem.GetWindowProperties());
-		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		// Window System:
+		g_WindowSystem.Initialize(configSystem.GetWindowProperties(), configSystem.GetGraphicsSpecification());
+		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		// Asset Library:
 		g_AssetLibrary;
-
-		// Default rendering system:
-		ConfigureRenderer(configSystem.GetGraphicsSpecification());
 
 		m_Initialized = true;
 	}
@@ -34,9 +31,9 @@ namespace tur
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
-		while (g_Window.IsOpen())
+		while (g_WindowSystem.GetWindow().IsOpen())
 		{
-			g_Window.PollEvents();
+			g_WindowSystem.GetWindow().PollEvents();
 
 			OnUpdate();
 
@@ -50,16 +47,14 @@ namespace tur
 
 	void TurnipEngine::Initialize()
 	{	
-		// Engine Startup:
 		OnEngineStartup();
-		g_Window.Show();
 	}
 
 	void TurnipEngine::Shutdown()
 	{
 		OnEngineShutdown();
 
-		g_Window.Shutdown();
+		g_WindowSystem.Shutdown();
 	}
 
 	void TurnipEngine::AddView(tur_unique<View> view)
@@ -102,10 +97,5 @@ namespace tur
 	{
 		for (const auto& view : g_ViewSystem)
 			view->OnEngineShutdown();
-	}
-
-	void TurnipEngine::ConfigureRenderer(const GraphicsSpecification& specification, RenderInitializer* initializer)
-	{
-		g_RenderDevice = std::move(RenderDevice::Create(g_Window, specification, initializer));
 	}
 }

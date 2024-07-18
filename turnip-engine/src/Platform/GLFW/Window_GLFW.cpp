@@ -7,7 +7,7 @@
 #include "Window_GLFW.h"
 #include "Monitor_GLFW.h"
 
-namespace tur
+namespace tur::platform
 {
 	void GLFWWindowDestroyer::operator()(GLFWwindow* window)
 	{
@@ -15,7 +15,7 @@ namespace tur
 	}
 }
 
-namespace tur
+namespace tur::platform
 {
 	void Window::Initialize(const WindowProperties& properties)
 	{
@@ -43,7 +43,7 @@ namespace tur
 		m_Window.reset();
 	}
 
-	void Window::SetEventCallback(const FnEventCallback& callback)
+	void Window::SetEventCallback(const EventCallback& callback)
 	{
 		m_WindowData.eventCallback = callback;
 	}

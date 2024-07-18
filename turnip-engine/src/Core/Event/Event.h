@@ -21,5 +21,5 @@ namespace tur
 		bool handled = false;
 	};
 
-	using FnEventCallback = std::function<void(Event&)>;
+	using EventCallback = std::function<void(Event&)>;
 }

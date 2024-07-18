@@ -5,9 +5,9 @@
 #include <vulkan/vulkan.hpp>
 #include "Platform/GLFW/Window_GLFW.h"
 
-namespace tur::platform
+namespace tur::platform::vulkan
 {
-	void SetupVulkan(Window& window);
+	void SetupVulkanWindowing(Window& window, const WindowProperties&);
 
 	std::vector<const char*> GetWindowingVulkanExtensions();
 

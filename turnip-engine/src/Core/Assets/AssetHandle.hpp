@@ -4,17 +4,17 @@
 
 namespace tur
 {
-	constexpr uint32_t InvalidHandle = std::numeric_limits<uint32_t>::max();
+	constexpr uint64_t InvalidHandle = std::numeric_limits<uint64_t>::max();
 
 	struct AssetHandle
 	{
 	public:
-		explicit AssetHandle(uint32_t handle = InvalidHandle) : handle(handle) { }
+		explicit AssetHandle(uint64_t handle = InvalidHandle) : handle(handle) { }
 
 	public:
-		operator uint32_t() const { return handle; }
+		operator uint64_t() const { return handle; }
 
 	public:
-		uint32_t handle = InvalidHandle;
+		uint64_t handle = InvalidHandle;
 	};
 }
