@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "Logger.h"
+#include "pch.hpp"
+#include "Logger.hpp"
 
 #pragma warning(push, 0)
 	#include <spdlog/sinks/stdout_color_sinks.h>

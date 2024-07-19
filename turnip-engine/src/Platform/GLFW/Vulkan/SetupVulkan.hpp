@@ -1,9 +1,9 @@
 #pragma once
-#include "Core/Defines.h"
-#include "Core/Logger/Logger.h"
+#include "Core/Defines.hpp"
+#include "Core/Logger/Logger.hpp"
 
 #include <vulkan/vulkan.hpp>
-#include "Platform/GLFW/Window_GLFW.h"
+#include "Platform/GLFW/Window_GLFW.hpp"
 
 namespace tur::platform::vulkan
 {

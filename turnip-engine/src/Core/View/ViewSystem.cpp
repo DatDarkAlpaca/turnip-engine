@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "ViewSystem.h"
+#include "pch.hpp"
+#include "ViewSystem.hpp"
 
 namespace tur
 {

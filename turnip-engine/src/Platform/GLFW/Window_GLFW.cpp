@@ -1,11 +1,11 @@
-#include "pch.h"
-#include "Common.h"
+#include "pch.hpp"
+#include "Common.hpp"
 
-#include "Core/Event/Events.h"
-#include "Events_GLFW.h"
+#include "Core/Event/Events.hpp"
+#include "Events_GLFW.hpp"
 
-#include "Window_GLFW.h"
-#include "Monitor_GLFW.h"
+#include "Window_GLFW.hpp"
+#include "Monitor_GLFW.hpp"
 
 namespace tur::platform
 {

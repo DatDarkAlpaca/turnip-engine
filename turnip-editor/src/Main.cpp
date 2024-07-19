@@ -1,5 +1,5 @@
-#include "pch.h"
-#include <TurnipEngine.h>
+#include "pch.hpp"
+#include <TurnipEngine.hpp>
 #include "Core/Assets/TextureLoader.hpp"
 #include "Core/Worker/WorkerPool.hpp"
 

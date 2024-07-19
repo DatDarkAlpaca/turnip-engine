@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "pch.hpp"
 #include "SetupOpenGL.hpp"
 
 #include <glad/glad.h>

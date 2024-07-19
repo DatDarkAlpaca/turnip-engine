@@ -1,6 +1,6 @@
 #pragma once
-#include "Graphics/GraphicsSpecification.h"
-#include "Platform/GLFW/Window_GLFW.h"
+#include "Graphics/GraphicsSpecification.hpp"
+#include "Platform/GLFW/Window_GLFW.hpp"
 
 namespace tur::platform::gl
 {

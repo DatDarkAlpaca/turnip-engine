@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "TurnipEngine.h"
-#include "Platform/Platform.h"
+#include "pch.hpp"
+#include "TurnipEngine.hpp"
+#include "Platform/Platform.hpp"
 #include "Core/Config/ConfigSystem.hpp"
 
 namespace tur

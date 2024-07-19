@@ -1,8 +1,8 @@
 #pragma once
-#include "Graphics/GraphicsSpecification.h"
-#include "Core/Event/Events.h"
-#include "Platform/Platform.h"
-#include "WindowProperties.h"
+#include "Graphics/GraphicsSpecification.hpp"
+#include "Core/Event/Events.hpp"
+#include "Platform/Platform.hpp"
+#include "WindowProperties.hpp"
 
 namespace tur
 {

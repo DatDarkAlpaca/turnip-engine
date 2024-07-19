@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "Scene.h"
-#include "Entity.h"
-#include "CommonComponents.h"
+#include "pch.hpp"
+#include "Scene.hpp"
+#include "Entity.hpp"
+#include "CommonComponents.hpp"
 
 namespace tur
 {

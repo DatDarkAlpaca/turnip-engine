@@ -1,8 +1,8 @@
-#include "pch.h"
+#include "pch.hpp"
 #include <stb_image.h>
 
 #include "TextureLoader.hpp"
-#include "Common.h"
+#include "Common.hpp"
 
 namespace tur
 {

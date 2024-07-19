@@ -7,7 +7,7 @@ project "turnip-engine"
     targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 	
-    pchheader "pch.h"
+    pchheader "pch.hpp"
     pchsource "src/pch.cpp"
 
     libdirs {
@@ -23,25 +23,20 @@ project "turnip-engine"
         "src/Core/**.cpp",
         "src/Core/**.hpp",
 		"src/Core/**.c",
-        "src/Core/**.h",
 		
         "src/Rendering/**.cpp",
         "src/Rendering/**.hpp",
 		"src/Rendering/**.c",
-        "src/Rendering/**.h",
 		
-        "src/Graphics/**.cpp",
-        "src/Graphics/**.hpp",
-        "src/Graphics/**.c",
-        "src/Graphics/**.h",
+        -- "src/Graphics/**.cpp",
+        -- "src/Graphics/**.hpp",
+        -- "src/Graphics/**.c",
 		
         "src/Util/**.cpp",
 		"src/Util/**.hpp",
-        "src/Util/**.h",
 		"src/Util/**.c",
 		
         "src/Platform/*.hpp",
-		"src/Platform/*.h",
 
 		"src/*.cpp",
 		"src/*.hpp",

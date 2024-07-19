@@ -2,8 +2,8 @@
 #include <filesystem>
 #include "Util/Json/JsonFile.hpp"
 
-#include "Core/Window/WindowProperties.h"
-#include "Graphics/GraphicsSpecification.h"
+#include "Core/Window/WindowProperties.hpp"
+#include "Graphics/GraphicsSpecification.hpp"
 
 namespace tur
 {

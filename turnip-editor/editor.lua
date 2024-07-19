@@ -7,7 +7,7 @@ project "turnip-editor"
     targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 
-    pchheader "pch.h"
+    pchheader "pch.hpp"
     pchsource "src/pch.cpp"
     
     files {

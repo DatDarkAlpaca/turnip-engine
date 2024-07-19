@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "CPUInfo.h"
-#include "Common.h"
+#include "pch.hpp"
+#include "CPUInfo.hpp"
+#include "Common.hpp"
 
 namespace tur
 {

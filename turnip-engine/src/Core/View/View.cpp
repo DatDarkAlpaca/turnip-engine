@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "View.h"
+#include "pch.hpp"
+#include "View.hpp"
 
-#include "Core/Engine/TurnipEngine.h"
+#include "Core/Engine/TurnipEngine.hpp"
 
 namespace tur
 {
