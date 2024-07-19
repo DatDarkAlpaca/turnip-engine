@@ -18,9 +18,6 @@ namespace tur
 		g_WindowSystem.Initialize(configSystem.GetWindowProperties(), configSystem.GetGraphicsSpecification());
 		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
-		// Asset Library:
-		g_AssetLibrary;
-
 		m_Initialized = true;
 	}
 
