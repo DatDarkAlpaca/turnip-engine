@@ -24,7 +24,7 @@ namespace tur
 		template<typename Function, typename... Args, typename Callback>
 		void SubmitTask(Function&& function, std::tuple<Args&...>&& args, Callback&& callback)
 		{
-			using returnType = typename std::result_of<Function(Args...)>::type;
+			using returnType = typename std::invoke_result<Function, Args...>::type;
 
 			auto task = std::make_shared<std::packaged_task<returnType()>>(
 				[function, args = std::move(args)]() mutable {
