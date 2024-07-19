@@ -11,14 +11,14 @@ namespace tur
 		{
 			// Todo: write a cpuid function for linux/macos
 #ifdef TUR_PLATFORM_WIN32
-			__cpuidex((int*)registers, eax, ecx);
+			__cpuidex(reinterpret_cast<int*>(registers), eax, ecx);
 #endif
 		}
 
 		explicit CPU_ID(uint32_t eax)
 		{
 #ifdef TUR_PLATFORM_WIN32
-			__cpuid((int*)registers, eax);
+			__cpuid(reinterpret_cast<int*>(registers), eax);
 #endif
 		}
 
@@ -49,9 +49,9 @@ namespace tur
 	{
 		CPU_ID cpuID(0x0);
 
-		m_Vendor += std::string((const char*)&cpuID.ebx(), 4);
-		m_Vendor += std::string((const char*)&cpuID.edx(), 4);
-		m_Vendor += std::string((const char*)&cpuID.ecx(), 4);
+		m_Vendor += std::string(reinterpret_cast<const char*>(&cpuID.ebx()), 4);
+		m_Vendor += std::string(reinterpret_cast<const char*>(&cpuID.edx()), 4);
+		m_Vendor += std::string(reinterpret_cast<const char*>(&cpuID.ecx()), 4);
 
 		const std::unordered_map<std::string, std::string> vendorMap = {
 			{ "AMDisbetter!", "AMD" },
@@ -82,9 +82,23 @@ namespace tur
 		CPU_ID cpuID_Part1 = CPU_ID(0x80000003);
 		CPU_ID cpuID_Part2 = CPU_ID(0x80000004);
 
-		memcpy(str, (uint32_t*)cpuID_Part0.registers, sizeof(cpuID_Part0.registers));
-		memcpy(str + sizeof(cpuID_Part0.registers), (uint32_t*)cpuID_Part1.registers, sizeof(cpuID_Part1.registers));
-		memcpy(str + sizeof(cpuID_Part0.registers) + sizeof(cpuID_Part1.registers), (uint32_t*)cpuID_Part2.registers, sizeof(cpuID_Part2.registers));
+		memcpy(
+			str, 
+			reinterpret_cast<uint32_t*>(cpuID_Part0.registers), 
+			sizeof(cpuID_Part0.registers)
+		);
+
+		memcpy(
+			str + sizeof(cpuID_Part0.registers), 
+			reinterpret_cast<uint32_t*>(cpuID_Part1.registers),
+			sizeof(cpuID_Part1.registers)
+		);
+
+		memcpy(
+			str + sizeof(cpuID_Part0.registers) + sizeof(cpuID_Part1.registers), 
+			reinterpret_cast<uint32_t*>(cpuID_Part2.registers),
+			sizeof(cpuID_Part2.registers)
+		);
 
 		str[sizeof(str) - 1] = '\0';
 		return std::string(str);
