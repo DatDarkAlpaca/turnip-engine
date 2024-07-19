@@ -2,10 +2,9 @@
 #include "Common.h"
 
 #include "Core/Assets/AssetLibrary.hpp"
-#include "Core/View/ViewSystem.h"
-#include "Core/Event/Event.h"
-
 #include "Core/Window/WindowSystem.hpp"
+#include "Core/Worker/WorkerPool.hpp"
+#include "Core/View/ViewSystem.h"
 
 #include "Platform/Platform.h"
 
@@ -49,11 +48,14 @@ namespace tur
 
 		WindowSystem& GetWindowSystem() { return g_WindowSystem; }
 
+		WorkerPool& GetWorkerPool() { return g_WorkerPool; }
+
 	private:
 		LoggerSystem g_LoggerSystem;
 		AssetLibrary g_AssetLibrary;
 		WindowSystem g_WindowSystem;
 		ViewSystem g_ViewSystem;
+		WorkerPool g_WorkerPool;
 
 	private:
 		bool m_Initialized = false;

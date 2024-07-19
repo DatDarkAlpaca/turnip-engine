@@ -35,6 +35,8 @@ namespace tur
 		{
 			g_WindowSystem.GetWindow().PollEvents();
 
+			g_WorkerPool.PollTasks();
+
 			OnUpdate();
 
 			OnRender();

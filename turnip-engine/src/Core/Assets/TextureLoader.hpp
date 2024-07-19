@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include "TextureAsset.hpp"
 
 namespace tur
@@ -6,6 +7,6 @@ namespace tur
 	class TextureLoader
 	{
 	public:
-		static TextureAsset Load(const AssetMetadata& metadata);
+		static TextureAsset Load(const std::filesystem::path& filepath);
 	};
 }

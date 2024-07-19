@@ -6,6 +6,7 @@ namespace tur
 {
 	class TurnipEngine;
 
+	class WorkerPool;
 	class ViewSystem;
 	class AssetLibrary;
 
@@ -38,6 +39,8 @@ namespace tur
 
 	public:
 		AssetLibrary& AssetLibrary() const;
+
+		WorkerPool& WorkerPool() const;
 
 	protected:
 		NON_OWNING TurnipEngine* engine = nullptr;

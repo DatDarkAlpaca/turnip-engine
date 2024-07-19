@@ -9,5 +9,10 @@ namespace tur
 	{
 		return engine->GetAssetLibrary();
 	}
+
+	WorkerPool& tur::View::WorkerPool() const
+	{
+		return engine->GetWorkerPool();
+	}
 }
 

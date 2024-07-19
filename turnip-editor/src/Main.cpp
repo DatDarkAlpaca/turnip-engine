@@ -1,6 +1,9 @@
 #include "pch.h"
 #include <TurnipEngine.h>
 #include "Core/Assets/TextureLoader.hpp"
+#include "Core/Worker/WorkerPool.hpp"
+
+#include <iostream>
 
 using namespace tur;
 
@@ -11,9 +14,10 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
-		// Texture loading:
-		auto textureAsset = TextureLoader::Load({ "mario_thick_ass.png" });
-		AssetLibrary().InsertTexture(textureAsset);
+		WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
+			TUR_LOG_INFO("Finished loading: {}", asset.metadata.filepath.string());
+			AssetLibrary().InsertTexture(asset);
+		});
 	}
 
 	void OnEngineShutdown() override
