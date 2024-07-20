@@ -27,7 +27,7 @@ Additionally, you may also need to add an environment variable to use `premake5`
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/DatDarkAlpaca/turnip-engine
+    git clone --recurse-submodules https://github.com/DatDarkAlpaca/turnip-engine
     ```
 
 2. **Generate the project**
