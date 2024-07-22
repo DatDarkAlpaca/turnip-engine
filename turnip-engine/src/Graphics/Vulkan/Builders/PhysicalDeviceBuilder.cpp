@@ -1,14 +1,17 @@
-#include "pch.h"
-#include "PhysicalDeviceBuilder.h"
-#include "Graphics/Vulkan/Constants.h"
+#include "pch.hpp"
+#include "PhysicalDeviceBuilder.hpp"
+#include "Graphics/Vulkan/Constants.hpp"
+#include "Graphics/Vulkan/Objects/QueueFamily.hpp"
 
 namespace tur::vulkan
 {
 	vk::PhysicalDevice DefaultPhysicalDeviceSelector(const PhysicalDeviceSelector& deviceSelector, const std::vector<vk::PhysicalDevice>& physicalDevices)
 	{
-		const auto& instanceOutput = deviceSelector.GetInstanceOutput();
+		const auto& instanceOutput = deviceSelector.GetInstanceObject();
 		const auto& surface = deviceSelector.GetSurface();
 		const auto& requestedExtensions = deviceSelector.GetRequestedExtensions();
+
+		bool requiresPresent = deviceSelector.GetConfigSystem().GetVulkanArguments().enablePresentation;
 
 		using score = uint32_t;
 
@@ -69,7 +72,7 @@ namespace tur::vulkan
 				scoreList[i] += 1;
 
 			// Required Queue Support:
-			if (instanceOutput.enablePresentation)
+			if (requiresPresent)
 			{
 				// Queues:
 				auto queueFamiliesSupported = GetQueueFamilyInformation(device, surface);
@@ -98,32 +101,33 @@ namespace tur::vulkan
 
 		size_t winnerIndex = std::distance(scoreList.begin(), std::max_element(scoreList.begin(), scoreList.end()));
 
-		// probably doesn't work:
 		if (scoreList[winnerIndex] == -1)
 			TUR_LOG_CRITICAL("None of the available physical devices support the features requested.");
 
 		return physicalDevices[winnerIndex];
 	}
+}
 
-	PhysicalDevice PhysicalDeviceSelector::SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>& selectorFunction) const
+namespace tur::vulkan
+{
+	PhysicalDeviceObject PhysicalDeviceSelector::SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>& selectorFunction) const
 	{
 		if (!m_InstanceSet)
 			TUR_LOG_CRITICAL("Instance not set. Use SetInstance() before selecting a physical device");
 
-		if (!m_SurfaceSet && m_InstanceOutput.enablePresentation)
+		if (!m_SurfaceSet && m_EnablePresentation)
 			TUR_LOG_CRITICAL("Surface not set and instance requires presentation. Use SetSurface() before selecting a physical device");
 
 		std::vector<vk::PhysicalDevice> availableDevices = GetInstance().enumeratePhysicalDevices();
 		auto physicalDevice = selectorFunction(*this, availableDevices);
 
-		PhysicalDevice output;
-		output.physicalDevice = physicalDevice;
-		output.queueFamilyInformation = GetQueueFamilyInformation(physicalDevice, m_Surface);
+		PhysicalDeviceObject physicalDeviceObject;
+		physicalDeviceObject.physicalDevice = physicalDevice;
 
-		return output;
+		return physicalDeviceObject;
 	}
 
-	PhysicalDevice PhysicalDeviceSelector::Select() const
+	PhysicalDeviceObject PhysicalDeviceSelector::Select() const
 	{
 		auto deviceResult = ChoosePhysicalDevice();
 		if (!deviceResult.has_value())
@@ -131,11 +135,9 @@ namespace tur::vulkan
 
 		vk::PhysicalDevice physicalDevice = deviceResult.value();
 
-		PhysicalDevice output;
-		output.physicalDevice = physicalDevice;
-		output.queueFamilyInformation = GetQueueFamilyInformation(physicalDevice, m_Surface);
-
-		return output;
+		PhysicalDeviceObject physicalDeviceObject;
+		physicalDeviceObject.physicalDevice = physicalDevice;
+		return physicalDeviceObject;
 	}
 
 	std::optional<vk::PhysicalDevice> PhysicalDeviceSelector::ChoosePhysicalDevice() const
@@ -155,11 +157,11 @@ namespace tur::vulkan
 
 	bool PhysicalDeviceSelector::DoesDeviceSupportRequirements(const vk::PhysicalDevice& device) const
 	{
-		const auto& instanceOutput = GetInstanceOutput();
+		const auto& instanceOutput = GetInstance();
 		const auto& surface = GetSurface();
 		const auto& availableExtensions = device.enumerateDeviceExtensionProperties();
 
-		bool requiresPresent = m_InstanceOutput.enablePresentation;
+		bool requiresPresent = m_ConfigSystem.GetVulkanArguments().enablePresentation;
 
 		bool supportsExtensions = false;
 		bool supportsPresent = false;
@@ -186,7 +188,7 @@ namespace tur::vulkan
 		// Queues:
 		if (requiresPresent)
 		{
-			for (const auto& queueFamily : GetQueueFamilyInformation(device, m_Surface))
+			for (const auto& queueFamily : GetQueueFamilyInformation(device, GetSurface()))
 			{
 				if (GetQueueFamilySupports(queueFamily, QueueOperation::GRAPHICS | QueueOperation::PRESENT))
 				{
@@ -202,20 +204,25 @@ namespace tur::vulkan
 		return supportsExtensions && supportsPresent;
 	}
 
-	PhysicalDeviceSelector& PhysicalDeviceSelector::SetInstance(const Instance& instanceOutput)
+	PhysicalDeviceSelector& PhysicalDeviceSelector::SetConfigSystem(const ConfigSystem& configSystem)
 	{
-		m_InstanceOutput = instanceOutput;
-		m_InstanceSet = true;
-
-		if (m_InstanceOutput.enablePresentation)
-			m_RequestedExtensions.push_back(vulkan::SwapchainExtensionName);
+		m_ConfigSystem = configSystem;
+		m_ConfigSystemSet = true;
 
 		return *this;
 	}
 
-	PhysicalDeviceSelector& PhysicalDeviceSelector::SetSurface(const vk::SurfaceKHR& surface)
+	PhysicalDeviceSelector& PhysicalDeviceSelector::SetInstanceObject(const InstanceObject& instanceObject)
 	{
-		m_Surface = surface;
+		m_InstanceObject = instanceObject;
+		m_InstanceSet = true;
+
+		return *this;
+	}
+
+	PhysicalDeviceSelector& PhysicalDeviceSelector::SetSurfaceObject(const SurfaceObject& surfaceObject)
+	{
+		m_SurfaceObject = surfaceObject;
 		m_SurfaceSet = true;
 		return *this;
 	}
@@ -231,6 +238,12 @@ namespace tur::vulkan
 	PhysicalDeviceSelector& PhysicalDeviceSelector::AddRequiredExtension(const char* extensionName)
 	{
 		m_RequestedExtensions.push_back(extensionName);
+		return *this;
+	}
+	
+	PhysicalDeviceSelector& PhysicalDeviceSelector::SetEnablePresentation(bool value)
+	{
+		m_EnablePresentation = value;
 		return *this;
 	}
 }

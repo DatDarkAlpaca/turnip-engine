@@ -1,5 +1,6 @@
-#include "pch.h"
-#include "InstanceBuilder.h"
+#include "pch.hpp"
+#include "InstanceBuilder.hpp"
+#include "Platform/Platform.hpp"
 
 static bool CheckExtensionSupport(const std::vector<vk::ExtensionProperties>& availableExtensions, const char* extensionName)
 {
@@ -65,7 +66,7 @@ static bool ValidateLayers(const std::vector<const char*>& layers)
 
 namespace tur::vulkan
 {
-	VulkanInstanceBuilder::VulkanInstanceBuilder()
+	InstanceBuilder::InstanceBuilder()
 	{
 #ifdef TUR_DEBUG
 		AddValidationLayer();
@@ -74,9 +75,9 @@ namespace tur::vulkan
 #endif
 	}
 
-	std::optional<Instance> VulkanInstanceBuilder::Build()
+	std::optional<InstanceObject> InstanceBuilder::Build()
 	{
-		Instance output;
+		InstanceObject instanceObject;
 
 		// Application information:
 		vk::ApplicationInfo applicationInformation = vk::ApplicationInfo(
@@ -116,7 +117,7 @@ namespace tur::vulkan
 
 		try
 		{
-			output.instanceHandle = vk::createInstance(createInfo);
+			instanceObject.instance = vk::createInstance(createInfo);
 		}
 		catch (const vk::SystemError& err)
 		{
@@ -125,10 +126,8 @@ namespace tur::vulkan
 		}
 
 		// Messenger Creation:
-		output.enablePresentation = !m_Information.disableKHRSurface && !m_Information.disableWindowingSurface;
-
 		if (!m_Information.useDebugMessenger)
-			return output;
+			return instanceObject;
 
 		vk::DebugUtilsMessengerCreateInfoEXT debugCreateInfo = vk::DebugUtilsMessengerCreateInfoEXT(
 			vk::DebugUtilsMessengerCreateFlagsEXT(),
@@ -138,15 +137,16 @@ namespace tur::vulkan
 			nullptr
 		);
 
-		vk::DispatchLoaderDynamic DLDI(output.instanceHandle, vkGetInstanceProcAddr);
-		output.debugMessenger = output.instanceHandle.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
-		output.DLDI = DLDI;
+		vk::DispatchLoaderDynamic DLDI(instanceObject.instance, vkGetInstanceProcAddr);
+		instanceObject.debugMessenger = instanceObject.instance.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
+		instanceObject.DLDI = DLDI;
 
-		return output;
+		return instanceObject;
 	}
 
-	void VulkanInstanceBuilder::DisplayVulkanAPIVersion() const
+	void InstanceBuilder::DisplayVulkanAPIVersion() const
 	{
+		// TODO: move to a graphics backend
 		auto variant = VK_API_VERSION_VARIANT(m_Information.apiVersion);
 		auto major = VK_API_VERSION_MAJOR(m_Information.apiVersion);
 		auto minor = VK_API_VERSION_MINOR(m_Information.apiVersion);
@@ -156,123 +156,117 @@ namespace tur::vulkan
 	}
 
 	// Application Information:
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetAppName(const std::string& applicationName)
+	InstanceBuilder& InstanceBuilder::SetAppName(const std::string& applicationName)
 	{
 		m_Information.applicationName = applicationName;
 		return *this;
 	}
 	
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetEngineName(const std::string& engineName)
+	InstanceBuilder& InstanceBuilder::SetEngineName(const std::string& engineName)
 	{
 		m_Information.engineName = engineName;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetApplicationVersion(uint32_t applicationVersion)
+	InstanceBuilder& InstanceBuilder::SetApplicationVersion(uint32_t applicationVersion)
 	{
 		m_Information.applicationVersion = applicationVersion;
 		return *this;
 	}
 	
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetApplicationVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
+	InstanceBuilder& InstanceBuilder::SetApplicationVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
 	{
 		m_Information.applicationVersion = VK_MAKE_API_VERSION(variant, major, minor, patch);
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetEngineVersion(uint32_t applicationVersion)
+	InstanceBuilder& InstanceBuilder::SetEngineVersion(uint32_t applicationVersion)
 	{
 		m_Information.engineVersion = applicationVersion;
 		return *this;
 	}
 	
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetEngineVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
+	InstanceBuilder& InstanceBuilder::SetEngineVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
 	{
 		m_Information.engineVersion = VK_MAKE_API_VERSION(variant, major, minor, patch);
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetAPIVersion(uint32_t applicationVersion)
+	InstanceBuilder& InstanceBuilder::SetAPIVersion(uint32_t applicationVersion)
 	{
 		m_Information.apiVersion = applicationVersion;
 		return *this;
 	}
 	
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetAPIVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
+	InstanceBuilder& InstanceBuilder::SetAPIVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant)
 	{
 		m_Information.apiVersion = VK_MAKE_API_VERSION(variant, major, minor, patch);
 		return *this;
 	}
 
 	// Layers & Extensions:
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddLayer(const char* layerName)
+	InstanceBuilder& InstanceBuilder::AddLayer(const char* layerName)
 	{
 		m_Information.layers.push_back(layerName);
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddValidationLayer()
+	InstanceBuilder& InstanceBuilder::AddValidationLayer()
 	{
-		if (m_Information.addedValidationLayer)
-			return *this;
-
 		m_Information.layers.push_back(ValidationLayerName);
-		m_Information.addedValidationLayer = true;
+		m_Information.addValidationLayer = true;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddLayers(const std::vector<const char*>& layers)
+	InstanceBuilder& InstanceBuilder::AddLayers(const std::vector<std::string>& layers)
 	{
 		for (const auto& layer : layers)
-			m_Information.layers.push_back(layer);
+			m_Information.layers.push_back(layer.c_str());
 
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddExtension(const char* extensionName)
+	InstanceBuilder& InstanceBuilder::AddExtension(const char* extensionName)
 	{
 		m_Information.extensions.push_back(extensionName);
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddDebugUtilsExtension()
+	InstanceBuilder& InstanceBuilder::AddDebugUtilsExtension()
 	{
-		if (m_Information.addDebugExtensions)
-			return *this;
-
 		m_Information.extensions.push_back(DebugUtilsExtensionName);
 		m_Information.addDebugExtensions = true;
 		return *this;
 	}
 	
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddExtensions(const std::vector<const char*>& extensions)
+	InstanceBuilder& InstanceBuilder::AddExtensions(const std::vector<std::string>& extensions)
 	{
 		for (const auto& extension : extensions)
-			m_Information.extensions.push_back(extension);
+			m_Information.extensions.push_back(extension.c_str());
 
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::ToggleKHRSurfaceFlag(bool state)
+	InstanceBuilder& InstanceBuilder::ToggleKHRSurfaceFlag(bool state)
 	{
 		m_Information.disableKHRSurface = state;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::ToggleWindowingSurfaceFlag(bool state)
+	InstanceBuilder& InstanceBuilder::ToggleWindowingSurfaceFlag(bool state)
 	{
 		m_Information.disableWindowingSurface = state;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetHeadless()
+	InstanceBuilder& InstanceBuilder::SetHeadless()
 	{
 		m_Information.disableKHRSurface = true;
 		m_Information.disableWindowingSurface = true;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetNotHeadless()
+	InstanceBuilder& InstanceBuilder::SetNotHeadless()
 	{
 		m_Information.disableKHRSurface = false;
 		m_Information.disableWindowingSurface = false;
@@ -280,7 +274,7 @@ namespace tur::vulkan
 	}
 
 	// Debug Messenger:
-	VulkanInstanceBuilder& VulkanInstanceBuilder::UseDebugMessenger(bool value)
+	InstanceBuilder& InstanceBuilder::UseDebugMessenger(bool value)
 	{
 		if (value)
 			UseDefaultDebugCallback();
@@ -289,7 +283,7 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::UseDefaultDebugCallback()
+	InstanceBuilder& InstanceBuilder::UseDefaultDebugCallback()
 	{
 		AddValidationLayer();
 		AddDebugUtilsExtension();
@@ -299,7 +293,7 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetDebugCallback(VulkanDebugCallback callback)
+	InstanceBuilder& InstanceBuilder::SetDebugCallback(VulkanDebugCallback callback)
 	{
 		AddValidationLayer();
 		AddDebugUtilsExtension();
@@ -309,32 +303,32 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetDebugMessengerSeverity(VulkanDebugSeverity severity)
+	InstanceBuilder& InstanceBuilder::SetDebugMessengerSeverity(VulkanDebugSeverity severity)
 	{
 		m_Information.messageSeverity = severity;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddDebugMessengerSeverity(VulkanDebugSeverity severity)
+	InstanceBuilder& InstanceBuilder::AddDebugMessengerSeverity(VulkanDebugSeverity severity)
 	{
 		m_Information.messageSeverity |= severity;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::SetDebugMessengerType(VulkanMessageType type)
+	InstanceBuilder& InstanceBuilder::SetDebugMessengerType(VulkanMessageType type)
 	{
 		m_Information.messageType = type;
 		return *this;
 	}
 
-	VulkanInstanceBuilder& VulkanInstanceBuilder::AddDebugMessengerType(VulkanMessageType type)
+	InstanceBuilder& InstanceBuilder::AddDebugMessengerType(VulkanMessageType type)
 	{
 		m_Information.messageType = m_Information.messageType | type;
 		return *this;
 	}
 
 	// Extensions:
-	void VulkanInstanceBuilder::RequestSurfaceExtension(const std::vector<vk::ExtensionProperties>& supportedExtensions)
+	void InstanceBuilder::RequestSurfaceExtension(const std::vector<vk::ExtensionProperties>& supportedExtensions)
 	{
 		if (m_Information.disableKHRSurface)
 			return;
@@ -346,44 +340,21 @@ namespace tur::vulkan
 			TUR_LOG_CRITICAL("This device does not support the KHR Surface extension");
 	}
 
-	void VulkanInstanceBuilder::RequestWindowingExtensions(const std::vector<vk::ExtensionProperties>& supportedExtensions)
+	void InstanceBuilder::RequestWindowingExtensions(const std::vector<vk::ExtensionProperties>& supportedExtensions)
 	{
 		if (m_Information.disableWindowingSurface)
 			return;
 
-#ifdef TUR_PLATFORM_WIN32
-		if (CheckExtensionSupport(supportedExtensions, WIN32_SurfaceExtensionName))
-			m_Information.extensions.push_back(WIN32_SurfaceExtensionName);
-		else
-			TUR_LOG_CRITICAL("This device does not support the WIN32 Surface extension");
+		auto availableExtensionNames = tur::platform::vulkan::GetVulkanExtensionPlatformSurfaceNames();
+		for (const char* extensionName : availableExtensionNames)
+		{
+			if (!CheckExtensionSupport(supportedExtensions, extensionName))
+				continue;
 
-#elif defined(TUR_PLATFORM_LINUX)
-		bool supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XCB_SurfaceExtensionName);
-		if (supportsLinuxSurface)
-			m_Information.extensions.push_back(XCB_SurfaceExtensionName);
+			m_Information.extensions.push_back(extensionName);
+			return;
+		}
 
-		supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, XLIB_SurfaceExtensionName);
-		if (supportsLinuxSurface)
-			m_Information.extensions.push_back(XLIB_SurfaceExtensionName);
-
-		supportsLinuxSurface = CheckExtensionSupport(supportedExtensions, WAYLAND_SurfaceExtensionName);
-		if (supportsLinuxSurface)
-			m_Information.extensions.push_back(WAYLAND_SurfaceExtensionName);
-
-		if (!supportsLinuxSurface)
-			TUR_LOG_CRITICAL("This linux device does not support any of the following supported surface extensions: XCB, XLIB, Wayland");
-
-#elif defined(TUR_PLATFORM_APPLE)
-		if (CheckExtensionSupport(supportedExtensions, METAL_SurfaceExtensionName))
-			m_Information.extensions.push_back(METAL_SurfaceExtensionName);
-		else
-			TUR_LOG_CRITICAL("This device does not support the Apple/Metal Surface extension");
-
-#elif defined(TUR_PLATFORM_ANDROID)
-		if (CheckExtensionSupport(supportedExtensions, ANDROID_SurfaceExtensionName))
-			m_Information.extensions.push_back(ANDROID_SurfaceExtensionName);
-		else
-			TUR_LOG_CRITICAL("This device does not support the Android Surface extension");
-#endif
+		TUR_LOG_CRITICAL("This device does not support any valid surface extension");
 	}
 }

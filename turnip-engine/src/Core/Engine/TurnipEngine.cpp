@@ -8,14 +8,14 @@ namespace tur
 	TurnipEngine::TurnipEngine(const std::filesystem::path& configFilePath)
 	{
 		ConfigSystem configSystem(configFilePath);
-			
+
 		platform::InitializePlatform();
 
 		// Logger System:
 		g_LoggerSystem.Get().Initialize();
 
 		// Window System:
-		g_WindowSystem.Initialize(configSystem.GetWindowProperties(), configSystem.GetGraphicsSpecification());
+		g_WindowSystem.Initialize(configSystem);
 		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		m_Initialized = true;

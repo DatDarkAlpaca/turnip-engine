@@ -4,6 +4,8 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include "Graphics/Vulkan/Constants.hpp"
+
 namespace tur::platform::vulkan
 {
 	void SetupVulkanWindowing(Window& window, const WindowProperties& properties)
@@ -36,5 +38,22 @@ namespace tur::platform::vulkan
 
 		TUR_LOG_CRITICAL("Failed to create window surface using GLFW and Vulkan");
 		return nullptr;
+	}
+
+	std::vector<const char*> GetVulkanExtensionPlatformSurfaceNames()
+	{
+#ifdef TUR_PLATFORM_WIN32
+		return { tur::vulkan::WIN32_SurfaceExtensionName };
+#elif defined(TUR_PLATFORM_LINUX)
+		return {
+			tur::vulkan::XCB_SurfaceExtensionName,
+			tur::vulkan::XLIB_SurfaceExtensionName,
+			tur::vulkan::WAYLAND_SurfaceExtensionName
+		};
+#elif defined(TUR_PLATFORM_APPLE)
+		return { METAL_SurfaceExtensionName };
+#elif defined(TUR_PLATFORM_ANDROID)
+		return { ANDROID_SurfaceExtensionName };
+#endif
 	}
 }

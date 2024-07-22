@@ -1,8 +1,8 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
 
-#include "QueueOperation.h"
-#include "Graphics/Vulkan/Constants.h"
+#include "QueueOperation.hpp"
+#include "Graphics/Vulkan/Constants.hpp"
 
 namespace tur::vulkan
 {

@@ -1,24 +1,23 @@
 #pragma once
-#include "Graphics/GraphicsSpecification.hpp"
+#include "Core/Config/ConfigSystem.hpp"
 #include "Core/Event/Events.hpp"
 #include "Platform/Platform.hpp"
-#include "WindowProperties.hpp"
 
 namespace tur
 {
 	class WindowSystem
 	{
 	public:
-		void Initialize(const WindowProperties&, const GraphicsSpecification& graphicsSpecification = {});
+		void Initialize(const ConfigSystem& configSystem);
 
 		void SetEventCallback(const EventCallback& callback);
 
 		void Shutdown();
 
 	private:
-		void InitializeOpenGL(const WindowProperties&, const GraphicsSpecification&);
+		void InitializeOpenGL(const ConfigSystem& configSystem);
 
-		void InitializeVulkan(const WindowProperties&, const GraphicsSpecification&);
+		void InitializeVulkan(const ConfigSystem& configSystem);
 
 	public:
 		const platform::Window& GetWindow() const { return m_Window; }

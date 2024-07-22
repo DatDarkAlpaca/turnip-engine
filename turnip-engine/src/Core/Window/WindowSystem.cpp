@@ -1,18 +1,21 @@
 #include "pch.hpp"
 #include "WindowSystem.hpp"
 
+#include "Graphics/OpenGL/OpenGLInitializer.hpp"
+#include "Graphics/Vulkan/VulkanInitializer.hpp"
+
 namespace tur
 {
-	void WindowSystem::Initialize(const WindowProperties& properties, const GraphicsSpecification& graphicsSpecification)
+	void WindowSystem::Initialize(const ConfigSystem& configSystem)
 	{
-		switch (graphicsSpecification.api)
+		switch (configSystem.GetGraphicsSpecification().api)
 		{
 			case GraphicsAPI::OPENGL:
-				InitializeOpenGL(properties, graphicsSpecification);
+				InitializeOpenGL(configSystem);
 				break;
 
 			case GraphicsAPI::VULKAN:
-				InitializeVulkan(properties, graphicsSpecification);
+				InitializeVulkan(configSystem);
 				break;
 		}
 	}
@@ -27,22 +30,15 @@ namespace tur
 		m_Window.Shutdown();
 	}
 
-	void WindowSystem::InitializeOpenGL(const WindowProperties& properties, const GraphicsSpecification& graphicsSpecification)
+	void WindowSystem::InitializeOpenGL(const ConfigSystem& configSystem)
 	{
-		platform::gl::SetupOpenGLWindowing(m_Window, properties, graphicsSpecification);
+		gl::OpenGLInitializer initializer(configSystem, m_Window);
+		initializer.Initialize();
 	}
 
-	void WindowSystem::InitializeVulkan(const WindowProperties& properties, const GraphicsSpecification& graphicsSpecification)
+	void WindowSystem::InitializeVulkan(const ConfigSystem& configSystem)
 	{
-		platform::vulkan::SetupVulkanWindowing(m_Window, properties);
-
-		/*if (initializer)
-		{
-			initializer->Initialize(renderDevice.get());
-			break;
-		}
-
-		vulkan::DefaultVulkanInitializer vulkanInitializer(specification);
-		vulkanInitializer.Initialize(renderDevice.get());*/
+		vulkan::DefaultVulkanInitializer initializer(configSystem, m_Window);
+		initializer.Initialize();
 	}
 }

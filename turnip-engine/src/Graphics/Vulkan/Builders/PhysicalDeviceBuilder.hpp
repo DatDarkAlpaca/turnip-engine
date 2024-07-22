@@ -5,10 +5,12 @@
 #include <string>
 #include <limits>
 
-#include "Common.h"
-#include <vulkan/vulkan.hpp>
+#include "Core/Config/ConfigSystem.hpp"
+#include "Graphics/Vulkan/Objects/Instance.hpp"
+#include "Graphics/Vulkan/Objects/Surface.hpp"
+#include "Graphics/Vulkan/Objects/PhysicalDevice.hpp"
 
-#include "Graphics/Vulkan/Objects/Objects.h"
+#include "Common.hpp"
 
 namespace tur::vulkan
 {
@@ -18,9 +20,9 @@ namespace tur::vulkan
 		using AvailableDevices = std::vector<vk::PhysicalDevice>;
 
 	public:
-		PhysicalDevice SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>&) const;
+		PhysicalDeviceObject SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>&) const;
 
-		PhysicalDevice Select() const;
+		PhysicalDeviceObject Select() const;
 
 	private:
 		std::optional<vk::PhysicalDevice> ChoosePhysicalDevice() const;
@@ -28,9 +30,11 @@ namespace tur::vulkan
 		bool DoesDeviceSupportRequirements(const vk::PhysicalDevice& device) const;
 		
 	public:
-		PhysicalDeviceSelector& SetInstance(const Instance& instanceOutput);
+		PhysicalDeviceSelector& SetConfigSystem(const ConfigSystem& configSystem);
 
-		PhysicalDeviceSelector& SetSurface(const vk::SurfaceKHR& surface);
+		PhysicalDeviceSelector& SetInstanceObject(const InstanceObject& instanceObject);
+
+		PhysicalDeviceSelector& SetSurfaceObject(const SurfaceObject& surfaceObject);
 
 	public:
 		PhysicalDeviceSelector& AddRequiredExtensions(const std::vector<const char*>& extensions);
@@ -38,20 +42,27 @@ namespace tur::vulkan
 		PhysicalDeviceSelector& AddRequiredExtension(const char* extensionName);
 
 	public:
-		inline const Instance& GetInstanceOutput() const { return m_InstanceOutput; }
-		inline vk::Instance GetInstance() const { return m_InstanceOutput.instanceHandle; }
-		inline vk::SurfaceKHR GetSurface() const { return m_Surface; }
+		PhysicalDeviceSelector& SetEnablePresentation(bool value);
+
+	public:
+		inline const InstanceObject& GetInstanceObject() const { return m_InstanceObject; }
+		inline vk::Instance GetInstance() const { return m_InstanceObject.instance; }
+		inline vk::SurfaceKHR GetSurface() const { return m_SurfaceObject.surface; }
+		inline const ConfigSystem& GetConfigSystem() const { return m_ConfigSystem; }
 
 		const std::vector<const char*>& GetRequestedExtensions() const { return m_RequestedExtensions; }
 
 	private:
-		Instance m_InstanceOutput;
-		vk::SurfaceKHR m_Surface;
+		ConfigSystem m_ConfigSystem;
+		InstanceObject m_InstanceObject;
+		SurfaceObject m_SurfaceObject;
 
 		std::vector<const char*> m_RequestedExtensions;
 		
+		bool m_EnablePresentation = true;
 		bool m_InstanceSet = false;
 		bool m_SurfaceSet = false;
+		bool m_ConfigSystemSet = false;
 	};
 
 	vk::PhysicalDevice DefaultPhysicalDeviceSelector(const PhysicalDeviceSelector& deviceSelector, const std::vector<vk::PhysicalDevice>& physicalDevices);

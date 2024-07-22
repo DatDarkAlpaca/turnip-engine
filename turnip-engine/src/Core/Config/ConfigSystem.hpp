@@ -2,8 +2,10 @@
 #include <filesystem>
 #include "Util/Json/JsonFile.hpp"
 
+#include "Core/Engine/ApplicationSpecification.hpp"
 #include "Core/Window/WindowProperties.hpp"
 #include "Graphics/GraphicsSpecification.hpp"
+#include "Graphics/Vulkan/VulkanArguments.hpp"
 
 namespace tur
 {
@@ -19,6 +21,19 @@ namespace tur
 		}
 
 	public:
+		ApplicationSpecification GetApplicationSpecification() const
+		{
+			ApplicationSpecification appSpecs;
+
+			appSpecs.applicationName = m_Config["Application"]["name"];
+			appSpecs.versionMajor = m_Config["Application"]["versionMajor"];
+			appSpecs.versionMinor = m_Config["Application"]["versionMinor"];
+			appSpecs.versionPatch = m_Config["Application"]["versionPatch"];
+			appSpecs.versionVariant = m_Config["Application"]["versionVariant"];
+
+			return appSpecs;
+		}
+
 		WindowProperties GetWindowProperties() const
 		{
 			WindowProperties windowProperties;
@@ -42,7 +57,7 @@ namespace tur
 			return windowProperties;
 		}
 
-		GraphicsSpecification GetGraphicsSpecification()
+		GraphicsSpecification GetGraphicsSpecification() const
 		{
 			GraphicsSpecification graphicsSpecification;
 
@@ -65,26 +80,55 @@ namespace tur
 		}
 
 	public:
+		vulkan::VulkanArguments GetVulkanArguments() const
+		{
+			vulkan::VulkanArguments arguments;
+
+			arguments.layers = m_Config["Vulkan"]["layers"].get<std::vector<std::string>>();
+			arguments.extensions = m_Config["Vulkan"]["extensions"].get<std::vector<std::string>>();
+
+			arguments.enablePresentation = m_Config["Vulkan"]["enablePresentation"];
+			arguments.addValidationLayer = m_Config["Vulkan"]["addValidationLayer"];
+			arguments.addDebugExtensions = m_Config["Vulkan"]["addDebugExtensions"];
+			arguments.useDebugMessenger  = m_Config["Vulkan"]["useDebugMessenger"];
+
+			return arguments;
+		}
+
+	public:
 		static void CreateDefaultConfigFile(const std::filesystem::path& filepath)
 		{
 			nlohmann::ordered_json jsonObject;
 
-			jsonObject["Window"]["width"] = 800;
-			jsonObject["Window"]["height"] = 600;
-			jsonObject["Window"]["title"] = "TurnipEngine v1.0";
-			jsonObject["Window"]["x"] = "DEFAULT";
-			jsonObject["Window"]["y"] = "DEFAULT";
-			jsonObject["Window"]["minWidth"] = 100;
-			jsonObject["Window"]["minHeight"] = 1000;
-			jsonObject["Window"]["maxWidth"] = 10000;
-			jsonObject["Window"]["maxHeight"] = 10000;
+			jsonObject["Application"]["name"]			= "Default Application";
+			jsonObject["Application"]["versionMajor"]	= 1;
+			jsonObject["Application"]["versionMinor"]	= 0;
+			jsonObject["Application"]["versionPatch"]	= 0;
+			jsonObject["Application"]["versionVariant"] = 0;
 
-			jsonObject["Graphics"]["API"] = "OPENGL";
-			jsonObject["Graphics"]["versionMajor"] = 4;
-			jsonObject["Graphics"]["versionMinor"] = 5;
-			jsonObject["Graphics"]["versionPatch"] = 0;
-			jsonObject["Graphics"]["versionVariant"] = 0;
-			jsonObject["Graphics"]["usingBottomLeftOrigin"] = true;
+			jsonObject["Window"]["width"]		= 800;
+			jsonObject["Window"]["height"]		= 600;
+			jsonObject["Window"]["title"]		= "TurnipEngine v1.0";
+			jsonObject["Window"]["x"]			= "DEFAULT";
+			jsonObject["Window"]["y"]			= "DEFAULT";
+			jsonObject["Window"]["minWidth"]	= 100;
+			jsonObject["Window"]["minHeight"]	= 1000;
+			jsonObject["Window"]["maxWidth"]	= 10000;
+			jsonObject["Window"]["maxHeight"]	= 10000;
+
+			jsonObject["Graphics"]["API"]					= "OPENGL";
+			jsonObject["Graphics"]["versionMajor"]			= 4;
+			jsonObject["Graphics"]["versionMinor"]			= 5;
+			jsonObject["Graphics"]["versionPatch"]			= 0;
+			jsonObject["Graphics"]["versionVariant"]		= 0;
+			jsonObject["Graphics"]["usingBottomLeftOrigin"]	= true;
+
+			jsonObject["Vulkan"]["layers"]				 = std::vector<const char*> {};
+			jsonObject["Vulkan"]["extensions"]			 = std::vector<const char*> {};
+			jsonObject["Vulkan"]["enablePresentation"]	 = true;
+			jsonObject["Vulkan"]["addValidationLayer"]	 = false;
+			jsonObject["Vulkan"]["addDebugExtensions"]	 = false;
+			jsonObject["Vulkan"]["useDebugMessenger"]    = false;
 
 			std::ofstream jsonFile(filepath);
 			jsonFile << std::setw(4) << jsonObject << std::endl;

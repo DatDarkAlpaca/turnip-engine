@@ -12,6 +12,8 @@
 
 #include "Util/State/State.hpp"
 
+#define TUR_ENGINE_NAME "TurnipEngine"
+
 #define BIND(function, argument) std::bind(function, argument, std::placeholders::_1)
 
 #define EXPOSE_PROPERTY(ClassName, SetterName, PropertyName)						\

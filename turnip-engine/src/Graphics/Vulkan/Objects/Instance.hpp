@@ -3,12 +3,10 @@
 
 namespace tur::vulkan
 {
-	struct Instance
+	struct InstanceObject
 	{
-		vk::Instance instanceHandle;
+		vk::Instance instance;
 		vk::DebugUtilsMessengerEXT debugMessenger;
 		vk::DispatchLoaderDynamic DLDI;
-
-		bool enablePresentation = false;
 	};
 }
