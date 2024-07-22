@@ -20,6 +20,8 @@ namespace tur
 			m_Config = ReadJson(configFilepath);
 		}
 
+		ConfigSystem() = default;
+
 	public:
 		ApplicationSpecification GetApplicationSpecification() const
 		{

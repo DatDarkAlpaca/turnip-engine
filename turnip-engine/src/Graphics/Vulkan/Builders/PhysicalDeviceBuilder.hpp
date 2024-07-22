@@ -20,6 +20,9 @@ namespace tur::vulkan
 		using AvailableDevices = std::vector<vk::PhysicalDevice>;
 
 	public:
+		PhysicalDeviceSelector() = default;
+
+	public:
 		PhysicalDeviceObject SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>&) const;
 
 		PhysicalDeviceObject Select() const;
@@ -57,7 +60,7 @@ namespace tur::vulkan
 		InstanceObject m_InstanceObject;
 		SurfaceObject m_SurfaceObject;
 
-		std::vector<const char*> m_RequestedExtensions;
+		std::vector<const char*> m_RequestedExtensions = {};
 		
 		bool m_EnablePresentation = true;
 		bool m_InstanceSet = false;

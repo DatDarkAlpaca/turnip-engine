@@ -78,7 +78,7 @@ namespace tur::vulkan
 			}
 
 			// Platform Surface:
-			SurfaceObject surfaceObject;
+			SurfaceObject surfaceObject = {};
 			if (vulkanArguments.enablePresentation)
 				surfaceObject.surface = platform::vulkan::GetVulkanSurface(instanceObject.instance, &r_Window);
 
