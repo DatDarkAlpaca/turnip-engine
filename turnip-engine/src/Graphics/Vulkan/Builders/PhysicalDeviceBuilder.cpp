@@ -102,7 +102,7 @@ namespace tur::vulkan
 		size_t winnerIndex = std::distance(scoreList.begin(), std::max_element(scoreList.begin(), scoreList.end()));
 
 		if (scoreList[winnerIndex] == -1)
-			TUR_LOG_CRITICAL("None of the available physical devices support the features requested.");
+			TUR_LOG_CRITICAL("[Vulkan Physical Device]: None of the available physical devices support the features requested.");
 
 		return physicalDevices[winnerIndex];
 	}
@@ -113,10 +113,10 @@ namespace tur::vulkan
 	PhysicalDeviceObject PhysicalDeviceSelector::SelectUsing(const std::function<vk::PhysicalDevice(const PhysicalDeviceSelector&, const AvailableDevices&)>& selectorFunction) const
 	{
 		if (!m_InstanceSet)
-			TUR_LOG_CRITICAL("Instance not set. Use SetInstance() before selecting a physical device");
+			TUR_LOG_CRITICAL("[Vulkan Physical Device]: Instance not set. Use SetInstance() before selecting a physical device");
 
 		if (!m_SurfaceSet && m_EnablePresentation)
-			TUR_LOG_CRITICAL("Surface not set and instance requires presentation. Use SetSurface() before selecting a physical device");
+			TUR_LOG_CRITICAL("[Vulkan Physical Device]: Surface not set and instance requires presentation. Use SetSurface() before selecting a physical device");
 
 		std::vector<vk::PhysicalDevice> availableDevices = GetInstance().enumeratePhysicalDevices();
 		auto physicalDevice = selectorFunction(*this, availableDevices);

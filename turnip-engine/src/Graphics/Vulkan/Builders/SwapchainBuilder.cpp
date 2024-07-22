@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "SwapchainBuilder.h"
+#include "pch.hpp"
+#include "SwapchainBuilder.hpp"
 
 namespace
 {
@@ -206,7 +206,7 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	std::optional<Swapchain> SwapchainBuilder::Create()
+	std::optional<SwapchainObject> SwapchainBuilder::Create()
 	{
 		if (!m_Prepared)
 			TUR_LOG_CRITICAL("The swapchain supported features haven't been cached. Call Prepare() before (re)creating a swapchain");
@@ -246,10 +246,10 @@ namespace tur::vulkan
 
 		PrepareQueueInformation(createInfo);
 
-		Swapchain swapchainResult;
+		SwapchainObject swapchainObject;
 		try
 		{
-			swapchainResult.swapchain = m_LogicalDevice.createSwapchainKHR(createInfo);
+			swapchainObject.swapchain = m_LogicalDevice.createSwapchainKHR(createInfo);
 		}
 		catch (const vk::SystemError& err)
 		{
@@ -258,11 +258,11 @@ namespace tur::vulkan
 		}
 
 		// Information:
-		swapchainResult.surfaceFormat = m_Information.surfaceFormat;
-		swapchainResult.presentMode = m_Information.presentMode;
-		swapchainResult.extent = m_Information.extent;
+		swapchainObject.surfaceFormat = m_Information.surfaceFormat;
+		swapchainObject.presentMode = m_Information.presentMode;
+		swapchainObject.extent = m_Information.extent;
 
-		return swapchainResult;
+		return swapchainObject;
 	}
 
 	SwapchainBuilder& SwapchainBuilder::SetArguments(vk::SurfaceKHR surface, vk::PhysicalDevice physicalDevice, vk::Device device, const QueueCluster& queues)
@@ -335,7 +335,7 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	SwapchainBuilder& SwapchainBuilder::SetOldSwapchain(const Swapchain& swapchain)
+	SwapchainBuilder& SwapchainBuilder::SetOldSwapchain(const SwapchainObject& swapchain)
 	{
 		m_Information.oldSwapchain = swapchain.swapchain;
 		return *this;

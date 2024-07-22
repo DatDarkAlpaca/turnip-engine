@@ -3,7 +3,7 @@
 
 namespace tur::vulkan
 {
-	class RenderpassVulkan
+	class RenderpassObject
 	{
 	public:
 		operator vk::RenderPass() { return renderpass; }

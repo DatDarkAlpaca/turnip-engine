@@ -2,12 +2,12 @@
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
-#include "Renderpass.h"
-#include "Frame.h"
+#include "Renderpass.hpp"
+#include "Frame.hpp"
 
 namespace tur::vulkan
 {
-	struct Swapchain
+	struct SwapchainObject
 	{
 		vk::SwapchainKHR swapchain;
 		std::vector<Frame> frames;
@@ -17,6 +17,6 @@ namespace tur::vulkan
 		vk::PresentModeKHR presentMode = vk::PresentModeKHR::eFifo;
 		vk::Extent2D extent;
 
-		RenderpassVulkan renderpass;
+		RenderpassObject renderpassObject;
 	};
 }

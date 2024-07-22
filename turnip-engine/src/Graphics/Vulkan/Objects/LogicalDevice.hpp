@@ -3,7 +3,7 @@
 
 namespace tur::vulkan
 {
-	struct LogicalDevice
+	struct LogicalDeviceObject
 	{
 		vk::Device device;
 	};

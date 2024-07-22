@@ -2,10 +2,10 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Common.h"
-#include "Core/Logger/Logger.h"
+#include "Common.hpp"
+#include "Core/Logger/Logger.hpp"
 
-#include "Graphics/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/Objects/Objects.hpp"
 
 namespace tur::vulkan
 {
@@ -42,7 +42,7 @@ namespace tur::vulkan
 	public:
 		SwapchainBuilder& Prepare();
 
-		std::optional<Swapchain> Create();
+		std::optional<SwapchainObject> Create();
 
 	public:
 		SwapchainBuilder& SetArguments(vk::SurfaceKHR surface, vk::PhysicalDevice physicalDevice, vk::Device device, const QueueCluster& queues);
@@ -56,7 +56,7 @@ namespace tur::vulkan
 		SwapchainBuilder& SetPresentMode(const vk::PresentModeKHR& presentMode);
 		SwapchainBuilder& SetPresentMode(const PresentModeSelector& presentModeSelector = SwapchainBuilder::DefaultPresentModeSelector);
 
-		SwapchainBuilder& SetOldSwapchain(const Swapchain& swapchain);
+		SwapchainBuilder& SetOldSwapchain(const SwapchainObject& swapchain);
 		SwapchainBuilder& SetOldSwapchain(const vk::SwapchainKHR& swapchain);
 
 		SwapchainBuilder& SetExtent(vk::Extent2D extent);

@@ -6,6 +6,10 @@
 #include "Objects/Surface.hpp"
 #include "Builders/PhysicalDeviceBuilder.hpp"
 #include "Objects/QueueFamily.hpp"
+#include "Builders/LogicalDeviceBuilder.hpp"
+#include "Objects/Queue.hpp"
+#include "Builders/VMABuilder.hpp"
+#include "Builders/SwapchainBuilder.hpp"
 
 #include "Platform/Platform.hpp"
 
@@ -59,7 +63,7 @@ namespace tur::vulkan
 
 					instanceBuilder.UseDebugMessenger(vulkanArguments.useDebugMessenger);
 				}
-				
+
 				instanceBuilder.ToggleKHRSurfaceFlag(vulkanArguments.enablePresentation);
 				instanceBuilder.ToggleWindowingSurfaceFlag(vulkanArguments.enablePresentation);
 
@@ -72,7 +76,7 @@ namespace tur::vulkan
 
 				instanceObject = instanceBuilderResult.value();
 			}
-			
+
 			// Platform Surface:
 			SurfaceObject surfaceObject;
 			if (vulkanArguments.enablePresentation)
@@ -82,24 +86,24 @@ namespace tur::vulkan
 			PhysicalDeviceObject physicalDeviceObject;
 			{
 				physicalDeviceSelector.SetInstanceObject(instanceObject)
-									  .SetConfigSystem(m_ConfigSystem);
+					.SetConfigSystem(m_ConfigSystem);
 
 				if (vulkanArguments.enablePresentation)
 				{
 					physicalDeviceSelector.SetEnablePresentation(true)
-										  .SetSurfaceObject(surfaceObject)
-										  .AddRequiredExtension(vulkan::SwapchainExtensionName);
+						.SetSurfaceObject(surfaceObject)
+						.AddRequiredExtension(vulkan::SwapchainExtensionName);
 
 					physicalDeviceObject = physicalDeviceSelector.Select();
 				}
 			}
-			
+
 			// Queue Family Query:
 			std::vector<QueueFamilyInformation> queueFamilyInfo;
 			{
 				queueFamilyInfo = GetQueueFamilyInformation(physicalDeviceObject.physicalDevice, surfaceObject.surface);
 			}
-			
+
 			// Queue Selection:
 			uint32_t presentQueueIndex = InvalidQueueIndex, graphicsQueueIndex = InvalidQueueIndex;
 			{
@@ -118,6 +122,81 @@ namespace tur::vulkan
 				if (graphicsQueueIndex == vulkan::InvalidQueueIndex)
 					TUR_LOG_ERROR("Failed to assign a graphics queue index");
 			}
+
+			// Logical Device:
+			LogicalDeviceObject logicalDeviceObject;
+			{
+				logicalDeviceBuilder
+					.SetInstanceObject(instanceObject)
+					.SetPhysicalDeviceObject(physicalDeviceObject);
+
+				// Queues:
+				{
+					logicalDeviceBuilder.PrepareQueueInfo(presentQueueIndex, 1.0f);
+					if (graphicsQueueIndex != presentQueueIndex)
+						logicalDeviceBuilder.PrepareQueueInfo(graphicsQueueIndex, 1.0f);
+				}
+
+				auto logicalDeviceResult = logicalDeviceBuilder.Create();
+				if (!logicalDeviceResult.has_value())
+					TUR_LOG_CRITICAL("Vulkan Initializer: Failed to create logical device");
+
+				// Logical Device:
+				logicalDeviceObject = logicalDeviceResult.value();
+			}
+
+			// Queues:
+			QueueCluster queueCluster;
+			{
+				// Queues:
+				auto graphicsQueue = logicalDeviceObject.device.getQueue(graphicsQueueIndex, 0);
+				auto presentQueue = logicalDeviceObject.device.getQueue(presentQueueIndex, 0);
+
+				queueCluster.Add(graphicsQueue, QueueOperation::GRAPHICS, graphicsQueueIndex);
+				queueCluster.Add(presentQueue, QueueOperation::PRESENT, presentQueueIndex);
+			}
+
+			// VMA Allocator:
+			VmaAllocator allocator;
+			{
+				vmaBuilder.SetArguments(
+					instanceObject.instance, 
+					physicalDeviceObject.physicalDevice, 
+					logicalDeviceObject.device
+				);
+
+				allocator = vmaBuilder.Build();
+			}
+
+			// Swapchain:
+			SwapchainObject swapchainObject;
+			{
+				auto& physicalDevice = physicalDeviceObject.physicalDevice;
+				auto& logicalDevice = logicalDeviceObject.device;
+				auto& surface = surfaceObject.surface;
+				auto& queues = queueCluster.queues;
+
+				auto& capabilities = QuerySurfaceCapabilities(physicalDevice, surface);
+				auto& surfaceFormats = QuerySurfaceFormats(physicalDevice, surface);
+				auto& presentModes = QuerySurfacePresentModes(physicalDevice, surface);
+
+#ifdef TUR_DEBUG
+				DisplaySurfaceCapabilities(capabilities);
+				DisplaySurfaceFormats(surfaceFormats);
+				DisplayPresentModes(presentModes);
+#endif
+
+				swapchainBuilder.SetArguments(surface, physicalDevice, logicalDevice, queueCluster)
+								.Prepare();
+
+				auto swapchainResult = swapchainBuilder.Create();
+				if (swapchainResult.has_value())
+					swapchainObject = swapchainResult.value();
+
+				// Image & Image Views:
+				// TODO: this;
+				// swapchainFrameBuilder.Build(logicalDevice, device->swapchain);
+			}
 		}
 
 	private:
@@ -127,5 +206,8 @@ namespace tur::vulkan
 	private:
 		InstanceBuilder instanceBuilder;
 		PhysicalDeviceSelector physicalDeviceSelector;
+		LogicalDeviceBuilder logicalDeviceBuilder;
+		VMABuilder vmaBuilder;
+		SwapchainBuilder swapchainBuilder;
 	};
 }
