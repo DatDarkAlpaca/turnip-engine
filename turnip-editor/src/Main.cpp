@@ -17,6 +17,12 @@ public:
 		});
 	}
 
+	void OnRenderGUI() override
+	{
+		ImGui::Begin("Frame");
+		ImGui::End();
+	}
+
 	void OnEngineShutdown() override
 	{
 		TUR_LOG_INFO("Application shutdown");

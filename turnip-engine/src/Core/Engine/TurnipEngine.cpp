@@ -15,8 +15,10 @@ namespace tur
 		// Logger System:
 		g_LoggerSystem.Get().Initialize();
 
+		// Graphics System:
+		g_GraphicsSystem.Initialize(configSystem, g_WindowSystem.GetWindow());
+
 		// Window System:
-		g_WindowSystem.Initialize(configSystem);
 		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		// UI:

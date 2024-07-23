@@ -5,6 +5,8 @@
 #include "Core/Window/WindowSystem.hpp"
 #include "Core/Worker/WorkerPool.hpp"
 #include "Core/View/ViewSystem.hpp"
+
+#include "Graphics/GraphicsSystem.hpp"
 #include "Graphics/UI/UISystem.hpp"
 
 #include "Platform/Platform.hpp"
@@ -57,6 +59,7 @@ namespace tur
 		WindowSystem g_WindowSystem;
 		ViewSystem g_ViewSystem;
 		WorkerPool g_WorkerPool;
+		GraphicsSystem g_GraphicsSystem;
 		UISystem g_UISystem;
 
 	private:
