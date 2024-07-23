@@ -1,7 +1,8 @@
 #include "pch.hpp"
 #include "TurnipEngine.hpp"
-#include "Platform/Platform.hpp"
+
 #include "Core/Config/ConfigSystem.hpp"
+#include "Platform/Platform.hpp"
 
 namespace tur
 {
@@ -18,12 +19,16 @@ namespace tur
 		g_WindowSystem.Initialize(configSystem);
 		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
+		// UI:
+		g_UISystem.SetUIBackend(CreateUIBackend(configSystem, g_WindowSystem.GetWindow()));
+		g_UISystem.Initialize(configSystem, g_WindowSystem.GetWindow());
+
 		m_Initialized = true;
 	}
 
 	void TurnipEngine::Run()
 	{
-		Initialize();
+		OnEngineStartup();
 
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
@@ -31,22 +36,22 @@ namespace tur
 		while (g_WindowSystem.GetWindow().IsOpen())
 		{
 			g_WindowSystem.GetWindow().PollEvents();
-
 			g_WorkerPool.PollTasks();
 
 			OnUpdate();
 
 			OnRender();
 
+			g_UISystem.StartFrame();
+
 			OnRenderGUI();
+
+			g_UISystem.EndFrame();
+
+			g_WindowSystem.GetWindow().SwapBuffers();
 		}
 
 		Shutdown();
-	}
-
-	void TurnipEngine::Initialize()
-	{	
-		OnEngineStartup();
 	}
 
 	void TurnipEngine::Shutdown()

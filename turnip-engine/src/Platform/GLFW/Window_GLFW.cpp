@@ -97,6 +97,11 @@ namespace tur::platform
 	{
 		return !glfwWindowShouldClose(m_Window.get());
 	}
+
+	void Window::SwapBuffers()
+	{
+		glfwSwapBuffers(m_Window.get());
+	}
 	
 	void Window::SetWindowDataPointer()
 	{

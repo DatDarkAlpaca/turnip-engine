@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Config/ConfigSystem.hpp"
 #include "Core/Event/Events.hpp"
+#include "Graphics/UI/UIBackend.hpp"
 #include "Platform/Platform.hpp"
 
 namespace tur

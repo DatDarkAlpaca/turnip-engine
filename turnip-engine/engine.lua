@@ -9,15 +9,6 @@ project "turnip-engine"
 	
     pchheader "pch.hpp"
     pchsource "src/pch.cpp"
-
-    libdirs {
-        os.getenv("VULKAN_SDK") .. '/Lib/'
-    }
-
-    links {
-        "imgui",
-        "vulkan-1.lib"
-    }
     
     files {
         "src/Core/**.cpp",

@@ -27,4 +27,5 @@
 	url = https://github.com/nothings/stb
 [submodule "vendor/imgui"]
 	path = vendor/imgui
-	url = https://github.com/ocornut/imgui/tree/docking
+	url = https://github.com/ocornut/imgui
+	branch = docking

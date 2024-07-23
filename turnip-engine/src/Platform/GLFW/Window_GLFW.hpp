@@ -39,6 +39,9 @@ namespace tur::platform
 		bool IsOpen() const;
 
 	public:
+		void SwapBuffers();
+
+	public:
 		inline WindowProperties GetProperties() const { return m_Properties; }
 
 		inline GLFWwindow* GetHandle() const { return m_Window.get(); };

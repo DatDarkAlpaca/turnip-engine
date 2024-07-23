@@ -19,6 +19,7 @@ vendor_links[2] = "imgui"
 vendor_links[3] = "imgui-glfw"
 vendor_links[4] = "imgui-opengl"
 vendor_links[5] = "vma"
+vendor_links[6] = "vulkan-1.lib"
 
 vendor_defines = {}
 vendor_defines[0] = "GLFW_INCLUDE_NONE"

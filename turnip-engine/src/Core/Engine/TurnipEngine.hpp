@@ -5,6 +5,7 @@
 #include "Core/Window/WindowSystem.hpp"
 #include "Core/Worker/WorkerPool.hpp"
 #include "Core/View/ViewSystem.hpp"
+#include "Graphics/UI/UISystem.hpp"
 
 #include "Platform/Platform.hpp"
 
@@ -21,8 +22,6 @@ namespace tur
 		void Run();
 
 	private:
-		void Initialize();
-
 		void Shutdown();
 
 	public:
@@ -50,12 +49,15 @@ namespace tur
 
 		WorkerPool& GetWorkerPool() { return g_WorkerPool; }
 
+		UISystem& UI() { return g_UISystem; }
+
 	private:
 		LoggerSystem g_LoggerSystem;
 		AssetLibrary g_AssetLibrary;
 		WindowSystem g_WindowSystem;
 		ViewSystem g_ViewSystem;
 		WorkerPool g_WorkerPool;
+		UISystem g_UISystem;
 
 	private:
 		bool m_Initialized = false;
