@@ -6,29 +6,29 @@
 
 namespace tur
 {
-	void GraphicsSystem::Initialize(const ConfigSystem& configSystem, platform::Window& window)
+	void GraphicsSystem::Initialize(const ConfigData& config, platform::Window& window)
 	{
-		switch (configSystem.GetGraphicsSpecification().api)
+		switch (config.graphicsSpecifications.api)
 		{
 		case GraphicsAPI::OPENGL:
-			InitializeOpenGL(configSystem, window);
+			InitializeOpenGL(config, window);
 			break;
 
 		case GraphicsAPI::VULKAN:
-			InitializeVulkan(configSystem, window);
+			InitializeVulkan(config, window);
 			break;
 		}
 	}
 
-	void GraphicsSystem::InitializeOpenGL(const ConfigSystem& configSystem, platform::Window& window)
+	void GraphicsSystem::InitializeOpenGL(const ConfigData& config, platform::Window& window)
 	{
-		gl::OpenGLInitializer initializer(configSystem, window);
+		gl::OpenGLInitializer initializer(config, window);
 		initializer.Initialize();
 	}
 
-	void GraphicsSystem::InitializeVulkan(const ConfigSystem& configSystem, platform::Window& window)
+	void GraphicsSystem::InitializeVulkan(const ConfigData& config, platform::Window& window)
 	{
-		vulkan::DefaultVulkanInitializer initializer(configSystem, window);
+		vulkan::DefaultVulkanInitializer initializer(config, window);
 		initializer.Initialize();
 	}
 }

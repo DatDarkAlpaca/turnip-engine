@@ -4,26 +4,30 @@
 #include "Core/Config/ConfigSystem.hpp"
 #include "Platform/Platform.hpp"
 
+#include "Core/Config/JSONConfigParser.hpp"
+
 namespace tur
 {
 	TurnipEngine::TurnipEngine(const std::filesystem::path& configFilePath)
 	{
-		ConfigSystem configSystem(configFilePath);
-
 		platform::InitializePlatform();
+
+		// Config System:
+		ConfigSystem configSystem(configFilePath);
+		configSystem.Initialize(tur::MakeUnique<JSONConfigParser>());
 
 		// Logger System:
 		g_LoggerSystem.Get().Initialize();
 
 		// Graphics System:
-		g_GraphicsSystem.Initialize(configSystem, g_WindowSystem.GetWindow());
+		g_GraphicsSystem.Initialize(configSystem.data(), g_WindowSystem.GetWindow());
 
 		// Window System:
 		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		// UI:
-		g_UISystem.SetUIBackend(CreateUIBackend(configSystem, g_WindowSystem.GetWindow()));
-		g_UISystem.Initialize(configSystem, g_WindowSystem.GetWindow());
+		g_UISystem.SetUIBackend(CreateUIBackend(configSystem.data(), g_WindowSystem.GetWindow()));
+		g_UISystem.Initialize(configSystem.data(), g_WindowSystem.GetWindow());
 
 		m_Initialized = true;
 	}

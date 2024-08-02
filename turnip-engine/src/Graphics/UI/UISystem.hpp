@@ -1,7 +1,7 @@
 #pragma once
 #include <imgui.h>
 
-#include "Core/Config/ConfigSystem.hpp"
+#include "Core/Config/ConfigData.hpp"
 #include "Graphics/UI/UIBackend.hpp"
 
 namespace tur
@@ -9,7 +9,7 @@ namespace tur
 	class UISystem
 	{
 	public:
-		void Initialize(const ConfigSystem& configSystem, platform::Window& window);
+		void Initialize(const ConfigData& configData, platform::Window& window);
 
 		void SetUIBackend(tur_unique<UIBackend> ui);
 

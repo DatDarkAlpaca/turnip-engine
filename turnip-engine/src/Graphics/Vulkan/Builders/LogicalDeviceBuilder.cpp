@@ -13,7 +13,7 @@ namespace tur::vulkan
 		if (!m_DeviceSet)
 			TUR_LOG_CRITICAL("[Vulkan Logical Device]: Physical device not set. Use SetPhysicalDevice() before creating a logical device");
 		
-		if (!m_ConfigSystemSet)
+		if (!m_ConfigDataSet)
 			TUR_LOG_CRITICAL("[Vulkan Logical Device]: ConfigSystem not set. Use SetConfigSystem() before creating a logical device");
 
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
@@ -46,7 +46,7 @@ namespace tur::vulkan
 		m_InstanceObject = instanceObject;
 		m_InstanceSet = true;
 
-		if (m_ConfigSystem.GetVulkanArguments().enablePresentation)
+		if (m_ConfigData.vulkanArguments.enablePresentation)
 			AddRequiredExtension(vulkan::SwapchainExtensionName);
 
 		return *this;
@@ -59,10 +59,10 @@ namespace tur::vulkan
 		return *this;
 	}
 
-	LogicalDeviceBuilder& LogicalDeviceBuilder::SetConfigSystem(const ConfigSystem& configSystem)
+	LogicalDeviceBuilder& LogicalDeviceBuilder::SetConfigData(const ConfigData& configData)
 	{
-		m_ConfigSystem = configSystem;
-		m_ConfigSystemSet = true;
+		m_ConfigData = configData;
+		m_ConfigDataSet = true;
 		return *this;
 	}
 

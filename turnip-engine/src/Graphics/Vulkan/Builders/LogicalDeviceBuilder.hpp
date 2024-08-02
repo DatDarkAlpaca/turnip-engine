@@ -2,7 +2,7 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Core/Config/ConfigSystem.hpp"
+#include "Core/Config/ConfigData.hpp"
 
 #include "Graphics/Vulkan/Objects/Instance.hpp"
 #include "Graphics/Vulkan/Objects/PhysicalDevice.hpp"
@@ -20,7 +20,7 @@ namespace tur::vulkan
 
 		LogicalDeviceBuilder& SetPhysicalDeviceObject(const PhysicalDeviceObject& deviceObject);
 
-		LogicalDeviceBuilder& SetConfigSystem(const ConfigSystem& configSystem);
+		LogicalDeviceBuilder& SetConfigData(const ConfigData& configData);
 
 	public:
 		LogicalDeviceBuilder& PrepareQueueInfo(uint32_t queueIndex, float priority = 1.0f);
@@ -33,13 +33,13 @@ namespace tur::vulkan
 	private:
 		PhysicalDeviceObject m_DeviceObject;
 		InstanceObject m_InstanceObject;
-		ConfigSystem m_ConfigSystem;
+		ConfigData m_ConfigData;
 
 		std::vector<const char*> m_Extensions;
 		std::vector<vk::DeviceQueueCreateInfo> m_QueueInfoList;
 
 		bool m_InstanceSet = false;
 		bool m_DeviceSet = false;
-		bool m_ConfigSystemSet = false;
+		bool m_ConfigDataSet = false;
 	};
 }

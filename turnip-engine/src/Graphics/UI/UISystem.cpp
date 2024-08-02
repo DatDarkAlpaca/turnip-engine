@@ -3,7 +3,7 @@
 
 namespace tur
 {
-	void UISystem::Initialize(const ConfigSystem& configSystem, platform::Window& window)
+	void UISystem::Initialize(const ConfigData& configData, platform::Window& window)
 	{
 		// TODO: use the config system to setup the ui options
 

@@ -11,7 +11,7 @@ namespace tur::vulkan
 		const auto& surface = deviceSelector.GetSurface();
 		const auto& requestedExtensions = deviceSelector.GetRequestedExtensions();
 
-		bool requiresPresent = deviceSelector.GetConfigSystem().GetVulkanArguments().enablePresentation;
+		bool requiresPresent = deviceSelector.GetConfigData().vulkanArguments.enablePresentation;
 
 		using score = uint32_t;
 
@@ -161,7 +161,7 @@ namespace tur::vulkan
 		const auto& surface = GetSurface();
 		const auto& availableExtensions = device.enumerateDeviceExtensionProperties();
 
-		bool requiresPresent = m_ConfigSystem.GetVulkanArguments().enablePresentation;
+		bool requiresPresent = m_ConfigData.vulkanArguments.enablePresentation;
 
 		bool supportsExtensions = false;
 		bool supportsPresent = false;
@@ -204,10 +204,10 @@ namespace tur::vulkan
 		return supportsExtensions && supportsPresent;
 	}
 
-	PhysicalDeviceSelector& PhysicalDeviceSelector::SetConfigSystem(const ConfigSystem& configSystem)
+	PhysicalDeviceSelector& PhysicalDeviceSelector::SetConfigData(const ConfigData& config)
 	{
-		m_ConfigSystem = configSystem;
-		m_ConfigSystemSet = true;
+		m_ConfigData = config;
+		m_ConfigDataSet = true;
 
 		return *this;
 	}

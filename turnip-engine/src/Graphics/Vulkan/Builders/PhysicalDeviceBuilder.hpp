@@ -33,7 +33,7 @@ namespace tur::vulkan
 		bool DoesDeviceSupportRequirements(const vk::PhysicalDevice& device) const;
 		
 	public:
-		PhysicalDeviceSelector& SetConfigSystem(const ConfigSystem& configSystem);
+		PhysicalDeviceSelector& SetConfigData(const ConfigData& config);
 
 		PhysicalDeviceSelector& SetInstanceObject(const InstanceObject& instanceObject);
 
@@ -51,12 +51,12 @@ namespace tur::vulkan
 		inline const InstanceObject& GetInstanceObject() const { return m_InstanceObject; }
 		inline vk::Instance GetInstance() const { return m_InstanceObject.instance; }
 		inline vk::SurfaceKHR GetSurface() const { return m_SurfaceObject.surface; }
-		inline const ConfigSystem& GetConfigSystem() const { return m_ConfigSystem; }
+		inline const ConfigData& GetConfigData() const { return m_ConfigData; }
 
 		const std::vector<const char*>& GetRequestedExtensions() const { return m_RequestedExtensions; }
 
 	private:
-		ConfigSystem m_ConfigSystem;
+		ConfigData m_ConfigData;
 		InstanceObject m_InstanceObject;
 		SurfaceObject m_SurfaceObject;
 
@@ -65,7 +65,7 @@ namespace tur::vulkan
 		bool m_EnablePresentation = true;
 		bool m_InstanceSet = false;
 		bool m_SurfaceSet = false;
-		bool m_ConfigSystemSet = false;
+		bool m_ConfigDataSet = false;
 	};
 
 	vk::PhysicalDevice DefaultPhysicalDeviceSelector(const PhysicalDeviceSelector& deviceSelector, const std::vector<vk::PhysicalDevice>& physicalDevices);

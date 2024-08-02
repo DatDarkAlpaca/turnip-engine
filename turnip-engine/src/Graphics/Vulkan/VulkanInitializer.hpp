@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Core/Config/ConfigSystem.hpp"
+#include "Core/Config/ConfigData.hpp"
 
 #include "Builders/InstanceBuilder.hpp"
 #include "Objects/Surface.hpp"
@@ -18,8 +18,8 @@ namespace tur::vulkan
 	class DefaultVulkanInitializer
 	{
 	public:
-		DefaultVulkanInitializer(const ConfigSystem& configSystem, platform::Window& window)
-			: m_ConfigSystem(configSystem)
+		DefaultVulkanInitializer(const ConfigData& config, platform::Window& window)
+			: m_ConfigData(config)
 			, r_Window(window)
 		{
 
@@ -29,10 +29,10 @@ namespace tur::vulkan
 		void Initialize()
 		{
 			// Config:
-			auto& applicationSpecification = m_ConfigSystem.GetApplicationSpecification();
-			auto& windowProperties = m_ConfigSystem.GetWindowProperties();
-			auto& graphicsSpecification = m_ConfigSystem.GetGraphicsSpecification();
-			auto& vulkanArguments = m_ConfigSystem.GetVulkanArguments();
+			auto& applicationSpecification = m_ConfigData.applicationSpecification;
+			auto& windowProperties = m_ConfigData.windowProperties;
+			auto& graphicsSpecification = m_ConfigData.graphicsSpecifications;
+			auto& vulkanArguments = m_ConfigData.vulkanArguments;
 
 			// Vulkan Instance:
 			InstanceObject instanceObject;
@@ -86,7 +86,7 @@ namespace tur::vulkan
 			PhysicalDeviceObject physicalDeviceObject;
 			{
 				physicalDeviceSelector.SetInstanceObject(instanceObject)
-					.SetConfigSystem(m_ConfigSystem);
+					.SetConfigData(m_ConfigData);
 
 				if (vulkanArguments.enablePresentation)
 				{
@@ -200,7 +200,7 @@ namespace tur::vulkan
 		}
 
 	private:
-		ConfigSystem m_ConfigSystem;
+		ConfigData m_ConfigData;
 		platform::Window& r_Window;
 
 	private:

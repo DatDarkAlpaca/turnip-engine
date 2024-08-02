@@ -5,9 +5,9 @@
 
 namespace tur
 {
-    tur_unique<UIBackend> tur::CreateUIBackend(const ConfigSystem& configSystem, platform::Window& window)
+    tur_unique<UIBackend> tur::CreateUIBackend(const ConfigData& config, platform::Window& window)
     {
-		switch (configSystem.GetGraphicsSpecification().api)
+		switch (config.graphicsSpecifications.api)
 		{
 			case GraphicsAPI::OPENGL:
 				return tur::MakeUnique<OpenGLUI>();

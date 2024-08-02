@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Config/ConfigSystem.hpp"
+#include "Core/Config/ConfigData.hpp"
 #include "Platform/Platform.hpp"
 #include "Common.hpp"
 
@@ -19,5 +19,5 @@ namespace tur
 		virtual void EndFrame() = 0;
 	};
 
-	tur_unique<UIBackend> CreateUIBackend(const ConfigSystem& configSystem, platform::Window& window);
+	tur_unique<UIBackend> CreateUIBackend(const ConfigData& config, platform::Window& window);
 }

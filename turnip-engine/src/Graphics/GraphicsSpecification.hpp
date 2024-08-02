@@ -1,15 +1,9 @@
 #pragma once
 #include <numeric>
+#include "GraphicsAPI.hpp"
 
 namespace tur
 {
-	enum class GraphicsAPI
-	{
-		NONE = 0,
-		OPENGL,
-		VULKAN
-	};
-
 	struct GraphicsOptions
 	{
 		bool usingBottomLeftOrigin = true;
@@ -17,7 +11,7 @@ namespace tur
 
 	struct GraphicsSpecification
 	{
-		GraphicsAPI api = GraphicsAPI::NONE;
+		GraphicsAPI api = GraphicsAPI::UNKNOWN;
 		uint16_t major = 0, minor = 0, patch = 0, variant = 0;
 		GraphicsOptions options = {};
 	};

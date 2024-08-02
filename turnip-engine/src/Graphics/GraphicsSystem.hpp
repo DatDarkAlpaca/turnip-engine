@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Config/ConfigSystem.hpp"
+#include "Core/Config/ConfigData.hpp"
 #include "Platform/Platform.hpp"
 
 namespace tur
@@ -7,11 +7,11 @@ namespace tur
 	class GraphicsSystem
 	{
 	public:
-		void Initialize(const ConfigSystem& configSystem, platform::Window& window);
+		void Initialize(const ConfigData& config, platform::Window& window);
 
 	private:
-		void InitializeOpenGL(const ConfigSystem& configSystem, platform::Window& window);
+		void InitializeOpenGL(const ConfigData& config, platform::Window& window);
 
-		void InitializeVulkan(const ConfigSystem& configSystem, platform::Window& window);
+		void InitializeVulkan(const ConfigData& config, platform::Window& window);
 	};
 }
