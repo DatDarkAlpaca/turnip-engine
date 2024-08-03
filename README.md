@@ -13,15 +13,14 @@ It uses [Premake 5](https://github.com/premake/premake-core/releases) to generat
 
 ## Prerequisites
 
-You'll need to install `python`, `conan`, `vulkan` and `premake5` in order to build this project.
+You'll need to install the following to build this project:
 
 * [Python 3](https://www.python.org/downloads/)
 * [Conan 2.0](https://conan.io/downloads)
 * [Vulkan](https://vulkan.lunarg.com/#new_tab)
 * [Premake 5](https://github.com/premake/premake-core/releases)
 
-If the SDK fails to include it automatically, you must provide an environment variable named `VULKAN_SDK` under `VulkanSDK/<version>`.
-Additionally, you may also need to add an environment variable to use `premake5`.
+If the SDK fails to include it automatically, you must provide an environment variable named VULKAN_SDK under `VulkanSDK/<version>`. Additionally, you may need to add an environment variable to use premake5.
 
 ## Installation
 
@@ -31,16 +30,14 @@ Additionally, you may also need to add an environment variable to use `premake5`
     ```
 
 2. **Generate the project**
-    If you're building on a Windows machine, you can use the `build.cmd` file to execute the Python script. 
-    This automatically calls premake, so you must specify the project file of your choice.
+    If you're building on a Windows machine, you can use the build.cmd file to execute the Python script. This automatically calls premake, so you must specify the project file of your choice.
 
     ```bash
     .\build <action: vs2022, vs2021, gmake, ...>
     ```
 
 3. **Compile the project**
-   Use the generated project files to build the project. 
-   After that, you should have a working copy under `turnip-engine/build/bin/{configuration}/turnip-editor`. 
+   Use the generated project files to build the project. After that, you should have a working copy under `turnip-engine/build/bin/{configuration}/turnip-editor`.
 
 # Resources
 
