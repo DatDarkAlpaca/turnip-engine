@@ -1,34 +1,37 @@
 #include "pch.hpp"
 #include "GraphicsSystem.hpp"
 
-#include "Graphics/OpenGL/OpenGLInitializer.hpp"
-#include "Graphics/Vulkan/VulkanInitializer.hpp"
+#include "Graphics/OpenGL/GraphicsLayerGL.hpp"
+#include "Platform/Platform.hpp"
 
 namespace tur
 {
-	void GraphicsSystem::Initialize(const ConfigData& config, platform::Window& window)
+	void GraphicsSystem::Initialize(const ConfigData& configData, platform::Window& window)
 	{
-		switch (config.graphicsSpecifications.api)
+		switch (configData.graphicsSpecifications.api)
 		{
-		case GraphicsAPI::OPENGL:
-			InitializeOpenGL(config, window);
-			break;
+			case GraphicsAPI::OPENGL:
+				InitializeOpenGL(configData, window);
+				break;
 
-		case GraphicsAPI::VULKAN:
-			InitializeVulkan(config, window);
-			break;
+			case GraphicsAPI::VULKAN:
+				InitializeVulkan(configData, window);
+				break;
 		}
 	}
 
-	void GraphicsSystem::InitializeOpenGL(const ConfigData& config, platform::Window& window)
+	void GraphicsSystem::InitializeOpenGL(const ConfigData& configData, platform::Window& window)
 	{
-		gl::OpenGLInitializer initializer(config, window);
-		initializer.Initialize();
+		platform::gl::SetupOpenGLWindowing(window, configData.windowProperties, configData.graphicsSpecifications);
+	
+		m_GraphicsLayer = std::make_unique<gl::GraphicsLayerGL>(window);
+		m_GraphicsLayer->Initialize();
 	}
 
-	void GraphicsSystem::InitializeVulkan(const ConfigData& config, platform::Window& window)
+	void GraphicsSystem::InitializeVulkan(const ConfigData& configData, platform::Window& window)
 	{
-		vulkan::DefaultVulkanInitializer initializer(config, window);
-		initializer.Initialize();
+		platform::vulkan::SetupVulkanWindowing(window, configData.windowProperties);
+
+		// TODO: create a vulkan graphics layer
 	}
 }

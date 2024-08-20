@@ -67,7 +67,6 @@ namespace tur
 				jsonObject["Graphics"]["versionMinor"] = graphicsProp.minor;
 				jsonObject["Graphics"]["versionPatch"] = graphicsProp.patch;
 				jsonObject["Graphics"]["versionVariant"] = graphicsProp.variant;
-				jsonObject["Graphics"]["usingBottomLeftOrigin"] = graphicsProp.options.usingBottomLeftOrigin;
 			}
 			
 			// Vulkan:
@@ -131,9 +130,6 @@ namespace tur
 			graphicsSpecification.minor   = jsonObject["Graphics"]["versionMinor"];
 			graphicsSpecification.patch   = jsonObject["Graphics"]["versionPatch"];
 			graphicsSpecification.variant = jsonObject["Graphics"]["versionVariant"];
-
-			graphicsSpecification.options.usingBottomLeftOrigin
-				= jsonObject["Graphics"]["usingBottomLeftOrigin"];
 
 			return graphicsSpecification;
 		}

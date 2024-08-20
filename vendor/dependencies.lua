@@ -12,6 +12,9 @@ vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/
 vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
 vendor_include_dirs["stb"]         		= "%{vendor_path}/stb"
 
+vendor_lib_dirs = { }
+vendor_lib_dirs["vulkan"]         		= os.getenv("VULKAN_SDK") .. '/Lib/'
+
 vendor_links = {}
 vendor_links[0] = "glad"
 vendor_links[1] = "glfw"
@@ -30,6 +33,12 @@ function set_vendor_include_dirs()
     end
 end
 
+function set_vendor_lib_dirs()
+    for vendor_names, vendor_paths in pairs(vendor_lib_dirs) do
+        libdirs { vendor_paths }
+    end
+end
+
 function set_vendor_links()
     for i, vendor_name in pairs(vendor_links) do
         links { vendor_name }
@@ -44,6 +53,7 @@ end
 
 function setup_vendors()
     set_vendor_include_dirs()
-    set_vendor_links()
+	set_vendor_lib_dirs()
+	set_vendor_links()
     set_vendor_defines()
 end

@@ -19,5 +19,3 @@
 #define EXPOSE_PROPERTY(ClassName, SetterName, PropertyName)						\
 	const ClassName& SetterName() const { return PropertyName; }					\
 	ClassName& SetterName() { return PropertyName; }
-
-static inline constexpr uint32_t InvalidHandle = 0xFFFFFFFF;

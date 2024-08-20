@@ -7,11 +7,11 @@
 
 namespace tur
 {
-	inline std::string ReadFile(const std::string& filepath)
+	inline std::string ReadFile(const std::filesystem::path& filepath)
 	{
 		std::ifstream file(filepath);
 		if (!file.is_open())
-			TUR_LOG_ERROR("Failed to load file: {}", filepath);
+			TUR_LOG_ERROR("Failed to load file: {}", filepath.string());
 
 		std::stringstream ss;
 
@@ -20,12 +20,12 @@ namespace tur
 		return ss.str();
 	}
 
-	inline std::vector<char> ReadBinaryFile(const std::string& filepath)
+	inline std::vector<char> ReadBinaryFile(const std::filesystem::path& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary);
 
 		if (!file.is_open())
-			TUR_LOG_ERROR("Failed to load file: {}", filepath);
+			TUR_LOG_ERROR("Failed to load file: {}", filepath.string());
 
 		size_t fileSize { static_cast<size_t>(file.tellg()) };
 

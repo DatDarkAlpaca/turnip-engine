@@ -19,9 +19,9 @@ project "turnip-engine"
         "src/Rendering/**.hpp",
 		"src/Rendering/**.c",
 		
-        -- "src/Graphics/**.cpp",
-        -- "src/Graphics/**.hpp",
-        -- "src/Graphics/**.c",
+        "src/Graphics/**.cpp",
+        "src/Graphics/**.hpp",
+        "src/Graphics/**.c",
 		
         "src/Util/**.cpp",
 		"src/Util/**.hpp",

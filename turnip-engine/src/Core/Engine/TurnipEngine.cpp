@@ -20,14 +20,12 @@ namespace tur
 		g_LoggerSystem.Get().Initialize();
 
 		// Graphics System:
-		g_GraphicsSystem.Initialize(configSystem.data(), g_WindowSystem.GetWindow());
-
-		// Window System:
-		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		g_GraphicsSystem.Initialize(configSystem.data(), g_Window);
+		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		// UI:
-		g_UISystem.SetUIBackend(CreateUIBackend(configSystem.data(), g_WindowSystem.GetWindow()));
-		g_UISystem.Initialize(configSystem.data(), g_WindowSystem.GetWindow());
+		// g_UISystem.SetUIBackend(CreateUIBackend(configSystem.data(), g_WindowSystem.GetWindow()));
+		// g_UISystem.Initialize(configSystem.data(), g_WindowSystem.GetWindow());
 
 		m_Initialized = true;
 	}
@@ -39,22 +37,20 @@ namespace tur
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
-		while (g_WindowSystem.GetWindow().IsOpen())
+		while (g_Window.IsOpen())
 		{
-			g_WindowSystem.GetWindow().PollEvents();
+			g_Window.PollEvents();
 			g_WorkerPool.PollTasks();
 
 			OnUpdate();
 
 			OnRender();
 
-			g_UISystem.StartFrame();
+			// g_UISystem.StartFrame();
 
 			OnRenderGUI();
 
-			g_UISystem.EndFrame();
-
-			g_WindowSystem.GetWindow().SwapBuffers();
+			// g_UISystem.EndFrame();
 		}
 
 		Shutdown();
@@ -64,7 +60,7 @@ namespace tur
 	{
 		OnEngineShutdown();
 
-		g_WindowSystem.Shutdown();
+		g_Window.Shutdown();
 	}
 
 	void TurnipEngine::AddView(tur_unique<View> view)
