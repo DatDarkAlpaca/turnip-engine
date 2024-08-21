@@ -20,6 +20,7 @@ namespace tur
 		virtual void BeginRenderPass(renderpass_handle handle = invalid_handle) = 0;
 		virtual void EndRenderPass() = 0;
 
+		virtual void SetViewport(const Rect2D& rect) = 0;
 		virtual void Clear(ClearFlags flags, const ClearValue& clearValue = {}) = 0;
 
 		virtual void BindPipeline(pipeline_handle handle) = 0;

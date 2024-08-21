@@ -40,6 +40,13 @@ namespace tur::gl
 		});
 	}
 
+	void CommandBufferGL::SetViewport(const Rect2D& rect)
+	{
+		m_Commands.push_back([rect]() {
+			glViewport(rect.x, rect.y, rect.width, rect.height);
+		});
+	}
+
 	void CommandBufferGL::Clear(ClearFlags flags, const ClearValue& clearValue)
 	{
 		m_Commands.push_back([flags, clearValue]() {
@@ -71,8 +78,9 @@ namespace tur::gl
 	{
 		m_Commands.push_back([&, handle]() {
 			m_PipelineDescriptor = r_GraphicsLayer->GetPipelineState(handle);
+			m_ActivePipeline = r_GraphicsLayer->GetPipeline(handle);
 
-			glUseProgram(r_GraphicsLayer->GetPipeline(handle));
+			glUseProgram(m_ActivePipeline);
 
 			glFrontFace(GetFrontFace(m_PipelineDescriptor.frontFace));
 			glPolygonMode(GL_FRONT_AND_BACK, GetPolygonMode(m_PipelineDescriptor.polygonMode));
@@ -194,6 +202,11 @@ namespace tur::gl
 
 			offsets[attribute.binding] += attribute.size * GetDataTypeSingleSize(attribute.type) * typeInfo.componentSize;
 		}
+	}
+
+	void CommandBufferGL::BindUniforms()
+	{
+		
 	}
 
 	void CommandBufferGL::ClearCommandState()

@@ -20,6 +20,7 @@ namespace tur::gl
 		void BeginRenderPass(renderpass_handle handle) override;
 		void EndRenderPass() override;
 
+		void SetViewport(const Rect2D& rect) override;
 		void Clear(ClearFlags flags, const ClearValue& clearValue) override;
 
 		void BindPipeline(pipeline_handle handle) override;
@@ -36,6 +37,8 @@ namespace tur::gl
 	private:
 		void BindPipelineAttributes();
 
+		void BindUniforms();
+
 		void ClearCommandState();
 
 	private:
@@ -46,5 +49,6 @@ namespace tur::gl
 		std::vector<std::function<void()>> m_Commands;
 
 		PipelineDescriptor m_PipelineDescriptor;
+		gl_handle m_ActivePipeline;
 	};
 }

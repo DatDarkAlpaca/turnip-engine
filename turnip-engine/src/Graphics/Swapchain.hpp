@@ -1,11 +1,12 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Graphics/Type/Rect.hpp"
 
 namespace tur
 {
 	struct SwapchainDescriptor
 	{
-		glm::vec2 resolution;
+		Rect2D resolution;
 		uint32_t colorBits = 32;
 		uint32_t depthBits = 24;
 		uint32_t stencilBits = 8;
@@ -17,9 +18,24 @@ namespace tur
 	class ISwapchain
 	{
 	public:
+		explicit ISwapchain(const SwapchainDescriptor& descriptor)
+			: m_Descriptor(descriptor)
+		{
+
+		}
+
 		virtual ~ISwapchain() = default;
 
 	public:
 		virtual void Present() = 0;
+
+
+	public:
+		SwapchainDescriptor& GetDescriptor() { return m_Descriptor; }
+
+		Rect2D GetResolution() { return m_Descriptor.resolution; }
+
+	private:
+		SwapchainDescriptor m_Descriptor;
 	};
 }

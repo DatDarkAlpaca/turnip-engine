@@ -5,7 +5,7 @@ namespace tur::gl
 {
 	tur_unique<ISwapchain> GraphicsLayerGL::CreateSwapChain(const SwapchainDescriptor& descriptor)
 	{
-		return tur::MakeUnique<SwapchainGL>(r_Window);
+		return tur::MakeUnique<SwapchainGL>(descriptor, r_Window);
 	}
 	tur_unique<ICommandBuffer> GraphicsLayerGL::CreateCommandBuffer()
 	{

@@ -2,9 +2,9 @@
 #include <vector>
 #include "CommonGraphics.hpp"
 
-#include "VertexFormat.hpp"
+#include "VertexLayout.hpp"
+#include "DescriptorSet.hpp"
 #include "Shader.hpp"
-
 
 // TODO: implement missing parameters
 
@@ -15,7 +15,8 @@ namespace tur
 	struct PipelineDescriptor
 	{
 		// Vertex Format:
-		VertexFormat vertexFormat;
+		VertexLayout vertexFormat;
+		DescriptorSetLayout descriptorSetLayout;
 
 		// Input Assembly:
 		PrimitiveTopology primitiveTopology = PrimitiveTopology::TRIANGLES;

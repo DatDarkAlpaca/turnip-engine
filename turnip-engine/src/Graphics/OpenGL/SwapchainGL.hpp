@@ -9,8 +9,9 @@ namespace tur::gl
 	class SwapchainGL : public ISwapchain
 	{
 	public:
-		SwapchainGL(platform::Window& window)
-			: r_Window(window)
+		SwapchainGL(const SwapchainDescriptor& descriptor, platform::Window& window)
+			: ISwapchain(descriptor)
+			, r_Window(window)
 		{
 
 		}

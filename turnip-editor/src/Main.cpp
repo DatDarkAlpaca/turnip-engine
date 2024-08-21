@@ -11,12 +11,21 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
-	/*	WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
+		/*WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
 			TUR_LOG_INFO("Finished loading: {}", asset.metadata.filepath.string());
 			AssetLibrary().InsertTexture(asset);
 		});*/
 
 		InitializeGraphics();
+	}
+
+	void OnEvent(Event& event) override
+	{
+		Subscriber subscriber(event);
+		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) {
+			swapchain->GetDescriptor().resolution = { 0, 0, (float)event.width, (float)event.height };
+			return false;
+		});
 	}
 		
 	void OnRender()
@@ -26,6 +35,8 @@ public:
 
 		{
 			commands->BeginRenderPass();
+			
+			commands->SetViewport(swapchain->GetResolution()); 
 			commands->Clear(ClearFlags::COLOR, { { 0.12f,0.12f,0.12f,1.0f } });
 
 			commands->BindPipeline(pipeline);
@@ -57,15 +68,17 @@ private:
 	{
 		auto& graphics = engine->GetGraphicsSystem().GraphicsLayer();
 		commands = graphics->CreateCommandBuffer();
-		swapchain = graphics->CreateSwapChain({ {800, 600} });
+
+		auto windowSize = engine->GetWindow().GetProperties().dimensions;
+		swapchain = graphics->CreateSwapChain({ 0, 0, windowSize.x, windowSize.y });
 
 		{
 			PipelineDescriptor pipelineDesc;
 
 			pipelineDesc.vertexShader = graphics->CreateShader({ "res/shaders/basic_opengl.vert", ShaderType::VERTEX });
 			pipelineDesc.fragmentShader = graphics->CreateShader({ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT });
-			pipelineDesc.vertexFormat.add(VertexFormat::Attribute{ 0, 0, 1, DataType::R32G32B32_SFLOAT });
-			pipelineDesc.vertexFormat.add(VertexFormat::Attribute{ 0, 1, 1, DataType::R32G32_SFLOAT });
+			pipelineDesc.vertexFormat.add(VertexLayout::Attribute{ 0, 0, 1, DataType::R32G32B32_SFLOAT });
+			pipelineDesc.vertexFormat.add(VertexLayout::Attribute{ 0, 1, 1, DataType::R32G32_SFLOAT });
 			
 			pipeline = graphics->CreatePipeline(pipelineDesc);
 		}

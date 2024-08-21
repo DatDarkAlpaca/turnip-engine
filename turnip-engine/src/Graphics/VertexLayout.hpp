@@ -4,7 +4,7 @@
 
 namespace tur
 {
-	struct VertexFormat
+	struct VertexLayout
 	{
 	public:
 		constexpr static inline uint32_t AUTO = std::numeric_limits<uint32_t>::max();
@@ -30,5 +30,4 @@ namespace tur
 	public:
 		std::vector<Attribute> attributes;
 	};
-
 }
