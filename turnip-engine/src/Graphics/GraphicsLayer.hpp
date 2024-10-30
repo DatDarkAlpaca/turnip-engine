@@ -72,7 +72,7 @@ namespace tur
 		}
 
 	public:
-		virtual texture_handle CreateTexture(const TextureDescriptor& descriptor)
+		virtual texture_handle CreateTexture(const TextureDescriptor& descriptor, const void* data)
 		{
 			LOG_UNSUPPORTED_FUNCTION("CreateTexture");
 			return invalid_handle;

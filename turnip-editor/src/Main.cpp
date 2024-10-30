@@ -11,10 +11,10 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
-		/*WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
+		WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
 			TUR_LOG_INFO("Finished loading: {}", asset.metadata.filepath.string());
 			AssetLibrary().InsertTexture(asset);
-		});*/
+		});
 
 		InitializeGraphics();
 	}
@@ -32,6 +32,7 @@ public:
 	{
 		commands->Begin();
 		commands->BindVertexBuffer(vbo, 0);
+		commands->BindIndexBuffer(ebo);
 
 		{
 			commands->BeginRenderPass();
@@ -41,7 +42,7 @@ public:
 
 			commands->BindPipeline(pipeline);
 
-			commands->Draw(0, 3);
+			commands->DrawIndexed(6);
 
 			commands->EndRenderPass();
 		}
@@ -64,6 +65,29 @@ public:
 	}
 
 private:
+	void InitializeTextures()
+	{
+		auto& graphics = engine->GetGraphicsSystem().GraphicsLayer();
+
+		TextureDescriptor descriptor
+		{
+			2, 2,
+			1, 1,
+			TextureFormat::RGB8,
+			TextureUsage::SAMPLING,
+			TextureType::TEXTURE_2D,
+		};
+		
+		int data[] = {
+			255,   0, 255,
+			  0,   0,   0,
+			  0,   0,   0,
+			255,   0, 255,
+		};
+
+		invalidTexture = graphics->CreateTexture(descriptor, data);
+	}
+
 	void InitializeGraphics()
 	{
 		auto& graphics = engine->GetGraphicsSystem().GraphicsLayer();
@@ -85,9 +109,10 @@ private:
 
 		// Quads:
 		std::vector<float> data = {
-			0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+			0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f,	1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,	1.0f, 1.0f,
+			0.0f, 1.0f, 0.0f,	0.0f, 1.0f,
 		};
 
 		BufferDescriptor descriptor;
@@ -95,6 +120,13 @@ private:
 		descriptor.memoryUsage = MemoryUsage::GPU_EXCLUSIVE;
 		descriptor.size = sizeof(float) * data.size();
 		vbo = graphics->CreateBuffer(descriptor, data.data());
+
+		int indices[6] = { 0, 1, 2, 2, 3, 0 };
+
+		descriptor.usage = BufferUsage::INDEX_BUFFER;
+		descriptor.memoryUsage = MemoryUsage::GPU_EXCLUSIVE;
+		descriptor.size = sizeof(int) * 6;
+		ebo = graphics->CreateBuffer(descriptor, indices);
 	}
 
 public:
@@ -102,7 +134,8 @@ public:
 	tur_unique<ISwapchain> swapchain;
 
 private:
-	buffer_handle vbo;
+	texture_handle invalidTexture;
+	buffer_handle vbo, ebo;
 	pipeline_handle pipeline;
 };
 

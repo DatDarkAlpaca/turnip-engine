@@ -1,6 +1,6 @@
 #pragma once
 #include <numeric>
-#include "Util/Random/Random.hpp"
+#include "Utils/Random/Random.hpp"
 
 namespace tur
 {

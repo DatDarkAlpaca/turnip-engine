@@ -26,6 +26,7 @@ namespace tur
 		virtual void BindPipeline(pipeline_handle handle) = 0;
 		virtual void BindVertexBuffer(buffer_handle handle, uint32_t binding) = 0;
 		virtual void BindIndexBuffer(buffer_handle handle) = 0;
+		virtual void BindTexture(texture_handle handle) = 0 ;
 
 		virtual void Draw(uint32_t first, uint32_t vertexCount) = 0;
 		virtual void DrawInstanced(uint32_t first, uint32_t vertexCount, uint32_t instanceCount) = 0;

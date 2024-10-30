@@ -6,14 +6,6 @@ namespace tur
 {
 	using framebuffer_handle = handle_type;
 
-    enum class AttachmentType
-    {
-        COLOR,
-        DEPTH,
-        STENCIL,
-        DEPTH_STENCIL
-    };
-
     struct FramebufferAttachmentDescriptor 
     {
         uint32_t width;

@@ -11,6 +11,6 @@ namespace tur
 		R64_SFLOAT,				// signed double
 		R32G32_SFLOAT,			// signed 32-bit vec2
 		R32G32B32_SFLOAT,		// signed 32-bit vec3
-		R32G32B32A32_SFLOAT		// signed 32-bit vec4
+		R32G32B32A32_SFLOAT,	// signed 32-bit vec4
 	};
 }

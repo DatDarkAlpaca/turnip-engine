@@ -10,7 +10,8 @@
 #include "Core/Logger/Logger.hpp"
 #include "Core/Assert/Assert.hpp"
 
-#include "Util/State/State.hpp"
+#include "Utils/State/State.hpp"
+#include "Utils/Json/JsonCommon.hpp"
 
 #define TUR_ENGINE_NAME "TurnipEngine"
 

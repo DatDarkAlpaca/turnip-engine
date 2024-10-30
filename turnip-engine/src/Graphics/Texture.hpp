@@ -5,15 +5,6 @@ namespace tur
 {
     using texture_handle = handle_type;
 
-    enum class TextureFormat 
-    {
-        RGBA8,
-        RGB8,
-        BGRA8,
-        D32,
-        DEPTH24_STENCIL8
-    };
-
     enum class TextureUsage 
     {
         SAMPLING,

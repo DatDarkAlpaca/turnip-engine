@@ -104,6 +104,14 @@ namespace tur::gl
 		});
 	}
 
+	void CommandBufferGL::BindTexture(texture_handle handle)
+	{
+		m_Commands.push_back([&, handle]() {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, r_GraphicsLayer->GetTexture(handle));
+		});
+	}
+
 	void CommandBufferGL::Draw(uint32_t first, uint32_t vertexCount)
 	{
 		m_Commands.push_back([&, first, vertexCount]() {

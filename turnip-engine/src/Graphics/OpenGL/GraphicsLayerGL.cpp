@@ -1,4 +1,6 @@
 #include "pch.hpp"
+#include "Util/File.hpp"
+#include "TypeConverters.hpp"
 #include "GraphicsLayerGL.hpp"
 
 namespace tur::gl
@@ -110,8 +112,10 @@ namespace tur::gl
 		m_Buffers.remove(handle);
 	}
 
-	texture_handle GraphicsLayerGL::CreateTexture(const TextureDescriptor& descriptor)
+	texture_handle GraphicsLayerGL::CreateTexture(const TextureDescriptor& descriptor, const void* data)
 	{
+		// TODO: add texture types etc.
+
 		gl_handle textureID;
 		glGenTextures(1, &textureID);
 
@@ -120,17 +124,31 @@ namespace tur::gl
 		bool generateMipmaps = descriptor.mipLevels > 1 || descriptor.generateMipmaps;
 
 		glBindTexture(target, textureID);
-		glTexImage2D(
-			target, 
-			0, 
-			internalFormat, 
-			descriptor.width, 
-			descriptor.height,
-			0,
-			GL_RGBA, 
-			GL_UNSIGNED_BYTE, 
-			nullptr
-		);
+		
+		switch (descriptor.type)
+		{
+			case TextureType::TEXTURE_2D:
+			{
+				glTexImage2D(
+					target,
+					0,
+					internalFormat,
+					descriptor.width,
+					descriptor.height,
+					0,
+					GL_RGBA,
+					GL_UNSIGNED_BYTE,
+					data
+				);
+			} break;
+			
+
+			case TextureType::TEXTURE_3D:
+				TUR_LOG_CRITICAL("3D Textures not implemented in OpenGL");
+
+			case TextureType::CUBE_MAP:
+				TUR_LOG_CRITICAL("Cubemaps not implemented in OpenGL");
+		}
 
 		glTexParameteri(target, GL_TEXTURE_WRAP_S, GetWrapMode(descriptor.wrapS));
 		glTexParameteri(target, GL_TEXTURE_WRAP_T, GetWrapMode(descriptor.wrapT));
@@ -160,56 +178,6 @@ namespace tur::gl
 		glGenFramebuffers(1, &framebufferID);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
 
-		std::vector<GLenum> drawBuffers;
-		for (size_t i = 0; i < descriptor.attachments.size(); ++i) 
-		{
-			const auto& attachment = descriptor.attachments[i];
-
-			if (attachment.useRenderbuffer) 
-			{
-				GLuint rbo;
-
-				glGenRenderbuffers(1, &rbo);
-				glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-
-				GLenum format = GetTextureFormat(attachment.textureFormat);
-				glRenderbufferStorage(GL_RENDERBUFFER, format, attachment.width, attachment.height);
-
-				GLenum attachmentType = GetFramebufferAttachmentType(attachment.type);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentType, GL_RENDERBUFFER, rbo);
-			}
-
-			else
-			{
-				GLuint texture;
-				glGenTextures(1, &texture);
-				glBindTexture(GL_TEXTURE_2D, texture);
-
-				GLenum format = GetTextureFormat(attachment.textureFormat);
-				glTexImage2D(GL_TEXTURE_2D, 0, format, attachment.width, attachment.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-				
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetWrapMode(attachment.wrapS));
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetWrapMode(attachment.wrapT));
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetFilterMode(attachment.minFilter, false));
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetFilterMode(attachment.magFilter, false));
-
-				GLenum attachmentType = GetFramebufferAttachmentType(attachment.type);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, texture, 0);
-
-				glBindTexture(GL_TEXTURE_2D, 0);
-
-				if (attachment.type == AttachmentType::COLOR)
-					drawBuffers.push_back(GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(i));
-			}
-		}
-
-		if (!drawBuffers.empty())
-			glDrawBuffers(static_cast<uint32_t>(drawBuffers.size()), drawBuffers.data());
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			TUR_LOG_ERROR("Failed to create framebuffer");
-
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		return m_Framebuffers.add(framebufferID);
@@ -223,8 +191,84 @@ namespace tur::gl
 
 	renderpass_handle GraphicsLayerGL::CreateRenderpass(const RenderpassDescriptor& descriptor)
 	{
-		framebuffer_handle handle = CreateFramebuffer(descriptor.frambufferDescriptor);
-		return m_Renderpasses.add(handle);
+		glBindFramebuffer(GL_FRAMEBUFFER, descriptor.framebuffer_handle);
+
+		std::vector<gl_handle> drawBuffers;
+		for (size_t i = 0; i < descriptor.attachments.size(); ++i)
+		{
+			const auto& attachment = descriptor.attachments[i];
+
+			for (auto attachmentType : descriptor.mapping.at(RenderpassDescriptor::attachment_id(i)))
+			{
+				switch (attachmentType)
+				{
+					case AttachmentType::COLOR:
+					{
+						gl_handle texture;
+						glGenTextures(1, &texture);
+						glBindTexture(GL_TEXTURE_2D, texture);
+
+						auto textureFormat = GetTextureFormat(attachment.imageFormat);
+						glTexImage2D(
+							GL_TEXTURE_2D, 
+							0, 
+							textureFormat, 
+							descriptor.extent.width, descriptor.extent.height, 
+							0, 
+							GL_RGBA, 
+							GL_UNSIGNED_BYTE, 
+							nullptr
+						);
+
+						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetWrapMode(WrapMode::REPEAT));
+						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetWrapMode(WrapMode::REPEAT));
+
+						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetFilterMode(FilterMode::LINEAR, false));
+						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetFilterMode(FilterMode::LINEAR, false));
+
+						gl_handle attachmentTypeHandle = GetFramebufferAttachmentType(attachmentType);
+						glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentTypeHandle, GL_TEXTURE_2D, texture, 0);
+
+						glBindTexture(GL_TEXTURE_2D, 0);
+
+						if (attachmentType == AttachmentType::COLOR)
+							drawBuffers.push_back(GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(i));
+
+					} break;
+
+					case AttachmentType::DEPTH:
+					case AttachmentType::STENCIL:
+					case AttachmentType::DEPTH_STENCIL:
+					{
+						gl_handle rbo;
+
+						glGenRenderbuffers(1, &rbo);
+						glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+
+						gl_handle format = GetTextureFormat(attachment.imageFormat);
+						glRenderbufferStorage(
+							GL_RENDERBUFFER,
+							format, 
+							descriptor.extent.width, 
+							descriptor.extent.height
+						);
+
+						gl_handle attachmentTypeHandle = GetFramebufferAttachmentType(attachmentType);
+						glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentTypeHandle, GL_RENDERBUFFER, rbo);
+					} break;
+				}
+			}
+		}
+
+		if (!drawBuffers.empty())
+			glDrawBuffers(static_cast<uint32_t>(drawBuffers.size()), drawBuffers.data());
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			TUR_LOG_ERROR("Failed to create framebuffer");
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		return m_Renderpasses.add(descriptor.framebuffer_handle);
 	}
 	void GraphicsLayerGL::DestroyRenderpass(renderpass_handle handle)
 	{

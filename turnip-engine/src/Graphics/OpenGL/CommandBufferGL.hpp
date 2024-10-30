@@ -26,6 +26,7 @@ namespace tur::gl
 		void BindPipeline(pipeline_handle handle) override;
 		void BindVertexBuffer(buffer_handle handle, uint32_t binding) override;
 		void BindIndexBuffer(buffer_handle handle) override;
+		void BindTexture(texture_handle handle) override;
 
 		void Draw(uint32_t first, uint32_t vertexCount) override;
 		void DrawInstanced(uint32_t first, uint32_t vertexCount, uint32_t instanceCount) override;
@@ -33,6 +34,12 @@ namespace tur::gl
 		void DrawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount) override;
 
 		void Submit() override;
+
+	private:
+		void UpdateTextureImmediate()
+		{
+
+		}
 
 	private:
 		void BindPipelineAttributes();
@@ -43,12 +50,12 @@ namespace tur::gl
 
 	private:
 		NON_OWNING GraphicsLayerGL* r_GraphicsLayer = nullptr;
-		gl_handle m_VAO;
+		gl_handle m_VAO = invalid_handle;
 
 		std::unordered_map<uint32_t, gl_handle> m_BufferBindings;
 		std::vector<std::function<void()>> m_Commands;
 
 		PipelineDescriptor m_PipelineDescriptor;
-		gl_handle m_ActivePipeline;
+		gl_handle m_ActivePipeline = invalid_handle;
 	};
 }

@@ -51,7 +51,6 @@ namespace tur
 		platform::Window& GetWindow() { return g_Window; }
 
 	private:
-		LoggerSystem g_LoggerSystem;
 		AssetLibrary g_AssetLibrary;
 		ViewSystem g_ViewSystem;
 		WorkerPool g_WorkerPool;

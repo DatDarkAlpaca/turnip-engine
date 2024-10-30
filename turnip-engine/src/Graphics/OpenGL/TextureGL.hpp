@@ -6,7 +6,7 @@ namespace tur::gl
 {
 	constexpr inline gl_handle GetTextureFormat(TextureFormat format)
 	{
-		switch (format) 
+		switch (format)
 		{
 			case TextureFormat::RGBA8: 
 				return GL_RGBA8;
@@ -16,6 +16,12 @@ namespace tur::gl
 
 			case TextureFormat::BGRA8: 
 				return GL_BGRA;
+
+			case TextureFormat::B8G8R8A8_UNORM:
+			{
+				TUR_LOG_WARN("B8G8R8A8_UNORM is not supported by OpenGL. Using GL_RGBA");
+				return GL_RGBA;
+			}
 
 			case TextureFormat::D32: 
 				return GL_DEPTH_COMPONENT32F;

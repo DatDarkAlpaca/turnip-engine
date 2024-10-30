@@ -1,31 +1,38 @@
 {
-    "Application": {
-        "name": "Default Application",
+    "applicationSpecification": {
+        "applicationName": "Default Application",
         "versionMajor": 1,
         "versionMinor": 0,
         "versionPatch": 0,
         "versionVariant": 0
     },
-    "Window": {
-        "width": 800,
-        "height": 600,
-        "title": "TurnipEngine v1.0",
-        "x": "DEFAULT",
-        "y": "DEFAULT",
-        "minWidth": 100,
-        "minHeight": 1000,
-        "maxWidth": 10000,
-        "maxHeight": 10000
+    "windowProperties": {
+        "windowTitle": "TurnipEngine v1.0",
+        "dimensions": {
+            "x": 800,
+            "y": 600
+        },
+        "position": {
+            "x": -1,
+            "y": -1
+        },
+        "minSize": {
+            "x": 300,
+            "y": 300
+        },
+        "maxSize": {
+            "x": 10000,
+            "y": 10000
+        }
     },
-    "Graphics": {
-        "API": "OPENGL",
+    "graphicsSpecifications": {
+        "api": "OPENGL",
         "versionMajor": 4,
         "versionMinor": 5,
         "versionPatch": 0,
-        "versionVariant": 0,
-        "usingBottomLeftOrigin": true
+        "versionVariant": 0
     },
-    "Vulkan": {
+    "vulkanArguments": {
         "layers": [],
         "extensions": [],
         "enablePresentation": true,

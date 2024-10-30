@@ -8,6 +8,10 @@ int main(int argc, char** argv)
 {
 	using namespace tur;
 
+	logger::InitializeLogger();
+	
+	platform::InitializePlatform();
+
 	tur_unique<TurnipEngine> engine = CreateApplication();
 	engine->Run();
 }

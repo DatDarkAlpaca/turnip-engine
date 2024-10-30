@@ -1,9 +1,10 @@
 #pragma once
+#include <numeric>
 #include <string>
 
 namespace tur
 {
-	enum class GraphicsAPI
+	enum class GraphicsAPI : uint32_t
 	{
 		UNKNOWN = 0,
 		OPENGL,

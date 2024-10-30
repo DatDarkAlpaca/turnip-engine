@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/Handle/HandleArray.hpp"
-#include "Util/File.hpp"
 #include "CommonGL.hpp"
 #include "Platform/Platform.hpp"
 
@@ -52,7 +51,7 @@ namespace tur::gl
 		void DestroyBuffer(buffer_handle handle) override;
 
 	public:
-		texture_handle CreateTexture(const TextureDescriptor& descriptor) override;
+		texture_handle CreateTexture(const TextureDescriptor& descriptor, const void* data) override;
 		void DestroyTexture(texture_handle handle) override;
 
 	public:

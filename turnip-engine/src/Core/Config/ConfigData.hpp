@@ -1,4 +1,6 @@
 #pragma once
+#include <nlohmann/json.hpp>
+
 #include "Core/Engine/ApplicationSpecification.hpp"
 #include "Core/Window/WindowProperties.hpp"
 #include "Graphics/GraphicsSpecification.hpp"
@@ -12,5 +14,12 @@ namespace tur
 		WindowProperties windowProperties;
 		GraphicsSpecification graphicsSpecifications;
 		vulkan::VulkanArguments vulkanArguments;
+
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigData, 
+			applicationSpecification, 
+			windowProperties, 
+			graphicsSpecifications, 
+			vulkanArguments
+		);
 	};
 }

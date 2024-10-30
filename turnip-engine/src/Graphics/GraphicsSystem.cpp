@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "GraphicsSystem.hpp"
 
+#include "Graphics/Vulkan/GraphicsLayerVulkan.hpp"
 #include "Graphics/OpenGL/GraphicsLayerGL.hpp"
 #include "Platform/Platform.hpp"
 
@@ -32,6 +33,7 @@ namespace tur
 	{
 		platform::vulkan::SetupVulkanWindowing(window, configData.windowProperties);
 
-		// TODO: create a vulkan graphics layer
+		m_GraphicsLayer = std::make_unique<vulkan::GraphicsLayerVulkan>(window);
+		m_GraphicsLayer->Initialize();
 	}
 }

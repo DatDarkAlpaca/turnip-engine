@@ -1,6 +1,4 @@
 #pragma once
-#include "Util/CPUInfo/CPUInfo.hpp"
-
 #include "Core/Engine/TurnipEngine.hpp"
 #include "Core/Event/Events.hpp"
 #include "Core/View/ViewSystem.hpp"
@@ -11,6 +9,8 @@
 #include "Core/Scene/CommonComponents.hpp"
 #include "Core/Scene/Entity.hpp"
 #include "Core/Scene/Scene.hpp"
+
+#include "Utils/CPUInfo/CPUInfo.hpp"
 
 #include "Platform/Platform.hpp"
 #include "Common.hpp"
