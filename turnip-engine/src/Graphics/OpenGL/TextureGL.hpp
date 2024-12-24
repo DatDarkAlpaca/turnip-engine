@@ -1,6 +1,6 @@
 #pragma once
 #include "CommonGL.hpp"
-#include "Graphics/Texture.hpp"
+#include "Graphics/Base/Texture.hpp"
 
 namespace tur::gl
 {

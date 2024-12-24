@@ -1,6 +1,6 @@
 #pragma once
 #include <numeric>
-#include "CommonGraphics.hpp"
+#include "Graphics/CommonGraphics.hpp"
 
 namespace tur
 {

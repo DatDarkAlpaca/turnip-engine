@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 #include <unordered_map>
-#include "CommonGraphics.hpp"
+#include "Graphics/CommonGraphics.hpp"
 
 #include "Graphics/Type/Types.hpp"
 #include "Framebuffer.hpp"

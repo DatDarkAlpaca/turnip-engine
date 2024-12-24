@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Buffer.hpp"
+#include "Graphics/Base/Buffer.hpp"
 #include "CommonGL.hpp"
 
 namespace tur::gl

@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Shader.hpp"
+#include "Graphics/Base/Shader.hpp"
 #include "CommonGL.hpp"
 
 namespace tur::gl

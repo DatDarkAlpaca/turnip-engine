@@ -11,7 +11,7 @@ public:
 	{
 		TUR_LOG_INFO("Application initialized");
 
-		WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario_thick_ass.png"), [&](TextureAsset asset) {
+		WorkerPool().SubmitTask(TextureLoader::Load, std::tie("mario.png"), [&](TextureAsset asset) {
 			TUR_LOG_INFO("Finished loading: {}", asset.metadata.filepath.string());
 			AssetLibrary().InsertTexture(asset);
 		});

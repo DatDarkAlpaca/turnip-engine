@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Pipeline.hpp"
+#include "Graphics/Base/Pipeline.hpp"
 #include "CommonGL.hpp"
 
 namespace tur::gl

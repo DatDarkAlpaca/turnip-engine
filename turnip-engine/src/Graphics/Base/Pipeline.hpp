@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "CommonGraphics.hpp"
+#include "Graphics/CommonGraphics.hpp"
 
 #include "VertexLayout.hpp"
 #include "DescriptorSet.hpp"

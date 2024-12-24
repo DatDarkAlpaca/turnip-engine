@@ -1,5 +1,5 @@
 #pragma once
-#include "CommonGraphics.hpp"
+#include "Graphics/CommonGraphics.hpp"
 
 #include "Buffer.hpp"
 #include "Pipeline.hpp"

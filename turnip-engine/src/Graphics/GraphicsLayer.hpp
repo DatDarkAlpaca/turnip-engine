@@ -1,14 +1,14 @@
 #pragma once
 #include "CommonGraphics.hpp"
 
-#include "Swapchain.hpp"
-#include "Shader.hpp"
-#include "Pipeline.hpp"
-#include "Buffer.hpp"
-#include "Texture.hpp"
-#include "Framebuffer.hpp"
-#include "Renderpass.hpp"
-#include "CommandBuffer.hpp"
+#include "Graphics/Base/Swapchain.hpp"
+#include "Graphics/Base/Shader.hpp"
+#include "Graphics/Base/Pipeline.hpp"
+#include "Graphics/Base/Buffer.hpp"
+#include "Graphics/Base/Texture.hpp"
+#include "Graphics/Base/Framebuffer.hpp"
+#include "Graphics/Base/Renderpass.hpp"
+#include "Graphics/Base/CommandBuffer.hpp"
 
 #define LOG_UNSUPPORTED_FUNCTION(FunctionName) \
 	TUR_LOG_ERROR(std::string(FunctionName) + " is unsupported.");

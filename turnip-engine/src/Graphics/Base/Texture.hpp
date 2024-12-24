@@ -1,5 +1,5 @@
 #pragma once
-#include "CommonGraphics.hpp"
+#include "Graphics/CommonGraphics.hpp"
 
 namespace tur
 {

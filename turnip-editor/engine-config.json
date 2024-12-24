@@ -28,7 +28,7 @@
     "graphicsSpecifications": {
         "api": "OPENGL",
         "versionMajor": 4,
-        "versionMinor": 5,
+        "versionMinor": 3,
         "versionPatch": 0,
         "versionVariant": 0
     },

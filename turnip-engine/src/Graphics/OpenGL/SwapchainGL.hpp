@@ -1,6 +1,6 @@
 #pragma once
 #include "CommonGL.hpp"
-#include "Graphics/Swapchain.hpp"
+#include "Graphics/Base/Swapchain.hpp"
 
 #include "Platform/Platform.hpp"
 

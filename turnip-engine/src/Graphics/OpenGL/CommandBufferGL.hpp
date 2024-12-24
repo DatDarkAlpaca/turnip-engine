@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/CommandBuffer.hpp"
+#include "Graphics/Base/CommandBuffer.hpp"
 #include "Graphics/GraphicsLayer.hpp"
 #include "CommonGL.hpp"
 

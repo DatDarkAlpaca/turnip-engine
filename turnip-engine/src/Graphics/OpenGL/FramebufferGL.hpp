@@ -1,6 +1,6 @@
 #pragma once
 #include "CommonGL.hpp"
-#include "Graphics/Framebuffer.hpp"
+#include "Graphics/Base/Framebuffer.hpp"
 
 namespace tur::gl
 {
