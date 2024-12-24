@@ -1,45 +1,52 @@
 #pragma once
-#include "Common.h"
-#include "RenderDeviceVK.h"
-#include "Rendering/RenderInitializer.h"
+#include "CommonVulkan.hpp"
+#include "Core/Config/ConfigData.hpp"
 
-#include "Graphics/GraphicsSpecification.h"
+#include "Builders/InstanceBuilder.hpp"
+#include "Builders/PhysicalDeviceBuilder.hpp"
+#include "Builders/LogicalDeviceBuilder.hpp"
+#include "Builders/VMABuilder.hpp"
+#include "Builders/SwapchainBuilder.hpp"
+#include "Builders/FrameBuilder.hpp"
 
-#include "Builders/InstanceBuilder.h"
-#include "Builders/PhysicalDeviceBuilder.h"
-#include "Builders/LogicalDeviceBuilder.h"
-#include "Builders/VMABuilder.h"
-#include "Builders/SwapchainBuilder.h"
-#include "Builders/FrameBuilder.h"
+#include "Platform/Platform.hpp"
 
 namespace tur::vulkan
 {
-    class VulkanInitializer
+    class GraphicsLayerVulkan;
+
+    class IVulkanInitializer
     {
     public:
-        VulkanInitializer(const GraphicsSpecification& specification);
+        IVulkanInitializer(const ConfigData& configData);
 
     public:
-        virtual ~VulkanInitializer() = default;
+        virtual ~IVulkanInitializer() = default;
         
+    public:
+        virtual void Initialize(GraphicsLayerVulkan& graphicsLayer) = 0;
+
     protected:
-        VulkanInstanceBuilder instanceBuilder;
+        InstanceBuilder instanceBuilder;
         PhysicalDeviceSelector physicalDeviceSelector;
         LogicalDeviceBuilder logicalDeviceBuilder;
-        SwapchainBuilder swapchainBuilder;
-        SwapchainFrameBuilder swapchainFrameBuilder;
         VMABuilder vmaBuilder;
+        SwapchainBuilder swapchainBuilder;
+        FrameBuilder frameBuilder;
 
     protected:
-        GraphicsSpecification specification;
+        ConfigData configData;
     };
 
-    class DefaultVulkanInitializer final : public VulkanInitializer
+    class DefaultVulkanInitializer final : public IVulkanInitializer
     {
     public:
-        DefaultVulkanInitializer(const GraphicsSpecification& specification);
+        DefaultVulkanInitializer(const ConfigData& configData, platform::Window& window);
 
     public:
-        void Initialize(NON_OWNING RenderDevice* _device) override;
+        void Initialize(GraphicsLayerVulkan& graphicsLayer) override;
+
+    private:
+        platform::Window& r_Window;
     };
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
+#include "Renderpass.hpp"
 
 namespace tur::vulkan
 {
@@ -12,5 +13,20 @@ namespace tur::vulkan
 
 		vk::Fence inFlightFence;
 		vk::Semaphore imageAvailableSemaphore, renderFinishedSemaphore;
+	};
+
+	struct Frames
+	{
+	public:
+		void Add(const Frame& frame)
+		{
+			frames.push_back(frame);
+		}
+
+	public:
+		RenderpassObject renderpassObject;
+
+		std::vector<Frame> frames;
+		uint32_t currentFrame = 0;
 	};
 }

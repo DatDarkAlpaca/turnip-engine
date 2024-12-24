@@ -6,5 +6,5 @@ namespace tur
 	{
 		GRAPHICS,
 		COMPUTE
-	}; 
+	};
 }

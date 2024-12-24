@@ -1,12 +1,10 @@
 #pragma once
-#include "Common.h"
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Rendering/Resource/Renderpass.h"
-#include "Graphics/Vulkan/Converters.h"
-#include "Graphics/Vulkan/Objects/Swapchain.h"
-#include "Graphics/Vulkan/Objects/Renderpass.h"
+#include "Graphics/Base/Renderpass.hpp"
+#include "Graphics/Vulkan/Objects/Swapchain.hpp"
+#include "Graphics/Vulkan/Objects/Renderpass.hpp"
 
 namespace tur::vulkan
 {
@@ -16,20 +14,19 @@ namespace tur::vulkan
 		RenderpassBuilder(const RenderpassDescriptor& descriptor);
 
 	public:
-		std::optional<RenderpassVulkan> Build();
+		std::optional<RenderpassObject> Build();
 
 	public:
-		RenderpassBuilder& SetArguments(vk::Device device, const vulkan::Swapchain& swapchain);
+		RenderpassBuilder& SetArguments(vk::Device device, const SwapchainObject& swapchain);
 
 	private:
 		void AddSwapchainColorAttachment();
 
-		std::optional<RenderpassVulkan> ConfigureRenderpass();
+		std::optional<RenderpassObject> ConfigureRenderpass();
 
 	private:
 		vk::Device m_Device;
-		vulkan::Swapchain m_Swapchain;
-
+		SwapchainObject m_Swapchain;
 		bool m_ArgumentsSet = false;
 
 	private:

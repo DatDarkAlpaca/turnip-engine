@@ -1,37 +1,34 @@
 #include "pch.hpp"
 #include "TurnipEngine.hpp"
+
+#include "Core/Config/ConfigReader.hpp"
 #include "Platform/Platform.hpp"
-#include "Core/Config/ConfigSystem.hpp"
 
 namespace tur
 {
 	TurnipEngine::TurnipEngine(const std::filesystem::path& configFilePath)
 	{
-		ConfigSystem configSystem(configFilePath);
-			
-		platform::InitializePlatform();
+		// Config System:
+		ConfigReader configReader(configFilePath);
+		ConfigData configData = configReader.Parse<ConfigData>();
 
-		// Logger System:
-		g_LoggerSystem.Get().Initialize();
-
-		// Window System:
-		g_WindowSystem.Initialize(configSystem.GetWindowProperties(), configSystem.GetGraphicsSpecification());
-		g_WindowSystem.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
+		// Graphics System:
+		g_GraphicsSystem.Initialize(configData, g_Window);
+		g_Window.SetEventCallback(BIND(&TurnipEngine::OnEvent, this));
 
 		m_Initialized = true;
 	}
 
 	void TurnipEngine::Run()
 	{
-		Initialize();
+		OnEngineStartup();
 
 		if (!m_Initialized)
 			TUR_LOG_CRITICAL("Failed to initialize the required systems.");
 
-		while (g_WindowSystem.GetWindow().IsOpen())
+		while (g_Window.IsOpen())
 		{
-			g_WindowSystem.GetWindow().PollEvents();
-
+			g_Window.PollEvents();
 			g_WorkerPool.PollTasks();
 
 			OnUpdate();
@@ -44,16 +41,11 @@ namespace tur
 		Shutdown();
 	}
 
-	void TurnipEngine::Initialize()
-	{	
-		OnEngineStartup();
-	}
-
 	void TurnipEngine::Shutdown()
 	{
 		OnEngineShutdown();
 
-		g_WindowSystem.Shutdown();
+		g_Window.Shutdown();
 	}
 
 	void TurnipEngine::AddView(tur_unique<View> view)

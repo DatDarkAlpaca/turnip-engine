@@ -1,17 +1,18 @@
-#include "pch.h"
-#include "FrameBuilder.h"
+#include "pch.hpp"
+#include "FrameBuilder.hpp"
 
 namespace tur::vulkan
 {
-	SwapchainFrameBuilder::SwapchainFrameBuilder()
+	FrameBuilder::FrameBuilder()
 	{
 		m_ComponentSwizzleFlags.fill(vk::ComponentSwizzle::eIdentity);
 	}
 
-	void SwapchainFrameBuilder::Build(vk::Device& device, Swapchain& swapchain)
+	Frames FrameBuilder::Build(vk::Device device, SwapchainObject swapchain)
 	{
 		auto swapchainImages = device.getSwapchainImagesKHR(swapchain.swapchain);
 
+		Frames frames;
 		for (size_t i = 0; i < swapchainImages.size(); ++i)
 		{
 			Frame frameData;
@@ -34,53 +35,55 @@ namespace tur::vulkan
 			frameData.image = swapchainImages[i];
 			frameData.view = device.createImageView(createInfo);
 
-			swapchain.frames.push_back(frameData);
+			frames.Add(frameData);
 		}
+
+		return frames;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetViewType(vk::ImageViewType viewType)
+	FrameBuilder& FrameBuilder::SetViewType(vk::ImageViewType viewType)
 	{
 		m_ViewType = viewType;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetComponentSwizzle(const std::array<vk::ComponentSwizzle, 4>& swizzleFlags)
+	FrameBuilder& FrameBuilder::SetComponentSwizzle(const std::array<vk::ComponentSwizzle, 4>& swizzleFlags)
 	{
 		m_ComponentSwizzleFlags = swizzleFlags;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetComponentSwizzle(vk::ComponentSwizzle r, vk::ComponentSwizzle g, vk::ComponentSwizzle b, vk::ComponentSwizzle a)
+	FrameBuilder& FrameBuilder::SetComponentSwizzle(vk::ComponentSwizzle r, vk::ComponentSwizzle g, vk::ComponentSwizzle b, vk::ComponentSwizzle a)
 	{
 		m_ComponentSwizzleFlags = { r,g,b,a };
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetAspectMask(vk::ImageAspectFlagBits imageAspect)
+	FrameBuilder& FrameBuilder::SetAspectMask(vk::ImageAspectFlagBits imageAspect)
 	{
 		m_ImageAspect = imageAspect;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetBaseMipLevel(uint32_t baseMipLevel)
+	FrameBuilder& FrameBuilder::SetBaseMipLevel(uint32_t baseMipLevel)
 	{
 		m_BaseMipLevel = baseMipLevel;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetLevelCount(uint32_t levelCount)
+	FrameBuilder& FrameBuilder::SetLevelCount(uint32_t levelCount)
 	{
 		m_LevelCount = levelCount;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetBaseArrayLayer(uint32_t baseArrayLayer)
+	FrameBuilder& FrameBuilder::SetBaseArrayLayer(uint32_t baseArrayLayer)
 	{
 		m_BaseArrayLayer = baseArrayLayer;
 		return *this;
 	}
 
-	SwapchainFrameBuilder& SwapchainFrameBuilder::SetLayerCount(uint32_t layerCount)
+	FrameBuilder& FrameBuilder::SetLayerCount(uint32_t layerCount)
 	{
 		m_LayerCount = layerCount;
 		return *this;

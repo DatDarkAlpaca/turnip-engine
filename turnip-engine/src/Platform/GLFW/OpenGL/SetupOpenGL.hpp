@@ -6,5 +6,5 @@ namespace tur::platform::gl
 {
 	void SetupOpenGLWindowing(Window& window, const WindowProperties&, const GraphicsSpecification&);
 
-	void SwapBuffers(Window* window);
+	void SwapBuffers(Window& window);
 }

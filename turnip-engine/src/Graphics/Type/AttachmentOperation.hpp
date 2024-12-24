@@ -19,9 +19,9 @@ namespace tur
 
 	struct AttachmentOperations
 	{
-		AttachmentLoadOperation  attachmentLoad  = AttachmentLoadOperation::CLEAR;
+		AttachmentLoadOperation  attachmentLoad = AttachmentLoadOperation::CLEAR;
 		AttachmentStoreOperation attachmentStore = AttachmentStoreOperation::STORE;
-		AttachmentLoadOperation  stencilLoad     = AttachmentLoadOperation::DONT_CARE;
-		AttachmentStoreOperation stencilStore    = AttachmentStoreOperation::DONT_CARE;
+		AttachmentLoadOperation  stencilLoad = AttachmentLoadOperation::DONT_CARE;
+		AttachmentStoreOperation stencilStore = AttachmentStoreOperation::DONT_CARE;
 	};
 }

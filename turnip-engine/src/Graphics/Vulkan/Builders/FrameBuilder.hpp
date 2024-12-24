@@ -1,27 +1,27 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
-#include "Graphics/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/Objects/Objects.hpp"
 
 namespace tur::vulkan
 {
-	class SwapchainFrameBuilder
+	class FrameBuilder
 	{
 	public:
-		SwapchainFrameBuilder();
+		FrameBuilder();
 
 	public:
-		void Build(vk::Device& device, Swapchain& swapchain);
+		Frames Build(vk::Device device, SwapchainObject swapchain);
 
 	public:
-		SwapchainFrameBuilder& SetViewType(vk::ImageViewType viewType);
-		SwapchainFrameBuilder& SetComponentSwizzle(const std::array<vk::ComponentSwizzle, 4>& swizzleFlags);
-		SwapchainFrameBuilder& SetComponentSwizzle(vk::ComponentSwizzle r, vk::ComponentSwizzle g, vk::ComponentSwizzle b, vk::ComponentSwizzle a);
-		SwapchainFrameBuilder& SetAspectMask(vk::ImageAspectFlagBits imageAspect);
+		FrameBuilder& SetViewType(vk::ImageViewType viewType);
+		FrameBuilder& SetComponentSwizzle(const std::array<vk::ComponentSwizzle, 4>& swizzleFlags);
+		FrameBuilder& SetComponentSwizzle(vk::ComponentSwizzle r, vk::ComponentSwizzle g, vk::ComponentSwizzle b, vk::ComponentSwizzle a);
+		FrameBuilder& SetAspectMask(vk::ImageAspectFlagBits imageAspect);
 
-		SwapchainFrameBuilder& SetBaseMipLevel(uint32_t baseMipLevel = 0);
-		SwapchainFrameBuilder& SetLevelCount(uint32_t levelCount = 1);
-		SwapchainFrameBuilder& SetBaseArrayLayer(uint32_t baseArrayLayer = 0);
-		SwapchainFrameBuilder& SetLayerCount(uint32_t layerCount = 1);
+		FrameBuilder& SetBaseMipLevel(uint32_t baseMipLevel = 0);
+		FrameBuilder& SetLevelCount(uint32_t levelCount = 1);
+		FrameBuilder& SetBaseArrayLayer(uint32_t baseArrayLayer = 0);
+		FrameBuilder& SetLayerCount(uint32_t layerCount = 1);
 
 	private:
 		vk::ImageViewType m_ViewType = vk::ImageViewType::e2D;

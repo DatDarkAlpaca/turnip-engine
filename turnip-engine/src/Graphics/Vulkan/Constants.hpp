@@ -5,8 +5,6 @@
 
 namespace tur::vulkan
 {
-	static inline constexpr uint32_t InvalidQueueIndex = 0xFFFFFFFF;
-
 	static inline constexpr const char* ValidationLayerName = "VK_LAYER_KHRONOS_validation";
 	static inline constexpr const char* DebugUtilsExtensionName = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
 	static inline constexpr const char* SwapchainExtensionName = VK_KHR_SWAPCHAIN_EXTENSION_NAME;

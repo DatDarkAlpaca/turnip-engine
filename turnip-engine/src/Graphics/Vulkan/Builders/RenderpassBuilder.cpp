@@ -1,5 +1,9 @@
-#include "pch.h"
-#include "RenderpassBuilder.h"
+#include "pch.hpp"
+#include "RenderpassBuilder.hpp"
+#include "Graphics/Vulkan/TypeConverters.hpp"
+#include "Graphics/Vulkan/VulkanInitializer.hpp"
+
+// TODO: redo the entire renderpass system for vulkan
 
 namespace tur::vulkan
 {
@@ -9,7 +13,7 @@ namespace tur::vulkan
 
 	}
 
-	std::optional<RenderpassVulkan> RenderpassBuilder::Build()
+	std::optional<RenderpassObject> RenderpassBuilder::Build()
 	{
 		if (!m_ArgumentsSet)
 		{
@@ -20,7 +24,7 @@ namespace tur::vulkan
 		return ConfigureRenderpass();
 	}
 
-	RenderpassBuilder& RenderpassBuilder::SetArguments(vk::Device device, const vulkan::Swapchain& swapchain)
+	RenderpassBuilder& RenderpassBuilder::SetArguments(vk::Device device, const SwapchainObject& swapchain)
 	{
 		m_Device = device;
 		m_Swapchain = swapchain;
@@ -55,14 +59,14 @@ namespace tur::vulkan
 		m_Subpasses.push_back(mainSubpass);
 	}
 
-	std::optional<RenderpassVulkan> RenderpassBuilder::ConfigureRenderpass()
+	std::optional<RenderpassObject> RenderpassBuilder::ConfigureRenderpass()
 	{
 		// Descriptors and references:
 		for (const auto& descriptorAttachment : m_Descriptor.attachments)
 		{
 			vk::AttachmentDescription attachment = { };
 			attachment.flags = vk::AttachmentDescriptionFlags();
-			attachment.format = GetFormat(descriptorAttachment.imageFormat);
+			attachment.format = GetTextureFormat(descriptorAttachment.imageFormat);
 			attachment.samples = GetSampleCount(descriptorAttachment.sampleCount);
 			attachment.loadOp = GetAttachmentLoadOp(descriptorAttachment.loadOperation);
 			attachment.storeOp = GetAttachmentStoreOp(descriptorAttachment.storeOperation);
@@ -95,29 +99,31 @@ namespace tur::vulkan
 
 			// TODO: convert resolve and depth refs into stack arrays
 
-			for (const auto& [subpassReferenceType, subpassReferenceIndex] : m_Descriptor.subpasses[i])
+			for (const auto& attachmentType : m_Descriptor.mapping[i])
 			{
-				switch (subpassReferenceType)
+				auto passID = i;
+
+				switch (attachmentType)
 				{
 					case AttachmentType::INPUT:
-						inputAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						inputAttachments[i].push_back(m_AttachmentReferences[passID]);
 						break;
 
 					case AttachmentType::COLOR:
-						colorAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						colorAttachments[i].push_back(m_AttachmentReferences[passID]);
 						break;
 
 					case AttachmentType::RESOLVE:
-						resolveAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						resolveAttachments[i].push_back(m_AttachmentReferences[passID]);
 						break;
 
 					case AttachmentType::DEPTH_STENCIL:
-						depthStencilAttachments[i].push_back(m_AttachmentReferences[subpassReferenceIndex]);
+						depthStencilAttachments[i].push_back(m_AttachmentReferences[passID]);
 						break;
 
 					default:
 					{
-						TUR_LOG_ERROR("Invalid subpass attachment reference type at index: {}", subpassReferenceIndex);
+						TUR_LOG_ERROR("Invalid subpass attachment reference type at index: {}", passID);
 					} break;
 				}
 				
@@ -145,7 +151,7 @@ namespace tur::vulkan
 		renderpassInfo.subpassCount = (uint32_t)m_Subpasses.size();
 		renderpassInfo.pSubpasses = m_Subpasses.data();
 
-		RenderpassVulkan renderpass;
+		RenderpassObject renderpass;
 		renderpass.offset = vk::Offset2D(m_Descriptor.offset.x, m_Descriptor.offset.y);
 		renderpass.extent = vk::Extent2D(m_Descriptor.extent.width, m_Descriptor.extent.height);
 		

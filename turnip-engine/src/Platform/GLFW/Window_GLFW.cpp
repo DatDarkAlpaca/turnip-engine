@@ -32,6 +32,7 @@ namespace tur::platform
 			TUR_LOG_CRITICAL("Failed to create a valid GLFW window. GLFW is probably uninitialized");
 
 		m_Window.reset(glfwWindow);
+		SetProperties(properties);
 
 		// Window Data:
 		SetWindowDataPointer();
@@ -67,12 +68,9 @@ namespace tur::platform
 
 		// Position:
 		int x = (int)properties.position.x, y = (int)properties.position.y;
-		if (properties.position.x == WindowProperties::Position::DEFAULT)
-			x = GLFW_DONT_CARE;
-		if (properties.position.y == WindowProperties::Position::DEFAULT)
-			y = GLFW_DONT_CARE;
-			
-		glfwSetWindowPos(window, x, y);
+		if (properties.position.x != WindowProperties::Position::DEFAULT &&
+			properties.position.y != WindowProperties::Position::DEFAULT)			
+			glfwSetWindowPos(window, x, y);
 
 		// Title:
 		glfwSetWindowTitle(window, properties.windowTitle.c_str());

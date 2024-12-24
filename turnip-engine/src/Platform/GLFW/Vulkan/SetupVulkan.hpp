@@ -12,4 +12,6 @@ namespace tur::platform::vulkan
 	std::vector<const char*> GetWindowingVulkanExtensions();
 
 	VkSurfaceKHR GetVulkanSurface(vk::Instance instance, Window* window);
+
+	std::vector<const char*> GetVulkanExtensionPlatformSurfaceNames();
 }

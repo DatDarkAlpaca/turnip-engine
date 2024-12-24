@@ -2,8 +2,9 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Common.h"
-#include "Graphics/Vulkan/Objects/Objects.h"
+#include "Graphics/Vulkan/Objects/Instance.hpp"
+#include "Graphics/Vulkan/Constants.hpp"
+#include "Common.hpp"
 
 namespace
 {
@@ -71,7 +72,7 @@ namespace
 
 namespace tur::vulkan
 {
-	class VulkanInstanceBuilder
+	class InstanceBuilder
 	{
 		using VulkanDebugSeverityFlags = vk::Flags<vk::DebugUtilsMessageSeverityFlagBitsEXT>;
 		using VulkanMessageTypeFlags = vk::Flags<vk::DebugUtilsMessageTypeFlagBitsEXT>;
@@ -82,52 +83,52 @@ namespace tur::vulkan
 		using VulkanDebugCallback = PFN_vkDebugUtilsMessengerCallbackEXT;
 
 	public:
-		VulkanInstanceBuilder();
+		InstanceBuilder();
 
 	public:
-		std::optional<Instance> Build();
+		std::optional<InstanceObject> Build();
 
 	public:
 		void DisplayVulkanAPIVersion() const;
 
 	public:
 		// Application Information:
-		VulkanInstanceBuilder& SetAppName(const std::string& applicationName);
-		VulkanInstanceBuilder& SetEngineName(const std::string& engineName);
+		InstanceBuilder& SetAppName(const std::string& applicationName);
+		InstanceBuilder& SetEngineName(const std::string& engineName);
 
-		VulkanInstanceBuilder& SetApplicationVersion(uint32_t applicationVersion);
-		VulkanInstanceBuilder& SetApplicationVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
-		VulkanInstanceBuilder& SetEngineVersion(uint32_t applicationVersion);
-		VulkanInstanceBuilder& SetEngineVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
+		InstanceBuilder& SetApplicationVersion(uint32_t applicationVersion);
+		InstanceBuilder& SetApplicationVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
+		InstanceBuilder& SetEngineVersion(uint32_t applicationVersion);
+		InstanceBuilder& SetEngineVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
 
-		VulkanInstanceBuilder& SetAPIVersion(uint32_t applicationVersion);
-		VulkanInstanceBuilder& SetAPIVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
+		InstanceBuilder& SetAPIVersion(uint32_t applicationVersion);
+		InstanceBuilder& SetAPIVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t variant = 0);
 
 		// Layers & Extensions:
-		VulkanInstanceBuilder& AddLayer(const char* layerName);
-		VulkanInstanceBuilder& AddValidationLayer();
-		VulkanInstanceBuilder& AddLayers(const std::vector<const char*>& layers);
+		InstanceBuilder& AddLayer(const char* layerName);
+		InstanceBuilder& AddValidationLayer();
+		InstanceBuilder& AddLayers(const std::vector<std::string>& layers);
 
-		VulkanInstanceBuilder& AddExtension(const char* extensionName);
-		VulkanInstanceBuilder& AddDebugUtilsExtension();
-		VulkanInstanceBuilder& AddExtensions(const std::vector<const char*>& extensions);
+		InstanceBuilder& AddExtension(const char* extensionName);
+		InstanceBuilder& AddDebugUtilsExtension();
+		InstanceBuilder& AddExtensions(const std::vector<std::string>& extensions);
 		
-		VulkanInstanceBuilder& ToggleKHRSurfaceFlag(bool state);
-		VulkanInstanceBuilder& ToggleWindowingSurfaceFlag(bool state);
-		VulkanInstanceBuilder& SetHeadless();
-		VulkanInstanceBuilder& SetNotHeadless();
+		InstanceBuilder& ToggleKHRSurfaceFlag(bool state);
+		InstanceBuilder& ToggleWindowingSurfaceFlag(bool state);
+		InstanceBuilder& SetHeadless();
+		InstanceBuilder& SetNotHeadless();
 
 		// Debug Messenger:
-		VulkanInstanceBuilder& UseDebugMessenger(bool value);
+		InstanceBuilder& UseDebugMessenger(bool value);
 
-		VulkanInstanceBuilder& UseDefaultDebugCallback();
-		VulkanInstanceBuilder& SetDebugCallback(VulkanDebugCallback callback);
+		InstanceBuilder& UseDefaultDebugCallback();
+		InstanceBuilder& SetDebugCallback(VulkanDebugCallback callback);
 
-		VulkanInstanceBuilder& SetDebugMessengerSeverity(VulkanDebugSeverity severity);
-		VulkanInstanceBuilder& AddDebugMessengerSeverity(VulkanDebugSeverity severity);
+		InstanceBuilder& SetDebugMessengerSeverity(VulkanDebugSeverity severity);
+		InstanceBuilder& AddDebugMessengerSeverity(VulkanDebugSeverity severity);
 
-		VulkanInstanceBuilder& SetDebugMessengerType(VulkanMessageType type);
-		VulkanInstanceBuilder& AddDebugMessengerType(VulkanMessageType type);
+		InstanceBuilder& SetDebugMessengerType(VulkanMessageType type);
+		InstanceBuilder& AddDebugMessengerType(VulkanMessageType type);
 
 	private:
 		void RequestSurfaceExtension(const std::vector<vk::ExtensionProperties>& supportedExtensions);
@@ -154,12 +155,10 @@ namespace tur::vulkan
 			bool disableWindowingSurface = false;
 
 #ifdef TUR_DEBUG
-			bool useDebugMessenger = true;
+			bool addValidationLayer = true, addDebugExtensions = true, useDebugMessenger = true;
 #else
-			bool useDebugMessenger = false;
+			bool addValidationLayer = false, addDebugExtensions = false, useDebugMessenger = false;
 #endif
-			bool addedValidationLayer = false, addDebugExtensions = false;
-
 		} m_Information;
 	};
 }

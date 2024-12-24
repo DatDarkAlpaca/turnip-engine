@@ -44,8 +44,8 @@ namespace tur::platform::gl
 #endif
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, specification.major);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, specification.minor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, specification.versionMajor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, specification.versionMinor);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
@@ -64,7 +64,7 @@ namespace tur::platform::gl
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-		if (specification.major >= 4 && specification.minor >= 3)
+		if (specification.versionMajor >= 4 && specification.versionMinor >= 3)
 		{
 			glDebugMessageCallback(OpenGLCallback, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
@@ -72,8 +72,8 @@ namespace tur::platform::gl
 #endif
 	}
 
-	void SwapBuffers(Window* window)
+	void SwapBuffers(Window& window)
 	{
-		glfwSwapBuffers(std::any_cast<GLFWwindow*>(window->GetHandle()));
+		glfwSwapBuffers(window.GetHandle());
 	}
 }

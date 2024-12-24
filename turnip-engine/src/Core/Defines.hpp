@@ -1,5 +1,9 @@
 #pragma once
 
+#if !defined(TUR_PROJECT_NAME)
+	#define TUR_PROJECT_NAME "Turnip"
+#endif
+
 #if defined(_DEBUG) && !defined(TUR_DEBUG)
 	#define TUR_DEBUG
 #elif defined(NDEBUG) && !defined(TUR_RELEASE)

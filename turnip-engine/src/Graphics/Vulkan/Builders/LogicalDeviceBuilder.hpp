@@ -2,19 +2,25 @@
 #include <optional>
 #include <vulkan/vulkan.hpp>
 
-#include "Graphics/Vulkan/Objects/Objects.h"
+#include "Core/Config/ConfigData.hpp"
+
+#include "Graphics/Vulkan/Objects/Instance.hpp"
+#include "Graphics/Vulkan/Objects/PhysicalDevice.hpp"
+#include "Graphics/Vulkan/Objects/LogicalDevice.hpp"
 
 namespace tur::vulkan
 {
 	class LogicalDeviceBuilder
 	{
 	public:
-		std::optional<LogicalDevice> Create() const;
+		std::optional<LogicalDeviceObject> Create() const;
 
 	public:
-		LogicalDeviceBuilder& SetInstance(const Instance& instance);
+		LogicalDeviceBuilder& SetInstanceObject(const InstanceObject& instanceObject);
 
-		LogicalDeviceBuilder& SetPhysicalDevice(const PhysicalDevice& device);
+		LogicalDeviceBuilder& SetPhysicalDeviceObject(const PhysicalDeviceObject& deviceObject);
+
+		LogicalDeviceBuilder& SetConfigData(const ConfigData& configData);
 
 	public:
 		LogicalDeviceBuilder& PrepareQueueInfo(uint32_t queueIndex, float priority = 1.0f);
@@ -25,10 +31,15 @@ namespace tur::vulkan
 		LogicalDeviceBuilder& AddRequiredExtension(const char* extensionName);
 
 	private:
-		PhysicalDevice m_Device;
-		Instance m_Instance;
+		PhysicalDeviceObject m_DeviceObject;
+		InstanceObject m_InstanceObject;
+		ConfigData m_ConfigData;
 
 		std::vector<const char*> m_Extensions;
 		std::vector<vk::DeviceQueueCreateInfo> m_QueueInfoList;
+
+		bool m_InstanceSet = false;
+		bool m_DeviceSet = false;
+		bool m_ConfigDataSet = false;
 	};
 }

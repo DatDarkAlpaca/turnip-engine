@@ -1,10 +1,13 @@
-#include "pch.h"
-#include "VulkanInitializer.h"
+#include "pch.hpp"
+#include "VulkanInitializer.hpp"
+
+#include "GraphicsLayerVulkan.hpp"
+#include "Builders/RenderpassBuilder.hpp"
 
 namespace tur::vulkan
 {
-    VulkanInitializer::VulkanInitializer(const GraphicsSpecification& specification)
-        : specification(specification)
+    IVulkanInitializer::IVulkanInitializer(const ConfigData& configData)
+        : configData(configData)
     {
 
     }
@@ -12,62 +15,86 @@ namespace tur::vulkan
 
 namespace tur::vulkan
 {
-	DefaultVulkanInitializer::DefaultVulkanInitializer(const GraphicsSpecification& specification)
-        : VulkanInitializer(specification)
+	DefaultVulkanInitializer::DefaultVulkanInitializer(const ConfigData& configData, platform::Window& window)
+        : IVulkanInitializer(configData)
+        , r_Window(window)
     {
-        instanceBuilder
-            .SetAppName("") /* TODO: Set Application Name */
-            .SetEngineName("TurnipEngine")
-            .SetAPIVersion(specification.major, specification.minor,
-                specification.patch, specification.variant);
+        
     }
 
-    void DefaultVulkanInitializer::Initialize(NON_OWNING RenderDevice* _device)
+    void DefaultVulkanInitializer::Initialize(GraphicsLayerVulkan& graphicsLayer)
     {
         using namespace vulkan;
 
-        RenderDeviceVK* device = static_cast<RenderDeviceVK*>(_device);
+        auto applicationData = configData.applicationSpecification;
+        auto graphicsData = configData.graphicsSpecifications;
+        auto vulkanData = configData.vulkanArguments;
+
+        bool enablePresentation = vulkanData.enablePresentation;
 
         // Instance:
-        Instance instanceOutput;
         {
+            instanceBuilder
+                .SetAppName(applicationData.applicationName)
+                .SetApplicationVersion(
+                    applicationData.versionMajor,
+                    applicationData.versionMinor,
+                    applicationData.versionPatch,
+                    applicationData.versionVariant)
+                .SetEngineName("TurnipEngine")
+                .SetAPIVersion(
+                    graphicsData.versionMajor,
+                    graphicsData.versionMinor,
+                    graphicsData.versionPatch,
+                    graphicsData.versionVariant)
+                .AddLayers(vulkanData.layers)
+                .AddExtensions(vulkanData.extensions)
+                .UseDebugMessenger(vulkanData.useDebugMessenger);
+
+            if (vulkanData.addValidationLayer)
+                instanceBuilder.AddValidationLayer();
+
+            if (vulkanData.addDebugExtensions)
+                instanceBuilder.AddDebugUtilsExtension();
+
             auto instanceOutputResult = instanceBuilder.Build();
 
             if (!instanceOutputResult.has_value())
                 TUR_LOG_CRITICAL("Vulkan Initializer: Failed to initialize instance");
 
-            instanceOutput = instanceOutputResult.value();
-
-            device->instance = instanceOutput.instanceHandle;
-            device->debugMessenger = instanceOutput.debugMessenger;
-            device->DLDI = instanceOutput.DLDI;
-
-            instanceBuilder.DisplayVulkanAPIVersion();
-            TUR_LOG_DEBUG("Initialized Vulkan Instance");
-            TUR_LOG_DEBUG("Initialized Vulkan DebugMessenger");
+            graphicsLayer.SetInstanceObject(instanceOutputResult.value());
         }
+
+        const auto& instance = graphicsLayer.instanceObject.instance;
 
         // Surface:
         {
-            device->surface = platform::GetVulkanSurface(instanceOutput.instanceHandle, device->GetWindow());
+            auto surface = platform::vulkan::GetVulkanSurface(instance, &r_Window);
+            graphicsLayer.SetSurfaceObject(surface);
         }
+
+        const auto& surface = graphicsLayer.surfaceObject.surface;
 
         // Physical Device:
-        PhysicalDevice physicalDeviceOutput;
+        PhysicalDeviceObject physicalDeviceOutput;
         {
-            physicalDeviceSelector.SetInstance(instanceOutput)
-                .SetSurface(device->surface);
+            physicalDeviceSelector
+                .SetConfigData(configData)
+                .SetInstanceObject(graphicsLayer.instanceObject)
+                .SetSurfaceObject(graphicsLayer.surfaceObject);
 
             physicalDeviceOutput = physicalDeviceSelector.Select();
-            device->physicalDevice = physicalDeviceOutput.physicalDevice;
-
-            TUR_LOG_DEBUG("Selected GPU: {}", physicalDeviceOutput.physicalDevice.getProperties().deviceName.data());
+            graphicsLayer.SetPhysicalDeviceObject(physicalDeviceOutput);
         }
 
-        // Queue Selection:
-        uint32_t presentQueueIndex = InvalidQueueIndex, graphicsQueueIndex = InvalidQueueIndex;
+        const auto& physicalDevice = graphicsLayer.physicalDeviceObject.physicalDevice;
+
+        // Queues:
+        uint32_t presentQueueIndex  = invalid_queue_index, graphicsQueueIndex = invalid_queue_index;
         {
-            for (const auto& queueFamily : physicalDeviceOutput.queueFamilyInformation)
+            auto queueInfo = GetQueueFamilyInformation(physicalDevice, surface);
+
+            for (const auto& queueFamily : queueInfo)
             {
                 if (GetQueueFamilySupports(queueFamily, QueueOperation::PRESENT))
                     presentQueueIndex = queueFamily.familyIndex;
@@ -75,78 +102,124 @@ namespace tur::vulkan
                 if (GetQueueFamilySupports(queueFamily, QueueOperation::GRAPHICS))
                     graphicsQueueIndex = queueFamily.familyIndex;
             }
-
-            if (presentQueueIndex == vulkan::InvalidQueueIndex)
-                TUR_LOG_ERROR("Failed to assign a present queue index");
-
-            if (graphicsQueueIndex == vulkan::InvalidQueueIndex)
-                TUR_LOG_ERROR("Failed to assign a graphics queue index");
         }
 
-        // Logical Device & Queue:
+        // Logical Device:
         {
-            logicalDeviceBuilder.SetInstance(instanceOutput)
-                .SetPhysicalDevice(physicalDeviceOutput);
+            logicalDeviceBuilder
+                .SetConfigData(configData)
+                .SetInstanceObject(graphicsLayer.instanceObject)
+                .SetPhysicalDeviceObject(graphicsLayer.physicalDeviceObject);
 
-            logicalDeviceBuilder.PrepareQueueInfo(presentQueueIndex, 1.0f);
+            if (enablePresentation)
+            {
+                logicalDeviceBuilder.PrepareQueueInfo(presentQueueIndex, 1.0f);
 
-            if (graphicsQueueIndex != presentQueueIndex)
-                logicalDeviceBuilder.PrepareQueueInfo(graphicsQueueIndex, 1.0f);
-
+                if (graphicsQueueIndex != presentQueueIndex)
+                    logicalDeviceBuilder.PrepareQueueInfo(graphicsQueueIndex, 1.0f);
+            }
+                
             auto logicalDeviceResult = logicalDeviceBuilder.Create();
             if (!logicalDeviceResult.has_value())
                 TUR_LOG_CRITICAL("Vulkan Initializer: Failed to create logical device");
 
             // Logical Device:
-            device->logicalDevice = logicalDeviceResult.value().device;
-
-            // Queues:
-            auto graphicsQueue = device->logicalDevice.getQueue(graphicsQueueIndex, 0);
-            auto presentQueue = device->logicalDevice.getQueue(presentQueueIndex, 0);
-
-            device->queues.Add(graphicsQueue, QueueOperation::GRAPHICS, graphicsQueueIndex);
-            device->queues.Add(presentQueue, QueueOperation::PRESENT, presentQueueIndex);
-
-            TUR_LOG_DEBUG("Initialized Vulkan Logical Device");
-            TUR_LOG_DEBUG("Using Graphics Queue Family: {}", graphicsQueueIndex);
-            TUR_LOG_DEBUG("Using Present Queue Family: {}", presentQueueIndex);
+            graphicsLayer.SetLogicalDeviceObject(logicalDeviceResult.value());
         }
 
+        const auto& logicalDevice = graphicsLayer.logicalDeviceObject.device;
+
+        // Queues:
+        {
+            auto graphicsQueue = logicalDevice.getQueue(graphicsQueueIndex, 0);
+            auto presentQueue = logicalDevice.getQueue(presentQueueIndex, 0);
+
+            graphicsLayer.deviceQueues.Add(graphicsQueue, graphicsQueueIndex, QueueOperation::GRAPHICS);
+            graphicsLayer.deviceQueues.Add(presentQueue, presentQueueIndex, QueueOperation::PRESENT);
+        }
+
+        const auto& queues = graphicsLayer.deviceQueues;
+        
         // VMA Allocator:
         {
-            vmaBuilder.SetArguments(device->instance, device->physicalDevice, device->logicalDevice);
-            device->allocator = vmaBuilder.Build();
+            vmaBuilder.SetArguments(instance, physicalDevice, logicalDevice);
+            graphicsLayer.SetAllocator(vmaBuilder.Build());
         }
 
         // Swapchain:
         {
-            auto& physicalDevice = device->physicalDevice;
-            auto& logicalDevice = device->logicalDevice;
-            auto& surface = device->surface;
-            auto& queues = device->queues;
+            // TODO: configuration data.
 
             auto& capabilities = QuerySurfaceCapabilities(physicalDevice, surface);
             auto& surfaceFormats = QuerySurfaceFormats(physicalDevice, surface);
             auto& presentModes = QuerySurfacePresentModes(physicalDevice, surface);
 
-#ifdef TUR_DEBUG
-            DisplaySurfaceCapabilities(capabilities);
-            DisplaySurfaceFormats(surfaceFormats);
-            DisplayPresentModes(presentModes);
-#endif
-
-            swapchainBuilder.SetArguments(surface, physicalDevice, logicalDevice, queues)
+            swapchainBuilder
+                .SetArguments(surface, physicalDevice, logicalDevice, queues)
                 .Prepare();
 
             auto swapchainResult = swapchainBuilder.Create();
             if (swapchainResult.has_value())
-                device->swapchain = swapchainResult.value();
-
-            // Image & Image Views:
-            swapchainFrameBuilder.Build(logicalDevice, device->swapchain);
+                graphicsLayer.SetSwapchainObject(swapchainResult.value());
         }
 
-        // Framebuffer & Default Renderpass for Swapchain Frames:
-        device->FinishSetup();
+        const auto& swapchain = graphicsLayer.swapchainObject;
+
+        // Image & Image Views:
+        {
+            auto frames = frameBuilder.Build(logicalDevice, swapchain);
+            graphicsLayer.SetFrames(frames);
+        }
+
+        auto& frames = graphicsLayer.frames;
+
+        // Swapchain Frame Renderpass:
+        {
+            RenderpassObject renderpass;
+
+            RenderpassDescriptor descriptor 
+                = RenderpassDescriptor::CreateDefaultRenderpass({ swapchain.extent.width, swapchain.extent.height });
+
+            vulkan::RenderpassBuilder renderpassBuilder(descriptor);
+            renderpassBuilder.SetArguments(logicalDevice, swapchain);
+
+            auto vulkanRenderpassResult = renderpassBuilder.Build();
+            if(!vulkanRenderpassResult.has_value())
+                TUR_LOG_CRITICAL("Vulkan Initializer: Failed to create swapchain renderpass");
+
+            frames.renderpassObject = vulkanRenderpassResult.value();
+        }
+
+        // Swapchain Frame Commands:
+        {
+            //// Commands:
+            //CommandPoolBuilder poolBuilder;
+            //poolBuilder.SetArguments(logicalDevice, queues);
+            //commandPool = poolBuilder.Build().value(); // TODO: check value
+
+            //vulkan::CommandBufferBuilder commandBuilder;
+            //commandBuilder.SetArguments(logicalDevice, commandPool);
+        }
+
+        // Swapchain Frame Framebuffers & Sync:
+        {
+            //// Frames:
+            //vulkan::FramebufferBuilder frameBuilder;
+            //frameBuilder.SetArguments(logicalDevice, swapchain.renderpass);
+
+            //for (auto& frame : swapchain.frames)
+            //{
+            //    frame.framebuffer = frameBuilder.Create(frame.view, swapchain);
+            //    frame.commandBuffer = commandBuilder.Build().value(); // TODO: check value
+
+            //    SemaphoreBuilder semaphoreBuilder;
+            //    FenceBuilder fenceBuilder;
+
+            //    // Sync objects:
+            //    frame.inFlightFence = fenceBuilder.Build(logicalDevice);
+            //    frame.renderFinishedSemaphore = semaphoreBuilder.Build(logicalDevice);
+            //    frame.imageAvailableSemaphore = semaphoreBuilder.Build(logicalDevice);
+            //}
+        }
     }
 }

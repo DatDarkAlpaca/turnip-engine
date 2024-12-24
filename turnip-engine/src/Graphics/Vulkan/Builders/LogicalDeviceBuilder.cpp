@@ -1,11 +1,21 @@
-#include "pch.h"
-#include "Common.h"
-#include "LogicalDeviceBuilder.h"
+#include "pch.hpp"
+#include "Common.hpp"
+#include "LogicalDeviceBuilder.hpp"
+#include "Graphics/Vulkan/Constants.hpp"
 
 namespace tur::vulkan
 {
-	std::optional<LogicalDevice> LogicalDeviceBuilder::Create() const
+	std::optional<LogicalDeviceObject> LogicalDeviceBuilder::Create() const
 	{
+		if (!m_InstanceSet)
+			TUR_LOG_CRITICAL("[Vulkan Logical Device]: Instance not set. Use SetInstance() before creating a logical device");
+
+		if (!m_DeviceSet)
+			TUR_LOG_CRITICAL("[Vulkan Logical Device]: Physical device not set. Use SetPhysicalDevice() before creating a logical device");
+		
+		if (!m_ConfigDataSet)
+			TUR_LOG_CRITICAL("[Vulkan Logical Device]: ConfigSystem not set. Use SetConfigSystem() before creating a logical device");
+
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 
 		vk::DeviceCreateInfo deviceInfo = vk::DeviceCreateInfo(
@@ -16,12 +26,12 @@ namespace tur::vulkan
 			&deviceFeatures
 		);
 
-		LogicalDevice output;
+		LogicalDeviceObject logicalDeviceObject;
 
 		try
 		{
-			output.device = m_Device.physicalDevice.createDevice(deviceInfo);
-			return output;
+			logicalDeviceObject.device = m_DeviceObject.physicalDevice.createDevice(deviceInfo);
+			return logicalDeviceObject;
 		}
 		catch (const vk::SystemError& err)
 		{
@@ -31,19 +41,28 @@ namespace tur::vulkan
 		return std::nullopt;
 	}
 
-	LogicalDeviceBuilder& LogicalDeviceBuilder::SetInstance(const Instance& instance)
+	LogicalDeviceBuilder& LogicalDeviceBuilder::SetInstanceObject(const InstanceObject& instanceObject)
 	{
-		m_Instance = instance;
+		m_InstanceObject = instanceObject;
+		m_InstanceSet = true;
 
-		if (instance.enablePresentation)
+		if (m_ConfigData.vulkanArguments.enablePresentation)
 			AddRequiredExtension(vulkan::SwapchainExtensionName);
 
 		return *this;
 	}
 
-	LogicalDeviceBuilder& LogicalDeviceBuilder::SetPhysicalDevice(const PhysicalDevice& device)
+	LogicalDeviceBuilder& LogicalDeviceBuilder::SetPhysicalDeviceObject(const PhysicalDeviceObject& deviceObject)
 	{
-		m_Device = device;
+		m_DeviceObject = deviceObject;
+		m_DeviceSet = true;
+		return *this;
+	}
+
+	LogicalDeviceBuilder& LogicalDeviceBuilder::SetConfigData(const ConfigData& configData)
+	{
+		m_ConfigData = configData;
+		m_ConfigDataSet = true;
 		return *this;
 	}
 

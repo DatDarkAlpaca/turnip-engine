@@ -1,25 +1,23 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
-
-#include "Common.h"
-#include "QueueOperation.h"
+#include "Graphics/Vulkan/CommonVulkan.hpp"
+#include "QueueFamily.hpp"
 
 namespace tur::vulkan
 {
-	struct QueueCluster
+	struct DeviceQueueData
 	{
-	public:
-		struct QueueData
-		{
-			uint32_t familyIndex;
-			vk::Queue queue;
-			QueueOperation operation;
-		};
+		vk::Queue queue;
+		uint32_t familyIndex;
+		QueueOperation operation;
+	};
 
+	struct DeviceQueues
+	{
 	public:
 		inline vk::Queue Get(QueueOperation operation) const
 		{
-			for (const auto& [_, queue, supportedOperations] : queues)
+			for (const auto& [queue, _, supportedOperations] : queues)
 			{
 				if ((uint32_t)(supportedOperations & operation))
 					return queue;
@@ -30,21 +28,21 @@ namespace tur::vulkan
 
 		inline uint32_t GetFamily(QueueOperation operation) const
 		{
-			for (const auto& [index, _, supportedOperations] : queues)
+			for (const auto& [_, index, supportedOperations] : queues)
 			{
 				if ((uint32_t)(supportedOperations & operation))
 					return index;
 			}
 
-			return InvalidHandle;
+			return invalid_queue_index;
 		}
 
-		inline void Add(vk::Queue queue, QueueOperation operation, uint32_t index)
+		inline void Add(vk::Queue queue, uint32_t index, QueueOperation operation)
 		{
-			queues.push_back({ index, queue, operation });
+			queues.push_back({ queue, index, operation });
 		}
 
 	public:
-		std::vector<QueueData> queues;
+		std::vector<DeviceQueueData> queues;
 	};
 }
