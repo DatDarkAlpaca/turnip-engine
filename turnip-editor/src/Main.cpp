@@ -71,11 +71,17 @@ int main()
 		shader_handle vert = context.device->create_shader(ShaderDescriptor{ "res/shaders/basic_opengl.vert", ShaderType::VERTEX });
 		shader_handle frag = context.device->create_shader(ShaderDescriptor{ "res/shaders/basic_opengl.frag", ShaderType::FRAGMENT });
 
+		struct Vertex
+		{
+			glm::vec3 position;
+			glm::vec2 uvs;
+		};
+
 		VertexInputDescriptor vertexInput; 
 		{
 			BindingDescription bindingDescription;
 			bindingDescription.binding = 0;
-			bindingDescription.stride = sizeof(float) * 5;
+			bindingDescription.stride = sizeof(Vertex);
 			bindingDescription.inputRate = InputRate::VERTEX;
 			vertexInput.bindings.push_back(bindingDescription);
 
@@ -110,10 +116,10 @@ int main()
 		
 		DataBuffer data;
 		{
-			float vertices[] = {
-				0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-				1.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-				1.0f, 1.0f, 0.0f,	1.0f, 1.0f,
+			Vertex vertices[3] = {
+				{{ 0.0f, 0.0f, 0.0f },	{ 0.0f, 0.0f }},
+				{{ 1.0f, 0.0f, 0.0f },	{ 1.0f, 0.0f }},
+				{{ 1.0f, 1.0f, 0.0f },	{ 1.0f, 1.0f }},
 			};
 			data.data = vertices;
 			data.size = sizeof(vertices);
@@ -129,7 +135,7 @@ int main()
 		on_update();
 
 		context.commands->begin();
-		context.commands->clear(ClearFlags::COLOR, ClearValue{ {0.f, 1.f, 0.f, 1.f} });
+		context.commands->clear(ClearFlags::COLOR, ClearValue{ {0.16f, 0.16f, 0.16f, 1.f} });
 
 		context.commands->bind_vertex_buffer(buffer, 0);
 		{
