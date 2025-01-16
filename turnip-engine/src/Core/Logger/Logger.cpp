@@ -1,14 +1,14 @@
 #include "pch.hpp"
-#include "Logger.hpp"
+#include "logger.hpp"
 
 #pragma warning(push, 0)
 	#include <spdlog/sinks/stdout_color_sinks.h>
 	#include <spdlog/sinks/basic_file_sink.h>
 #pragma warning(pop)
 
-namespace tur::logger
+namespace tur
 {
-	void InitializeLogger()
+	void initialize_logger_system()
 	{
 		std::vector<spdlog::sink_ptr> sinks;
 
@@ -22,14 +22,14 @@ namespace tur::logger
 		sinks[1]->set_pattern("[%D | %T] [%n] [%l]: %v");
 
 		// Core Logger:
-		MainLogger = tur::MakeShared<spdlog::logger>(TUR_PROJECT_NAME, std::begin(sinks), std::end(sinks));
+		MainLogger = tur::make_shared<spdlog::logger>(TUR_PROJECT_NAME, std::begin(sinks), std::end(sinks));
 		spdlog::register_logger(MainLogger);
 
 		MainLogger->set_level(spdlog::level::trace);
 		MainLogger->flush_on(spdlog::level::trace);
 
 		// Info Logger:
-		InfoLogger = tur::MakeShared<spdlog::logger>("Info", sinks[0]);
+		InfoLogger = tur::make_shared<spdlog::logger>("Info", sinks[0]);
 		spdlog::register_logger(InfoLogger);
 
 		InfoLogger->set_level(spdlog::level::trace);

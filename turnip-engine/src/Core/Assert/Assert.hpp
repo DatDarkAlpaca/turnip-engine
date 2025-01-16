@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Logger/Logger.hpp"
+#include "core/logger/logger.hpp"
 
 namespace tur
 {

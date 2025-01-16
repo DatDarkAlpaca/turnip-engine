@@ -2,8 +2,10 @@ import sys
 import subprocess
 
 
-def execute_premake(action: str):
-    subprocess.run(['premake5', action])
+def execute_premake(*args):
+    action = sys.argv[1]
+    options = list(sys.argv[2:])
+    subprocess.run(['premake5', action] + options)
 
 
 def main():
@@ -12,13 +14,10 @@ def main():
         print('Usage: build <action>')
         return
 
-    # Vulkan:
-    # TODO: Detect vulkan
-
     # Premake:
     print('Running premake...')
-    action = sys.argv[1]
-    execute_premake(action)
+    
+    execute_premake(sys.argv)
 
 
 if __name__ == '__main__':

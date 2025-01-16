@@ -1,14 +1,12 @@
 #pragma once
-#include "Common.hpp"
-#include "Core/Event/Event.hpp"
+#include <vector>
+
+#include "common.hpp"
+#include "core/event/event.hpp"
 
 namespace tur
 {
-	class TurnipEngine;
-
-	class WorkerPool;
-	class ViewSystem;
-	class AssetLibrary;
+	using view_handle = handle_type;
 
 	class View
 	{
@@ -16,34 +14,47 @@ namespace tur
 		virtual ~View() = default;
 
 	public:
-		virtual void OnEngineStartup() { };
+		virtual void on_engine_startup() { };
 
-		virtual void OnViewInstantiated() { };
+		virtual void on_view_added() { };
 
-		virtual void OnRender() { };
+		virtual void on_render() { };
 
-		virtual void OnRenderGUI() { };
+		virtual void on_render_gui() { };
 
-		virtual void OnUpdate() { };
+		virtual void on_update() { };
 
-		virtual void OnEvent(Event& event) { };
+		virtual void on_event(Event& event) { };
 
-		virtual void OnViewRemoved() { };
+		virtual void on_view_removed() { };
 
-		virtual void OnEngineShutdown() { };
-
-	public:
-		void SetEngine(TurnipEngine* engine) { this->engine = engine; }
-
-		void SetHandler(ViewSystem* handler) { this->handler = handler; }
-
-	public:
-		AssetLibrary& AssetLibrary() const;
-
-		WorkerPool& WorkerPool() const;
-
-	protected:
-		NON_OWNING TurnipEngine* engine = nullptr;
-		NON_OWNING ViewSystem* handler = nullptr;
+		virtual void on_engine_shutdown() { };
 	};
+
+
+	struct ViewSystem
+	{
+		std::vector<tur_unique<View>> views;
+	};
+
+	view_handle add_view(ViewSystem* system, tur_unique<View> view)
+	{
+		view->on_view_added();
+
+		system->views.push_back(std::move(view));
+		return system->views.size() - 1;
+	}
+
+	void remove_view(ViewSystem* system, view_handle handle)
+	{
+		auto viewSystemIterator = system->views.begin() + handle;
+		viewSystemIterator->get()->on_view_removed();
+
+		system->views.erase(viewSystemIterator);
+	}
+
+	tur_unique<View>& get_view(ViewSystem* system, view_handle handle)
+	{
+		return system->views[handle];
+	}
 }

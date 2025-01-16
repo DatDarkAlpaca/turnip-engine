@@ -2,16 +2,13 @@
 #include <numeric>
 #include <limits>
 #include <filesystem>
+#include <glm/glm.hpp>
 
-#include "Core/Defines.hpp"
-#include "Core/NonCopyable.hpp"
+#include "core/defines.hpp"
 
-#include "Core/Memory/Memory.hpp"
-#include "Core/Logger/Logger.hpp"
-#include "Core/Assert/Assert.hpp"
-
-#include "Utils/State/State.hpp"
-#include "Utils/Json/JsonCommon.hpp"
+#include "core/memory/memory.hpp"
+#include "core/logger/logger.hpp"
+#include "core/assert/assert.hpp"
 
 #define TUR_ENGINE_NAME "TurnipEngine"
 
@@ -20,3 +17,14 @@
 #define EXPOSE_PROPERTY(ClassName, SetterName, PropertyName)						\
 	const ClassName& SetterName() const { return PropertyName; }					\
 	ClassName& SetterName() { return PropertyName; }
+
+namespace tur
+{
+	using handle_type = uint32_t;
+	constexpr handle_type invalid_handle = std::numeric_limits<handle_type>::max();
+
+	constexpr glm::uvec2 invalid_size = glm::uvec2(
+		std::numeric_limits<handle_type>::max(),
+		std::numeric_limits<handle_type>::max()
+	);
+}

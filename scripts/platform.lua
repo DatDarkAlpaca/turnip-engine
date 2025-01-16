@@ -1,18 +1,14 @@
 function detect_platform()
     filter { "system:Windows" }
         defines {
-            -- "TUR_WINDOWING_WIN32",
-            "TUR_WINDOWING_GLFW",
             "TUR_PLATFORM_WIN32",
             "VK_USE_PLATFORM_WIN32_KHR",
             "GLFW_STATIC",
             "GLFW_VULKAN_STATIC"
         }
         files {
-            "src/Platform/GLFW/**.cpp",
-            "src/Platform/GLFW/**.h",
-            --"src/Platform/WIN32/**.cpp",
-            --"src/Platform/WIN32/**.h",
+            "src/platform/glfw/**.cpp",
+            "src/platform/glfw/**.hpp",
         }
         links {
             "shcore.lib",
@@ -20,16 +16,27 @@ function detect_platform()
         }
     filter { }
 
-    filter { "system:Unix or linux or macosx" }
+    filter { "system:Unix or linux" }
         defines {
-            "TUR_WINDOWING_GLFW",
-            "TUR_PLATFORM_GLFW",
+            "TUR_PLATFORM_LINUX",
             "GLFW_STATIC",
             "GLFW_VULKAN_STATIC"
         }
         files {
-            "src/Platform/GLFW/**.cpp",
-            "src/Platform/GLFW/**.h",
+            "src/platform/glfw/**.cpp",
+            "src/platform/glfw/**.hpp",
+        }
+    filter { }
+	
+	filter { "system:macosx" }
+        defines {
+            "TUR_PLATFORM_MACOS",
+            "GLFW_STATIC",
+            "GLFW_VULKAN_STATIC"
+        }
+        files {
+            "src/platform/glfw/**.cpp",
+            "src/platform/glfw/**.hpp",
         }
     filter { }
 end

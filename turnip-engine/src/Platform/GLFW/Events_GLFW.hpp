@@ -1,14 +1,14 @@
 #pragma once
-#include "Core/Defines.hpp"
-#include "Core/Event/KeyboardEvents/KeyboardEvent.hpp"
-#include "Core/Event/MouseEvents/MouseEvent.hpp"
+#include "core/defines.hpp"
+#include "core/event/keyboard_events/keyboard_event.hpp"
+#include "core/event/mouse_events/mouse_event.hpp"
 
 #define GLFW_INPUT
 #include <GLFW/glfw3.h>
 
-namespace tur::platform
+namespace tur
 {
-	inline constexpr Key TranslateKey(GLFW_INPUT uint32_t key)
+	constexpr inline Key translate_key(GLFW_INPUT uint32_t key)
 	{
 		switch (key)
 		{
@@ -251,7 +251,7 @@ namespace tur::platform
 		}
 	}
 
-	inline constexpr KeyboardMods TranslateKeyMods(GLFW_INPUT uint32_t mods)
+	constexpr inline KeyboardMods translate_key_mods(GLFW_INPUT uint32_t mods)
 	{
 		uint32_t result = 0;
 
@@ -276,7 +276,7 @@ namespace tur::platform
 		return (KeyboardMods)result;
 	}
 
-	inline constexpr MouseButton TranslateMouseButton(uint32_t mouseButton)
+	constexpr inline MouseButton translate_mouse_button(uint32_t mouseButton)
 	{
 		switch (mouseButton)
 		{

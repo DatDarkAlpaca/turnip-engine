@@ -1,60 +1,27 @@
 #pragma once
-#include <any>
+#include <string>
+#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
-#include "Common.hpp"
-#include "Core/Event/Event.hpp"
-#include "Core/Window/WindowProperties.hpp"
+#include "common.hpp"
+#include "platform/window.hpp"
+#include "core/event/events.hpp"
 
-namespace tur::platform
+namespace tur
 {
-	class GLFWWindowDestroyer
+	struct Window
 	{
-	public:
-		void operator() (GLFWwindow* window);
-	};
-}
+		GLFWwindow* window = nullptr;
+		std::string title;
+		glm::uvec2 size = glm::uvec2(640, 480);
 
-namespace tur::platform
-{
-	class Window
-	{
-	public:
-		void Initialize(const WindowProperties& properties);
+		glm::uvec2 position = invalid_size;
+		glm::uvec2 minSize  = invalid_size;
+		glm::uvec2 maxSize  = invalid_size;
 
-		void Shutdown();
-
-	public:
-		void SetEventCallback(const EventCallback& callback);
-
-		void SetProperties(const WindowProperties& properties);
-
-		void PollEvents();
-
-	public:
-		void Hide();
-
-		void Show();
-
-		bool IsOpen() const;
-
-	public:
-		inline WindowProperties GetProperties() const { return m_Properties; }
-
-		inline GLFWwindow* GetHandle() const { return m_Window.get(); };
-
-	private:
-		void SetWindowDataPointer();
-
-		void SetWindowCallbacks();
-
-	private:
-		tur_unique<GLFWwindow, GLFWWindowDestroyer> m_Window;
-		WindowProperties m_Properties;
-
-		struct WindowData
+		struct Data
 		{
 			EventCallback eventCallback;
-		} m_WindowData;
+		} data;
 	};
 }

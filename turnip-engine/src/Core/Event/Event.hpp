@@ -1,5 +1,5 @@
 #pragma once
-#include "EventType.hpp"
+#include "event_type.hpp"
 
 namespace tur
 { 

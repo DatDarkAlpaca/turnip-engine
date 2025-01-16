@@ -1,6 +1,4 @@
 #pragma once
-#undef APIENTRY
-
 #pragma warning(push, 0)
 	#include <unordered_set>
 	#include <unordered_map>
