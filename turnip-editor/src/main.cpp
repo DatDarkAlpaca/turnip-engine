@@ -9,6 +9,7 @@ struct ApplicationContext
 	Window window;
 	ViewSystem viewSystem;
 	AssetLibrary assetLibrary;
+	WorkerPool workerPool;
 
 	tur_unique<GraphicsDevice> device;
 	tur_unique<CommandBuffer> commands;
@@ -16,13 +17,34 @@ struct ApplicationContext
 
 static void initialize_context(ApplicationContext* context)
 {
+	// Logger:
+	initialize_logger_system();
+
+	// Worker Pool:
+	context->workerPool.initialize();
+
+	// Window:
 	context->window.title = "TurnipEngine v1.0";
+	initialize_windowing_system();
+	{
+		GraphicsSpecification specification;
+		specification.major = 4;
+		specification.minor = 3;
+		specification.api = GraphicsAPI::OPENGL;
+
+		initialize_opengl_windowing(&context->window, specification);
+	}
 }
 
 // Application:
 static void initialize()
 {
-
+	context.workerPool.submit<asset_handle>([&]() {
+		return load_texture_asset(&context.assetLibrary, "res/textures/face.png");
+	}, [&](asset_handle handle) {
+		auto filepath = context.assetLibrary.textures.get(handle).filepath;
+		TUR_LOG_INFO("Loaded texture successfully: {}", filepath.string());
+	});
 }
 
 static void on_event(Event& event)
@@ -37,29 +59,15 @@ static void on_update()
 
 int main()
 {
-	initialize_logger_system();
 	initialize_context(&context);
+	set_callback_window(&context.window, on_event);
 
-	// Window:
-	initialize_windowing_system();
-	{
-		GraphicsSpecification specification;
-		specification.major = 4;
-		specification.minor = 3;
-		specification.api = GraphicsAPI::OPENGL;
-
-		initialize_opengl_windowing(&context.window, specification);
-		set_callback_window(&context.window, on_event);
-	}
-
-	// Assets:
-	{
-		// load_texture_asset(&context.assetLibrary, "filepath");
-	}
+	initialize();
 
 	// Graphics:
 	pipeline_handle pipeline;
 	buffer_handle buffer;
+	buffer_handle indexBuffer;
 	{
 		// Pipeline:
 		context.device = tur::make_unique<GraphicsDevice>(&context.window);
@@ -88,14 +96,14 @@ int main()
 			Attribute attribute0;
 			attribute0.binding  = 0;
 			attribute0.location = 0;
-			attribute0.format   = AttributeFormat::R32G32B32_SFLOAT; // vec3
+			attribute0.format   = AttributeFormat::R32G32B32_SFLOAT;		// vec3
 			attribute0.offset   = 0;
 			vertexInput.attributes.push_back(attribute0);
 
 			Attribute attribute1;
 			attribute1.binding = 0;
 			attribute1.location = 1;
-			attribute1.format = AttributeFormat::R32G32_SFLOAT; // vec2
+			attribute1.format = AttributeFormat::R32G32_SFLOAT;				// vec2
 			attribute1.offset = sizeof(float) * 3;
 			vertexInput.attributes.push_back(attribute1);
 		}
@@ -108,26 +116,46 @@ int main()
 		pipeline = context.device->create_pipeline(descriptor);
 
 		// Buffer:
-		BufferDescriptor bufferDesc;
 		{
-			bufferDesc.type = BufferType::VERTEX_BUFFER;
-			bufferDesc.usage = BufferUsage::STATIC;
+			BufferDescriptor bufferDesc;
+			{
+				bufferDesc.type = BufferType::VERTEX_BUFFER;
+				bufferDesc.usage = BufferUsage::STATIC;
+			}
+
+			DataBuffer data;
+			{
+				Vertex vertices[3] = {
+					{{ 0.0f, 0.0f, 0.0f },	{ 0.0f, 0.0f }},
+					{{ 1.0f, 0.0f, 0.0f },	{ 1.0f, 0.0f }},
+					{{ 1.0f, 1.0f, 0.0f },	{ 1.0f, 1.0f }},
+				};
+				data.data = vertices;
+				data.size = sizeof(vertices);
+			}
+			buffer = context.device->create_buffer(bufferDesc, data);
 		}
-		
-		DataBuffer data;
+
+		// Index:
 		{
-			Vertex vertices[3] = {
-				{{ 0.0f, 0.0f, 0.0f },	{ 0.0f, 0.0f }},
-				{{ 1.0f, 0.0f, 0.0f },	{ 1.0f, 0.0f }},
-				{{ 1.0f, 1.0f, 0.0f },	{ 1.0f, 1.0f }},
-			};
-			data.data = vertices;
-			data.size = sizeof(vertices);
+			BufferDescriptor bufferDesc;
+			{
+				bufferDesc.type = BufferType::INDEX_BUFFER;
+				bufferDesc.usage = BufferUsage::STATIC;
+			}
+
+			DataBuffer data;
+			{
+				unsigned int vertices[3] = {
+					0, 1, 2
+				};
+				data.data = vertices;
+				data.size = sizeof(vertices);
+			}
+			indexBuffer = context.device->create_buffer(bufferDesc, data);
 		}
-		buffer = context.device->create_buffer(bufferDesc, data);
 	}
 
-	initialize();
 	while (is_open_window(&context.window))
 	{
 		poll_events(&context.window);
@@ -138,6 +166,7 @@ int main()
 		context.commands->clear(ClearFlags::COLOR, ClearValue{ {0.16f, 0.16f, 0.16f, 1.f} });
 
 		context.commands->bind_vertex_buffer(buffer, 0);
+		context.commands->bind_index_buffer(indexBuffer);
 		{
 			context.commands->bind_pipeline(pipeline);
 			context.commands->draw(0, 3);

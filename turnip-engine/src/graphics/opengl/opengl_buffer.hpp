@@ -15,6 +15,29 @@ namespace tur::gl
 
 namespace tur::gl
 {
+	constexpr static inline gl_handle get_buffer_index_type(BufferIndexType type)
+	{
+		switch (type)
+		{
+			case BufferIndexType::UNSIGNED_BYTE:
+				return GL_UNSIGNED_BYTE;
+
+			case BufferIndexType::UNSIGNED_SHORT:
+				return GL_UNSIGNED_SHORT;
+
+			case BufferIndexType::UNSIGNED_INT:
+				return GL_UNSIGNED_INT;
+		}
+
+		TUR_LOG_ERROR("Invalid Index Buffer Type: {}. Default: GL_UNSIGNED_INT",
+			static_cast<int>(type));
+
+		return GL_UNSIGNED_INT;
+	}
+}
+
+namespace tur::gl
+{
 	constexpr static inline gl_handle get_buffer_type(BufferType type)
 	{
 		switch (type)
@@ -22,7 +45,7 @@ namespace tur::gl
 			case BufferType::VERTEX_BUFFER:
 				return GL_ARRAY_BUFFER;
 
-			case BufferType::ELEMENT_ARRAY_BUFFER:
+			case BufferType::INDEX_BUFFER:
 				return GL_ELEMENT_ARRAY_BUFFER;
 
 			case BufferType::UNIFORM_BUFFER:

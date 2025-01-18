@@ -3,12 +3,22 @@
 
 namespace tur
 {
+	enum class BufferIndexType : uint8_t
+	{
+		UNSIGNED_BYTE,
+		UNSIGNED_SHORT,
+		UNSIGNED_INT
+	};
+}
+
+namespace tur
+{
 	using buffer_handle = handle_type;
 
 	enum class BufferType
 	{
 		VERTEX_BUFFER,
-		ELEMENT_ARRAY_BUFFER,
+		INDEX_BUFFER,
 		UNIFORM_BUFFER,
 	};
 

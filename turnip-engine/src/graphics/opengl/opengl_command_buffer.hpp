@@ -35,6 +35,7 @@ namespace tur::gl
 		void bind_texture_impl(texture_handle handle);
 
 		void draw_impl(uint32_t first, uint32_t vertexCount);
+		void draw_impl(uint32_t count, BufferIndexType type);
 		
 		void submit()
 		{
@@ -47,6 +48,7 @@ namespace tur::gl
 	private:
 		gl_handle m_VAO = invalid_handle;
 
+		Buffer m_IndexBuffer;
 		Pipeline m_ActivePipeline;
 		std::unordered_map<int, int> m_BufferBindings;
 

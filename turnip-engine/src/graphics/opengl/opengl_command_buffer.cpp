@@ -73,7 +73,8 @@ namespace tur::gl
 
 	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle)
 	{
-		
+		Buffer buffer = r_Device->get_buffers().get(handle);
+		m_IndexBuffer = buffer;
 	}
 
 	void CommandBufferGL::bind_texture_impl(texture_handle handle)
@@ -85,6 +86,12 @@ namespace tur::gl
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
 		glDrawArrays(topology, first, vertexCount);
+	}
+
+	void CommandBufferGL::draw_impl(uint32_t count, BufferIndexType type)
+	{
+		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
+		glDrawElements(topology, count, get_buffer_index_type(type), nullptr);
 	}
 }
 namespace tur::gl
