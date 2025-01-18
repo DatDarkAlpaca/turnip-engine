@@ -15,31 +15,14 @@ struct ApplicationContext
 	tur_unique<CommandBuffer> commands;
 } context;
 
-static void initialize_context(ApplicationContext* context)
-{
-	// Logger:
-	initialize_logger_system();
-
-	// Worker Pool:
-	context->workerPool.initialize();
-
-	// Window:
-	context->window.title = "TurnipEngine v1.0";
-	initialize_windowing_system();
-	{
-		GraphicsSpecification specification;
-		specification.major = 4;
-		specification.minor = 3;
-		specification.api = GraphicsAPI::OPENGL;
-
-		initialize_opengl_windowing(&context->window, specification);
-	}
-}
-
 // Application:
 static void initialize()
 {
+	using namespace std::chrono_literals;
+
+	// Textures:
 	context.workerPool.submit<asset_handle>([&]() {
+		std::this_thread::sleep_for(2000ms);
 		return load_texture_asset(&context.assetLibrary, "res/textures/face.png");
 	}, [&](asset_handle handle) {
 		auto filepath = context.assetLibrary.textures.get(handle).filepath;
@@ -57,11 +40,32 @@ static void on_update()
 
 }
 
+static void initialize_context(ApplicationContext* context)
+{
+	// Logger:
+	initialize_logger_system();
+
+	// Worker Pool:
+	context->workerPool.initialize();
+
+	// Window:
+	context->window.title = "TurnipEngine v1.0";
+	initialize_windowing_system();
+	set_callback_window(&context->window, on_event);
+
+	{
+		GraphicsSpecification specification;
+		specification.major = 4;
+		specification.minor = 3;
+		specification.api = GraphicsAPI::OPENGL;
+
+		initialize_opengl_windowing(&context->window, specification);
+	}
+}
+
 int main()
 {
 	initialize_context(&context);
-	set_callback_window(&context.window, on_event);
-
 	initialize();
 
 	// Graphics:
@@ -69,7 +73,6 @@ int main()
 	buffer_handle buffer;
 	buffer_handle indexBuffer;
 	{
-		// Pipeline:
 		context.device = tur::make_unique<GraphicsDevice>(&context.window);
 		context.device->initialize();
 
@@ -85,7 +88,7 @@ int main()
 			glm::vec2 uvs;
 		};
 
-		VertexInputDescriptor vertexInput; 
+		VertexInputDescriptor vertexInput;
 		{
 			BindingDescription bindingDescription;
 			bindingDescription.binding = 0;
@@ -125,10 +128,11 @@ int main()
 
 			DataBuffer data;
 			{
-				Vertex vertices[3] = {
+				Vertex vertices[4] = {
 					{{ 0.0f, 0.0f, 0.0f },	{ 0.0f, 0.0f }},
 					{{ 1.0f, 0.0f, 0.0f },	{ 1.0f, 0.0f }},
 					{{ 1.0f, 1.0f, 0.0f },	{ 1.0f, 1.0f }},
+					{{ 0.0f, 1.0f, 0.0f },	{ 0.0f, 1.0f }},
 				};
 				data.data = vertices;
 				data.size = sizeof(vertices);
@@ -146,9 +150,7 @@ int main()
 
 			DataBuffer data;
 			{
-				unsigned int vertices[3] = {
-					0, 1, 2
-				};
+				unsigned int vertices[] = { 0, 1, 2, 2, 3, 0 };
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
@@ -163,13 +165,13 @@ int main()
 		on_update();
 
 		context.commands->begin();
-		context.commands->clear(ClearFlags::COLOR, ClearValue{ {0.16f, 0.16f, 0.16f, 1.f} });
+		context.commands->clear(ClearFlags::COLOR, ClearValue{{ 0.16f, 0.16f, 0.16f, 1.f }});
 
 		context.commands->bind_vertex_buffer(buffer, 0);
 		context.commands->bind_index_buffer(indexBuffer);
 		{
 			context.commands->bind_pipeline(pipeline);
-			context.commands->draw(0, 3);
+			context.commands->draw(6, BufferIndexType::UNSIGNED_INT);
 		}
 
 		context.commands->end();

@@ -62,7 +62,7 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->draw_impl(first, vertexCount);
 		};
-		void draw_impl(uint32_t count, BufferIndexType type)
+		void draw(uint32_t count, BufferIndexType type)
 		{
 			static_cast<CommandBuffer*>(this)->draw_impl(count, type);
 		}

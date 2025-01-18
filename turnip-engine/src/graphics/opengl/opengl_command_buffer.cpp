@@ -90,6 +90,8 @@ namespace tur::gl
 
 	void CommandBufferGL::draw_impl(uint32_t count, BufferIndexType type)
 	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer.handle);
+
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
 		glDrawElements(topology, count, get_buffer_index_type(type), nullptr);
 	}
