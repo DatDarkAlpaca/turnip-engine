@@ -1,6 +1,6 @@
 #pragma once
 #include <numeric>
-#include "Utils/Random/Random.hpp"
+#include "utils/random/random.hpp"
 
 namespace tur
 {
@@ -8,7 +8,7 @@ namespace tur
 	{
 	public:
 		UUID()
-			: m_UUID(GenerateRandom<std::uint64_t>())
+			: m_UUID(generate_random<std::uint64_t>())
 		{
 
 		}

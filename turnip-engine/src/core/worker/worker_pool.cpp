@@ -22,6 +22,16 @@ namespace tur
 			m_Threads.emplace_back(std::bind(&WorkerPool::worker_function, this));
 	}
 
+	void WorkerPool::poll_tasks()
+	{
+		std::unique_lock<std::mutex> lock(m_QueueMutex);
+
+		for (const auto& task : m_Callbacks)
+			task();
+
+		m_Callbacks.clear();
+	}
+
 	void WorkerPool::worker_function()
 	{
 		while (true)

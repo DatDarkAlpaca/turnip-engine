@@ -37,11 +37,6 @@ namespace tur::gl
 		void draw_impl(uint32_t first, uint32_t vertexCount);
 		void draw_impl(uint32_t count, BufferIndexType type);
 		
-		void submit()
-		{
-
-		}
-
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);
 

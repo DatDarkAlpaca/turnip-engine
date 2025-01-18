@@ -13,9 +13,9 @@ namespace tur
 	class BaseGraphicsDevice
 	{
 	public:
-		void initialize()
+		void initialize(NON_OWNING Window* window)
 		{
-			static_cast<Backend*>(this)->initialize_impl();
+			static_cast<Backend*>(this)->initialize_impl(window);
 		}
 
 		void present()

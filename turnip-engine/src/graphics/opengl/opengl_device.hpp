@@ -16,11 +16,8 @@ namespace tur::gl
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceGL>;
 
-	public:
-		GraphicsDeviceGL(NON_OWNING Window* window);
-
 	protected:
-		void initialize_impl();
+		void initialize_impl(NON_OWNING Window* window);
 
 		void present_impl();
 

@@ -8,10 +8,18 @@ namespace tur
 {
 	using view_handle = handle_type;
 
+	class TurnipEngine;
+
 	class View
 	{
 	public:
 		virtual ~View() = default;
+
+	public:
+		void set_engine(TurnipEngine* engine)
+		{
+			r_Engine = engine;
+		}
 
 	public:
 		virtual void on_engine_startup() { };
@@ -29,15 +37,19 @@ namespace tur
 		virtual void on_view_removed() { };
 
 		virtual void on_engine_shutdown() { };
+
+	protected:
+		NON_OWNING TurnipEngine* r_Engine = nullptr;
 	};
-
-
+}
+namespace tur
+{
 	struct ViewSystem
 	{
 		std::vector<tur_unique<View>> views;
 	};
-
-	view_handle add_view(ViewSystem* system, tur_unique<View> view)
+	
+	inline view_handle view_system_add(ViewSystem* system, tur_unique<View> view)
 	{
 		view->on_view_added();
 
@@ -45,7 +57,7 @@ namespace tur
 		return system->views.size() - 1;
 	}
 
-	void remove_view(ViewSystem* system, view_handle handle)
+	inline void view_system_remove(ViewSystem* system, view_handle handle)
 	{
 		auto viewSystemIterator = system->views.begin() + handle;
 		viewSystemIterator->get()->on_view_removed();
@@ -53,7 +65,7 @@ namespace tur
 		system->views.erase(viewSystemIterator);
 	}
 
-	tur_unique<View>& get_view(ViewSystem* system, view_handle handle)
+	inline tur_unique<View>& view_system_get(ViewSystem* system, view_handle handle)
 	{
 		return system->views[handle];
 	}

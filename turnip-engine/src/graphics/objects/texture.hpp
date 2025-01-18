@@ -9,6 +9,7 @@ namespace tur
     {
         TEXTURE_2D,
         TEXTURE_3D,
+        ARRAY_TEXTURE,
         CUBE_MAP,
     };
 

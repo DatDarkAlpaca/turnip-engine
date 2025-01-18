@@ -10,13 +10,10 @@
 
 namespace tur::gl
 {
-	GraphicsDeviceGL::GraphicsDeviceGL(NON_OWNING Window* window)
-		: r_Window(window)
+	void GraphicsDeviceGL::initialize_impl(NON_OWNING Window* window)
 	{
-	}
+		r_Window = window;
 
-	void GraphicsDeviceGL::initialize_impl()
-	{
 		m_Swapbuffer = tur::make_unique<Swapbuffer>();
 		initialize_swapbuffer(m_Swapbuffer.get(), r_Window);
 	}

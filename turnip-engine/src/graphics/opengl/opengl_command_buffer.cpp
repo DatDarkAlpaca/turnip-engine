@@ -7,6 +7,7 @@ namespace tur::gl
 	CommandBufferGL::CommandBufferGL(NON_OWNING GraphicsDeviceGL* device)
 		: r_Device(device)
 	{
+	
 	}
 
 	void CommandBufferGL::initialize_impl()
@@ -96,6 +97,7 @@ namespace tur::gl
 		glDrawElements(topology, count, get_buffer_index_type(type), nullptr);
 	}
 }
+
 namespace tur::gl
 {
 	void CommandBufferGL::setup_pipeline_bindings(const PipelineDescriptor& descriptor)

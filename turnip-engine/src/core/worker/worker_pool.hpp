@@ -23,6 +23,8 @@ namespace tur
 	public:
 		void initialize(uint64_t threadAmount = std::thread::hardware_concurrency());
 
+		void poll_tasks();
+
 	public:
 		template<typename ReturnType>
 		void submit(std::function<ReturnType()> task, std::function<void(ReturnType)> callback = {})
@@ -30,9 +32,9 @@ namespace tur
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
 
-				m_Tasks.emplace_back([task, callback]() {
+				m_Tasks.emplace_back([&, callback, task]() {
 					ReturnType returnValue = task();
-					callback(returnValue);
+					m_Callbacks.push_back([callback, returnValue]() { callback(returnValue); });
 				});
 			}
 
@@ -44,6 +46,7 @@ namespace tur
 
 	private:
 		std::vector<std::thread> m_Threads;
+		std::vector<task_t> m_Callbacks;
 		std::deque<task_t> m_Tasks;
 
 		std::condition_variable m_ConditionalVar;
