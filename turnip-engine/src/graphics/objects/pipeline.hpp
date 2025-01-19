@@ -90,12 +90,14 @@ namespace tur
     enum class BindingTypes
     {
         SAMPLER,
+        IMAGE_SAMPLER,
         UNIFORM_BUFFER,
         STORAGE_BUFFER
     };
 
-    struct BindingDescriptor
+    struct DescriptorDescripion
     {
+        uint32_t binding;
         BindingTypes type;
         PipelineStage stages;
     };
@@ -115,12 +117,16 @@ namespace tur
             pushConstants.push_back(pushConstant);
         }
 
+        void add_binding(const DescriptorDescripion& binding)
+        {
+            bindingDescriptors.push_back(binding);
+        }
+
     public:
         std::vector<PushConstant> pushConstants;
-        std::vector<BindingDescriptor> bindingDescriptors;
+        std::vector<DescriptorDescripion> bindingDescriptors;
     };
 }
-
 
 namespace tur
 {

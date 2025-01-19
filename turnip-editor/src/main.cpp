@@ -16,13 +16,13 @@ public:
 		m_MainCamera.set_orthogonal(0.0f, 640.0f, 480.f, 0.f, -1.f, 1.f);
 
 		// Scene:
-		auto entity = m_Scene.add_entity();
+		m_Entity = m_Scene.add_entity();
 		{
 			glm::mat4 model(1.f);
-			float scale = 100.f;
+			float scale = 50.f;
 			model = glm::translate(model, glm::vec3(640.f / 2, 480.f / 2, 1.f));
 			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
-			entity.add_component<TransformComponent>(model);
+			m_Entity.add_component<TransformComponent>(model);
 		}
 
 		// Render System:
@@ -59,14 +59,18 @@ private:
 			}
 
 			m_Texture = r_Engine->get_graphics_device().create_texture(descriptor, texture);
+			m_Entity.add_component<TextureComponent>(m_Texture);
 		});
 	}
 
 private:
 	Scene m_Scene;
+	Entity m_Entity;
 	Camera m_MainCamera;
-	texture_handle m_Texture;
 	QuadRendererSystem m_RenderSystem;
+
+private:
+	texture_handle m_Texture = invalid_handle;
 };
 
 int main()

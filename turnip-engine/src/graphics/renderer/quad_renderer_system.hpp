@@ -19,13 +19,27 @@ namespace tur
 		{
 			auto& registry = r_Scene->get_registry();
 
-			auto view = registry.view<TransformComponent>();
-			for (auto [entity, transformComponent] : view.each())
+			auto view0 = registry.view<TransformComponent>();
+			for (auto [entity, transformComponent] : view0.each())
 			{
 				const auto& transform = transformComponent.transform;
 
 				QuadRenderer::QuadData quadData;
 				quadData.transform = transform;
+				quadData.texture = invalid_handle;
+
+				m_Renderer.add_quad(quadData);
+			}
+
+			auto view1 = registry.view<TransformComponent, TextureComponent>();
+			for (auto [entity, transformComponent, textureComponent] : view1.each())
+			{
+				const auto& transform = transformComponent.transform;
+				const auto& texture = textureComponent.handle;
+
+				QuadRenderer::QuadData quadData;
+				quadData.transform = transform;
+				quadData.texture = texture;
 
 				m_Renderer.add_quad(quadData);
 			}

@@ -1,6 +1,7 @@
 #pragma once
-#include "Utils/UUID/UUID.hpp"
 #include <string>
+#include "graphics/graphics.hpp"
+#include "utils/uuid/uuid.hpp"
 
 namespace tur
 {
@@ -34,5 +35,16 @@ namespace tur
 
 	public:
 		glm::mat4 transform;
+	};
+
+	struct TextureComponent
+	{
+	public:
+		TextureComponent() = default;
+		TextureComponent(const TextureComponent&) = default;
+		TextureComponent(texture_handle handle) : handle(handle) { }
+
+	public:
+		texture_handle handle;
 	};
 }

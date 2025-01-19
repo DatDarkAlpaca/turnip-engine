@@ -29,6 +29,10 @@ namespace tur
 			for (const auto& quad : m_Quads)
 			{
 				bind_mvp(quad.transform);
+
+				if(quad.texture != invalid_handle)
+					m_Commands->bind_texture(quad.texture);
+
 				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 			}
 		}
@@ -64,22 +68,18 @@ namespace tur
 		// Pipeline Layout (Push constants):
 		PipelineLayout layout;
 		{
-			PushConstant constant;
+			DescriptorDescripion description;
 			{
-				constant.offset = 0;
-				constant.byteSize = sizeof(glm::mat4);
-				constant.stages = PipelineStage::ALL;
-				layout.add_push_constant(constant);
+				description.binding = 0;
+				description.stages = PipelineStage::VERTEX_STAGE;
+				description.type = BindingTypes::UNIFORM_BUFFER;
+				layout.add_binding(description);
 			}
-
 			{
-				constant.offset = sizeof(glm::mat4);
-				layout.add_push_constant(constant);
-			}
-
-			{
-				constant.offset = 2 * sizeof(glm::mat4);
-				layout.add_push_constant(constant);
+				description.binding = 1;
+				description.stages = PipelineStage::FRAGMENT_STAGE;
+				description.type = BindingTypes::IMAGE_SAMPLER;
+				layout.add_binding(description);
 			}
 		}
 		
@@ -118,7 +118,7 @@ namespace tur
 
 	void QuadRenderer::initialize_buffers()
 	{
-		// Buffer:
+		// Vertex Buffer:
 		{
 			BufferDescriptor bufferDesc;
 			{
@@ -156,17 +156,31 @@ namespace tur
 			}
 			indexBuffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
 		}
+
+		// Uniform Buffer:
+		{
+			BufferDescriptor bufferDesc;
+			{
+				bufferDesc.type = BufferType::UNIFORM_BUFFER;
+				bufferDesc.usage = BufferUsage::DYNAMIC;
+			}
+			uniformBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(glm::mat4) * 3);
+		}
 	}
 
 	void QuadRenderer::bind_mvp(const glm::mat4& transform)
 	{
-		m_Commands->push_constants(0 * sizeof(glm::mat4), PipelineStage::ALL, 
-			{ (void*)glm::value_ptr(transform), sizeof(glm::mat4) });
+		glm::mat4 matrices[3] = {
+			transform,
+			r_Camera->view(),
+			r_Camera->projection()
+		};
 
-		m_Commands->push_constants(1 * sizeof(glm::mat4), PipelineStage::ALL,
-			{ (void*)glm::value_ptr(r_Camera->view()), sizeof(glm::mat4) });
+		DataBuffer dataBuffer;
+		dataBuffer.size = sizeof(matrices);
+		dataBuffer.data = matrices;
 
-		m_Commands->push_constants(2 * sizeof(glm::mat4), PipelineStage::ALL, 
-			{ (void*)glm::value_ptr(r_Camera->projection()), sizeof(glm::mat4) });
+		m_Commands->update_buffer(uniformBuffer, 0, dataBuffer);
+		m_Commands->bind_descriptors(uniformBuffer, 0);
 	}
 }

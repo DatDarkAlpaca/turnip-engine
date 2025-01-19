@@ -47,6 +47,7 @@ namespace tur
 		glm::vec4 m_ClearColor;
 
 	private:
+		buffer_handle uniformBuffer;
 		buffer_handle indexBuffer;
 		buffer_handle buffer;
 

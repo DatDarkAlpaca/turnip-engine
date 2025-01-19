@@ -23,25 +23,24 @@ namespace tur::gl
 		void end_impl();
 
 	protected:
-		// virtual void begin_render_pass(renderpass_handle handle) { };
-		// virtual void end_render_pass() { };
-
 		void set_viewport_impl(const Viewport& viewport);
 		void set_scissor_impl(const Rect2D& scissor);
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
-		void update_buffer(buffer_handle handle, u32 offset, const DataBuffer& data);
+		void update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data);
 
 		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding);
 		void bind_index_buffer_impl(buffer_handle handle);
 		void bind_uniform_buffer_impl(buffer_handle handle = invalid_handle);
-		void bind_texture_impl(texture_handle handle);
+		void bind_texture_impl(texture_handle handle, u32 textureUnit);
+		void bind_descriptors_impl(buffer_handle handle, uint32_t binding);
 
 		void push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data);
 
 		void draw_impl(u32 first, u32 vertexCount);
 		void draw_impl(u32 count, BufferIndexType type);
+		void draw_instanced_impl(u32 first, u32 vertexCount, u32 instanceCount);
 		
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);

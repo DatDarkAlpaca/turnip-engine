@@ -21,16 +21,12 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->begin_impl();
 		};
-
 		void end()
 		{
 			static_cast<CommandBuffer*>(this)->end_impl();
 		};
 
 	public:
-		// virtual void begin_render_pass(renderpass_handle handle) { };
-		// virtual void end_render_pass() { };
-
 		void set_viewport(const Viewport& viewport)
 		{
 			static_cast<CommandBuffer*>(this)->set_viewport_impl(viewport);
@@ -65,9 +61,13 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_uniform_buffer_impl(handle);
 		}
-		void bind_texture(texture_handle handle)
+		void bind_texture(texture_handle handle, u32 textureUnit = invalid_handle)
 		{
-			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle);
+			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
+		}
+		void bind_descriptors(buffer_handle handle, uint32_t binding)
+		{
+			static_cast<CommandBuffer*>(this)->bind_descriptors_impl(handle, binding);
 		}
 
 		void push_constants(u32 offset, PipelineStage stages, const DataBuffer& data)
@@ -83,9 +83,10 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->draw_impl(count, type);
 		}
-		// void draw_instanced(u32 first, u32 vertexCount, u32 instanceCount) { };
-		// void draw_indexed(u32 indexCount, u32 instanceCount = 1) { };
-		// void draw_indexed_instanced(u32 indexCount, u32 instanceCount) {} ;
+		void draw_instanced(u32 first, u32 vertexCount, u32 instanceCount) 
+		{
+			static_cast<CommandBuffer*>(this)->draw_instanced_impl(first, vertexCount, instanceCount);
+		};
 
 		void submit(u32 first, u32 vertexCount)
 		{
