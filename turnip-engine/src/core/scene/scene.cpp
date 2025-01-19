@@ -44,7 +44,7 @@ namespace tur
 		auto& entityOption = find_entity_by_uuid(uuid);
 		if (!entityOption.has_value())
 		{
-			TUR_LOG_WARN("Failed to remove entity with UUID: {}", std::uint64_t(uuid));
+			TUR_LOG_WARN("Failed to remove entity with UUID: {}", static_cast<u64>(uuid));
 			return;
 		}
 

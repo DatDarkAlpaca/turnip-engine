@@ -17,7 +17,7 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
-		m_Commands->clear(ClearFlags::COLOR, ClearValue{ { 0.16f, 0.16f, 0.16f, 1.f } });
+		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
@@ -26,15 +26,31 @@ namespace tur
 
 			for (const auto& quad : m_Quads)
 			{
-				quad.texture;
+				DataBuffer constantsBuffer;
+				constantsBuffer.data = (void*)glm::value_ptr(quad.transform);
+				constantsBuffer.size = sizeof(glm::mat4);
 
-
+				m_Commands->push_constants(0, PipelineStage::ALL, constantsBuffer);
 				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 			}
-			
 		}
 
 		m_Commands->end();
+	}
+
+	void QuadRenderer::set_clear_color(const glm::vec4& color)
+	{
+		m_ClearColor = color;
+	}
+
+	void QuadRenderer::add_quad(const QuadData& quad)
+	{
+		m_Quads.push_back(quad);
+	}
+
+	void QuadRenderer::clear_quads()
+	{
+		m_Quads.clear();
 	}
 
 	void QuadRenderer::initialize_pipeline()
@@ -42,11 +58,24 @@ namespace tur
 		// TODO: allow for different filepaths.
 		shader_handle vertexShader = m_GraphicsDevice->create_shader(ShaderDescriptor
 			{ "res/shaders/quad.vert", ShaderType::VERTEX
-			});
+		});
 		shader_handle fragmentShader = m_GraphicsDevice->create_shader(ShaderDescriptor
 			{ "res/shaders/quad.frag", ShaderType::FRAGMENT
-			});
+		});
 
+		// Pipeline Layout (Push constants):
+		PipelineLayout layout;
+		{
+			PushConstant constant;
+			{
+				constant.offset = 0;
+				constant.byteSize = sizeof(glm::mat4);
+				constant.stages = PipelineStage::ALL;
+			}
+			layout.add_push_constant(constant);
+		}
+		
+		// Vertex Input:
 		VertexInputDescriptor vertexInput;
 		{
 			BindingDescription bindingDescription;
@@ -74,6 +103,7 @@ namespace tur
 		descriptor.vertexInputStage = vertexInput;
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
+		descriptor.pipelineLayout = layout;
 
 		pipeline = m_GraphicsDevice->create_pipeline(descriptor);
 	}

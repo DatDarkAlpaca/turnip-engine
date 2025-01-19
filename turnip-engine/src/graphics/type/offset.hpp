@@ -5,7 +5,7 @@ namespace tur
 {
 	struct Offset2D
 	{
-		uint32_t x;
-		uint32_t y;
+		u32 x;
+		u32 y;
 	};
 }

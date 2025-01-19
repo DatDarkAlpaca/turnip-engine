@@ -7,7 +7,7 @@ namespace tur
 	struct CPU_ID
 	{
 	public:
-		explicit CPU_ID(uint32_t eax, uint32_t ecx)
+		explicit CPU_ID(u32 eax, u32 ecx)
 		{
 			// Todo: write a cpuid function for linux/macos
 #ifdef TUR_PLATFORM_WIN32
@@ -15,7 +15,7 @@ namespace tur
 #endif
 		}
 
-		explicit CPU_ID(uint32_t eax)
+		explicit CPU_ID(u32 eax)
 		{
 #ifdef TUR_PLATFORM_WIN32
 			__cpuid(reinterpret_cast<int*>(registers), eax);
@@ -23,16 +23,16 @@ namespace tur
 		}
 
 	public:
-		const uint32_t& eax() const { return registers[0]; }
+		const u32& eax() const { return registers[0]; }
 
-		const uint32_t& ebx() const { return registers[1]; }
+		const u32& ebx() const { return registers[1]; }
 
-		const uint32_t& ecx() const { return registers[2]; }
+		const u32& ecx() const { return registers[2]; }
 
-		const uint32_t& edx() const { return registers[3]; }
+		const u32& edx() const { return registers[3]; }
 
 	public:
-		uint32_t registers[4] = { 0, 0, 0, 0 };
+		u32 registers[4] = { 0, 0, 0, 0 };
 	};
 }
 
@@ -72,7 +72,7 @@ namespace tur
 
 	std::string CPU_Information::brand() const
 	{
-		char str[sizeof(uint32_t) * 13];
+		char str[sizeof(u32) * 13];
 
 		CPU_ID cpuID_Part0 = CPU_ID(0x80000000);
 		if (cpuID_Part0.eax() < 0x80000004)
@@ -84,19 +84,19 @@ namespace tur
 
 		memcpy(
 			str, 
-			reinterpret_cast<uint32_t*>(cpuID_Part0.registers), 
+			reinterpret_cast<u32*>(cpuID_Part0.registers),
 			sizeof(cpuID_Part0.registers)
 		);
 
 		memcpy(
 			str + sizeof(cpuID_Part0.registers), 
-			reinterpret_cast<uint32_t*>(cpuID_Part1.registers),
+			reinterpret_cast<u32*>(cpuID_Part1.registers),
 			sizeof(cpuID_Part1.registers)
 		);
 
 		memcpy(
 			str + sizeof(cpuID_Part0.registers) + sizeof(cpuID_Part1.registers), 
-			reinterpret_cast<uint32_t*>(cpuID_Part2.registers),
+			reinterpret_cast<u32*>(cpuID_Part2.registers),
 			sizeof(cpuID_Part2.registers)
 		);
 

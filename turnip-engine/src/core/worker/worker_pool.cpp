@@ -16,7 +16,7 @@ namespace tur
 			thread.join();
 	}
 
-	void WorkerPool::initialize(uint64_t threadAmount)
+	void WorkerPool::initialize(u64 threadAmount)
 	{
 		for (size_t i = 0; i < threadAmount; ++i)
 			m_Threads.emplace_back(std::bind(&WorkerPool::worker_function, this));

@@ -27,23 +27,33 @@ namespace tur::gl
 	}
 
 
+	void CommandBufferGL::set_viewport_impl(const Viewport& viewport)
+	{
+		glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+	}
+
+	void CommandBufferGL::set_scissor_impl(const Rect2D& scissor)
+	{
+		glScissor(scissor.x, scissor.y, scissor.width, scissor.height);
+	}
+
 	void CommandBufferGL::clear_impl(ClearFlags flags, const ClearValue& clearValue)
 	{
 		gl_handle setBits = 0;
 
-		if (static_cast<uint32_t>(flags) & static_cast<uint32_t>(ClearFlags::COLOR))
+		if (static_cast<u32>(flags) & static_cast<u32>(ClearFlags::COLOR))
 		{
 			glClearColor(clearValue.color.r, clearValue.color.g, clearValue.color.b, clearValue.color.a);
 			setBits |= GL_COLOR_BUFFER_BIT;
 		}
 
-		if (static_cast<uint32_t>(flags) & static_cast<uint32_t>(ClearFlags::DEPTH))
+		if (static_cast<u32>(flags) & static_cast<u32>(ClearFlags::DEPTH))
 		{
 			glClearDepth(clearValue.depth);
 			setBits |= GL_DEPTH_BUFFER_BIT;
 		}
 
-		if (static_cast<uint32_t>(flags) & static_cast<uint32_t>(ClearFlags::STENCIL))
+		if (static_cast<u32>(flags) & static_cast<u32>(ClearFlags::STENCIL))
 		{
 			glClearStencil(clearValue.stencil);
 			setBits |= GL_STENCIL_BUFFER_BIT;
@@ -51,6 +61,7 @@ namespace tur::gl
 
 		glClear(setBits);
 	}
+
 
 	void CommandBufferGL::bind_pipeline_impl(pipeline_handle handle)
 	{
@@ -64,9 +75,28 @@ namespace tur::gl
 		glCullFace(get_cull_mode(descriptor.rasterizerStage.cullMode));
 
 		setup_pipeline_bindings(descriptor);
+
+		// Push Constants:
+		const auto& pushConstants = m_ActivePipeline.descriptor.pipelineLayout.pushConstants;
+		
+		u32 totalSize = 0;
+		for (const auto& constant : pushConstants)
+			totalSize += constant.byteSize;
+
+		// TODO: use cached push constants.
+		BufferDescriptor pushDescriptor;
+		{
+			pushDescriptor.type = BufferType::UNIFORM_BUFFER;
+			pushDescriptor.usage = BufferUsage::DYNAMIC;
+		}
+
+		if (m_PushConstantsBuffers.find(handle) == m_PushConstantsBuffers.end())
+			m_PushConstantsBuffers[handle] = r_Device->create_buffer(pushDescriptor, totalSize);
+
+		m_ActivePushConstantBuffer = m_PushConstantsBuffers[handle];
 	}
 
-	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, uint32_t binding)
+	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 	{
 		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
 		m_BufferBindings[binding] = bufferHandle;
@@ -78,18 +108,35 @@ namespace tur::gl
 		m_IndexBuffer = buffer;
 	}
 
+	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle)
+	{
+		if (handle != invalid_handle)
+			glBindBuffer(GL_UNIFORM_BUFFER, r_Device->get_buffers().get(handle).handle);
+		else
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
 	void CommandBufferGL::bind_texture_impl(texture_handle handle)
 	{
 	}
 
+	void CommandBufferGL::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
+	{
+		bind_uniform_buffer(m_ActivePushConstantBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, offset, data.size, data.data);
+		bind_uniform_buffer();
 
-	void CommandBufferGL::draw_impl(uint32_t first, uint32_t vertexCount)
+		glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_Device->get_buffers().get(m_ActivePushConstantBuffer).handle, offset, data.size);
+	}
+
+
+	void CommandBufferGL::draw_impl(u32 first, u32 vertexCount)
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
 		glDrawArrays(topology, first, vertexCount);
 	}
 
-	void CommandBufferGL::draw_impl(uint32_t count, BufferIndexType type)
+	void CommandBufferGL::draw_impl(u32 count, BufferIndexType type)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer.handle);
 

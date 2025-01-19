@@ -2,7 +2,7 @@
 #include <entt/entt.hpp>
 #include <optional>
 
-#include "Utils/UUID/UUID.hpp"
+#include "utils/uuid/uuid.hpp"
 
 namespace tur
 {
@@ -27,7 +27,9 @@ namespace tur
 		std::vector<Entity> find_entities_by_name(const std::string& name);
 
 	public:
-		inline uint64_t get_entity_count() const { return m_Diagnostics.entityCount; }
+		inline u64 get_entity_count() const { return m_Diagnostics.entityCount; }
+
+		inline entt::registry& get_registry() { return m_Registry; }
 
 	private:
 		entt::registry m_Registry;
@@ -35,7 +37,7 @@ namespace tur
 
 		struct Diagnostics
 		{
-			uint64_t entityCount = 0;
+			u64 entityCount = 0;
 		} m_Diagnostics;
 	};
 }

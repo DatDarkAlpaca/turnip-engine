@@ -12,10 +12,10 @@ namespace tur
 	struct GraphicsSpecification
 	{
 		GraphicsAPI api = GraphicsAPI::UNKNOWN;
-		uint8_t major = 0;
-		uint8_t minor = 0;
-		uint8_t patch = 0;
-		uint8_t variant = 0;
+		u8 major = 0;
+		u8 minor = 0;
+		u8 patch = 0;
+		u8 variant = 0;
 	};
 
 	inline std::string_view get_graphics_api_name(GraphicsAPI api)

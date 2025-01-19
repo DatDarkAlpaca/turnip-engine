@@ -21,7 +21,7 @@ namespace tur
 		~WorkerPool();
 
 	public:
-		void initialize(uint64_t threadAmount = std::thread::hardware_concurrency());
+		void initialize(u64 threadAmount = std::thread::hardware_concurrency());
 
 		void poll_tasks();
 

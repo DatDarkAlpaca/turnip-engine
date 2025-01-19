@@ -8,7 +8,7 @@
 
 namespace tur
 {
-	enum class Key : uint32_t
+	enum class Key : u32
 	{
 		KEY_UNKNOWN = 0U,
 
@@ -149,7 +149,7 @@ namespace tur
 		KEY_LAST,
 	};
 
-	enum class KeyboardMods : uint32_t
+	enum class KeyboardMods : u32
 	{
 		KEY_MOD_SHIFT			= 1 << 0,
 		KEY_MOD_CTRL			= 1 << 1,
@@ -163,22 +163,22 @@ namespace tur
 	{
 		std::vector<std::string> modResults;
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_SHIFT)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_SHIFT)
 			modResults.push_back("SHIFT");
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_CTRL)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_CTRL)
 			modResults.push_back("CTRL");
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_ALT)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_ALT)
 			modResults.push_back("ALT");
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_SUPER)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_SUPER)
 			modResults.push_back("SUPER");
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_CAPS_LOCK)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_CAPS_LOCK)
 			modResults.push_back("CAPS_LOCK");
 
-		if ((uint32_t)mods & (uint32_t)KeyboardMods::KEY_MOD_NUM_LOCK)
+		if ((u32)mods & (u32)KeyboardMods::KEY_MOD_NUM_LOCK)
 			modResults.push_back("NUM_LOCK");
 
 		if (modResults.size() == 0)

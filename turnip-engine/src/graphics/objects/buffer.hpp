@@ -3,7 +3,7 @@
 
 namespace tur
 {
-	enum class BufferIndexType : uint8_t
+	enum class BufferIndexType : u8
 	{
 		UNSIGNED_BYTE,
 		UNSIGNED_SHORT,

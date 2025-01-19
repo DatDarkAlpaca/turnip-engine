@@ -42,10 +42,10 @@ namespace tur
 
     struct TextureDescriptor
     {
-        uint32_t width = 0;
-        uint32_t height = 0;
-        uint32_t depth = 1;
-        uint32_t mipLevels = 1;
+        u32 width = 0;
+        u32 height = 0;
+        u32 depth = 1;
+        u32 mipLevels = 1;
 
         TextureFormat format;
         TextureType type;

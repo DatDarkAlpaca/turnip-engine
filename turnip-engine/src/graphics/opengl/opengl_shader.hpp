@@ -37,7 +37,7 @@ namespace tur::gl
                 return GL_COMPUTE_SHADER;
 
             default:
-                TUR_LOG_CRITICAL("OpenGL does not support the following shader type: {}", (uint32_t)type);
+                TUR_LOG_CRITICAL("OpenGL does not support the following shader type: {}", (u32)type);
         }
 
         return invalid_handle;
@@ -45,7 +45,7 @@ namespace tur::gl
 
     inline void check_compile_error(gl_handle shader, ShaderType type)
     {
-        constexpr uint64_t BufferSize = 256;
+        constexpr u64 BufferSize = 256;
 
         int success;
         char infoLog[BufferSize];

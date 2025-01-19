@@ -20,7 +20,20 @@
 
 namespace tur
 {
-	using handle_type = uint32_t;
+	using u8  = std::uint8_t;
+	using u16 = std::uint16_t;
+	using u32 = std::uint32_t;
+	using u64 = std::uint64_t;
+
+	using i8 = int8_t;
+	using i16 = int16_t;
+	using i32 = int32_t;
+	using i64 = int64_t;
+
+	using f32 = float;
+	using f64 = double;
+
+	using handle_type = u32;
 	constexpr handle_type invalid_handle = std::numeric_limits<handle_type>::max();
 
 	constexpr glm::uvec2 invalid_size = glm::uvec2(

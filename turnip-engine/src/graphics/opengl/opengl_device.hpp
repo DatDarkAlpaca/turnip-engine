@@ -25,6 +25,8 @@ namespace tur::gl
 		CommandBufferGL create_command_buffer_impl();
 
 	protected:
+		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize);
+
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data);

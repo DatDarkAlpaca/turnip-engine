@@ -6,4 +6,9 @@ namespace tur
 	{
 		float x = 0, y = 0, width, height;
 	};
+
+	struct Viewport
+	{
+		float x = 0, y = 0, width, height;
+	};
 }

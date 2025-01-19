@@ -5,7 +5,7 @@ namespace tur
 {
 	struct Extent2D
 	{
-		uint32_t width;
-		uint32_t height;
+		u32 width;
+		u32 height;
 	};
 }

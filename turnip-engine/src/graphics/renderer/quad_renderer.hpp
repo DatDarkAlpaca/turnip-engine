@@ -24,10 +24,11 @@ namespace tur
 		void render();
 
 	public:
-		void add_quad(const QuadData& quad)
-		{
-			m_Quads.push_back(quad);
-		}
+		void set_clear_color(const glm::vec4& color);
+
+		void add_quad(const QuadData& quad);
+
+		void clear_quads();
 
 	private:
 		void initialize_pipeline();
@@ -39,6 +40,7 @@ namespace tur
 		tur_unique<CommandBuffer> m_Commands;
 
 		std::vector<QuadData> m_Quads;
+		glm::vec4 m_ClearColor;
 
 	private:
 		buffer_handle indexBuffer;

@@ -13,7 +13,7 @@ namespace tur
         CLOCKWISE
     };
 
-    enum class CullMode : uint32_t
+    enum class CullMode : u32
     {
         NONE            = 1 << 0,
         FRONT           = 1 << 1,
@@ -21,14 +21,14 @@ namespace tur
         FRONT_AND_BACK  = 1 << 3
     };
 
-    inline uint32_t operator& (CullMode lhs, CullMode rhs)
+    inline u32 operator& (CullMode lhs, CullMode rhs)
     {
-        return static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs);
+        return static_cast<u32>(lhs) & static_cast<u32>(rhs);
     }
 
-    inline uint32_t operator| (CullMode lhs, CullMode rhs)
+    inline u32 operator| (CullMode lhs, CullMode rhs)
     {
-        return static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs);
+        return static_cast<u32>(lhs) | static_cast<u32>(rhs);
     }
 
     enum class PolygonMode
@@ -75,7 +75,38 @@ namespace tur
         R32G32_SINT,            // IVEC2
         R32G32B32A32_UINT,      // VEC4
     };
+
+    enum class PipelineStage
+    {
+        NONE                = 0,
+        VERTEX_STAGE        = 1 << 0,
+        FRAGMENT_STAGE      = 1 << 2,
+        ALL                 = VERTEX_STAGE | FRAGMENT_STAGE
+    };
 }
+
+namespace tur
+{
+    struct PushConstant
+    {
+        u32 offset;
+        u32 byteSize;
+        PipelineStage stages;
+    };
+    
+    struct PipelineLayout
+    {
+    public:
+        void add_push_constant(const PushConstant& pushConstant)
+        {
+            pushConstants.push_back(pushConstant);
+        }
+
+    public:
+        std::vector<PushConstant> pushConstants;
+    };
+}
+
 
 namespace tur
 {
@@ -83,17 +114,17 @@ namespace tur
 
     struct BindingDescription
     {
-        uint32_t binding = 0;
-        uint32_t stride  = 0;
+        u32 binding = 0;
+        u32 stride  = 0;
         InputRate inputRate = InputRate::VERTEX;
     };
 
     struct Attribute
     {
-        uint32_t binding  = 0;
-        uint32_t location = 0;
+        u32 binding  = 0;
+        u32 location = 0;
         AttributeFormat format = AttributeFormat::R32_SFLOAT;
-        uint32_t offset = 0;
+        u32 offset = 0;
         bool normalized = false;
     };
 
@@ -128,6 +159,8 @@ namespace tur
         VertexInputDescriptor vertexInputStage;
         InputAssemblyDescriptor inputAssemblyStage;
         RasterizerDescriptor rasterizerStage;
+
+        PipelineLayout pipelineLayout;
 
         shader_handle vertexShader = invalid_handle;
         shader_handle tesselationControlShader = invalid_handle;

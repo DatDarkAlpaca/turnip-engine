@@ -1,5 +1,7 @@
 #pragma once
 #include <numeric>
+
+#include "common.hpp"
 #include "utils/random/random.hpp"
 
 namespace tur
@@ -8,7 +10,7 @@ namespace tur
 	{
 	public:
 		UUID()
-			: m_UUID(generate_random<std::uint64_t>())
+			: m_UUID(generate_random<u64>())
 		{
 
 		}
@@ -17,7 +19,7 @@ namespace tur
 		operator uint64_t() const { return m_UUID; }
 
 	private:
-		std::uint64_t m_UUID;
+		u64 m_UUID;
 	};
 }
 
@@ -30,7 +32,7 @@ namespace std
 	{
 		size_t operator()(const tur::UUID& uuid) const
 		{
-			return (uint64_t)uuid;
+			return static_cast<uint64_t>(uuid);
 		}
 	};
 }

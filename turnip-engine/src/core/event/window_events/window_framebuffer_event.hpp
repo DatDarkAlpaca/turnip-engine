@@ -8,7 +8,7 @@ namespace tur
 		DEFINE_EVENT(EventType::WINDOW_FRAMEBUFFER_RESIZE);
 
 	public:
-		WindowFramebufferEvent(uint32_t width, uint32_t height)
+		WindowFramebufferEvent(u32 width, u32 height)
 			: width(width)
 			, height(height)
 		{
@@ -16,6 +16,6 @@ namespace tur
 		}
 
 	public:
-		uint32_t width = 0, height = 0;
+		u32 width = 0, height = 0;
 	};
 }

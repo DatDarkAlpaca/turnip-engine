@@ -30,6 +30,30 @@ namespace tur::gl
 	}
 
 
+	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize)
+	{
+		gl_handle bufferID;
+		glGenBuffers(1, &bufferID);
+
+		gl_handle bufferType = get_buffer_type(descriptor.type);
+
+		glBindBuffer(bufferType, bufferID);
+		glBufferData(
+			bufferType,
+			bufferSize,
+			nullptr,
+			get_buffer_usage(descriptor.usage)
+		);
+
+		glBindBuffer(bufferType, 0);
+
+		gl::Buffer buffer;
+		buffer.descriptor = descriptor;
+		buffer.handle = bufferID;
+
+		return static_cast<buffer_handle>(m_Buffers.add(buffer));
+	}
+
 	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
 		gl_handle bufferID;
@@ -98,7 +122,7 @@ namespace tur::gl
 		std::string contents = read_file(descriptor.filepath);
 		const char* cString = contents.c_str();
 
-		uint32_t shaderID = glCreateShader(get_shader_type(descriptor.type));
+		u32 shaderID = glCreateShader(get_shader_type(descriptor.type));
 		glShaderSource(shaderID, 1, &cString, NULL);
 		glCompileShader(shaderID);
 		check_compile_error(shaderID, descriptor.type);

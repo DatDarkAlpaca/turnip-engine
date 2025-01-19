@@ -136,10 +136,10 @@ namespace tur::gl
             return GL_UNSIGNED_INT;
         }
 
-        TUR_LOG_CRITICAL("Invalid Attribute Format: {}", static_cast<uint32_t>(format));
+        TUR_LOG_CRITICAL("Invalid Attribute Format: {}", static_cast<u32>(format));
     }
 
-    constexpr inline uint64_t get_format_size(AttributeFormat format)
+    constexpr inline u64 get_format_size(AttributeFormat format)
     {
         switch (format)
         {
@@ -165,15 +165,15 @@ namespace tur::gl
                 return 4;
         }
 
-        TUR_LOG_CRITICAL("Invalid Attribute Format [Size]: {}", static_cast<uint32_t>(format));
+        TUR_LOG_CRITICAL("Invalid Attribute Format [Size]: {}", static_cast<u64>(format));
     }
 }
 
 namespace tur::gl
 {
-    inline void check_program_link_errors(uint32_t program)
+    inline void check_program_link_errors(u32 program)
     {
-        constexpr uint64_t BufferSize = 256;
+        constexpr u64 BufferSize = 256;
 
         int success;
         char infoLog[BufferSize];

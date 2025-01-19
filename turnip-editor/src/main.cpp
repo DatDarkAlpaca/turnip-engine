@@ -12,13 +12,18 @@ public:
 	{
 		initialize_textures();
 
-		m_Renderer.initialize(&r_Engine->get_graphics_device());
-		m_Renderer.add_quad(QuadRenderer::QuadData{ glm::mat4(), m_Texture });
+		// Scene:
+		auto entity = m_Scene.add_entity();
+		entity.add_component<TransformComponent>(glm::mat4(1.f));
+			
+		// Render System:
+		m_RenderSystem.initialize(&m_Scene, &r_Engine->get_graphics_device());
+		m_RenderSystem.get_renderer().set_clear_color({ 0.16f, 0.16f, 0.16f, 1.f });
 	}
 
 	void on_render() override
 	{
-		m_Renderer.render();
+		m_RenderSystem.render();
 	};
 
 private:
@@ -49,8 +54,9 @@ private:
 	}
 
 private:
+	Scene m_Scene;
 	texture_handle m_Texture;
-	QuadRenderer m_Renderer;
+	QuadRendererSystem m_RenderSystem;
 };
 
 int main()

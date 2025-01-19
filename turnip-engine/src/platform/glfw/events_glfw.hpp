@@ -8,7 +8,7 @@
 
 namespace tur
 {
-	constexpr inline Key translate_key(GLFW_INPUT uint32_t key)
+	constexpr inline Key translate_key(GLFW_INPUT u32 key)
 	{
 		switch (key)
 		{
@@ -251,32 +251,32 @@ namespace tur
 		}
 	}
 
-	constexpr inline KeyboardMods translate_key_mods(GLFW_INPUT uint32_t mods)
+	constexpr inline KeyboardMods translate_key_mods(GLFW_INPUT u32 mods)
 	{
-		uint32_t result = 0;
+		u32 result = 0;
 
 		if (mods & GLFW_MOD_SHIFT)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_SHIFT;
+			result |= (u32)KeyboardMods::KEY_MOD_SHIFT;
 
 		if (mods & GLFW_MOD_CONTROL)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_CTRL;
+			result |= (u32)KeyboardMods::KEY_MOD_CTRL;
 
 		if (mods & GLFW_MOD_ALT)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_ALT;
+			result |= (u32)KeyboardMods::KEY_MOD_ALT;
 
 		if (mods & GLFW_MOD_SUPER)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_SUPER;
+			result |= (u32)KeyboardMods::KEY_MOD_SUPER;
 
 		if (mods & GLFW_MOD_CAPS_LOCK)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_CAPS_LOCK;
+			result |= (u32)KeyboardMods::KEY_MOD_CAPS_LOCK;
 
 		if (mods & GLFW_MOD_NUM_LOCK)
-			result |= (uint32_t)KeyboardMods::KEY_MOD_NUM_LOCK;
+			result |= (u32)KeyboardMods::KEY_MOD_NUM_LOCK;
 
 		return (KeyboardMods)result;
 	}
 
-	constexpr inline MouseButton translate_mouse_button(uint32_t mouseButton)
+	constexpr inline MouseButton translate_mouse_button(u32 mouseButton)
 	{
 		switch (mouseButton)
 		{

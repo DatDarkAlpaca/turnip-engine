@@ -24,9 +24,9 @@ namespace tur
 		TextureAsset asset;
 		asset.filepath = filepath;
 
-		asset.width = static_cast<uint32_t>(width);
-		asset.height = static_cast<uint32_t>(height);
-		asset.channels = static_cast<uint32_t>(channels);
+		asset.width = static_cast<u32>(width);
+		asset.height = static_cast<u32>(height);
+		asset.channels = static_cast<u32>(channels);
 		asset.data = buffer;
 
 		return static_cast<asset_handle>(assetLibrary->textures.add(asset));
@@ -51,9 +51,9 @@ namespace tur
 		TextureAsset asset;
 		asset.filepath = filepath;
 
-		asset.width = static_cast<uint32_t>(width);
-		asset.height = static_cast<uint32_t>(height);
-		asset.channels = static_cast<uint32_t>(channels);
+		asset.width = static_cast<u32>(width);
+		asset.height = static_cast<u32>(height);
+		asset.channels = static_cast<u32>(channels);
 		asset.data = buffer;
 		asset.floatTexture = true;
 

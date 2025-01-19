@@ -3,7 +3,7 @@
 
 namespace tur
 {
-	enum class EventType : uint64_t
+	enum class EventType : u32
 	{
 		UNKNOWN = 0,
 

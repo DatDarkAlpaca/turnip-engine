@@ -26,28 +26,35 @@ namespace tur::gl
 		// virtual void begin_render_pass(renderpass_handle handle) { };
 		// virtual void end_render_pass() { };
 
-		// void set_viewport(const Rect2D& rect) { };
+		void set_viewport_impl(const Viewport& viewport);
+		void set_scissor_impl(const Rect2D& scissor);
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
 		void bind_pipeline_impl(pipeline_handle handle);
-		void bind_vertex_buffer_impl(buffer_handle handle, uint32_t binding);
+		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding);
 		void bind_index_buffer_impl(buffer_handle handle);
+		void bind_uniform_buffer_impl(buffer_handle handle = invalid_handle);
 		void bind_texture_impl(texture_handle handle);
 
-		void draw_impl(uint32_t first, uint32_t vertexCount);
-		void draw_impl(uint32_t count, BufferIndexType type);
+		void push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data);
+
+		void draw_impl(u32 first, u32 vertexCount);
+		void draw_impl(u32 count, BufferIndexType type);
 		
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);
 
 	private:
-		gl_handle m_VAO = invalid_handle;
-
-		Buffer m_IndexBuffer;
-		Pipeline m_ActivePipeline;
-		std::unordered_map<int, int> m_BufferBindings;
+		NON_OWNING GraphicsDeviceGL* r_Device = nullptr;
 
 	private:
-		NON_OWNING GraphicsDeviceGL* r_Device = nullptr;
+		std::unordered_map<int, int> m_BufferBindings;
+		Pipeline m_ActivePipeline;
+		Buffer m_IndexBuffer;
+
+		std::unordered_map<pipeline_handle, buffer_handle> m_PushConstantsBuffers;
+		buffer_handle m_ActivePushConstantBuffer;
+
+		gl_handle m_VAO = invalid_handle;
 	};
 }

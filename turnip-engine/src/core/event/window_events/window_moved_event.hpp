@@ -8,7 +8,7 @@ namespace tur
 		DEFINE_EVENT(EventType::WINDOW_MOVED);
 
 	public:
-		WindowMovedEvent(uint32_t x, uint32_t y)
+		WindowMovedEvent(u32 x, u32 y)
 			: x(x)
 			, y(y)
 		{
@@ -16,6 +16,6 @@ namespace tur
 		}
 
 	public:
-		uint32_t x = 0, y = 0;
+		u32 x = 0, y = 0;
 	};
 }

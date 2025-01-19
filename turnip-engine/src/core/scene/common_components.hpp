@@ -24,4 +24,15 @@ namespace tur
 	public:
 		std::string name;
 	};
+
+	struct TransformComponent 
+	{
+	public:
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent&) = default;
+		TransformComponent(const glm::mat4& transform) : transform(transform) { }
+
+	public:
+		glm::mat4 transform;
+	};
 }
