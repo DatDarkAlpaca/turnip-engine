@@ -28,6 +28,9 @@ namespace tur
 
 		void set_default_texture(texture_handle handle);
 
+		void set_viewport(const Viewport& viewport);
+
+	public:
 		void add_quad(const QuadData& quad);
 
 		void clear_quads();
@@ -47,6 +50,7 @@ namespace tur
 
 		std::vector<QuadData> m_Quads;
 		glm::vec4 m_ClearColor;
+		Viewport m_Viewport;
 
 	private:
 		buffer_handle uniformBuffer;

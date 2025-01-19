@@ -26,8 +26,22 @@ public:
 		}
 
 		// Render System:
+		auto windowSize = r_Engine->get_window().size;
+
 		m_RenderSystem.initialize(&m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
 		m_RenderSystem.get_renderer().set_clear_color({ 0.16f, 0.16f, 0.16f, 1.f });
+		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+	}
+
+	void on_event(Event& event) override
+	{
+		Subscriber subscriber(event);
+		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
+			m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
+			m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
+
+			return false;
+		});
 	}
 
 	void on_render() override

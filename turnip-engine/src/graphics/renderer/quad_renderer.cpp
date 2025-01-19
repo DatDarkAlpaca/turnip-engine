@@ -19,7 +19,7 @@ namespace tur
 	{
 		m_Commands->begin();
 		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
-		m_Commands->set_viewport({ 0.0f, 0.0f, 640.f, 480.f }); // TODO: expose viewport
+		m_Commands->set_viewport(m_Viewport);
 
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
@@ -55,6 +55,11 @@ namespace tur
 	void QuadRenderer::set_default_texture(texture_handle handle)
 	{
 		defaultTexture = handle;
+	}
+
+	void QuadRenderer::set_viewport(const Viewport& viewport)
+	{
+		m_Viewport = viewport;
 	}
 
 	void QuadRenderer::add_quad(const QuadData& quad)
