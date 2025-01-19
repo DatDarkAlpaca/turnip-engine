@@ -87,6 +87,19 @@ namespace tur
 
 namespace tur
 {
+    enum class BindingTypes
+    {
+        SAMPLER,
+        UNIFORM_BUFFER,
+        STORAGE_BUFFER
+    };
+
+    struct BindingDescriptor
+    {
+        BindingTypes type;
+        PipelineStage stages;
+    };
+
     struct PushConstant
     {
         u32 offset;
@@ -104,6 +117,7 @@ namespace tur
 
     public:
         std::vector<PushConstant> pushConstants;
+        std::vector<BindingDescriptor> bindingDescriptors;
     };
 }
 

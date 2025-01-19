@@ -44,6 +44,11 @@ namespace tur
 			static_cast<CommandBuffer*>(this)->clear_impl(flags, clearValue);
 		}
 
+		void update_buffer(buffer_handle handle, u32 offset, const DataBuffer& data)
+		{
+			static_cast<CommandBuffer*>(this)->update_buffer_impl(handle, offset, data);
+		}
+
 		void bind_pipeline(pipeline_handle handle)
 		{
 			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);

@@ -3,11 +3,12 @@
 
 namespace tur
 {
-	void QuadRenderer::initialize(GraphicsDevice* graphicsDevice)
+	void QuadRenderer::initialize(GraphicsDevice* graphicsDevice, Camera* camera)
 	{
-		m_GraphicsDevice = graphicsDevice;
+		r_GraphicsDevice = graphicsDevice;
+		r_Camera = camera;
 
-		m_Commands = tur::make_unique<CommandBuffer>(m_GraphicsDevice->create_command_buffer());
+		m_Commands = tur::make_unique<CommandBuffer>(r_GraphicsDevice->create_command_buffer());
 		m_Commands->initialize();
 
 		initialize_pipeline();
@@ -18,6 +19,7 @@ namespace tur
 	{
 		m_Commands->begin();
 		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
+		m_Commands->set_viewport({ 0.0f, 0.0f, 640.f, 480.f }); // TODO: expose viewport
 
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
@@ -26,11 +28,7 @@ namespace tur
 
 			for (const auto& quad : m_Quads)
 			{
-				DataBuffer constantsBuffer;
-				constantsBuffer.data = (void*)glm::value_ptr(quad.transform);
-				constantsBuffer.size = sizeof(glm::mat4);
-
-				m_Commands->push_constants(0, PipelineStage::ALL, constantsBuffer);
+				bind_mvp(quad.transform);
 				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 			}
 		}
@@ -56,10 +54,10 @@ namespace tur
 	void QuadRenderer::initialize_pipeline()
 	{
 		// TODO: allow for different filepaths.
-		shader_handle vertexShader = m_GraphicsDevice->create_shader(ShaderDescriptor
+		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor
 			{ "res/shaders/quad.vert", ShaderType::VERTEX
 		});
-		shader_handle fragmentShader = m_GraphicsDevice->create_shader(ShaderDescriptor
+		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor
 			{ "res/shaders/quad.frag", ShaderType::FRAGMENT
 		});
 
@@ -71,8 +69,18 @@ namespace tur
 				constant.offset = 0;
 				constant.byteSize = sizeof(glm::mat4);
 				constant.stages = PipelineStage::ALL;
+				layout.add_push_constant(constant);
 			}
-			layout.add_push_constant(constant);
+
+			{
+				constant.offset = sizeof(glm::mat4);
+				layout.add_push_constant(constant);
+			}
+
+			{
+				constant.offset = 2 * sizeof(glm::mat4);
+				layout.add_push_constant(constant);
+			}
 		}
 		
 		// Vertex Input:
@@ -105,7 +113,7 @@ namespace tur
 		descriptor.vertexShader = vertexShader;
 		descriptor.pipelineLayout = layout;
 
-		pipeline = m_GraphicsDevice->create_pipeline(descriptor);
+		pipeline = r_GraphicsDevice->create_pipeline(descriptor);
 	}
 
 	void QuadRenderer::initialize_buffers()
@@ -121,15 +129,15 @@ namespace tur
 			DataBuffer data;
 			{
 				Vertex vertices[4] = {
-					{{ 0.0f, 0.0f, 0.0f },	{ 0.0f, 0.0f }},
-					{{ 0.5f, 0.0f, 0.0f },	{ 1.0f, 0.0f }},
-					{{ 0.5f, 0.5f, 0.0f },	{ 1.0f, 1.0f }},
-					{{ 0.0f, 0.5f, 0.0f },	{ 0.0f, 1.0f }},
+					{{ -0.5f, -0.5f, 0.0f },	{ 0.0f, 0.0f }},
+					{{  0.5f, -0.5f, 0.0f },	{ 1.0f, 0.0f }},
+					{{  0.5f,  0.5f, 0.0f },	{ 1.0f, 1.0f }},
+					{{ -0.5f,  0.5f, 0.0f },	{ 0.0f, 1.0f }},
 				};
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			buffer = m_GraphicsDevice->create_buffer(bufferDesc, data);
+			buffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
 		}
 
 		// Index:
@@ -146,7 +154,19 @@ namespace tur
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			indexBuffer = m_GraphicsDevice->create_buffer(bufferDesc, data);
+			indexBuffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
 		}
+	}
+
+	void QuadRenderer::bind_mvp(const glm::mat4& transform)
+	{
+		m_Commands->push_constants(0 * sizeof(glm::mat4), PipelineStage::ALL, 
+			{ (void*)glm::value_ptr(transform), sizeof(glm::mat4) });
+
+		m_Commands->push_constants(1 * sizeof(glm::mat4), PipelineStage::ALL,
+			{ (void*)glm::value_ptr(r_Camera->view()), sizeof(glm::mat4) });
+
+		m_Commands->push_constants(2 * sizeof(glm::mat4), PipelineStage::ALL, 
+			{ (void*)glm::value_ptr(r_Camera->projection()), sizeof(glm::mat4) });
 	}
 }

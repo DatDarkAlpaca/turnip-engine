@@ -62,6 +62,15 @@ namespace tur::gl
 		glClear(setBits);
 	}
 
+	void CommandBufferGL::update_buffer(buffer_handle handle, u32 offset, const DataBuffer& data)
+	{
+		Buffer buffer = r_Device->get_buffers().get(handle);
+		const auto& type = get_buffer_type(buffer.descriptor.type);
+
+		glBindBuffer(type, buffer.handle);
+		glBufferSubData(type, offset, data.size, data.data);
+		glBindBuffer(type, 0);
+	}
 
 	void CommandBufferGL::bind_pipeline_impl(pipeline_handle handle)
 	{
@@ -94,6 +103,8 @@ namespace tur::gl
 			m_PushConstantsBuffers[handle] = r_Device->create_buffer(pushDescriptor, totalSize);
 
 		m_ActivePushConstantBuffer = m_PushConstantsBuffers[handle];
+
+		glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_Device->get_buffers().get(m_ActivePushConstantBuffer).handle, 0, totalSize);
 	}
 
 	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
@@ -125,8 +136,6 @@ namespace tur::gl
 		bind_uniform_buffer(m_ActivePushConstantBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, offset, data.size, data.data);
 		bind_uniform_buffer();
-
-		glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_Device->get_buffers().get(m_ActivePushConstantBuffer).handle, offset, data.size);
 	}
 
 

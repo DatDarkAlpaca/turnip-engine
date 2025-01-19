@@ -8,9 +8,9 @@ namespace tur
 	struct QuadRendererSystem
 	{
 	public:
-		void initialize(Scene* scene, GraphicsDevice* device)
+		void initialize(Scene* scene, GraphicsDevice* device, Camera* camera)
 		{
-			m_Renderer.initialize(device);
+			m_Renderer.initialize(device, camera);
 			r_Scene = scene;
 		}
 

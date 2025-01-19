@@ -202,9 +202,10 @@ namespace tur::gl
 		{
 			texture.handle = textureID;
 			texture.descriptor = descriptor;
-			
 		}
 		
+		glBindTexture(textureType, 0);
+
 		return static_cast<texture_handle>(m_Textures.add(texture));
 	}
 

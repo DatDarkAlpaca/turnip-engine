@@ -19,7 +19,7 @@ namespace tur
 		};
 
 	public:
-		void initialize(GraphicsDevice* graphicsDevice);
+		void initialize(GraphicsDevice* graphicsDevice, Camera* camera);
 
 		void render();
 
@@ -35,8 +35,12 @@ namespace tur
 
 		void initialize_buffers();
 
+		void bind_mvp(const glm::mat4& transform);
+
 	private:
-		NON_OWNING GraphicsDevice* m_GraphicsDevice;
+		NON_OWNING GraphicsDevice* r_GraphicsDevice;
+		NON_OWNING Camera* r_Camera;
+
 		tur_unique<CommandBuffer> m_Commands;
 
 		std::vector<QuadData> m_Quads;

@@ -30,6 +30,8 @@ namespace tur::gl
 		void set_scissor_impl(const Rect2D& scissor);
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
+		void update_buffer(buffer_handle handle, u32 offset, const DataBuffer& data);
+
 		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding);
 		void bind_index_buffer_impl(buffer_handle handle);

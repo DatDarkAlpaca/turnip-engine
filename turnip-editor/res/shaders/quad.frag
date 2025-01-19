@@ -1,7 +1,8 @@
 #version 450 core
 out vec4 out_color;
 
-uniform sampler2D u_texture;
+layout (binding = 0) uniform sampler2D u_texture;
+
 in vec2 v_uvs;
 
 void main()
