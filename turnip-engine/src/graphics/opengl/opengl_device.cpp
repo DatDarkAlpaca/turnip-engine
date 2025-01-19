@@ -17,18 +17,15 @@ namespace tur::gl
 		m_Swapbuffer = tur::make_unique<Swapbuffer>();
 		initialize_swapbuffer(m_Swapbuffer.get(), r_Window);
 	}
-
 	void GraphicsDeviceGL::present_impl()
 	{
 		present_swapbuffer(m_Swapbuffer.get());
 	}
 
-
 	CommandBufferGL GraphicsDeviceGL::create_command_buffer_impl()
 	{
 		return CommandBufferGL(this);
 	}
-
 
 	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize)
 	{
@@ -53,7 +50,6 @@ namespace tur::gl
 
 		return static_cast<buffer_handle>(m_Buffers.add(buffer));
 	}
-
 	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
 		gl_handle bufferID;
@@ -77,7 +73,6 @@ namespace tur::gl
 
 		return static_cast<buffer_handle>(m_Buffers.add(buffer));
 	}
-
 	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data)
 	{
 		auto& buffer = m_Buffers.get(handle);
@@ -87,7 +82,6 @@ namespace tur::gl
 
 		glBindBuffer(get_buffer_type(buffer.descriptor.type), 0);
 	}
-
 	void* GraphicsDeviceGL::map_buffer_impl(buffer_handle handle)
 	{
 		auto& buffer = m_Buffers.get(handle);
@@ -99,7 +93,6 @@ namespace tur::gl
 
 		return mapped;
 	}
-
 	void GraphicsDeviceGL::unmap_buffer_impl(buffer_handle handle)
 	{
 		auto& buffer = m_Buffers.get(handle);
@@ -109,13 +102,11 @@ namespace tur::gl
 
 		glBindBuffer(get_buffer_type(buffer.descriptor.type), 0);
 	}
-
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{
 		auto& buffer = m_Buffers.get(handle);
 		glDeleteBuffers(1, &buffer.handle);
 	}
-
 
 	shader_handle GraphicsDeviceGL::create_shader_impl(const ShaderDescriptor& descriptor)
 	{
@@ -132,13 +123,11 @@ namespace tur::gl
 
 		return static_cast<texture_handle>(m_Shaders.add(shader));
 	}
-
 	void GraphicsDeviceGL::destroy_shader_impl(shader_handle handle)
 	{
 		glDeleteShader(m_Shaders.get(handle).handle);
 		m_Shaders.remove(handle);
 	}
-
 
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
@@ -146,13 +135,13 @@ namespace tur::gl
 		glGenTextures(1, &textureID);
 
 		gl_handle textureType = get_texture_type(descriptor.type);
-		bool generateMipmaps = descriptor.generateMipmaps;
 		gl_handle textureFormat = get_texture_format(descriptor.format);
+		bool generateMipmaps = descriptor.generateMipmaps;
 
 		// TODO: implement float textures | texture formats.
 
 		gl_handle dataFormat = asset.channels == 4 ? GL_RGBA : GL_RGB;
-		gl_handle dataFormatType = !asset.floatTexture ? GL_UNSIGNED_BYTE : GL_FLOAT;
+		gl_handle dataFormatType = asset.floatTexture ? GL_FLOAT : GL_UNSIGNED_BYTE;
 
 		glBindTexture(textureType, textureID);
 		switch (descriptor.type)
@@ -208,13 +197,11 @@ namespace tur::gl
 
 		return static_cast<texture_handle>(m_Textures.add(texture));
 	}
-
 	void GraphicsDeviceGL::destroy_texture_impl(texture_handle handle)
 	{
 		auto& texture = m_Textures.get(handle);
 		glDeleteTextures(1, &texture.handle);
 	}
-
 	pipeline_handle GraphicsDeviceGL::create_pipeline_impl(const PipelineDescriptor& descriptor)
 	{
 		gl_handle pipelineID = glCreateProgram();

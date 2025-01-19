@@ -26,25 +26,19 @@ namespace tur::gl
 
 	protected:
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize);
-
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data);
-
 		void* map_buffer_impl(buffer_handle handle);
-
 		void unmap_buffer_impl(buffer_handle handle);
-
 		void destroy_buffer_impl(buffer_handle handle);
 
 	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
-
 		void destroy_shader_impl(shader_handle handle);
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
-
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:

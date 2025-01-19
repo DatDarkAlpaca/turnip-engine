@@ -26,6 +26,8 @@ namespace tur
 	public:
 		void set_clear_color(const glm::vec4& color);
 
+		void set_default_texture(texture_handle handle);
+
 		void add_quad(const QuadData& quad);
 
 		void clear_quads();
@@ -50,7 +52,8 @@ namespace tur
 		buffer_handle uniformBuffer;
 		buffer_handle indexBuffer;
 		buffer_handle buffer;
+		texture_handle defaultTexture = invalid_handle;
 
-		pipeline_handle pipeline;
+ 		pipeline_handle pipeline;
 	};
 }

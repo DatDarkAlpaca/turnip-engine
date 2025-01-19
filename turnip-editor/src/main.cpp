@@ -41,9 +41,17 @@ private:
 		using namespace std::chrono_literals;
 
 		auto& assetLibrary = r_Engine->get_asset_library();
+		
+		// Default Texture:
+		{
+			auto [descriptor, asset] = create_default_texture();
+			auto defaultTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
+			m_RenderSystem.get_renderer().set_default_texture(defaultTexture);
+		}
 
+		// Face:
 		r_Engine->get_worker_pool().submit<asset_handle>([&]() {
-			std::this_thread::sleep_for(700ms);
+			std::this_thread::sleep_for(1000ms);
 			return load_texture_asset(&assetLibrary, "res/textures/face.png");
 		}, [&](asset_handle handle) {
 			auto texture = assetLibrary.textures.get(handle);

@@ -30,9 +30,16 @@ namespace tur
 			{
 				bind_mvp(quad.transform);
 
-				if(quad.texture != invalid_handle)
+				if (quad.texture != invalid_handle)
+				{
 					m_Commands->bind_texture(quad.texture);
-
+				}
+				else
+				{
+					if(defaultTexture != invalid_handle)
+						m_Commands->bind_texture(defaultTexture);
+				}
+			
 				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 			}
 		}
@@ -43,6 +50,11 @@ namespace tur
 	void QuadRenderer::set_clear_color(const glm::vec4& color)
 	{
 		m_ClearColor = color;
+	}
+
+	void QuadRenderer::set_default_texture(texture_handle handle)
+	{
+		defaultTexture = handle;
 	}
 
 	void QuadRenderer::add_quad(const QuadData& quad)
