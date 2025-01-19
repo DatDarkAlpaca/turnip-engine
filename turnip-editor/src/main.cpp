@@ -12,8 +12,10 @@ public:
 	{
 		initialize_textures();
 
+		auto windowSize = r_Engine->get_window().size;
+
 		// Camera:
-		m_MainCamera.set_orthogonal(0.0f, 640.0f, 480.f, 0.f, -1.f, 1.f);
+		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, (float)windowSize.y, 0.f, -1.f, 1.f);
 
 		// Scene:
 		m_Entity = m_Scene.add_entity();
@@ -24,10 +26,19 @@ public:
 			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
 			m_Entity.add_component<TransformComponent>(model);
 		}
+		{
+			for (int x = 0; x < 10; ++x)
+			{
+				auto newEntity = m_Scene.add_entity();
+				glm::mat4 model(1.f);
+				float scale = 50.f;
+				model = glm::translate(model, glm::vec3(20.f + scale * x, 20.f, 1.f));
+				model = glm::scale(model, glm::vec3(scale, scale, 1.f));
+				newEntity.add_component<TransformComponent>(model);
+			}
+		}
 
 		// Render System:
-		auto windowSize = r_Engine->get_window().size;
-
 		m_RenderSystem.initialize(&m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
 		m_RenderSystem.get_renderer().set_clear_color({ 0.16f, 0.16f, 0.16f, 1.f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
@@ -98,7 +109,7 @@ private:
 int main()
 {
 	TurnipEngine engine;
-	engine.initialize();
+	engine.initialize("engine_config.json");
 
 	engine.add_view(tur::make_unique<MainView>());
 

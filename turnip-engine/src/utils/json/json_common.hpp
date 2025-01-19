@@ -4,14 +4,14 @@
 
 namespace glm
 {
-    inline void to_json(nlohmann::json& j, const glm::vec2& vec)
+    inline void to_json(nlohmann::json& json, const glm::vec2& vector)
     {
-        j = { { "x", vec.x }, { "y", vec.y } };
+        json = { { "x", vector.x }, { "y", vector.y } };
     };
 
-    inline void from_json(const nlohmann::json& j, glm::vec2& vec)
+    inline void from_json(const nlohmann::json& json, glm::vec2& vector)
     {
-        vec.x = j.at("x").get<float>();
-        vec.y = j.at("y").get<float>();
+        vector.x = json.at("x").get<float>();
+        vector.y = json.at("y").get<float>();
     }
 }

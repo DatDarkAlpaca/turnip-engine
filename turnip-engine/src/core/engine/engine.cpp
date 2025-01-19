@@ -1,25 +1,38 @@
 #include "pch.hpp"
 #include "engine.hpp"
+#include "core/config/config_data.hpp"
 
 namespace tur
 {
-	void TurnipEngine::initialize()
+	void TurnipEngine::initialize(const std::filesystem::path& configPath)
 	{
 		// Logger:
 		initialize_logger_system();
+
+		// Config:
+		initialize_config_data(configPath);
+
+		ConfigReader configReader(configPath);
+		ConfigData configData = configReader.parse<ConfigData>();
 
 		// Worker Pool:
 		m_WorkerPool.initialize();
 
 		// Window:
-		m_Window.title = "TurnipEngine v1.0";
+		{
+			m_Window.title = configData.windowSpecification.windowTitle;
+			m_Window.size = configData.windowSpecification.dimensions;
+			m_Window.position = configData.windowSpecification.position;
+			m_Window.minSize = configData.windowSpecification.minSize;
+			m_Window.maxSize = configData.windowSpecification.maxSize;
+		}
 		initialize_windowing_system();
 		set_callback_window(&m_Window, BIND(&TurnipEngine::on_event, this));
 		{
 			GraphicsSpecification specification;
-			specification.major = 4;
-			specification.minor = 3;
-			specification.api = GraphicsAPI::OPENGL;
+			specification.major = configData.graphicsConfig.major;
+			specification.minor = configData.graphicsConfig.minor;
+			specification.api = configData.graphicsConfig.api;
 
 			initialize_opengl_windowing(&m_Window, specification);
 		}

@@ -54,7 +54,7 @@ namespace tur
 		view->on_view_added();
 
 		system->views.push_back(std::move(view));
-		return system->views.size() - 1;
+		return static_cast<view_handle>(system->views.size() - 1);
 	}
 
 	inline void view_system_remove(ViewSystem* system, view_handle handle)

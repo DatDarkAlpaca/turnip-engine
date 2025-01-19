@@ -10,6 +10,8 @@
 #include "core/logger/logger.hpp"
 #include "core/assert/assert.hpp"
 
+#include "utils/json/json_common.hpp"
+
 #define TUR_ENGINE_NAME "TurnipEngine"
 
 #define BIND(function, argument) std::bind(function, argument, std::placeholders::_1)

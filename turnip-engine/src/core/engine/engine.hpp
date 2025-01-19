@@ -1,4 +1,6 @@
 #pragma once
+#include <filesystem>
+
 #include "core/assets/asset_library.hpp"
 #include "core/worker/worker_pool.hpp"
 #include "core/event/events.hpp"
@@ -12,7 +14,7 @@ namespace tur
 	class TurnipEngine
 	{
 	public:
-		void initialize();
+		void initialize(const std::filesystem::path& configPath);
 
 		void run();
 
