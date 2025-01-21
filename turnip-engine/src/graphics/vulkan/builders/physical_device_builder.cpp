@@ -19,8 +19,16 @@ namespace tur::vulkan
 		{
 			for (const auto& device : physicalDevices)
 			{
-				if (!validate_extensions(device.enumerateDeviceExtensionProperties(), extensions).success)
-					continue;
+				auto deviceName = device.getProperties().deviceName.data();
+
+				auto extensionSupport = validate_extensions(device.enumerateDeviceExtensionProperties(), extensions);
+				if (!extensionSupport.success)
+				{
+					TUR_LOG_INFO("{} does not support the following extensions: ", deviceName);
+					
+					for (const auto& unsupported : extensionSupport.unsupported)
+						TUR_LOG_INFO(" * {}", unsupported);
+				}
 
 				auto supportedQueueFeatures = get_queue_family_supported_features(device, state.surface);
 				if (state.requiresDrawing)
@@ -34,6 +42,11 @@ namespace tur::vulkan
 
 				suitableDevices.push_back(device);
 			}
+		}
+
+		if (suitableDevices.size() == 0)
+		{
+			TUR_LOG_CRITICAL("No suitable devices were found.");
 		}
 		
 		vk::PhysicalDevice chosenDevice;
