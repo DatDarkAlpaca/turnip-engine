@@ -4,6 +4,7 @@
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
 
+#include "core/config/config_data.hpp"
 #include "graphics_specification.hpp"
 #include "core/assets/texture_asset.hpp"
 
@@ -13,9 +14,9 @@ namespace tur
 	class BaseGraphicsDevice
 	{
 	public:
-		void initialize(NON_OWNING Window* window)
+		void initialize(NON_OWNING Window* window, const ConfigData& configData)
 		{
-			static_cast<Backend*>(this)->initialize_impl(window);
+			static_cast<Backend*>(this)->initialize_impl(window, configData);
 		}
 
 		void present()

@@ -1,9 +1,9 @@
 #pragma once
 #include "common.hpp"
+#include "type/types.hpp"
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
-#include "type/types.hpp"
 
 namespace tur
 {

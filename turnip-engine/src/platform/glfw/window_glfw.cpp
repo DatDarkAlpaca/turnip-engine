@@ -164,15 +164,17 @@ namespace tur
 		glfwTerminate();
 	}
 
-	void initialize_window(Window* window)
+	void initialize_window(Window* window, const WindowProperties& properties)
 	{
 		window->window = glfwCreateWindow(
-			window->size.x,
-			window->size.y,
-			window->title.c_str(),
+			properties.dimensions.x,
+			properties.dimensions.y,
+			properties.title.c_str(),
 			nullptr,
 			nullptr
 		);
+
+		window->properties = properties;
 
 		if (!window->window)
 		{
@@ -182,7 +184,7 @@ namespace tur
 
 		glfwSetWindowUserPointer(window->window, &window->data);
 
-		set_properties_window(window);
+		set_properties_window(window, properties);
 		set_window_events(window);
 	}
 
@@ -196,28 +198,28 @@ namespace tur
 		glfwPollEvents();
 	}
 
-	void set_properties_window(Window* window)
+	void set_properties_window(Window* window, const WindowProperties& properties)
 	{
 		auto* windowGlfw = window->window;
 
 		// Current Size:
-		glfwSetWindowSize(windowGlfw, (int)window->size.x, (int)window->size.y);
+		glfwSetWindowSize(windowGlfw, (int)properties.dimensions.x, (int)properties.dimensions.y);
 
 		// Size Limits:
 		glfwSetWindowSizeLimits(
 			windowGlfw,
-			(int)window->minSize.x,
-			(int)window->minSize.y,
-			(int)window->maxSize.x,
-			(int)window->maxSize.y
+			(int)properties.minSize.x,
+			(int)properties.minSize.y,
+			(int)properties.maxSize.x,
+			(int)properties.maxSize.y
 		);
 
 		// Position:
-		if (window->position != invalid_size)
-			glfwSetWindowPos(windowGlfw, window->position.x, window->position.y);
+		if (properties.position != invalid_size)
+			glfwSetWindowPos(windowGlfw, properties.position.x, properties.position.y);
 
 		// Title:
-		glfwSetWindowTitle(windowGlfw, window->title.c_str());
+		glfwSetWindowTitle(windowGlfw, properties.title.c_str());
 	}
 
 	void shutdown_window(Window* window)

@@ -10,6 +10,6 @@ namespace tur
 		using namespace nlohmann;
 
 		std::ifstream file(filepath);
-		return json::parse(file);
+		return nlohmann::json::parse(file);
 	}
 }

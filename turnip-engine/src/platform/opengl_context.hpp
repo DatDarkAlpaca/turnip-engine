@@ -9,5 +9,5 @@ namespace tur
 		Window* window;
 	};
 
-	extern void initialize_opengl_windowing(Window* window, const GraphicsSpecification& specification);
+	extern void initialize_opengl_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification);
 }

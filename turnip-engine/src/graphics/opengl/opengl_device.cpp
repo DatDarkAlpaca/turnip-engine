@@ -10,7 +10,7 @@
 
 namespace tur::gl
 {
-	void GraphicsDeviceGL::initialize_impl(NON_OWNING Window* window)
+	void GraphicsDeviceGL::initialize_impl(NON_OWNING Window* window, const ConfigData&)
 	{
 		r_Window = window;
 

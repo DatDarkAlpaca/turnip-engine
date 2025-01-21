@@ -5,8 +5,13 @@
 #include "objects/texture.hpp"
 #include "camera.hpp"
 
+#include "platform/opengl_context.hpp"
 #include "opengl/opengl_device.hpp"
 #include "opengl/opengl_command_buffer.hpp"
+
+#include "platform/vulkan_context.hpp"
+#include "graphics/vulkan/vulkan_device.hpp"
+#include "graphics/vulkan/vulkan_command_buffer.hpp"
 
 namespace tur
 {
@@ -15,8 +20,17 @@ namespace tur
 	using CommandBuffer = tur::gl::CommandBufferGL;
 
 #elif DAT_API_VULKAN
-	using GraphicsDevice = vulkan::GraphicsDeviceVulkan;
-	using CommandBuffer = vulkan::CommandBufferVulkan;
-
+	using GraphicsDevice = tur::vulkan::GraphicsDeviceVulkan;
+	using CommandBuffer = tur::vulkan::CommandBufferVulkan;
 #endif
+
+	inline void initialize_graphics_system(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
+	{
+#ifdef DAT_API_OPENGL
+		initialize_opengl_windowing(window, properties, specification);
+
+#elif DAT_API_VULKAN
+		initialize_vulkan_windowing(window, properties, specification);
+#endif
+	}
 }

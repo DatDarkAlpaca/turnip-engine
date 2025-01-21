@@ -12,7 +12,7 @@ public:
 	{
 		initialize_textures();
 
-		auto windowSize = r_Engine->get_window().size;
+		auto windowSize = r_Engine->get_window().properties.dimensions;
 
 		// Camera:
 		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, (float)windowSize.y, 0.f, -1.f, 1.f);
