@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "logical_device_builder.hpp"
+
 #include "graphics/vulkan/vulkan_helpers.hpp"
+#include "graphics/vulkan/vulkan_constants.hpp"
 #include "graphics/vulkan/objects/queue_family.hpp"
 
 namespace tur::vulkan
@@ -56,6 +58,9 @@ namespace tur::vulkan
 		for (const auto& extension : vulkanConfig.physicalDeviceRequirements.extensions)
 			extensions.push_back(extension.c_str());
 
+		if (state.requiresDrawing)
+			extensions.push_back(SwapchainExtensionName);
+
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 
 		std::vector<const char*> layers;
@@ -83,7 +88,7 @@ namespace tur::vulkan
 		for (const auto& [queueFamilyIndex, operation] : queueFamilyResponsibility)
 		{
 			vk::Queue queue = state.logicalDevice.getQueue(queueFamilyIndex, 0);
-			state.queueList.add_queue(queue, static_cast<QueueUsage>(operation));
+			state.queueList.add_queue(queue, queueFamilyIndex, static_cast<QueueUsage>(operation));
 		}		
 	}
 }
