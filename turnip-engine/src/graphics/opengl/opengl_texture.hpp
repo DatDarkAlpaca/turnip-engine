@@ -120,6 +120,56 @@ namespace tur::gl
 
 			case TextureFormat::RGBA:
 				return GL_RGBA;
+
+			case TextureFormat::B8G8R8A8_UNORM:
+				return GL_BGRA;
+		}
+
+		TUR_LOG_ERROR("Invalid Texture Format: {}. Default: GL_RGBA",
+			static_cast<int>(format));
+
+		return GL_RGBA;
+	}
+
+	constexpr static gl_handle get_texture_data_format(TextureDataFormat format)
+	{
+		switch (format)
+		{
+			case TextureDataFormat::RED:
+				return GL_RED;
+
+			case TextureDataFormat::RG:
+				return GL_RG;
+
+			case TextureDataFormat::RGB:
+				return GL_RGB;
+
+			case TextureDataFormat::RGBA:
+				return GL_RGBA;
+
+			case TextureDataFormat::BGR:
+				return GL_BGR;
+
+			case TextureDataFormat::BGRA:
+				return GL_BGRA;
+
+			case TextureDataFormat::RED_INTEGER:
+				return GL_RED_INTEGER;
+
+			case TextureDataFormat::RG_INTEGER:
+				return GL_RG_INTEGER;
+
+			case TextureDataFormat::RGB_INTEGER:
+				return GL_RGB_INTEGER;
+
+			case TextureDataFormat::RGBA_INTEGER:
+				return GL_RGBA_INTEGER;
+
+			case TextureDataFormat::BGR_INTEGER:
+				return GL_BGR_INTEGER;
+
+			case TextureDataFormat::BGRA_INTEGER:
+				return GL_BGRA_INTEGER;
 		}
 
 		TUR_LOG_ERROR("Invalid Texture Format: {}. Default: GL_RGBA",

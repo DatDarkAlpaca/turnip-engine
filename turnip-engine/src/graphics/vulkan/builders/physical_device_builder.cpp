@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "physical_device_builder.hpp"
+
 #include "graphics/vulkan/vulkan_helpers.hpp"
+#include "graphics/vulkan/objects/swapchain.hpp"
 #include "graphics/vulkan/objects/queue_family.hpp"
 
 namespace tur::vulkan
@@ -15,12 +17,34 @@ namespace tur::vulkan
 		for (const auto& extension : requirements.extensions)
 			extensions.push_back(extension.c_str());
 
+		if (state.requiresDrawing)
+			extensions.push_back(SwapchainExtensionName);
+
 		std::vector<vk::PhysicalDevice> suitableDevices;
 		{
 			for (const auto& device : physicalDevices)
 			{
 				auto deviceName = device.getProperties().deviceName.data();
 
+				// Drawing Queues, Extensions & Swapchain:
+				auto supportedQueueFeatures = get_queue_family_supported_features(device, state.surface);
+				if (state.requiresDrawing)
+				{
+					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::GRAPHICS)))
+						continue;
+
+					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::PRESENT)))
+						continue;
+
+					auto swapchainCapabilities = fetch_swapchain_capabilities(device, state.surface);
+					if (swapchainCapabilities.availableSurfaceFormats.empty())
+						continue;
+
+					if (swapchainCapabilities.presentModes.empty())
+						continue;
+				}
+
+				// Extension Support:
 				auto extensionSupport = validate_extensions(device.enumerateDeviceExtensionProperties(), extensions);
 				if (!extensionSupport.success)
 				{
@@ -30,24 +54,12 @@ namespace tur::vulkan
 						TUR_LOG_INFO(" * {}", unsupported);
 				}
 
-				auto supportedQueueFeatures = get_queue_family_supported_features(device, state.surface);
-				if (state.requiresDrawing)
-				{
-					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::GRAPHICS)))
-						continue;
-
-					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::PRESENT)))
-						continue;
-				}
-
 				suitableDevices.push_back(device);
 			}
 		}
 
 		if (suitableDevices.size() == 0)
-		{
 			TUR_LOG_CRITICAL("No suitable devices were found.");
-		}
 		
 		vk::PhysicalDevice chosenDevice;
 		{

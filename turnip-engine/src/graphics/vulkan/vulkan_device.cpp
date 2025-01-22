@@ -7,6 +7,7 @@
 #include "builders/physical_device_builder.hpp"
 #include "builders/logical_device_builder.hpp"
 #include "builders/vma_allocator_builder.hpp"
+#include "builders/swapchain_builder.hpp"
 
 namespace tur::vulkan
 {
@@ -30,9 +31,7 @@ namespace tur::vulkan
 		initialize_vma_allocator(m_State);
 
 		// Swapchain:
-		{
-
-		}
+		initialize_swapchain(m_State, {});
 
 		// Swapchain Frames [Image, ImageViews, Synchronization & Commands]:
 		{

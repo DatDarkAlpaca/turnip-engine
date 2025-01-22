@@ -12,9 +12,6 @@ namespace tur
 		COMPUTE = 1 << 3,
 		TRANSFER = 1 << 4,
 		SPARSE_BINDING = 1 << 5,
-
-		GENERAL_PRESENT = GRAPHICS | PRESENT,
-		ALL = GRAPHICS | PRESENT | COMPUTE | TRANSFER | SPARSE_BINDING
 	};
 
 	inline u64 count_queue_usage_matches(QueueUsage lhs, QueueUsage rhs)

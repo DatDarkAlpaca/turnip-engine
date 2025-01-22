@@ -140,7 +140,7 @@ namespace tur::gl
 
 		// TODO: implement float textures | texture formats.
 
-		gl_handle dataFormat = asset.channels == 4 ? GL_RGBA : GL_RGB;
+		gl_handle dataFormat = get_texture_data_format(asset.dataFormat);
 		gl_handle dataFormatType = asset.floatTexture ? GL_FLOAT : GL_UNSIGNED_BYTE;
 
 		glBindTexture(textureType, textureID);

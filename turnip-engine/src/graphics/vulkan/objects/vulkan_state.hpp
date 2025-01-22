@@ -1,6 +1,8 @@
 #pragma once
 #include <vulkan/vulkan.hpp>
 #include <vk_mem_alloc.h>
+
+#include "graphics/vulkan/objects/swapchain.hpp"
 #include "graphics/vulkan/objects/queue_list.hpp"
 
 namespace tur::vulkan
@@ -27,5 +29,9 @@ namespace tur::vulkan
 
 		// VMA:
 		VmaAllocator vmaAllocator;
+
+		// Swapchain:
+		VkSwapchainKHR swapchain;
+		SwapchainCapabilities swapchainCapabilities;
 	};
 }

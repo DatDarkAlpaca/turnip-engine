@@ -29,15 +29,36 @@ namespace tur
         TRILINEAR
     };
 
-    // TODO: extend.
+    // Represents a texture on the GPU
     enum class TextureFormat
     {
-        DEPTH_COMPONENT,
-        DEPTH_STENCIL,
         RED,
         RG,
         RGB,
-        RGBA
+        RGBA,
+
+        DEPTH_COMPONENT,
+        DEPTH_STENCIL,
+
+        B8G8R8A8_UNORM
+    };
+
+    // Represents data formats and is used for loading textures, rather than representing them on the GPU 
+    enum class TextureDataFormat
+    {
+        RED,
+        RG,
+        RGB,
+        RGBA,
+        BGR,
+        BGRA,
+
+        RED_INTEGER,
+        RG_INTEGER,
+        RGB_INTEGER,
+        RGBA_INTEGER,
+        BGR_INTEGER,
+        BGRA_INTEGER,
     };
 
     struct TextureDescriptor

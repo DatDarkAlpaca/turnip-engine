@@ -10,13 +10,14 @@
 namespace tur::vulkan
 {
 	using queue_index = handle_type;
+	using queue_family_index = handle_type;
 
 	struct QueueList
 	{
 	public:
-		void add_queue(const vk::Queue& queue, QueueUsage usage)
+		void add_queue(const vk::Queue& queue, queue_family_index familyIndex, QueueUsage usage)
 		{
-			m_Queues.push_back(queue);
+			m_Queues.push_back({ queue, familyIndex });
 			m_Usage[static_cast<queue_index>(m_Queues.size() - 1)] = usage;
 		}
 
@@ -25,15 +26,27 @@ namespace tur::vulkan
 			for (const auto& [index, usage] : m_Usage)
 			{
 				if (requestedUsage == usage)
-					return m_Queues[index];
+					return m_Queues[index].first;
 			}
 
 			TUR_LOG_CRITICAL("Failed to locate requested queue: {}", static_cast<u16>(requestedUsage));
 			return nullptr;
 		}
 
+		queue_family_index get_family_index(QueueUsage requestedUsage)
+		{
+			for (const auto& [index, usage] : m_Usage)
+			{
+				if (static_cast<u16>(requestedUsage) & static_cast<u16>(usage))
+					return m_Queues[index].second;
+			}
+
+			TUR_LOG_CRITICAL("Failed to locate requested queue: {}", static_cast<u16>(requestedUsage));
+			return invalid_handle;
+		}
+
 	private:
 		std::unordered_map<queue_index, QueueUsage> m_Usage;
-		std::vector<vk::Queue> m_Queues;
+		std::vector<std::pair<vk::Queue, queue_family_index>> m_Queues;
 	};
 }

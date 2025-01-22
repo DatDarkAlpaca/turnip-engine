@@ -8,6 +8,7 @@ namespace tur
 	struct TextureAsset
 	{
 		std::filesystem::path filepath;
+        TextureDataFormat dataFormat  = TextureDataFormat::RGBA;
 		DataBuffer data;
 
 		u32 width    = 0;
