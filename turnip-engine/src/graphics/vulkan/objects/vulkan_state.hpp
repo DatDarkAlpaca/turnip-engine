@@ -32,7 +32,10 @@ namespace tur::vulkan
 
 		// Swapchain:
 		VkSwapchainKHR swapchain;
-		SwapchainCapabilities swapchainCapabilities;
+		vk::SurfaceFormatKHR swapchainFormat;
+		vk::Extent2D swapchainExtent;
+
 		std::vector<vk::Image> swapChainImages;
+		std::vector<vk::ImageView> swapChainImageViews;
 	};
 }

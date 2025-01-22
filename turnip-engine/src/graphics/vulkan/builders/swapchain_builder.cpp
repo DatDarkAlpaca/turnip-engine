@@ -64,16 +64,20 @@ namespace tur::vulkan
 		vk::PresentModeKHR presentMode = choose_present_mode(swapchainCapabilities.presentModes, requirements.presentMode);
 		vk::Extent2D extent = choose_swapchain_extent(swapchainCapabilities.surfaceCapabilities, requirements.extent);
 		
-		vk::SwapchainCreateInfoKHR createInfo = {};
+		vk::SwapchainCreateInfoKHR createInfo { };
 		{
 			createInfo.flags = vk::SwapchainCreateFlagsKHR();
 			createInfo.surface = state.surface;
-			createInfo.imageFormat = surfaceFormat.format;
 
 			if(requirements.imageCount == invalid_handle && requirements.imageCount > 0)
 				createInfo.minImageCount = swapchainCapabilities.surfaceCapabilities.minImageCount + 1;
 			else
 				createInfo.minImageCount = requirements.imageCount;
+
+			createInfo.imageArrayLayers = 1;
+
+			createInfo.imageFormat = surfaceFormat.format;
+			createInfo.imageColorSpace = surfaceFormat.colorSpace;
 
 			createInfo.imageExtent.width = extent.width;
 			createInfo.imageExtent.height = extent.height;
@@ -105,15 +109,47 @@ namespace tur::vulkan
 		}
 		catch (const vk::SystemError& err)
 		{
-			TUR_LOG_ERROR("Failed to create swapchain: {}", err.what());
+			TUR_LOG_CRITICAL("Failed to create swapchain: {}", err.what());
 		}
 		
-		// Capabilities:
-		state.swapchainCapabilities = swapchainCapabilities;
+		// Swapchain information:
+		state.swapchainExtent = extent;
+		state.swapchainFormat = surfaceFormat;
 
 		// Retrieve Images:
 		{
 			state.swapChainImages = state.logicalDevice.getSwapchainImagesKHR(state.swapchain);
+		}
+
+		// Create Image Views:
+		{
+			state.swapChainImageViews.resize(state.swapChainImages.size());
+
+			for (size_t i = 0; i < state.swapChainImageViews.size(); ++i)
+			{
+				vk::ImageViewCreateInfo imageCreateInfo = {};
+
+				imageCreateInfo.image = state.swapChainImages[i];
+				imageCreateInfo.viewType = vk::ImageViewType::e2D;
+				imageCreateInfo.format = state.swapchainFormat.format;
+
+				{
+					imageCreateInfo.components.r = vk::ComponentSwizzle::eIdentity;
+					imageCreateInfo.components.b = vk::ComponentSwizzle::eIdentity;
+					imageCreateInfo.components.b = vk::ComponentSwizzle::eIdentity;
+					imageCreateInfo.components.a = vk::ComponentSwizzle::eIdentity;
+				}
+
+				{
+					imageCreateInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
+					imageCreateInfo.subresourceRange.baseMipLevel = 0;
+					imageCreateInfo.subresourceRange.levelCount = 1;
+					imageCreateInfo.subresourceRange.baseArrayLayer = 0;
+					imageCreateInfo.subresourceRange.layerCount = 1;
+				}
+
+				state.swapChainImageViews[i] = state.logicalDevice.createImageView(imageCreateInfo);
+			}	
 		}
 	}
 }
