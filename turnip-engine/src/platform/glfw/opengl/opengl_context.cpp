@@ -67,4 +67,9 @@ namespace tur
 		}
 #endif
 	}
+
+	void present_opengl_window(Window* window)
+	{
+		glfwSwapBuffers(window->window);
+	}
 }

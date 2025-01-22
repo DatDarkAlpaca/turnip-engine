@@ -1,6 +1,5 @@
 #pragma once
 #include "graphics_specification.hpp"
-#include "objects/swapbuffer.hpp"
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "camera.hpp"

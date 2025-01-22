@@ -51,8 +51,6 @@ namespace tur::gl
 		free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 
 	private:
-		tur_unique<Swapbuffer> m_Swapbuffer;
-
 		free_list<Buffer>   m_Buffers;
 		free_list<Texture>  m_Textures;
 		free_list<Shader>   m_Shaders;

@@ -1,5 +1,4 @@
 #pragma once
-#include "objects/swapbuffer.hpp"
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"

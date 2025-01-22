@@ -13,13 +13,10 @@ namespace tur::gl
 	void GraphicsDeviceGL::initialize_impl(NON_OWNING Window* window, const ConfigData&)
 	{
 		r_Window = window;
-
-		m_Swapbuffer = tur::make_unique<Swapbuffer>();
-		initialize_swapbuffer(m_Swapbuffer.get(), r_Window);
 	}
 	void GraphicsDeviceGL::present_impl()
 	{
-		present_swapbuffer(m_Swapbuffer.get());
+		present_opengl_window(r_Window);
 	}
 
 	CommandBufferGL GraphicsDeviceGL::create_command_buffer_impl()
