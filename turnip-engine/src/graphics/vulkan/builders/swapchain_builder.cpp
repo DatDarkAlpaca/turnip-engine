@@ -108,6 +108,12 @@ namespace tur::vulkan
 			TUR_LOG_ERROR("Failed to create swapchain: {}", err.what());
 		}
 		
+		// Capabilities:
 		state.swapchainCapabilities = swapchainCapabilities;
+
+		// Retrieve Images:
+		{
+			state.swapChainImages = state.logicalDevice.getSwapchainImagesKHR(state.swapchain);
+		}
 	}
 }

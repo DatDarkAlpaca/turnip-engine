@@ -33,5 +33,6 @@ namespace tur::vulkan
 		// Swapchain:
 		VkSwapchainKHR swapchain;
 		SwapchainCapabilities swapchainCapabilities;
+		std::vector<vk::Image> swapChainImages;
 	};
 }
