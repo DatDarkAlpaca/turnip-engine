@@ -35,5 +35,14 @@ namespace tur::vulkan
 
 			frame.commandBuffer = state.logicalDevice.allocateCommandBuffers(allocateInfo).front();
 		}
+
+		// Synchonization primitives:
+		for (auto& frame : state.frameDataHolder.get_frames())
+		{
+			vk::FenceCreateInfo createInfo = {};
+			createInfo.flags = vk::FenceCreateFlagBits::eSignaled;
+
+			frame.recordingFence = state.logicalDevice.createFence(createInfo);
+		}
 	}
 }

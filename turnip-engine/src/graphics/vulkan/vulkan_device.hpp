@@ -14,7 +14,6 @@ namespace tur::vulkan
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
-
 		void present_impl();
 
 	protected:
@@ -78,6 +77,9 @@ namespace tur::vulkan
 		{
 			return invalid_handle;
 		}
+
+	public:
+		VulkanState& get_state() { return m_State; }
 
 	private:
 		VulkanState m_State;

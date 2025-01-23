@@ -15,6 +15,7 @@ namespace tur::gl
 		glGenVertexArrays(1, &m_VAO);
 		glBindVertexArray(m_VAO);
 	}
+
 	void CommandBufferGL::begin_impl()
 	{
 		// * Blank

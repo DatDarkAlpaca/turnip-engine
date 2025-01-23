@@ -45,6 +45,7 @@ namespace tur
 		}
 
 		m_Commands->end();
+		r_GraphicsDevice->present();
 	}
 
 	void QuadRenderer::set_clear_color(const glm::vec4& color)

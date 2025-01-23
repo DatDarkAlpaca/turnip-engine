@@ -8,6 +8,8 @@ namespace tur::vulkan
 	{
 		vk::CommandPool commandPool;
 		vk::CommandBuffer commandBuffer;
+
+		vk::Fence recordingFence;
 	};
 
 	struct FrameDataHolder
@@ -16,13 +18,14 @@ namespace tur::vulkan
 		FrameDataHolder(u32 totalAllocatedFrames = 3)
 			: m_TotalAllocatedFrames(totalAllocatedFrames)
 		{
-
+			m_FrameData.resize(m_TotalAllocatedFrames);
 		}
 
 	public:
 		inline FrameData& get_frame_data()
 		{
-			return m_FrameData[m_FrameNumber % m_TotalAllocatedFrames];
+			m_FrameNumber = (m_FrameNumber + 1) % m_TotalAllocatedFrames;
+			return m_FrameData[m_FrameNumber];
 		}
 
 		inline std::vector<FrameData>& get_frames()

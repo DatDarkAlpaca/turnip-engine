@@ -37,7 +37,6 @@ namespace tur::vulkan
 		// Frame Data:
 		initialize_frame_data(m_State);
 	}
-
 	void GraphicsDeviceVulkan::present_impl()
 	{
 

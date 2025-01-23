@@ -17,7 +17,6 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_impl(window, configData);
 		}
-
 		void present()
 		{
 			static_cast<Backend*>(this)->present_impl();

@@ -151,5 +151,8 @@ namespace tur::vulkan
 				state.swapChainImageViews[i] = state.logicalDevice.createImageView(imageCreateInfo);
 			}	
 		}
+
+		// Initialize frame data:
+		state.frameDataHolder = FrameDataHolder(state.swapChainImages.size());
 	}
 }

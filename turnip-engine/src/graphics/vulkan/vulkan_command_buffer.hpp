@@ -13,24 +13,44 @@ namespace tur::vulkan
 	public:
 		CommandBufferVulkan(NON_OWNING GraphicsDeviceVulkan* device)
 		{
-
+			r_Device = device;
 		}
 
 	protected:
 		void initialize_impl()
 		{
-
 		}
 
 	protected:
 		void begin_impl()
 		{
+			get_device().waitForFences(get_frame_data().recordingFence, true, 1'000'000'000);
+			get_device().resetFences(get_frame_data().recordingFence);
 
+			m_CommandBuffer = acquire_command_buffer();
+			m_CommandBuffer.reset();
+
+			vk::CommandBufferBeginInfo beginInfo = {};
+			{
+				beginInfo.pInheritanceInfo = nullptr;
+				beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
+			}
+
+			try
+			{
+				m_CommandBuffer.begin(beginInfo);
+			} catch(vk::SystemError& err) {
+				TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.");
+			}
 		}
-
 		void end_impl()
 		{
-
+			try {
+				m_CommandBuffer.end();
+			}
+			catch (vk::SystemError err) {
+				throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
+			}
 		}
 
 	protected:
@@ -84,18 +104,37 @@ namespace tur::vulkan
 
 		void draw_impl(u32 first, u32 vertexCount)
 		{
-
+			m_CommandBuffer.draw(vertexCount, 1, first, 0);
 		}
 		void draw_impl(u32 count, BufferIndexType type)
 		{
-
+			m_CommandBuffer.drawIndexed(count, 1, 0, 0, 0);
 		}
 		void draw_instanced_impl(u32 first, u32 vertexCount, u32 instanceCount)
 		{
-
+			// TODO: add instanceFirst to function parameters
+			m_CommandBuffer.draw(vertexCount, instanceCount, first, 0);
 		}
 
 	private:
+		inline FrameData& get_frame_data()
+		{
+			return r_Device->get_state().frameDataHolder.get_frame_data();
+		}
+		
+		inline vk::Device& get_device() 
+		{
+			return r_Device->get_state().logicalDevice;
+		}
+
+	private:
+		vk::CommandBuffer acquire_command_buffer()
+		{
+			return get_frame_data().commandBuffer;
+		}
+		
+	private:
 		NON_OWNING GraphicsDeviceVulkan* r_Device = nullptr;
+		vk::CommandBuffer m_CommandBuffer;
 	};
 }

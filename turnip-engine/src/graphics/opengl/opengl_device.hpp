@@ -18,7 +18,6 @@ namespace tur::gl
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData&);
-
 		void present_impl();
 
 	public:
