@@ -4,6 +4,7 @@
 
 #include "graphics/vulkan/objects/swapchain.hpp"
 #include "graphics/vulkan/objects/queue_list.hpp"
+#include "graphics/vulkan/objects/frame_data.hpp"
 
 namespace tur::vulkan
 {
@@ -34,8 +35,10 @@ namespace tur::vulkan
 		VkSwapchainKHR swapchain;
 		vk::SurfaceFormatKHR swapchainFormat;
 		vk::Extent2D swapchainExtent;
-
 		std::vector<vk::Image> swapChainImages;
 		std::vector<vk::ImageView> swapChainImageViews;
+
+		// Frame:
+		FrameDataHolder frameDataHolder;
 	};
 }

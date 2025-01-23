@@ -8,6 +8,7 @@
 #include "builders/logical_device_builder.hpp"
 #include "builders/vma_allocator_builder.hpp"
 #include "builders/swapchain_builder.hpp"
+#include "builders/frame_data_builder.hpp"
 
 namespace tur::vulkan
 {
@@ -33,15 +34,8 @@ namespace tur::vulkan
 		// Swapchain:
 		initialize_swapchain(m_State, {});
 
-		// Swapchain Frames [Image, ImageViews, Synchronization & Commands]:
-		{
-
-		}
-
-		// Main Commands:
-		{
-
-		}
+		// Frame Data:
+		initialize_frame_data(m_State);
 	}
 
 	void GraphicsDeviceVulkan::present_impl()
