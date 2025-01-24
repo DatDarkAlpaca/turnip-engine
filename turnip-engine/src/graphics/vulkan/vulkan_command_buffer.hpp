@@ -24,12 +24,25 @@ namespace tur::vulkan
 	protected:
 		void begin_impl()
 		{
-			get_device().waitForFences(get_frame_data().recordingFence, true, 1'000'000'000);
-			get_device().resetFences(get_frame_data().recordingFence);
+			auto& device = r_Device->get_state().logicalDevice;
+			auto& swapchain = r_Device->get_state().swapchain;
+			auto& frameDataHolder = r_Device->get_state().frameDataHolder;
+			auto& frameData = frameDataHolder.get_frame_data();
 
-			m_CommandBuffer = acquire_command_buffer();
+			try {
+				auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
+				device.resetFences(frameData.recordingFence);
+			}
+			catch (vk::SystemError& err) {
+				TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
+			}
+
+			u32 imageIndex = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore).value;
+			frameDataHolder.set_color_buffer(imageIndex);
+
+			m_CommandBuffer = get_command_buffer();
 			m_CommandBuffer.reset();
-
+			
 			vk::CommandBufferBeginInfo beginInfo = {};
 			{
 				beginInfo.pInheritanceInfo = nullptr;
@@ -126,12 +139,11 @@ namespace tur::vulkan
 		{
 			return r_Device->get_state().logicalDevice;
 		}
-
-	private:
-		vk::CommandBuffer acquire_command_buffer()
+		
+		inline vk::CommandBuffer get_command_buffer()
 		{
 			return get_frame_data().commandBuffer;
-		}
+		}	
 		
 	private:
 		NON_OWNING GraphicsDeviceVulkan* r_Device = nullptr;

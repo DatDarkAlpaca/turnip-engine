@@ -32,7 +32,7 @@ namespace tur::vulkan
 		VmaAllocator vmaAllocator;
 
 		// Swapchain:
-		VkSwapchainKHR swapchain;
+		vk::SwapchainKHR swapchain;
 		vk::SurfaceFormatKHR swapchainFormat;
 		vk::Extent2D swapchainExtent;
 		std::vector<vk::Image> swapChainImages;

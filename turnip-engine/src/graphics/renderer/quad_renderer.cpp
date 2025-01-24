@@ -23,29 +23,25 @@ namespace tur
 
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
+		m_Commands->bind_pipeline(pipeline);
+
+		for (const auto& quad : m_Quads)
 		{
-			m_Commands->bind_pipeline(pipeline);
+			bind_mvp(quad.transform);
 
-			for (const auto& quad : m_Quads)
+			if (quad.texture != invalid_handle)
+				m_Commands->bind_texture(quad.texture);
+
+			else
 			{
-				bind_mvp(quad.transform);
-
-				if (quad.texture != invalid_handle)
-				{
-					m_Commands->bind_texture(quad.texture);
-				}
-				else
-				{
-					if(defaultTexture != invalid_handle)
-						m_Commands->bind_texture(defaultTexture);
-				}
-			
-				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
+				if (defaultTexture != invalid_handle)
+					m_Commands->bind_texture(defaultTexture);
 			}
+
+			m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 		}
 
 		m_Commands->end();
-		r_GraphicsDevice->present();
 	}
 
 	void QuadRenderer::set_clear_color(const glm::vec4& color)

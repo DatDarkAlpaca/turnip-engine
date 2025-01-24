@@ -25,7 +25,7 @@ namespace tur::vulkan
 		{
 			for (const auto& [index, usage] : m_Usage)
 			{
-				if (requestedUsage == usage)
+				if (static_cast<u16>(requestedUsage) & static_cast<u16>(usage))
 					return m_Queues[index].first;
 			}
 

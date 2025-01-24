@@ -44,5 +44,12 @@ namespace tur::vulkan
 
 			frame.recordingFence = state.logicalDevice.createFence(createInfo);
 		}
+
+		for (auto& frame : state.frameDataHolder.get_frames())
+		{
+			vk::SemaphoreCreateInfo createInfo = {};
+			frame.imageAvailableSemaphore = state.logicalDevice.createSemaphore(createInfo);
+			frame.renderFinishedSemaphore = state.logicalDevice.createSemaphore(createInfo);
+		}
 	}
 }
