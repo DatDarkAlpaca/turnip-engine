@@ -9,7 +9,9 @@
 #include "builders/vma_allocator_builder.hpp"
 #include "builders/swapchain_builder.hpp"
 #include "builders/frame_data_builder.hpp"
-#include "builders/sync_builder.hpp"
+
+#include "factories/pipeline_factory.hpp"
+#include "factories/shader_factory.hpp"
 
 namespace tur::vulkan
 {
@@ -106,5 +108,28 @@ namespace tur::vulkan
 	CommandBufferVulkan GraphicsDeviceVulkan::create_command_buffer_impl()
 	{
 		return CommandBufferVulkan(this);
+	}
+
+	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)
+	{
+		vk::ShaderModule shaderModule = create_shader_module(m_State.logicalDevice, descriptor);
+		return m_ShaderModules.add(shaderModule);
+	}
+	void GraphicsDeviceVulkan::destroy_shader_impl(shader_handle handle)
+	{
+		auto shaderModule = m_ShaderModules.get(handle);
+		m_State.logicalDevice.destroyShaderModule(shaderModule);
+		m_ShaderModules.remove(handle);
+	}
+
+	pipeline_handle GraphicsDeviceVulkan::create_pipeline_impl(const PipelineDescriptor& descriptor)
+	{
+		vk::Pipeline pipeline = create_graphics_pipeline(*this, descriptor);
+
+		// TODO: destroy others
+		destroy_shader(descriptor.vertexShader);
+		destroy_shader(descriptor.fragmentShader);
+
+		return m_Pipelines.add(pipeline);
 	}
 }

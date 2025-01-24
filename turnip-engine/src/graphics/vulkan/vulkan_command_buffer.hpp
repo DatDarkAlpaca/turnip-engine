@@ -53,7 +53,7 @@ namespace tur::vulkan
 			{
 				m_CommandBuffer.begin(beginInfo);
 			} catch(vk::SystemError& err) {
-				TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.");
+				TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
 			}
 		}
 		void end_impl()
@@ -69,11 +69,12 @@ namespace tur::vulkan
 	protected:
 		void set_viewport_impl(const Viewport& viewport)
 		{
-
+			m_CommandBuffer.setViewport(0, vk::Viewport(viewport.x, viewport.y, viewport.width, viewport.height));
 		}
 		void set_scissor_impl(const Rect2D& scissor)
 		{
-
+			m_CommandBuffer.setScissor(0, 
+				vk::Rect2D({ (i32)scissor.x, (i32)scissor.y }, { (u32)scissor.width, (u32)scissor.height }));
 		}
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue)
 		{

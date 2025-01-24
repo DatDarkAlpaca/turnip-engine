@@ -44,10 +44,10 @@ namespace tur::gl
 		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	public:
-		free_list<Buffer>&   get_buffers()   { return m_Buffers; }
-		free_list<Texture>&  get_textures()  { return m_Textures; }
-		free_list<Shader>&   get_shaders()   { return m_Shaders; }
-		free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }
+		inline free_list<Texture>&  get_textures()  { return m_Textures; }
+		inline free_list<Shader>&   get_shaders()   { return m_Shaders; }
+		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 
 	private:
 		free_list<Buffer>   m_Buffers;

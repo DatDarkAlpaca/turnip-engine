@@ -24,27 +24,22 @@ namespace tur::vulkan
 		{
 			return invalid_handle;
 		}
-
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 		{
 			return invalid_handle;
 		}
-
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data)
 		{
 
 		}
-
 		void* map_buffer_impl(buffer_handle handle)
 		{
 
 		}
-
 		void unmap_buffer_impl(buffer_handle handle)
 		{
 
 		}
-
 		void destroy_buffer_impl(buffer_handle handle)
 		{
 
@@ -55,33 +50,25 @@ namespace tur::vulkan
 		{
 			return invalid_handle;
 		}
-
 		void destroy_texture_impl(texture_handle handle)
 		{
 
 		}
 
 	protected:
-		shader_handle create_shader_impl(const ShaderDescriptor& descriptor)
-		{
-			return invalid_handle;
-		}
-
-		void destroy_shader_impl(shader_handle handle)
-		{
-
-		}
+		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
+		void destroy_shader_impl(shader_handle handle);
 
 	protected:
-		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor)
-		{
-			return invalid_handle;
-		}
+		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	public:
-		VulkanState& get_state() { return m_State; }
+		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
+		inline VulkanState& get_state() { return m_State; }
 
 	private:
+		free_list<vk::ShaderModule> m_ShaderModules;
+		free_list<vk::Pipeline> m_Pipelines;
 		VulkanState m_State;
 	};
 }

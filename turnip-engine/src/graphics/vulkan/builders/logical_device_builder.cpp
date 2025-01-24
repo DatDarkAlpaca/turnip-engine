@@ -63,6 +63,12 @@ namespace tur::vulkan
 
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 
+		// Dynamic Rendering:
+		vk::PhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeatures = {};
+		{
+			dynamicRenderingFeatures.dynamicRendering = true;
+		}
+
 		std::vector<const char*> layers;
 		for (const auto& layer : vulkanConfig.instanceRequirements.layers)
 			layers.push_back(layer.c_str());
@@ -72,7 +78,8 @@ namespace tur::vulkan
 			queueCreateInfos.size(), queueCreateInfos.data(),
 			layers.size(), layers.data(),
 			extensions.size(), extensions.data(),
-			&deviceFeatures
+			&deviceFeatures,
+			&dynamicRenderingFeatures
 		);
 
 		try

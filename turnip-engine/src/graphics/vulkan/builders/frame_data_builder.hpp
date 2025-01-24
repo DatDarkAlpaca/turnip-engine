@@ -11,10 +11,10 @@ namespace tur::vulkan
 		// Command Pool & Buffers:
 		vk::CommandPoolCreateInfo poolCreateInfo = {};
 		{
-			poolCreateInfo.flags = vk::CommandPoolCreateFlags();
+			poolCreateInfo.flags = vk::CommandPoolCreateFlags() | vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
 			poolCreateInfo.queueFamilyIndex = state.queueList.get_family_index(QueueUsage::TRANSFER);
 		}
-
+		
 		for (auto& frame : state.frameDataHolder.get_frames())
 		{
 			try

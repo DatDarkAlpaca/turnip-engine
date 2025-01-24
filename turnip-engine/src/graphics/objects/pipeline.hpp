@@ -175,7 +175,6 @@ namespace tur
 
     struct PipelineDescriptor
     {
-        // Dynamic States: Scissor and Viewport
         VertexInputDescriptor vertexInputStage;
         InputAssemblyDescriptor inputAssemblyStage;
         RasterizerDescriptor rasterizerStage;
@@ -187,5 +186,14 @@ namespace tur
         shader_handle tesselationEvaluationShader = invalid_handle;
         shader_handle geometryShader = invalid_handle;
         shader_handle fragmentShader = invalid_handle;
+
+        // Viewport & Scissor:
+        std::vector<Viewport> viewports = {};
+        std::vector<Rect2D> scissors = {};
+
+        u32 viewportCount = 1;
+        u32 scissorCount = 1;
+        bool useDynamicViewport = true;
+        bool useDynamicScissor = true;
     };
 }

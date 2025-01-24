@@ -83,6 +83,10 @@ namespace tur::vulkan
 		state.requiresDrawing = instanceConfig.enableDrawing;
 		state.validationEnabled = instanceConfig.enableValidationLayers;
 
+#ifdef TUR_DEBUG
+		state.validationEnabled = true;
+#endif
+
 		// Application information:
 		vk::ApplicationInfo applicationInformation = vk::ApplicationInfo(
 			appConfig.applicationName.c_str(),

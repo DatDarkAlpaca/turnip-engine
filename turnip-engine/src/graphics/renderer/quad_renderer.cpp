@@ -18,8 +18,8 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
-		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 		m_Commands->set_viewport(m_Viewport);
+		/*m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
@@ -39,7 +39,7 @@ namespace tur
 			}
 
 			m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
-		}
+		}*/
 
 		m_Commands->end();
 	}
@@ -73,16 +73,16 @@ namespace tur
 	{
 		// TODO: allow for different filepaths.
 		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/quad.vert", ShaderType::VERTEX
+			{ "res/shaders/vertex.spv", ShaderType::VERTEX
 		});
 		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/quad.frag", ShaderType::FRAGMENT
+			{ "res/shaders/fragment.spv", ShaderType::FRAGMENT
 		});
 
 		// Pipeline Layout (Push constants):
 		PipelineLayout layout;
 		{
-			DescriptorDescripion description;
+			DescriptorDescripion description = {};
 			{
 				description.binding = 0;
 				description.stages = PipelineStage::VERTEX_STAGE;
@@ -134,7 +134,7 @@ namespace tur
 	{
 		// Vertex Buffer:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::VERTEX_BUFFER;
 				bufferDesc.usage = BufferUsage::STATIC;
@@ -156,7 +156,7 @@ namespace tur
 
 		// Index:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::INDEX_BUFFER;
 				bufferDesc.usage = BufferUsage::STATIC;
@@ -173,7 +173,7 @@ namespace tur
 
 		// Uniform Buffer:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::UNIFORM_BUFFER;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
