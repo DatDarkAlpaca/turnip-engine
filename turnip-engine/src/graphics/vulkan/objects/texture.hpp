@@ -66,16 +66,16 @@ namespace tur::vulkan
 				return vk::Format::eD16UnormS8Uint;
 
 			case TextureFormat::RED:
-				return vk::Format::eR8Srgb;
+				return vk::Format::eR8Unorm;
 
 			case TextureFormat::RG:
-				return vk::Format::eR8G8Srgb;
+				return vk::Format::eR8G8Unorm;
 
 			case TextureFormat::RGB:
-				return vk::Format::eR8G8B8Srgb;
+				return vk::Format::eR8G8B8Unorm;
 
 			case TextureFormat::RGBA:
-				return vk::Format::eR8G8B8A8Srgb;
+				return vk::Format::eR8G8B8A8Unorm;
 
 			case TextureFormat::RGBA16SFloat:
 				return vk::Format::eR16G16B16A16Sfloat;

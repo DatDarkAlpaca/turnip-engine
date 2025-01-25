@@ -85,6 +85,7 @@ namespace tur::vulkan
 			createInfo.preTransform = swapchainCapabilities.surfaceCapabilities.currentTransform;
 			createInfo.presentMode = presentMode;
 
+			createInfo.imageUsage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eColorAttachment;
 			createInfo.oldSwapchain = requirements.oldSwapchain;
 		}
 
@@ -151,7 +152,7 @@ namespace tur::vulkan
 				if(state.apiVersion > VK_API_VERSION_1_1)
 				{
 					vk::ImageViewUsageCreateInfo usageCreateInfo;
-					usageCreateInfo.usage = vk::ImageUsageFlagBits::eTransferDst;
+					usageCreateInfo.usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eColorAttachment;
 					imageCreateInfo.pNext = &usageCreateInfo;
 				}
 				
