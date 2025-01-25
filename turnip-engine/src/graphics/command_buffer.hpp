@@ -21,6 +21,14 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->begin_impl();
 		};
+		void begin_render()
+		{
+			static_cast<CommandBuffer*>(this)->begin_render_impl();
+		}
+		void end_render()
+		{
+			static_cast<CommandBuffer*>(this)->end_render_impl();
+		}
 		void end()
 		{
 			static_cast<CommandBuffer*>(this)->end_impl();

@@ -20,6 +20,14 @@ namespace tur::gl
 	{
 		// * Blank
 	}
+	void CommandBufferGL::begin_render_impl()
+	{
+		// * Blank
+	}
+	void CommandBufferGL::end_render_impl()
+	{
+		// * Blank
+	}
 	void CommandBufferGL::end_impl()
 	{
 		// * Blank

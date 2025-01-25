@@ -2,6 +2,7 @@
 #include "core/free_list.hpp"
 #include "graphics/graphics_device.hpp"
 
+#include "objects/texture.hpp"
 #include "objects/vulkan_state.hpp"
 
 namespace tur::vulkan
@@ -46,10 +47,7 @@ namespace tur::vulkan
 		}
 
 	protected:
-		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
-		{
-			return invalid_handle;
-		}
+		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle)
 		{
 
@@ -69,6 +67,7 @@ namespace tur::vulkan
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
 		free_list<vk::Pipeline> m_Pipelines;
+		free_list<Texture> m_Textures;
 		VulkanState m_State;
 	};
 }

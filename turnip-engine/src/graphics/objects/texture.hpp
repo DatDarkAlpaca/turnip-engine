@@ -63,6 +63,8 @@ namespace tur
 
     struct TextureDescriptor
     {
+        // todo: array layers. 
+
         u32 width = 0;
         u32 height = 0;
         u32 depth = 1;

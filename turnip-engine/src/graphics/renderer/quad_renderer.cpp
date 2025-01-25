@@ -18,6 +18,7 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
+		m_Commands->begin_render();
 		m_Commands->set_viewport(m_Viewport);
 		/*m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
@@ -41,6 +42,7 @@ namespace tur
 			m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
 		}*/
 
+		m_Commands->end_render();
 		m_Commands->end();
 	}
 
