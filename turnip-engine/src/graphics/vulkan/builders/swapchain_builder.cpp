@@ -161,6 +161,6 @@ namespace tur::vulkan
 		}
 
 		// Initialize frame data:
-		state.frameDataHolder = FrameDataHolder(state.swapChainImages.size());
+		state.frameDataHolder = FrameDataHolder(static_cast<u32>(state.swapChainImages.size()));
 	}
 }

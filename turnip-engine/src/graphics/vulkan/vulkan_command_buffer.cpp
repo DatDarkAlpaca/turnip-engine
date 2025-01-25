@@ -59,7 +59,6 @@ namespace tur::vulkan
 
 		vk::RenderingInfo renderInfo = {};
 		{
-			VkRenderingAttachmentInfoKHR;
 			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
 			{
 				colorAttachmentInfo.imageView = drawTexture.imageView;

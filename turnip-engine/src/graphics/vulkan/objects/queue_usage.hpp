@@ -14,9 +14,31 @@ namespace tur
 		SPARSE_BINDING = 1 << 5,
 	};
 
+	inline u32 operator& (QueueUsage lhs, QueueUsage rhs)
+	{
+		return static_cast<u32>(lhs) & static_cast<u32>(rhs);
+	}
+
+	inline u32 operator| (QueueUsage lhs, QueueUsage rhs)
+	{
+		return static_cast<u32>(lhs) | static_cast<u32>(rhs);
+	}
+
+	inline QueueUsage& operator |= (QueueUsage& lhs, QueueUsage rhs)
+	{
+		lhs = static_cast<QueueUsage>(lhs | rhs);
+		return lhs;
+	}
+
+	inline QueueUsage& operator &= (QueueUsage& lhs, QueueUsage rhs)
+	{
+		lhs = static_cast<QueueUsage>(lhs & rhs);
+		return lhs;
+	}
+
 	inline u64 count_queue_usage_matches(QueueUsage lhs, QueueUsage rhs)
 	{
-		u16 overlap = static_cast<uint16_t>(lhs) & static_cast<uint16_t>(rhs);
+		u32 overlap = lhs & rhs;
 
 		u64 count = 0;
 		while (overlap)
@@ -32,22 +54,22 @@ namespace tur
 	{
 		std::vector<const char*> usageStrings;
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::NONE))
+		if (usage & QueueUsage::NONE)
 			usageStrings.push_back("none");
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::GRAPHICS))
+		if (usage & QueueUsage::GRAPHICS)
 			usageStrings.push_back("graphics");
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::PRESENT))
+		if (usage & QueueUsage::PRESENT)
 			usageStrings.push_back("present");
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::COMPUTE))
+		if (usage & QueueUsage::COMPUTE)
 			usageStrings.push_back("compute");
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::TRANSFER))
+		if (usage & QueueUsage::TRANSFER)
 			usageStrings.push_back("transfer");
 
-		if (static_cast<u16>(usage) & static_cast<u16>(QueueUsage::SPARSE_BINDING))
+		if (usage & QueueUsage::SPARSE_BINDING)
 			usageStrings.push_back("sparse_binding");
 
 		return usageStrings;
@@ -75,5 +97,7 @@ namespace tur
 
 		if (testString == "sparse_binding")
 			return QueueUsage::SPARSE_BINDING;
+
+		return QueueUsage::NONE;
 	}
 }

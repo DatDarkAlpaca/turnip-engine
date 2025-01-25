@@ -30,10 +30,10 @@ namespace tur::vulkan
 				auto supportedQueueFeatures = get_queue_family_supported_features(device, state.surface);
 				if (state.requiresDrawing)
 				{
-					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::GRAPHICS)))
+					if (!(supportedQueueFeatures & QueueUsage::GRAPHICS))
 						continue;
 
-					if (!(static_cast<u16>(supportedQueueFeatures) & static_cast<u16>(QueueUsage::PRESENT)))
+					if (!(supportedQueueFeatures & QueueUsage::PRESENT))
 						continue;
 
 					auto swapchainCapabilities = fetch_swapchain_capabilities(device, state.surface);
@@ -61,7 +61,7 @@ namespace tur::vulkan
 		if (suitableDevices.size() == 0)
 			TUR_LOG_CRITICAL("No suitable devices were found.");
 		
-		vk::PhysicalDevice chosenDevice;
+		vk::PhysicalDevice chosenDevice = suitableDevices[0];
 		{
 			for (const auto& device : suitableDevices)
 			{
@@ -72,7 +72,6 @@ namespace tur::vulkan
 			}
 		}
 
-		// TODO: handle invalid device
 		state.physicalDevice = chosenDevice;
 	}
 }

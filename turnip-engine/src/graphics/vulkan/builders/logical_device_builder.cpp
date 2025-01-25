@@ -11,7 +11,7 @@ namespace tur::vulkan
 	{
 		using queue_family_index = handle_type;
 
-		auto requiredQueueOperations = vulkanConfig.logicalDeviceRequirements.requiredQueueOperations;
+		const auto& requiredQueueOperations = vulkanConfig.logicalDeviceRequirements.requiredQueueOperations;
 		const auto& queueFamilies = get_queue_families(state.physicalDevice, state.surface);
 
 		// Queue Selection:
@@ -82,9 +82,12 @@ namespace tur::vulkan
 
 		vk::DeviceCreateInfo deviceInfo = vk::DeviceCreateInfo(
 			vk::DeviceCreateFlags(),
-			queueCreateInfos.size(), queueCreateInfos.data(),
-			layers.size(), layers.data(),
-			extensions.size(), extensions.data(),
+			static_cast<u32>(queueCreateInfos.size()),
+			queueCreateInfos.data(),
+			static_cast<u32>(layers.size()),
+			layers.data(),
+			static_cast<u32>(extensions.size()),
+			extensions.data(),
 			&deviceFeatures,
 			&vulkan13Features
 		);

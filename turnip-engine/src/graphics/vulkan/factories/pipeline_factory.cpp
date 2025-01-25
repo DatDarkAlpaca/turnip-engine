@@ -82,7 +82,7 @@ namespace tur::vulkan
 			if (descriptor.useDynamicScissor)
 				dynamicStates.push_back(vk::DynamicState::eScissor);
 
-			dynamicStateCreateInfo.dynamicStateCount = dynamicStates.size();
+			dynamicStateCreateInfo.dynamicStateCount = static_cast<u32>(dynamicStates.size());
 			dynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
 		}
 
@@ -100,7 +100,7 @@ namespace tur::vulkan
 				for (const auto& viewport : descriptor.viewports)
 					viewports.push_back(vk::Viewport{ viewport.x, viewport.y, viewport.width, viewport.height });
 
-				pipelineViewportState.viewportCount = viewports.size();
+				pipelineViewportState.viewportCount = static_cast<u32>(viewports.size());
 				pipelineViewportState.pViewports = viewports.data();
 			}
 
@@ -109,7 +109,7 @@ namespace tur::vulkan
 				for (const auto& scissor : descriptor.scissors)
 					viewports.push_back(vk::Viewport{ scissor.x, scissor.y, scissor.width, scissor.height });
 
-				pipelineViewportState.viewportCount = scissors.size();
+				pipelineViewportState.viewportCount = static_cast<u32>(scissors.size());
 				pipelineViewportState.pViewports = scissors.data();
 			}
 		}
@@ -238,7 +238,7 @@ namespace tur::vulkan
 		{
 			pipelineInfo.flags = vk::PipelineCreateFlags();
 
-			pipelineInfo.stageCount = shaderCreateInfos.size();
+			pipelineInfo.stageCount = static_cast<u32>(shaderCreateInfos.size());
 			pipelineInfo.pStages = shaderCreateInfos.data();
 
 			pipelineInfo.pDynamicState = &dynamicStateCreateInfo;

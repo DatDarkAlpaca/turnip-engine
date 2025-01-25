@@ -96,7 +96,7 @@ namespace tur::vulkan
 
 		try
 		{
-			presentQueue.presentKHR(presentInfo);
+			auto _ = presentQueue.presentKHR(presentInfo);
 		}
 		catch (vk::SystemError& err)
 		{

@@ -25,7 +25,7 @@ namespace tur::vulkan
 		{
 			for (const auto& [index, usage] : m_Usage)
 			{
-				if (static_cast<u16>(requestedUsage) & static_cast<u16>(usage))
+				if (requestedUsage & usage)
 					return m_Queues[index].first;
 			}
 
@@ -37,13 +37,13 @@ namespace tur::vulkan
 		{
 			for (const auto& [index, usage] : m_Usage)
 			{
-				if(static_cast<u16>(usage) | static_cast<u16>(QueueUsage::GRAPHICS) && requestedUsage == QueueUsage::TRANSFER)
+				if((usage & QueueUsage::GRAPHICS) && (requestedUsage == QueueUsage::TRANSFER))
 					return m_Queues[index].second;
 
-				if (static_cast<u16>(usage) | static_cast<u16>(QueueUsage::COMPUTE) && requestedUsage == QueueUsage::TRANSFER)
+				if ((usage & QueueUsage::COMPUTE) && (requestedUsage == QueueUsage::TRANSFER))
 					return m_Queues[index].second;
 
-				if (static_cast<u16>(requestedUsage) & static_cast<u16>(usage))
+				if (requestedUsage & usage)
 					return m_Queues[index].second;
 			}
 

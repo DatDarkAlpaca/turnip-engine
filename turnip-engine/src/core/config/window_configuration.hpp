@@ -34,11 +34,11 @@ namespace tur
 		auto xPosString = json["position"].at("x").get<std::string>();
 		to_lower(xPosString);
 		if (xPosString != "default")
-			properties.position.x = json["position"].at("x").get<float>();
+			properties.position.x = json["position"].at("x").get<u32>();
 		
 		auto yPosString = json["position"].at("y").get<std::string>();
 		to_lower(yPosString);
 		if (yPosString != "default")
-			properties.position.x = json["position"].at("y").get<float>();
+			properties.position.x = json["position"].at("y").get<u32>();
 	}
 }

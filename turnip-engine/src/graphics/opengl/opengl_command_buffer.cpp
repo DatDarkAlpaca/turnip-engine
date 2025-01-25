@@ -35,7 +35,11 @@ namespace tur::gl
 
 	void CommandBufferGL::set_viewport_impl(const Viewport& viewport)
 	{
-		glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+		glViewport(
+			static_cast<i32>(viewport.x), 
+			static_cast<i32>(viewport.y), 
+			static_cast<i32>(viewport.width), 
+			static_cast<i32>(viewport.height));
 	}
 	void CommandBufferGL::set_scissor_impl(const Rect2D& scissor)
 	{
@@ -191,14 +195,14 @@ namespace tur::gl
 
 				gl_handle bufferHandle = m_BufferBindings[binding.binding];
 				glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
-
+				
 				glVertexAttribPointer(
 					attribute.location,
-					get_format_size(attribute.format),
+					static_cast<i32>(get_format_size(attribute.format)),
 					get_format(attribute.format),
 					attribute.normalized,
 					binding.stride,
-					(void*)attribute.offset
+					reinterpret_cast<void*>(attribute.offset)
 				);
 
 				int divisor = binding.inputRate == InputRate::VERTEX ? 0 : 1;

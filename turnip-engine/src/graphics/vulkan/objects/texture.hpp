@@ -9,9 +9,9 @@ namespace tur::vulkan
 	{
 		vk::Image image;
 		vk::ImageView imageView;
-		VmaAllocation allocation;
-		vk::Extent3D extent;
-		vk::Format format;
+		VmaAllocation allocation = nullptr;
+		vk::Extent3D extent;		
+		vk::Format format = vk::Format::eR8G8B8A8Unorm;
 	};
 }
 

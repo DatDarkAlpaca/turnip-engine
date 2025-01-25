@@ -22,7 +22,7 @@ namespace glm
 
     inline void from_json(const nlohmann::json& json, glm::uvec2& vector)
     {
-        vector.x = json.at("x").get<float>();
-        vector.y = json.at("y").get<float>();
+        vector.x = json.at("x").get<u32>();
+        vector.y = json.at("y").get<u32>();
     }
 }
