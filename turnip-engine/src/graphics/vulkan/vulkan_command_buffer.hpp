@@ -28,7 +28,7 @@ namespace tur::vulkan
 			auto& swapchain = r_Device->get_state().swapchain;
 			auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 			auto& frameData = frameDataHolder.get_frame_data();
-
+		
 			try {
 				auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
 				device.resetFences(frameData.recordingFence);
@@ -55,9 +55,21 @@ namespace tur::vulkan
 			} catch(vk::SystemError& err) {
 				TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
 			}
+
+			auto& images = r_Device->get_state().swapChainImages;
+			const auto& currentImage = frameDataHolder.get_color_buffer();
+
+			transition_image(images.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eGeneral);
 		}
 		void end_impl()
 		{
+			auto& frameDataHolder = r_Device->get_state().frameDataHolder;
+
+			auto& images = r_Device->get_state().swapChainImages;
+			const auto& currentImage = frameDataHolder.get_color_buffer();
+
+			transition_image(images.at(currentImage), vk::ImageLayout::eGeneral, vk::ImageLayout::ePresentSrcKHR);
+
 			try {
 				m_CommandBuffer.end();
 			}
@@ -128,6 +140,54 @@ namespace tur::vulkan
 		{
 			// TODO: add instanceFirst to function parameters
 			m_CommandBuffer.draw(vertexCount, instanceCount, first, 0);
+		}
+
+	private:
+		void transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout)
+		{
+			vk::ImageAspectFlags aspectMask;
+			vk::ImageSubresourceRange subresourceRange;
+
+			vk::ImageMemoryBarrier2 imageBarrier = {};
+			{
+				imageBarrier.srcStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+				imageBarrier.srcAccessMask = vk::AccessFlagBits2::eMemoryWrite;
+
+				imageBarrier.dstStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+				imageBarrier.dstAccessMask = vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead;
+
+				imageBarrier.oldLayout = currentLayout;
+				imageBarrier.newLayout = newLayout;
+
+				
+				if (newLayout == vk::ImageLayout::eDepthAttachmentOptimal)
+					aspectMask = vk::ImageAspectFlagBits::eDepth;
+				else
+					aspectMask = vk::ImageAspectFlagBits::eColor;
+
+				
+				{
+					subresourceRange.aspectMask = aspectMask;
+					subresourceRange.baseMipLevel = 0;
+					subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+					subresourceRange.baseArrayLayer = 0;
+					subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+				}
+
+				imageBarrier.subresourceRange = subresourceRange;
+				imageBarrier.image = targetImage;
+			}
+
+			vk::DependencyInfo dependencyInfo = vk::DependencyInfo().setImageMemoryBarriers(imageBarrier);
+			
+			try
+			{
+				m_CommandBuffer.pipelineBarrier2(dependencyInfo);
+			}
+			catch (vk::SystemError& err)
+			{
+				TUR_LOG_CRITICAL("Failed to issue transition image layout command. {}", err.what());
+			}
 		}
 
 	private:

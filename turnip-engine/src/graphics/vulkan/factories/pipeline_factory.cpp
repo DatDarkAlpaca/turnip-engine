@@ -255,21 +255,29 @@ namespace tur::vulkan
 		}
 
 		vk::Pipeline graphicsPipeline;
-		auto result = device.get_state().logicalDevice.createGraphicsPipeline(nullptr, pipelineInfo);
-		
-		switch (result.result)
+		try 
 		{
-			case vk::Result::eSuccess: 
+			auto result = device.get_state().logicalDevice.createGraphicsPipeline(nullptr, pipelineInfo);
+			switch (result.result)
+			{
+			case vk::Result::eSuccess:
 				break;
-			
+
 			case vk::Result::ePipelineCompileRequiredEXT:
 				TUR_LOG_CRITICAL("VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT on PipelineCreateInfo");
 				break;
 
-			default: 
+			default:
 				TUR_LOG_CRITICAL("Pipeline creation gone wild");
-		}
+			}
 
-		return result.value;
+			graphicsPipeline = result.value;
+		}
+		catch (vk::SystemError& err)
+		{
+			TUR_LOG_CRITICAL("Failed to create graphics pipeline. {}", err.what());
+		}
+		
+		return graphicsPipeline;
 	}
 }

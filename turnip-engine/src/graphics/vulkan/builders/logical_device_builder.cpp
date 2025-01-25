@@ -53,20 +53,27 @@ namespace tur::vulkan
 			queueCreateInfos.push_back(createInfo);
 		}
 
-		// Device creation:
+		// Extensions:
 		std::vector<const char*> extensions;
-		for (const auto& extension : vulkanConfig.physicalDeviceRequirements.extensions)
-			extensions.push_back(extension.c_str());
-
-		if (state.requiresDrawing)
-			extensions.push_back(SwapchainExtensionName);
-
-		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
-
-		// Dynamic Rendering:
-		vk::PhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeatures = {};
 		{
-			dynamicRenderingFeatures.dynamicRendering = true;
+			for (const auto& extension : vulkanConfig.physicalDeviceRequirements.extensions)
+				extensions.push_back(extension.c_str());
+
+			if (state.requiresDrawing)
+				extensions.push_back(SwapchainExtensionName);
+		}
+		
+		// Features:
+		vk::PhysicalDeviceVulkan13Features vulkan13Features;
+		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
+		{
+			const auto& strExtensions = vulkanConfig.physicalDeviceRequirements.extensions;
+
+			if (std::find(strExtensions.begin(), strExtensions.end(), VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME) != strExtensions.end())
+				vulkan13Features.dynamicRendering = true;
+			
+			if (std::find(strExtensions.begin(), strExtensions.end(), VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME) != strExtensions.end())
+				vulkan13Features.synchronization2 = true;
 		}
 
 		std::vector<const char*> layers;
@@ -79,7 +86,7 @@ namespace tur::vulkan
 			layers.size(), layers.data(),
 			extensions.size(), extensions.data(),
 			&deviceFeatures,
-			&dynamicRenderingFeatures
+			&vulkan13Features
 		);
 
 		try

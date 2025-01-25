@@ -147,7 +147,14 @@ namespace tur::vulkan
 					imageCreateInfo.subresourceRange.baseArrayLayer = 0;
 					imageCreateInfo.subresourceRange.layerCount = 1;
 				}
-
+				
+				if(state.apiVersion > VK_API_VERSION_1_1)
+				{
+					vk::ImageViewUsageCreateInfo usageCreateInfo;
+					usageCreateInfo.usage = vk::ImageUsageFlagBits::eTransferDst;
+					imageCreateInfo.pNext = &usageCreateInfo;
+				}
+				
 				state.swapChainImageViews[i] = state.logicalDevice.createImageView(imageCreateInfo);
 			}	
 		}
