@@ -29,14 +29,14 @@ namespace tur::vulkan
 		vulkanFunctions.vkGetPhysicalDeviceMemoryProperties2KHR = vkGetPhysicalDeviceMemoryProperties2;
 		
 		VmaAllocatorCreateInfo allocatorCreateInfo = { };
-		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
+		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
 		allocatorCreateInfo.vulkanApiVersion = state.apiVersion;
 		allocatorCreateInfo.instance = state.instance;
 		allocatorCreateInfo.physicalDevice = state.physicalDevice;
 		allocatorCreateInfo.device = state.logicalDevice;
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
 
-		VmaAllocator allocator;
-		vmaCreateAllocator(&allocatorCreateInfo, &allocator);
+		if (vmaCreateAllocator(&allocatorCreateInfo, &state.vmaAllocator) != VK_SUCCESS)
+			TUR_LOG_CRITICAL("Failed to initialize VMA");
 	}
 }

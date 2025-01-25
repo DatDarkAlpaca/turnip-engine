@@ -2,7 +2,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "graphics/vulkan/objects/vulkan_state.hpp"
-#include "graphics/vulkan/vulkan_textures.hpp"
+#include "graphics/vulkan/objects/texture.hpp"
 #include "graphics/type/extent.hpp"
 
 #include "core/config/config_data.hpp"

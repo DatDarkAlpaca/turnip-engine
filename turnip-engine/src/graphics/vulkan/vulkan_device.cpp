@@ -39,6 +39,15 @@ namespace tur::vulkan
 
 		// Frame Data:
 		initialize_frame_data(m_State);
+
+		// Texture:
+		TextureDescriptor descriptor;
+		{
+			descriptor.format = TextureFormat::RGBA16SFloat;
+			descriptor.width = m_State.swapchainExtent.width;
+			descriptor.height = m_State.swapchainExtent.height;
+			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));
+		}
 	}
 	void GraphicsDeviceVulkan::present_impl()
 	{
@@ -150,18 +159,18 @@ namespace tur::vulkan
 			imageAllocationInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 		}
 		
-		VkImageCreateInfo cCreateInfo = static_cast<VkImageCreateInfo>(imageCreateInfo);
-		VkImage cImage = static_cast<VkImage>(texture.image);
-
-		vmaCreateImage(
-			m_State.vmaAllocator, 
-			&cCreateInfo,
-			&imageAllocationInfo, 
-			&cImage,
+		if (vmaCreateImage(
+			m_State.vmaAllocator,
+			reinterpret_cast<const VkImageCreateInfo*>(&imageCreateInfo),
+			&imageAllocationInfo,
+			reinterpret_cast<VkImage*>(&texture.image),
 			&texture.allocation,
 			nullptr
-		);
-
+		) != VK_SUCCESS)
+		{
+			TUR_LOG_ERROR("Failed to create image");
+		}
+		
 		vk::ImageViewCreateInfo imageViewCreateInfo = {};
 		{
 			imageViewCreateInfo.flags = vk::ImageViewCreateFlags();

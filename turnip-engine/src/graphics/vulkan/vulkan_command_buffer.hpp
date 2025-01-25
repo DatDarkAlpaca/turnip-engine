@@ -103,13 +103,11 @@ namespace tur::vulkan
 				imageBarrier.oldLayout = currentLayout;
 				imageBarrier.newLayout = newLayout;
 
-				
 				if (newLayout == vk::ImageLayout::eDepthAttachmentOptimal)
 					aspectMask = vk::ImageAspectFlagBits::eDepth;
 				else
 					aspectMask = vk::ImageAspectFlagBits::eColor;
 
-				
 				{
 					subresourceRange.aspectMask = aspectMask;
 					subresourceRange.baseMipLevel = 0;
@@ -133,6 +131,8 @@ namespace tur::vulkan
 				TUR_LOG_CRITICAL("Failed to issue transition image layout command. {}", err.what());
 			}
 		}
+
+		void copy_image(vk::Image source, vk::Image target, vk::Extent2D sourceSize, vk::Extent2D targetSize);
 
 	private:
 		inline FrameData& get_frame_data()

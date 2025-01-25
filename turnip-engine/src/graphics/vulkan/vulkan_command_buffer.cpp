@@ -10,6 +10,7 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::initialize_impl()
 	{
+		
 	}
 
 	void CommandBufferVulkan::begin_impl()
@@ -47,16 +48,13 @@ namespace tur::vulkan
 			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
 		}
 
-		auto& images = r_Device->get_state().swapChainImages;
-		const auto& currentImage = frameDataHolder.get_color_buffer();
-
-		transition_image(images.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eGeneral);
+		auto& drawTexture = r_Device->get_state().drawTexture;
+		transition_image(drawTexture.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eGeneral);
 	}
-
 	void CommandBufferVulkan::begin_render_impl()
 	{
 		const auto& currentFrame = r_Device->get_state().frameDataHolder.get_color_buffer();
-		auto& imageView = r_Device->get_state().swapChainImageViews[currentFrame];
+		auto& drawTexture = r_Device->get_state().drawTexture;
 		const auto& swapchainExtent = r_Device->get_state().swapchainExtent;
 
 		vk::RenderingInfo renderInfo = {};
@@ -64,14 +62,14 @@ namespace tur::vulkan
 			VkRenderingAttachmentInfoKHR;
 			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
 			{
-				colorAttachmentInfo.imageView = imageView;
+				colorAttachmentInfo.imageView = drawTexture.imageView;
 				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
 				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
 				colorAttachmentInfo.clearValue = vk::ClearValue({ 0.0f, 1.0f, 0.0f, 0.0f });
 			}
-
+			
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};
 			{
 				colorAttachmentInfo.imageView;
@@ -84,7 +82,7 @@ namespace tur::vulkan
 				colorAttachmentInfo.clearValue;
 			}*/
 
-			renderInfo.renderArea = vk::Rect2D({}, { swapchainExtent.width, swapchainExtent.height });
+			renderInfo.renderArea = vk::Rect2D({}, { drawTexture.extent.width, drawTexture.extent.height });
 			renderInfo.colorAttachmentCount = 1;
 			renderInfo.pColorAttachments = &colorAttachmentInfo;
 			renderInfo.layerCount = 1;
@@ -101,11 +99,20 @@ namespace tur::vulkan
 	void CommandBufferVulkan::end_impl()
 	{
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
+		auto& swapchainExtent = r_Device->get_state().swapchainExtent;
 
 		auto& images = r_Device->get_state().swapChainImages;
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
-		transition_image(images.at(currentImage), vk::ImageLayout::eGeneral, vk::ImageLayout::ePresentSrcKHR);
+		auto& drawTexture = r_Device->get_state().drawTexture;
+
+		transition_image(drawTexture.image, vk::ImageLayout::eGeneral, vk::ImageLayout::eTransferSrcOptimal);
+		transition_image(images.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+
+		copy_image(drawTexture.image, images.at(currentImage),
+			{ drawTexture.extent.width, drawTexture.extent.height }, swapchainExtent);
+
+		transition_image(images.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 
 		try {
 			m_CommandBuffer.end();
@@ -113,5 +120,43 @@ namespace tur::vulkan
 		catch (vk::SystemError err) {
 			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
+	}
+
+	void CommandBufferVulkan::copy_image(vk::Image source, vk::Image target, vk::Extent2D sourceSize, vk::Extent2D targetSize)
+	{
+		vk::ImageBlit2 blitRegion = {};
+		{
+			blitRegion.srcOffsets[1].x = sourceSize.width;
+			blitRegion.srcOffsets[1].y = sourceSize.height;
+			blitRegion.srcOffsets[1].z = 1;
+
+			blitRegion.dstOffsets[1].x = targetSize.width;
+			blitRegion.dstOffsets[1].y = targetSize.height;
+			blitRegion.dstOffsets[1].z = 1;
+
+			blitRegion.srcSubresource.aspectMask = vk::ImageAspectFlagBits::eColor;
+			blitRegion.srcSubresource.baseArrayLayer = 0;
+			blitRegion.srcSubresource.layerCount = 1;
+			blitRegion.srcSubresource.mipLevel = 0;
+
+			blitRegion.dstSubresource.aspectMask = vk::ImageAspectFlagBits::eColor;
+			blitRegion.dstSubresource.baseArrayLayer = 0;
+			blitRegion.dstSubresource.layerCount = 1;
+			blitRegion.dstSubresource.mipLevel = 0;
+		}
+
+		vk::BlitImageInfo2 blitInfo = {};
+		{
+			blitInfo.srcImage = source;
+			blitInfo.dstImage = target;
+			blitInfo.srcImageLayout = vk::ImageLayout::eTransferSrcOptimal;
+			blitInfo.dstImageLayout = vk::ImageLayout::eTransferDstOptimal;
+			
+			blitInfo.filter = vk::Filter::eLinear;
+			blitInfo.regionCount = 1;
+			blitInfo.pRegions = &blitRegion;
+		}
+		
+		m_CommandBuffer.blitImage2(blitInfo);
 	}
 }

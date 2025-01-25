@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.hpp>
 #include <vk_mem_alloc.h>
 
+#include "graphics/vulkan/objects/texture.hpp"
 #include "graphics/vulkan/objects/swapchain.hpp"
 #include "graphics/vulkan/objects/queue_list.hpp"
 #include "graphics/vulkan/objects/frame_data.hpp"
@@ -40,5 +41,6 @@ namespace tur::vulkan
 
 		// Frame:
 		FrameDataHolder frameDataHolder;
+		Texture drawTexture;
 	};
 }

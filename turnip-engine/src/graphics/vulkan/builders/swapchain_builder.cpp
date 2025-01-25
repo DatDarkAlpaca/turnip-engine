@@ -151,7 +151,7 @@ namespace tur::vulkan
 				if(state.apiVersion > VK_API_VERSION_1_1)
 				{
 					vk::ImageViewUsageCreateInfo usageCreateInfo;
-					usageCreateInfo.usage = vk::ImageUsageFlagBits::eColorAttachment;
+					usageCreateInfo.usage = vk::ImageUsageFlagBits::eTransferDst;
 					imageCreateInfo.pNext = &usageCreateInfo;
 				}
 				
