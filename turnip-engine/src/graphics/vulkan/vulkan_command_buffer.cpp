@@ -28,8 +28,14 @@ namespace tur::vulkan
 			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
 		}
 
-		u32 imageIndex = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore).value;
-		frameDataHolder.set_color_buffer(imageIndex);
+		auto imageResult = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore);
+		frameDataHolder.set_color_buffer(imageResult.value);
+
+		if (imageResult.result == vk::Result::eErrorOutOfDateKHR)
+			r_Device->recreate_swapchain();
+
+		else if (imageResult.result != vk::Result::eSuccess && imageResult.result != vk::Result::eSuboptimalKHR)
+			TUR_LOG_CRITICAL("Failed to acquire swapchain image");
 
 		m_CommandBuffer = get_command_buffer();
 		m_CommandBuffer.reset();
@@ -113,10 +119,12 @@ namespace tur::vulkan
 
 		transition_image(images.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 
-		try {
+		try 
+		{
 			m_CommandBuffer.end();
 		}
-		catch (vk::SystemError err) {
+		catch (vk::SystemError err) 
+		{
 			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
 	}

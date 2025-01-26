@@ -19,6 +19,7 @@ namespace tur::vulkan
 		FrameDataHolder(u32 totalAllocatedFrames = 3)
 			: m_TotalAllocatedFrames(totalAllocatedFrames)
 		{
+			m_FrameData.clear();
 			m_FrameData.resize(m_TotalAllocatedFrames);
 		}
 

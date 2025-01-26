@@ -13,11 +13,15 @@
 #include "factories/pipeline_factory.hpp"
 #include "factories/shader_factory.hpp"
 
+#include "platform/platform.hpp"
+
 namespace tur::vulkan
 {
 	void GraphicsDeviceVulkan::initialize_impl(NON_OWNING Window* window, const ConfigData& configData)
 	{
 		const auto& vulkanConfig = configData.vulkanConfiguration;
+		r_Window = window;
+		m_ConfigData = configData;
 
 		// Instance:
 		initialize_instance(m_State, configData);
@@ -55,6 +59,8 @@ namespace tur::vulkan
 		auto& presentQueue = m_State.queueList.get(QueueUsage::PRESENT);
 		auto& frameDataHolder = m_State.frameDataHolder;
 		const auto& frameData = frameDataHolder.get_frame_data();
+
+		bool& framebufferResized = r_Window->data.framebufferResized;
 
 		// Submit:
 		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
@@ -94,24 +100,23 @@ namespace tur::vulkan
 			presentInfo.pImageIndices = imageIndices;
 		}
 
+		vk::Result presentResult = {};
 		try
 		{
-			auto _ = presentQueue.presentKHR(presentInfo);
+			presentResult = presentQueue.presentKHR(presentInfo);
 		}
 		catch (vk::SystemError& err)
 		{
-			TUR_LOG_ERROR("Failed to submit a present command to the present queue. {}", err.what());
+			if (presentResult == vk::Result::eErrorOutOfDateKHR || presentResult == vk::Result::eSuboptimalKHR || framebufferResized)
+			{
+				framebufferResized = false;
+				recreate_swapchain();
+			}
+			else if (presentResult != vk::Result::eSuccess)
+				TUR_LOG_CRITICAL("Failed to acquire swapchain image");
 		}
 
 		frameDataHolder.increment_frame_count();
-
-		// Acquire next image:
-		/*m_State.frameDataHolder.increment_frame_count();
-		m_State.logicalDevice.waitForFences(frameData.recordingFence, true, 1'000'000'000);
-		m_State.logicalDevice.resetFences(frameData.recordingFence);
-
-		auto image = m_State.logicalDevice.acquireNextImageKHR(m_State.swapchain, 1'000'000'000, frameData.imageAvailableSemaphore);
-		m_CurrentColorBufferIndex = image.value;*/
 	}
 
 	CommandBufferVulkan GraphicsDeviceVulkan::create_command_buffer_impl()
@@ -212,5 +217,23 @@ namespace tur::vulkan
 		destroy_shader(descriptor.fragmentShader);
 
 		return m_Pipelines.add(pipeline);
+	}
+	
+	void GraphicsDeviceVulkan::recreate_swapchain()
+	{
+		auto size = get_window_size(r_Window);
+
+		while (size.x == 0 || size.y == 0)
+			size = get_window_size(r_Window);
+
+		m_State.logicalDevice.waitIdle();
+		cleanup_swapchain(m_State);
+		
+		// New Swapchain:
+		SwapchainRequirements requirements;
+		requirements.oldSwapchain = m_State.swapchain;
+		initialize_swapchain(m_State, requirements);
+
+		initialize_frame_data(m_State);
 	}
 }

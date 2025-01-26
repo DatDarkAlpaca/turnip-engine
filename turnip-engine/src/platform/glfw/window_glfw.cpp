@@ -46,6 +46,7 @@ namespace tur
 
 		glfwSetFramebufferSizeCallback(window->window, [](GLFWwindow* window, int width, int height) {
 			auto* data = static_cast<Window::Data*>(glfwGetWindowUserPointer(window));
+			data->framebufferResized = true;
 
 			WindowFramebufferEvent event(width, height);
 			data->eventCallback(event);
@@ -240,5 +241,13 @@ namespace tur
 	void hide_window(Window* window)
 	{
 		glfwHideWindow(window->window);
+	}
+
+	glm::uvec2 get_window_size(Window* window)
+	{
+		int width = 0, height = 0;
+		glfwGetFramebufferSize(window->window, &width, &height);
+
+		return { static_cast<u32>(width), static_cast<u32>(height) };
 	}
 }

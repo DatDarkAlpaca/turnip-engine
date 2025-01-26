@@ -30,11 +30,16 @@ namespace tur
 
 	extern void poll_events(Window* window);
 
+
 	extern void shutdown_window(Window* window);
 
 	extern bool is_open_window(Window* window);
 
+
 	extern void show_window(Window* window);
 
 	extern void hide_window(Window* window);
+
+
+	extern glm::uvec2 get_window_size(Window* window);
 }

@@ -163,4 +163,14 @@ namespace tur::vulkan
 		// Initialize frame data:
 		state.frameDataHolder = FrameDataHolder(static_cast<u32>(state.swapChainImages.size()));
 	}
+
+	void cleanup_swapchain(VulkanState& state)
+	{
+		auto& device = state.logicalDevice;
+
+		for (auto imageView : state.swapChainImageViews)
+			device.destroyImageView(imageView);
+
+		device.destroySwapchainKHR(state.swapchain);
+	}
 }

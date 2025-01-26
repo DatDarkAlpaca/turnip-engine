@@ -23,4 +23,6 @@ namespace tur::vulkan
 	};
 
 	void initialize_swapchain(VulkanState& state, const SwapchainRequirements& requirements);
+
+	void cleanup_swapchain(VulkanState& state);
 }

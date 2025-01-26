@@ -17,6 +17,7 @@ namespace tur
 		struct Data
 		{
 			EventCallback eventCallback;
+			bool framebufferResized = false;
 		} data;
 	};
 }
