@@ -82,9 +82,9 @@ namespace tur
 		}
 
 	public:
-		pipeline_handle create_pipeline(const PipelineDescriptor& descriptor)
+		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
 		{
-			return static_cast<Backend*>(this)->create_pipeline_impl(descriptor);
+			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
 		}
 
 	protected:

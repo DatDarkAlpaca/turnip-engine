@@ -198,8 +198,8 @@ namespace tur::gl
 				
 				glVertexAttribPointer(
 					attribute.location,
-					static_cast<i32>(get_format_size(attribute.format)),
-					get_format(attribute.format),
+					static_cast<i32>(get_attribute_format_size(attribute.format)),
+					get_attribute_format(attribute.format),
 					attribute.normalized,
 					binding.stride,
 					reinterpret_cast<void*>(attribute.offset)

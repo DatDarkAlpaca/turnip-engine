@@ -110,7 +110,7 @@ namespace tur::gl
 
 namespace tur::gl
 {
-    constexpr inline gl_handle get_format(AttributeFormat format)
+    constexpr inline gl_handle get_attribute_format(AttributeFormat format)
     {
         switch (format)
         {
@@ -140,7 +140,7 @@ namespace tur::gl
         return 0;
     }
 
-    constexpr inline u64 get_format_size(AttributeFormat format)
+    constexpr inline u64 get_attribute_format_size(AttributeFormat format)
     {
         switch (format)
         {

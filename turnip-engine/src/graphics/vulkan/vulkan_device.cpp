@@ -113,7 +113,7 @@ namespace tur::vulkan
 				recreate_swapchain();
 			}
 			else if (presentResult != vk::Result::eSuccess)
-				TUR_LOG_CRITICAL("Failed to acquire swapchain image");
+				TUR_LOG_CRITICAL("Failed to acquire swapchain image. {}", err.what());
 		}
 
 		frameDataHolder.increment_frame_count();
@@ -208,15 +208,24 @@ namespace tur::vulkan
 		m_ShaderModules.remove(handle);
 	}
 
-	pipeline_handle GraphicsDeviceVulkan::create_pipeline_impl(const PipelineDescriptor& descriptor)
+	pipeline_handle GraphicsDeviceVulkan::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
 	{
-		vk::Pipeline pipeline = create_graphics_pipeline(*this, descriptor);
-
-		// TODO: destroy others
+		vk::Pipeline pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+	
 		destroy_shader(descriptor.vertexShader);
+
+		if (descriptor.tesselationControlShader != invalid_handle)
+			destroy_shader(descriptor.tesselationControlShader);
+
+		if (descriptor.tesselationEvaluationShader != invalid_handle)
+			destroy_shader(descriptor.tesselationEvaluationShader);
+
+		if (descriptor.geometryShader != invalid_handle)
+			destroy_shader(descriptor.geometryShader);
+
 		destroy_shader(descriptor.fragmentShader);
 
-		return m_Pipelines.add(pipeline);
+		return m_Pipelines.add({ pipeline, PipelineType::GRAPHICS });
 	}
 	
 	void GraphicsDeviceVulkan::recreate_swapchain()

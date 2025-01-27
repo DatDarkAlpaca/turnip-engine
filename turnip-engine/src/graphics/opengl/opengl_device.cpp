@@ -199,7 +199,7 @@ namespace tur::gl
 		auto& texture = m_Textures.get(handle);
 		glDeleteTextures(1, &texture.handle);
 	}
-	pipeline_handle GraphicsDeviceGL::create_pipeline_impl(const PipelineDescriptor& descriptor)
+	pipeline_handle GraphicsDeviceGL::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
 	{
 		gl_handle pipelineID = glCreateProgram();
 		

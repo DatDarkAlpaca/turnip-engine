@@ -58,18 +58,20 @@ namespace tur::vulkan
 		void destroy_shader_impl(shader_handle handle);
 
 	protected:
-		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor);
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	public:
 		void recreate_swapchain();
 
 	public:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
+		inline free_list<std::pair<vk::Pipeline, PipelineType>>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline VulkanState& get_state() { return m_State; }
 
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
-		free_list<vk::Pipeline> m_Pipelines;
+		free_list<std::pair<vk::Pipeline, PipelineType>> m_Pipelines;
 		free_list<Texture> m_Textures;
 		VulkanState m_State;
 		ConfigData m_ConfigData;

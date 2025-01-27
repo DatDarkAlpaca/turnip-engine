@@ -41,7 +41,7 @@ namespace tur::gl
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:
-		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor);
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	public:
 		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }

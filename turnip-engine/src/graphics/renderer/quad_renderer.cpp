@@ -20,8 +20,10 @@ namespace tur
 		m_Commands->begin();
 		m_Commands->begin_render();
 		m_Commands->set_viewport(m_Viewport);
-		/*m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
-
+		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
+		
+		m_Commands->bind_pipeline(pipeline);
+		/*
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
 		m_Commands->bind_pipeline(pipeline);
@@ -129,7 +131,7 @@ namespace tur
 		descriptor.vertexShader = vertexShader;
 		descriptor.pipelineLayout = layout;
 
-		pipeline = r_GraphicsDevice->create_pipeline(descriptor);
+		pipeline = r_GraphicsDevice->create_graphics_pipeline(descriptor);
 	}
 
 	void QuadRenderer::initialize_buffers()

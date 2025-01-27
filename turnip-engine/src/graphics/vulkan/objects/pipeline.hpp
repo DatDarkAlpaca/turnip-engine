@@ -58,7 +58,7 @@ namespace tur::vulkan
         return vk::PolygonMode::eFill;
     }
 
-	vk::PrimitiveTopology get_primitive_topology(PrimitiveTopology primitiveTopology)
+	constexpr inline vk::PrimitiveTopology get_primitive_topology(PrimitiveTopology primitiveTopology)
 	{
         switch (primitiveTopology)
         {
@@ -99,4 +99,55 @@ namespace tur::vulkan
         TUR_LOG_ERROR("Invalid Topology: {}. Default: eTriangleList", static_cast<int>(primitiveTopology));
         return vk::PrimitiveTopology::eTriangleList;
 	}
+}
+
+namespace tur::vulkan
+{
+    constexpr inline vk::Format get_attribute_format(AttributeFormat format)
+    {
+        switch (format)
+        {
+            case AttributeFormat::R32_SFLOAT:
+                return vk::Format::eR32Sfloat;
+
+            case AttributeFormat::R64_SFLOAT:
+                return vk::Format::eR64Sfloat;
+
+            case AttributeFormat::R32G32_SFLOAT:
+                return vk::Format::eR32G32Sfloat;
+
+            case AttributeFormat::R32G32B32_SFLOAT:
+                return vk::Format::eR32G32B32Sfloat;
+
+            case AttributeFormat::R32G32B32A32_SFLOAT:
+                return vk::Format::eR32G32B32A32Sfloat;
+
+            case AttributeFormat::R32G32_SINT:
+                return vk::Format::eR32G32Sint;
+
+            case AttributeFormat::R32G32B32A32_UINT:
+                return vk::Format::eR32G32B32A32Uint;
+        }
+
+        TUR_LOG_CRITICAL("Invalid Attribute Format: {}", static_cast<u32>(format));
+        return vk::Format::eUndefined;
+    }
+}
+
+namespace tur::vulkan
+{
+    constexpr inline vk::PipelineBindPoint get_pipeline_type(PipelineType type)
+    {
+        switch (type)
+        {
+            case PipelineType::GRAPHICS:
+                return vk::PipelineBindPoint::eGraphics;
+
+            case PipelineType::COMPUTE:
+                return vk::PipelineBindPoint::eCompute;
+        }
+
+        TUR_LOG_CRITICAL("Invalid Pipline Type: {}", static_cast<u32>(type));
+        return vk::PipelineBindPoint::eGraphics;
+    }
 }

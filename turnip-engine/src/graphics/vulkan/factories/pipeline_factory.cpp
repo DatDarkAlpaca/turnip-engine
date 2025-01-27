@@ -116,15 +116,48 @@ namespace tur::vulkan
 
 		// Vertex Input:
 		// TODO: use descriptors.
+		std::vector<vk::VertexInputBindingDescription>   bindingDescriptions;
+		std::vector<vk::VertexInputAttributeDescription> attributeDescriptions;
+		{
+			// Bindings:
+			const auto& bindings = descriptor.vertexInputStage.bindings;		
+			bindingDescriptions.reserve(bindings.size());
+			for (const auto& binding : bindings)
+			{
+				vk::VertexInputBindingDescription bindingDescription = {};
+				bindingDescription.binding = binding.binding;
+				bindingDescription.stride = binding.stride;
+
+				bool isVertexRate = binding.inputRate == InputRate::VERTEX;
+				bindingDescription.inputRate = isVertexRate ? vk::VertexInputRate::eVertex : vk::VertexInputRate::eInstance;
+
+				bindingDescriptions.push_back(bindingDescription);
+			}
+
+			// Attributes:
+			const auto& attributes = descriptor.vertexInputStage.attributes;
+			attributeDescriptions.reserve(attributes.size());
+			for (const auto& attribute : attributes)
+			{
+				vk::VertexInputAttributeDescription attributeDescription = {};
+				attributeDescription.binding = attribute.binding;
+				attributeDescription.location = attribute.location;
+				attributeDescription.format = get_attribute_format(attribute.format);
+				attributeDescription.offset = attribute.offset;
+
+				attributeDescriptions.push_back(attributeDescription);
+			}
+		}
+
 		vk::PipelineVertexInputStateCreateInfo inputCreateInfo = {};
 		{
 			inputCreateInfo.flags = vk::PipelineVertexInputStateCreateFlags();
 			
-			inputCreateInfo.vertexBindingDescriptionCount = 0;
-			inputCreateInfo.pVertexBindingDescriptions = nullptr;
+			inputCreateInfo.vertexBindingDescriptionCount = static_cast<u32>(bindingDescriptions.size());
+			inputCreateInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
-			inputCreateInfo.vertexAttributeDescriptionCount = 0;
-			inputCreateInfo.pVertexAttributeDescriptions = nullptr;
+			inputCreateInfo.vertexAttributeDescriptionCount = static_cast<u32>(attributeDescriptions.size());
+			inputCreateInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 		}
 
 		// Input Assembly:
@@ -134,15 +167,6 @@ namespace tur::vulkan
 			inputAssemblyCreateInfo.primitiveRestartEnable = descriptor.inputAssemblyStage.primitiveRestartEnable;
 			inputAssemblyCreateInfo.topology = get_primitive_topology(descriptor.inputAssemblyStage.topology);
 		}
-
-		// polygonMode
-		// cullMode
-		// frontFace
-		// depthBiasEnable
-		// depthBiasConstantFactor
-		// depthBiasClamp
-		// depthBiasSlopeFactor
-		// lineWidth
 
 		// Rasterizer:
 		vk::PipelineRasterizationStateCreateInfo rasterizerCreateInfo = {};

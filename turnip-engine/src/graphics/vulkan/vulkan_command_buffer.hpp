@@ -32,20 +32,14 @@ namespace tur::vulkan
 			m_CommandBuffer.setScissor(0, 
 				vk::Rect2D({ (i32)scissor.x, (i32)scissor.y }, { (u32)scissor.width, (u32)scissor.height }));
 		}
-		void clear_impl(ClearFlags flags, const ClearValue& clearValue)
-		{
-
-		}
+		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
 		void update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
 		{
 
 		}
 
-		void bind_pipeline_impl(pipeline_handle handle)
-		{
-
-		}
+		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 		{
 

@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "vulkan_command_buffer.hpp"
+#include "graphics/vulkan/objects/pipeline.hpp"
 
 namespace tur::vulkan
 {
@@ -127,6 +128,17 @@ namespace tur::vulkan
 		{
 			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
+	}
+
+	void CommandBufferVulkan::clear_impl(ClearFlags flags, const ClearValue& clearValue)
+	{
+		
+	}
+
+	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
+	{
+		auto [pipeline, type] = r_Device->get_pipelines().get(handle);
+		m_CommandBuffer.bindPipeline(get_pipeline_type(type), pipeline);
 	}
 
 	void CommandBufferVulkan::copy_image(vk::Image source, vk::Image target, vk::Extent2D sourceSize, vk::Extent2D targetSize)
