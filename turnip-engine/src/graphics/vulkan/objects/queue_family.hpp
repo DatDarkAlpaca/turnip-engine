@@ -54,7 +54,7 @@ namespace tur::vulkan
 			}
 
 			if (device.getSurfaceSupportKHR(queueIndex, surface))
-				support |= QueueUsage::TRANSFER;
+				support |= QueueUsage::PRESENT;
 
 			if (queueFamily.queueFlags & vk::QueueFlagBits::eCompute)
 			{

@@ -24,30 +24,7 @@ namespace tur::gl
 		return CommandBufferGL(this);
 	}
 
-	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize)
-	{
-		gl_handle bufferID;
-		glGenBuffers(1, &bufferID);
-
-		gl_handle bufferType = get_buffer_type(descriptor.type);
-
-		glBindBuffer(bufferType, bufferID);
-		glBufferData(
-			bufferType,
-			bufferSize,
-			nullptr,
-			get_buffer_usage(descriptor.usage)
-		);
-
-		glBindBuffer(bufferType, 0);
-
-		gl::Buffer buffer;
-		buffer.descriptor = descriptor;
-		buffer.handle = bufferID;
-
-		return static_cast<buffer_handle>(m_Buffers.add(buffer));
-	}
-	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
+	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
 		gl_handle bufferID;
 		glGenBuffers(1, &bufferID);
@@ -61,7 +38,6 @@ namespace tur::gl
 			data.data,
 			get_buffer_usage(descriptor.usage)
 		);
-
 		glBindBuffer(bufferType, 0);
 
 		gl::Buffer buffer;
@@ -70,34 +46,25 @@ namespace tur::gl
 
 		return static_cast<buffer_handle>(m_Buffers.add(buffer));
 	}
-	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data)
+	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
 	{
-		auto& buffer = m_Buffers.get(handle);
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), buffer.handle);
-
-		glBufferSubData(get_buffer_type(buffer.descriptor.type), 0, data.size, data.data);
-
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), 0);
+		return create_default_buffer_impl(descriptor, { nullptr, size });
 	}
-	void* GraphicsDeviceGL::map_buffer_impl(buffer_handle handle)
+	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
 	{
 		auto& buffer = m_Buffers.get(handle);
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), buffer.handle);
-
-		void* mapped = glMapBuffer(get_buffer_type(buffer.descriptor.type), GL_WRITE_ONLY);
-
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), 0);
-
-		return mapped;
+		const auto& type = get_buffer_type(buffer.descriptor.type);
+		
+		glBindBuffer(type, buffer.handle);
+		glBufferSubData(type, offset, data.size, data.data);
+		glBindBuffer(type, 0);
 	}
-	void GraphicsDeviceGL::unmap_buffer_impl(buffer_handle handle)
+	void GraphicsDeviceGL::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
-		auto& buffer = m_Buffers.get(handle);
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), buffer.handle);
+		auto& srcBuffer = m_Buffers.get(source);
+		auto& dstBuffer = m_Buffers.get(destination);
 
-		glUnmapBuffer(get_buffer_type(buffer.descriptor.type));
-
-		glBindBuffer(get_buffer_type(buffer.descriptor.type), 0);
+		glCopyBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
 	}
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{
@@ -115,7 +82,7 @@ namespace tur::gl
 		glCompileShader(shaderID);
 		check_compile_error(shaderID, descriptor.type);
 
-		Shader shader;
+		Shader shader = {};
 		shader.handle = shaderID;
 
 		return static_cast<texture_handle>(m_Shaders.add(shader));

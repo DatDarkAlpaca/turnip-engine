@@ -69,6 +69,7 @@ namespace tur::gl
 
 		glClear(setBits);
 	}
+	
 	void CommandBufferGL::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
 	{
 		Buffer buffer = r_Device->get_buffers().get(handle);
@@ -129,10 +130,11 @@ namespace tur::gl
 		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
 		m_BufferBindings[binding] = bufferHandle;
 	}
-	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle)
+	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type)
 	{
 		Buffer buffer = r_Device->get_buffers().get(handle);
 		m_IndexBuffer = buffer;
+		m_IndexType = type;
 	}
 	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle)
 	{
@@ -161,22 +163,24 @@ namespace tur::gl
 		bind_uniform_buffer();
 	}
 
-	void CommandBufferGL::draw_impl(u32 first, u32 vertexCount)
+	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawArrays(topology, first, vertexCount);
+		
+		if (instanceCount == 1)
+			glDrawArrays(topology, firstVertex, vertexCount);
+		else
+			glDrawArraysInstanced(topology, firstVertex, vertexCount, instanceCount);
 	}
-	void CommandBufferGL::draw_impl(u32 count, BufferIndexType type)
+	void CommandBufferGL::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
+		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer.handle);
 
-		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawElements(topology, count, get_buffer_index_type(type), nullptr);
-	}
-	void CommandBufferGL::draw_instanced_impl(u32 first, u32 vertexCount, u32 instanceCount)
-	{
-		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawArraysInstanced(topology, first, vertexCount, instanceCount);
+		if (instanceCount == 1)
+			glDrawElements(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr);
+		else
+			glDrawElementsInstanced(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr, instanceCount);
 	}
 }
 

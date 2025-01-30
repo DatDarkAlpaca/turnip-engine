@@ -20,14 +20,13 @@ namespace tur
 		m_Commands->begin();
 		m_Commands->begin_render();
 		m_Commands->set_viewport(m_Viewport);
+		m_Commands->set_scissor(Rect2D{ m_Viewport.width, m_Viewport.height });
 		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 		
-		m_Commands->bind_pipeline(pipeline);
-		/*
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
 		m_Commands->bind_pipeline(pipeline);
-
+		
 		for (const auto& quad : m_Quads)
 		{
 			bind_mvp(quad.transform);
@@ -41,8 +40,8 @@ namespace tur
 					m_Commands->bind_texture(defaultTexture);
 			}
 
-			m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
-		}*/
+			m_Commands->draw_indexed(6);
+		}
 
 		m_Commands->end_render();
 		m_Commands->end();
@@ -141,7 +140,6 @@ namespace tur
 			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::VERTEX_BUFFER;
-				bufferDesc.usage = BufferUsage::STATIC;
 			}
 
 			DataBuffer data;
@@ -155,7 +153,7 @@ namespace tur
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			buffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
+			buffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Index:
@@ -163,7 +161,6 @@ namespace tur
 			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::INDEX_BUFFER;
-				bufferDesc.usage = BufferUsage::STATIC;
 			}
 
 			DataBuffer data;
@@ -172,7 +169,7 @@ namespace tur
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			indexBuffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
+			indexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Uniform Buffer:
@@ -182,7 +179,9 @@ namespace tur
 				bufferDesc.type = BufferType::UNIFORM_BUFFER;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
-			uniformBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(glm::mat4) * 3);
+			DataBuffer data;
+			data.size = sizeof(glm::mat4) * 3;
+			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 	}
 

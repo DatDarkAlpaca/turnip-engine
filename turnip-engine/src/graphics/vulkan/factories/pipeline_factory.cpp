@@ -115,7 +115,6 @@ namespace tur::vulkan
 		}
 
 		// Vertex Input:
-		// TODO: use descriptors.
 		std::vector<vk::VertexInputBindingDescription>   bindingDescriptions;
 		std::vector<vk::VertexInputAttributeDescription> attributeDescriptions;
 		{

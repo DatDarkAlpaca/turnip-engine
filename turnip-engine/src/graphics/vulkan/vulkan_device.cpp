@@ -10,8 +10,10 @@
 #include "builders/swapchain_builder.hpp"
 #include "builders/frame_data_builder.hpp"
 
-#include "factories/pipeline_factory.hpp"
 #include "factories/shader_factory.hpp"
+#include "factories/pipeline_factory.hpp"
+#include "factories/buffer_factory.hpp"
+#include "factories/texture_factory.hpp"
 
 #include "platform/platform.hpp"
 
@@ -51,6 +53,33 @@ namespace tur::vulkan
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));
+		}
+
+		// Immediate command buffer:
+		{
+			vk::CommandPoolCreateInfo poolCreateInfo = {};
+			{
+				poolCreateInfo.flags = vk::CommandPoolCreateFlags() | vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
+				poolCreateInfo.queueFamilyIndex = m_State.queueList.get_family_index(QueueUsage::TRANSFER);
+			}
+
+			try
+			{
+				m_ImmCommandPool = m_State.logicalDevice.createCommandPool(poolCreateInfo);
+			}
+			catch (vk::SystemError& err)
+			{
+				TUR_LOG_CRITICAL("Failed to create immediate command pool. {}", err.what());
+			}
+
+			vk::CommandBufferAllocateInfo allocateInfo = {};
+			{
+				allocateInfo.commandPool = m_ImmCommandPool;
+				allocateInfo.commandBufferCount = 1;
+				allocateInfo.level = vk::CommandBufferLevel::ePrimary;
+			}
+
+			m_ImmCommandBuffer = m_State.logicalDevice.allocateCommandBuffers(allocateInfo).front();
 		}
 	}
 	void GraphicsDeviceVulkan::present_impl()
@@ -124,76 +153,93 @@ namespace tur::vulkan
 		return CommandBufferVulkan(this);
 	}
 
+	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
+	{	
+		// Source Buffer:
+		BufferDescriptor srcDescriptor = {};
+		{
+			srcDescriptor.usage = descriptor.usage;
+			srcDescriptor.type = descriptor.type | BufferType::TRANSFER_DST;
+			srcDescriptor.memoryUsage = BufferMemoryUsage::GPU_ONLY;
+		}
+		Buffer buffer = vulkan::create_buffer(m_State.vmaAllocator, srcDescriptor, data.size);
+		
+		// Staging buffer:
+		BufferDescriptor stagingDescriptor = {};
+		{
+			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
+			stagingDescriptor.type = BufferType::TRANSFER_SRC;
+		}
+		Buffer& stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
+
+		// Buffer data:
+		if(data.data)
+		{
+			void* bufferData = nullptr;
+			vmaMapMemory(m_State.vmaAllocator, stagingBuffer.allocation, &bufferData);
+
+			std::memcpy(bufferData, (u8*)data.data, data.size);
+
+			vmaUnmapMemory(m_State.vmaAllocator, stagingBuffer.allocation);
+		}
+
+		// Buffer copy:
+		{
+			vk::BufferCopy region;
+			{
+				region.dstOffset = 0;
+				region.srcOffset = 0;
+				region.size = data.size;
+			}
+
+			vk::CommandBufferBeginInfo beginInfo = {};
+
+			m_ImmCommandBuffer.begin(beginInfo);
+			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, buffer.buffer, region);
+			m_ImmCommandBuffer.end();
+		}
+
+		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
+		return m_Buffers.add(buffer);
+	}
+	buffer_handle GraphicsDeviceVulkan::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
+	{
+		return m_Buffers.add(vulkan::create_buffer(m_State.vmaAllocator, descriptor, size));
+	}
+	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	{
+		Buffer& buffer = m_Buffers.get(handle);
+		void* bufferData = nullptr;
+
+		vmaMapMemory(m_State.vmaAllocator, buffer.allocation, &bufferData);
+		std::memcpy(bufferData, (u8*)data.data + offset, data.size);
+		vmaUnmapMemory(m_State.vmaAllocator, buffer.allocation);
+	}
+	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
+	{
+		vk::BufferCopy region;
+		{
+			region.dstOffset = dstOffset;
+			region.srcOffset = srcOffset;
+			region.size = size;
+		}
+
+		Buffer& srcBuffer = m_Buffers.get(source);
+		Buffer& dstBuffer = m_Buffers.get(destination);
+
+		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
+	}
+	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
+	{
+		Buffer& buffer = m_Buffers.get(handle);
+		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
+
+		m_Buffers.remove(handle);
+	}
+
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
-		Texture texture;
-		texture.format = get_texture_format(descriptor.format);
-		texture.extent = vk::Extent3D{ descriptor.width, descriptor.height, 1 };
-
-		vk::ImageCreateInfo imageCreateInfo = {};
-		{
-			imageCreateInfo.flags = vk::ImageCreateFlags();
-			imageCreateInfo.imageType = get_texture_type(descriptor.type);
-
-			imageCreateInfo.format = texture.format;
-			imageCreateInfo.extent = texture.extent;
-
-			imageCreateInfo.mipLevels = descriptor.mipLevels;
-			imageCreateInfo.arrayLayers = 1;
-
-			// TODO: support multisampling.
-			imageCreateInfo.samples = vk::SampleCountFlagBits::e1;
-
-			// TODO: support linear tiling for CPU data.
-			imageCreateInfo.tiling = vk::ImageTiling::eOptimal;
-
-			// TODO: descriptor for usage flags.
-			vk::ImageUsageFlags usageFlags;
-			{
-				usageFlags |= vk::ImageUsageFlagBits::eTransferSrc;
-				usageFlags |= vk::ImageUsageFlagBits::eTransferDst;
-				usageFlags |= vk::ImageUsageFlagBits::eStorage;
-				usageFlags |= vk::ImageUsageFlagBits::eColorAttachment;
-			}
-			imageCreateInfo.usage = usageFlags;
-		}
-
-		VmaAllocationCreateInfo imageAllocationInfo = {};
-		{
-			imageAllocationInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-			imageAllocationInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-		}
-		
-		if (vmaCreateImage(
-			m_State.vmaAllocator,
-			reinterpret_cast<const VkImageCreateInfo*>(&imageCreateInfo),
-			&imageAllocationInfo,
-			reinterpret_cast<VkImage*>(&texture.image),
-			&texture.allocation,
-			nullptr
-		) != VK_SUCCESS)
-		{
-			TUR_LOG_ERROR("Failed to create image");
-		}
-		
-		vk::ImageViewCreateInfo imageViewCreateInfo = {};
-		{
-			imageViewCreateInfo.flags = vk::ImageViewCreateFlags();
-			imageViewCreateInfo.viewType = get_texture_view_type(descriptor.type);
-			imageViewCreateInfo.image = texture.image;
-			imageViewCreateInfo.format = texture.format;
-			imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-			imageViewCreateInfo.subresourceRange.levelCount = 1;
-			imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
-			imageViewCreateInfo.subresourceRange.layerCount = 1;
-
-			// TODO: descriptor aspect flags
-			imageViewCreateInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
-		}
-		
-		texture.imageView = m_State.logicalDevice.createImageView(imageViewCreateInfo);
-
-		return m_Textures.add(texture);
+		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
 	}
 
 	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)

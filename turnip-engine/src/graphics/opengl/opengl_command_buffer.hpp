@@ -32,17 +32,16 @@ namespace tur::gl
 
 		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding);
-		void bind_index_buffer_impl(buffer_handle handle);
+		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType type);
 		void bind_uniform_buffer_impl(buffer_handle handle = invalid_handle);
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 		void bind_descriptors_impl(buffer_handle handle, uint32_t binding);
 
 		void push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data);
 
-		void draw_impl(u32 first, u32 vertexCount);
-		void draw_impl(u32 count, BufferIndexType type);
-		void draw_instanced_impl(u32 first, u32 vertexCount, u32 instanceCount);
-		
+		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
+		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
+				
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);
 
@@ -55,8 +54,9 @@ namespace tur::gl
 		Buffer m_IndexBuffer;
 
 		std::unordered_map<pipeline_handle, buffer_handle> m_PushConstantsBuffers;
-		buffer_handle m_ActivePushConstantBuffer;
+		buffer_handle m_ActivePushConstantBuffer = invalid_handle;
 
+		BufferIndexType m_IndexType = BufferIndexType::UNSIGNED_INT;
 		gl_handle m_VAO = invalid_handle;
 	};
 }

@@ -64,9 +64,14 @@ namespace tur::vulkan
 		}
 		
 		// Features:
+		vk::PhysicalDeviceVulkan12Features vulkan12Features;
 		vk::PhysicalDeviceVulkan13Features vulkan13Features;
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 		{
+			// Required bufffer device address feature
+			vulkan12Features.bufferDeviceAddress = true;
+			vulkan12Features.pNext = &vulkan13Features;
+
 			const auto& strExtensions = vulkanConfig.physicalDeviceRequirements.extensions;
 
 			if (std::find(strExtensions.begin(), strExtensions.end(), VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME) != strExtensions.end())
@@ -89,7 +94,7 @@ namespace tur::vulkan
 			static_cast<u32>(extensions.size()),
 			extensions.data(),
 			&deviceFeatures,
-			&vulkan13Features
+			&vulkan12Features
 		);
 
 		try

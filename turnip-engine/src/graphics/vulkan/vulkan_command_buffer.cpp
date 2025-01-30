@@ -73,7 +73,12 @@ namespace tur::vulkan
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
 				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
-				colorAttachmentInfo.clearValue = vk::ClearValue({ 0.0f, 1.0f, 0.0f, 0.0f });
+				colorAttachmentInfo.clearValue = vk::ClearValue({ 
+					m_ClearValue.color.r,
+					m_ClearValue.color.g,
+					m_ClearValue.color.b,
+					m_ClearValue.color.a 
+				});
 			}
 			
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};
@@ -130,9 +135,22 @@ namespace tur::vulkan
 		}
 	}
 
+	void CommandBufferVulkan::set_viewport_impl(const Viewport& viewport)
+	{
+		m_CommandBuffer.setViewport(0, vk::Viewport(viewport.x, viewport.y, viewport.width, viewport.height));
+	}
+	void CommandBufferVulkan::set_scissor_impl(const Rect2D& scissor)
+	{
+		m_CommandBuffer.setScissor(0,
+			vk::Rect2D({ (i32)scissor.x, (i32)scissor.y }, { (u32)scissor.width, (u32)scissor.height }));
+	}
 	void CommandBufferVulkan::clear_impl(ClearFlags flags, const ClearValue& clearValue)
 	{
-		
+		m_ClearValue = clearValue;
+	}
+
+	void CommandBufferVulkan::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
+	{
 	}
 
 	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
@@ -140,7 +158,87 @@ namespace tur::vulkan
 		auto [pipeline, type] = r_Device->get_pipelines().get(handle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(type), pipeline);
 	}
+	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
+	{
+		const Buffer& buffer = r_Device->get_buffers().get(handle);
+		const vk::DeviceSize offset = 0;
 
+		m_CommandBuffer.bindVertexBuffers(binding, buffer.buffer, offset);
+	}
+	void CommandBufferVulkan::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
+	{
+		const Buffer& buffer = r_Device->get_buffers().get(handle);
+		const vk::DeviceSize offset = 0;
+
+		m_CommandBuffer.bindIndexBuffer(buffer.buffer, offset, get_buffer_index_type(type));
+	}
+	void CommandBufferVulkan::bind_uniform_buffer_impl(buffer_handle handle)
+	{
+	}
+	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
+	{
+	}
+	void CommandBufferVulkan::bind_descriptors_impl(buffer_handle handle, uint32_t binding)
+	{
+	}
+
+	void CommandBufferVulkan::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
+	{
+	}
+
+	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
+	{
+		m_CommandBuffer.draw(vertexCount, instanceCount, firstVertex, firstInstance);
+	}
+	void CommandBufferVulkan::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
+	{
+		m_CommandBuffer.drawIndexed(indexCount, instanceCount, 0, firstVertex, firstInstance);
+	}
+
+	void CommandBufferVulkan::transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout)
+	{
+		vk::ImageAspectFlags aspectMask;
+		vk::ImageSubresourceRange subresourceRange;
+
+		vk::ImageMemoryBarrier2 imageBarrier = {};
+		{
+			imageBarrier.srcStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+			imageBarrier.srcAccessMask = vk::AccessFlagBits2::eMemoryWrite;
+
+			imageBarrier.dstStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+			imageBarrier.dstAccessMask = vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead;
+
+			imageBarrier.oldLayout = currentLayout;
+			imageBarrier.newLayout = newLayout;
+
+			if (newLayout == vk::ImageLayout::eDepthAttachmentOptimal)
+				aspectMask = vk::ImageAspectFlagBits::eDepth;
+			else
+				aspectMask = vk::ImageAspectFlagBits::eColor;
+
+			{
+				subresourceRange.aspectMask = aspectMask;
+				subresourceRange.baseMipLevel = 0;
+				subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+				subresourceRange.baseArrayLayer = 0;
+				subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+			}
+
+			imageBarrier.subresourceRange = subresourceRange;
+			imageBarrier.image = targetImage;
+		}
+
+		vk::DependencyInfo dependencyInfo = vk::DependencyInfo().setImageMemoryBarriers(imageBarrier);
+
+		try
+		{
+			m_CommandBuffer.pipelineBarrier2(dependencyInfo);
+		}
+		catch (vk::SystemError& err)
+		{
+			TUR_LOG_CRITICAL("Failed to issue transition image layout command. {}", err.what());
+		}
+	}
 	void CommandBufferVulkan::copy_image(vk::Image source, vk::Image target, vk::Extent2D sourceSize, vk::Extent2D targetSize)
 	{
 		vk::ImageBlit2 blitRegion = {};
