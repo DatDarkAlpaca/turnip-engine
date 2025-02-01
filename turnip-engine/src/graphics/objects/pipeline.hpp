@@ -81,16 +81,16 @@ namespace tur
         NONE                = 0,
         VERTEX_STAGE        = 1 << 0,
         FRAGMENT_STAGE      = 1 << 2,
-        ALL                 = VERTEX_STAGE | FRAGMENT_STAGE
+        GRAPHICS_ALL        = 1 << 3
     };
 }
 
 namespace tur
 {
-    enum class BindingTypes
+    enum class DescriptorType
     {
         SAMPLER,
-        IMAGE_SAMPLER,
+        SAMPLED_IMAGE,
         UNIFORM_BUFFER,
         STORAGE_BUFFER
     };
@@ -98,8 +98,9 @@ namespace tur
     struct DescriptorDescripion
     {
         uint32_t binding;
-        BindingTypes type;
+        DescriptorType type;
         PipelineStage stages;
+        u32 amount = 1;
     };
 
     struct PushConstant

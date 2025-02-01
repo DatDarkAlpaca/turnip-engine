@@ -45,6 +45,8 @@ namespace tur
 
 		m_Commands->end_render();
 		m_Commands->end();
+
+		m_Commands->submit();
 	}
 
 	void QuadRenderer::set_clear_color(const glm::vec4& color)
@@ -89,14 +91,14 @@ namespace tur
 			{
 				description.binding = 0;
 				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = BindingTypes::UNIFORM_BUFFER;
+				description.type = DescriptorType::UNIFORM_BUFFER;
 				layout.add_binding(description);
 			}
 			{
-				description.binding = 1;
+				/*description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = BindingTypes::IMAGE_SAMPLER;
-				layout.add_binding(description);
+				description.type = DescriptorType::UNIFORM_BUFFER;
+				layout.add_binding(description);*/
 			}
 		}
 

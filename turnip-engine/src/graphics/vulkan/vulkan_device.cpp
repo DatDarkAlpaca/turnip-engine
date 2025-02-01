@@ -95,36 +95,9 @@ namespace tur::vulkan
 		auto& frameDataHolder = m_State.frameDataHolder;
 		const auto& frameData = frameDataHolder.get_frame_data();
 
-		bool& framebufferResized = r_Window->data.framebufferResized;
-
-		// Submit:
 		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
 		vk::Semaphore waitSemaphores[] = { frameData.imageAvailableSemaphore };
-		vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
-		vk::SubmitInfo submitInfo = {};
-		{
-			submitInfo.pWaitDstStageMask = waitStages;
 
-			submitInfo.waitSemaphoreCount = 1;
-			submitInfo.pWaitSemaphores = waitSemaphores;
-
-			submitInfo.signalSemaphoreCount = 1;
-			submitInfo.pSignalSemaphores = signalSemaphores;
-
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &frameData.commandBuffer;
-		}
-
-		try
-		{
-			graphicsQueue.submit(submitInfo, frameData.recordingFence);
-		}
-		catch (vk::SystemError& err)
-		{
-			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
-		}
-
-		// Present:
 		u32 imageIndices[] = { frameDataHolder.get_color_buffer() };
 		vk::PresentInfoKHR presentInfo = {};
 		{
@@ -134,6 +107,8 @@ namespace tur::vulkan
 			presentInfo.pSwapchains = &m_State.swapchain;
 			presentInfo.pImageIndices = imageIndices;
 		}
+
+		bool& framebufferResized = r_Window->data.framebufferResized;
 
 		vk::Result presentResult = {};
 		try

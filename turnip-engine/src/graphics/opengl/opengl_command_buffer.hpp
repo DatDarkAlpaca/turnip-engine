@@ -37,11 +37,11 @@ namespace tur::gl
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 		void bind_descriptors_impl(buffer_handle handle, uint32_t binding);
 
-		void push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data);
-
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
-				
+		
+		void submit_impl();
+
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);
 

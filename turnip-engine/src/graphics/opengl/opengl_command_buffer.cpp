@@ -94,36 +94,13 @@ namespace tur::gl
 		setup_pipeline_bindings(descriptor);
 
 		// Descriptors:
-		for (const auto& [binding, type, stages] : descriptor.pipelineLayout.bindingDescriptors)
+		for (const auto& [binding, type, stages, amount] : descriptor.pipelineLayout.bindingDescriptors)
 		{
-			if (type == BindingTypes::IMAGE_SAMPLER)
+			if (type == DescriptorType::SAMPLED_IMAGE)
 			{
 				glActiveTexture(GL_TEXTURE0 + binding);
 			}
 		}
-
-		// Push Constants:
-#ifdef TUR_USE_PUSH_CONSTANTS
-		const auto& pushConstants = m_ActivePipeline.descriptor.pipelineLayout.pushConstants;
-		
-		u32 totalSize = 0;
-		for (const auto& constant : pushConstants)
-			totalSize += constant.byteSize;
-
-		// TODO: use cached push constants.
-		BufferDescriptor pushDescriptor;
-		{
-			pushDescriptor.type = BufferType::UNIFORM_BUFFER;
-			pushDescriptor.usage = BufferUsage::DYNAMIC;
-		}
-
-		if (m_PushConstantsBuffers.find(handle) == m_PushConstantsBuffers.end())
-			m_PushConstantsBuffers[handle] = r_Device->create_buffer(pushDescriptor, totalSize);
-
-		m_ActivePushConstantBuffer = m_PushConstantsBuffers[handle];
-
-		glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_Device->get_buffers().get(m_ActivePushConstantBuffer).handle, 0, totalSize);
-#endif
 	}
 	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 	{
@@ -156,12 +133,6 @@ namespace tur::gl
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding, r_Device->get_buffers().get(handle).handle);
 	}
-	void CommandBufferGL::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
-	{
-		bind_uniform_buffer(m_ActivePushConstantBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, offset, data.size, data.data);
-		bind_uniform_buffer();
-	}
 
 	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
@@ -181,6 +152,11 @@ namespace tur::gl
 			glDrawElements(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr);
 		else
 			glDrawElementsInstanced(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr, instanceCount);
+	}
+	
+	void CommandBufferGL::submit_impl()
+	{
+		/* Blank */
 	}
 }
 

@@ -147,7 +147,44 @@ namespace tur::vulkan
                 return vk::PipelineBindPoint::eCompute;
         }
 
-        TUR_LOG_CRITICAL("Invalid Pipline Type: {}", static_cast<u32>(type));
+        TUR_LOG_CRITICAL("Invalid Pipeline Type: {}", static_cast<u32>(type));
         return vk::PipelineBindPoint::eGraphics;
+    }
+
+    constexpr inline vk::ShaderStageFlags get_pipeline_stages(PipelineStage stage)
+    {
+        vk::ShaderStageFlags flags;
+
+        if (static_cast<u32>(stage) & static_cast<u32>(PipelineStage::VERTEX_STAGE))
+            flags |= vk::ShaderStageFlagBits::eVertex;
+
+        if (static_cast<u32>(stage) & static_cast<u32>(PipelineStage::FRAGMENT_STAGE))
+            flags |= vk::ShaderStageFlagBits::eFragment;
+
+        if (static_cast<u32>(stage) & static_cast<u32>(PipelineStage::GRAPHICS_ALL))
+            flags |= vk::ShaderStageFlagBits::eAllGraphics;
+
+        return flags;
+    }
+
+    constexpr inline vk::DescriptorType get_descriptor_type(DescriptorType type)
+    {
+        switch (type)
+        {
+            case DescriptorType::SAMPLER:
+                return vk::DescriptorType::eSampler;
+
+            case DescriptorType::SAMPLED_IMAGE:
+                return vk::DescriptorType::eSampledImage;
+
+            case DescriptorType::UNIFORM_BUFFER:
+                return vk::DescriptorType::eUniformBuffer;
+
+            case DescriptorType::STORAGE_BUFFER:
+                return vk::DescriptorType::eStorageBuffer;
+        }
+
+        TUR_LOG_CRITICAL("Invalid Descriptor Type: {}", static_cast<u32>(type));
+        return vk::DescriptorType::eUniformBuffer;
     }
 }

@@ -77,12 +77,7 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_descriptors_impl(handle, binding);
 		}
-
-		void push_constants(u32 offset, PipelineStage stages, const DataBuffer& data)
-		{
-			static_cast<CommandBuffer*>(this)->push_constants_impl(offset, stages, data);
-		}
-	
+			
 		void draw(u32 vertexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)
 		{
 			static_cast<CommandBuffer*>(this)->draw_impl(vertexCount, instanceCount, firstVertex, firstInstance);
@@ -91,6 +86,11 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->draw_indexed_impl(indexCount, instanceCount, firstVertex, firstInstance);
 		};
+
+		void submit()
+		{
+			static_cast<CommandBuffer*>(this)->submit_impl();
+		}
 
 	protected:
 		BaseCommandBuffer() = default;

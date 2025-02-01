@@ -195,6 +195,42 @@ namespace tur::vulkan
 		m_CommandBuffer.drawIndexed(indexCount, instanceCount, 0, firstVertex, firstInstance);
 	}
 
+	void CommandBufferVulkan::submit_impl()
+	{
+		auto& state = r_Device->get_state();
+
+		auto& graphicsQueue = state.queueList.get(QueueUsage::GRAPHICS);
+		auto& presentQueue = state.queueList.get(QueueUsage::PRESENT);
+		auto& frameDataHolder = state.frameDataHolder;
+		const auto& frameData = frameDataHolder.get_frame_data();
+
+		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
+		vk::Semaphore waitSemaphores[] = { frameData.imageAvailableSemaphore };
+		vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+		vk::SubmitInfo submitInfo = {};
+		{
+			submitInfo.pWaitDstStageMask = waitStages;
+
+			submitInfo.waitSemaphoreCount = 1;
+			submitInfo.pWaitSemaphores = waitSemaphores;
+
+			submitInfo.signalSemaphoreCount = 1;
+			submitInfo.pSignalSemaphores = signalSemaphores;
+
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &frameData.commandBuffer;
+		}
+
+		try
+		{
+			graphicsQueue.submit(submitInfo, frameData.recordingFence);
+		}
+		catch (vk::SystemError& err)
+		{
+			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
+		}
+	}
+
 	void CommandBufferVulkan::transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout)
 	{
 		vk::ImageAspectFlags aspectMask;

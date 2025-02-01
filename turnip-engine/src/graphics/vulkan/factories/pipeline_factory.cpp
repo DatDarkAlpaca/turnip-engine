@@ -234,27 +234,48 @@ namespace tur::vulkan
 		}
 	
 		// Pipeline Layout:
-		vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
-		{
-			// TODO: descriptor.
-
-			pipelineLayoutCreateInfo.flags = vk::PipelineLayoutCreateFlags();
-			pipelineLayoutCreateInfo.setLayoutCount = 0;
-			pipelineLayoutCreateInfo.pSetLayouts = nullptr;
-			pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-			pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
-		}
-
 		vk::PipelineLayout pipelineLayout;
-		try
 		{
-			pipelineLayout = device.get_state().logicalDevice.createPipelineLayout(pipelineLayoutCreateInfo);
-		} 
-		catch(vk::SystemError& err)
-		{
-			TUR_LOG_CRITICAL("Failed to create pipeline layout. {}", err.what());
-		}
+			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
+			std::vector<vk::DescriptorSetLayoutBinding> descriptorBindings;
+			for (const auto& [binding, type, stages, amount] : bindingDescriptors)
+			{
+				vk::DescriptorSetLayoutBinding descriptorBinding = {};
+				descriptorBinding.binding = binding;
+				descriptorBinding.descriptorType = get_descriptor_type(type);
+				descriptorBinding.stageFlags = get_pipeline_stages(stages);
+				descriptorBinding.descriptorCount = amount;
 
+				descriptorBindings.push_back(descriptorBinding);
+			}
+
+			vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
+			descriptorSetLayoutInfo.bindingCount = static_cast<u32>(descriptorBindings.size());
+			descriptorSetLayoutInfo.pBindings = descriptorBindings.data();
+
+			auto descriptorSetLayout = device.get_state().logicalDevice.createDescriptorSetLayout(descriptorSetLayoutInfo);
+
+			vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
+			{
+				// TODO: descriptor.
+
+				pipelineLayoutCreateInfo.flags = vk::PipelineLayoutCreateFlags();
+				pipelineLayoutCreateInfo.setLayoutCount = 1;
+				pipelineLayoutCreateInfo.pSetLayouts = &descriptorSetLayout;
+				pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
+				pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
+			}
+
+			try
+			{
+				pipelineLayout = device.get_state().logicalDevice.createPipelineLayout(pipelineLayoutCreateInfo);
+			}
+			catch (vk::SystemError& err)
+			{
+				TUR_LOG_CRITICAL("Failed to create pipeline layout. {}", err.what());
+			}
+		}
+		
 		// Pipeline:
 		// ! No renderpass since the vulkan device will use dynamic rendering.
 		vk::GraphicsPipelineCreateInfo pipelineInfo;
