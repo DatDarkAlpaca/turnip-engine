@@ -35,7 +35,7 @@ namespace tur
 		}
 		buffer_handle create_buffer(const BufferDescriptor& descriptor, u32 size)
 		{
-			return static_cast<Backend*>(this)->create_raw_buffer_impl(descriptor);
+			return static_cast<Backend*>(this)->create_buffer_impl(descriptor, size);
 		}
 		void update_buffer(buffer_handle handle, const DataBuffer& data, u32 offset = 0)
 		{

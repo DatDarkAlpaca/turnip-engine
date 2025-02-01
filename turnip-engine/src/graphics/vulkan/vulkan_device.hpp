@@ -45,6 +45,9 @@ namespace tur::vulkan
 	public:
 		void recreate_swapchain();
 
+	private:
+		void submit_immediate_command(std::function<void()>&& function);
+
 	public:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
 		inline free_list<std::pair<vk::Pipeline, PipelineType>>& get_pipelines() { return m_Pipelines; }
@@ -64,6 +67,7 @@ namespace tur::vulkan
 		free_list<Buffer> m_Buffers;
 
 	private:
+		vk::Fence m_ImmFence;
 		vk::CommandPool m_ImmCommandPool;
 		vk::CommandBuffer m_ImmCommandBuffer;
 	};

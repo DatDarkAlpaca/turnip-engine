@@ -10,7 +10,7 @@ struct MainView : public View
 public:
 	void on_engine_startup() override
 	{
-		// initialize_textures();
+		initialize_textures();
 
 		auto windowSize = r_Engine->get_window().properties.dimensions;
 

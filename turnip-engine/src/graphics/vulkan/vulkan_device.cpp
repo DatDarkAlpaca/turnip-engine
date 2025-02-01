@@ -56,7 +56,7 @@ namespace tur::vulkan
 		}
 
 		// Immediate command buffer:
-		{
+		{			
 			vk::CommandPoolCreateInfo poolCreateInfo = {};
 			{
 				poolCreateInfo.flags = vk::CommandPoolCreateFlags() | vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
@@ -80,6 +80,12 @@ namespace tur::vulkan
 			}
 
 			m_ImmCommandBuffer = m_State.logicalDevice.allocateCommandBuffers(allocateInfo).front();
+
+			{
+				vk::FenceCreateInfo createInfo = {};
+				createInfo.flags = vk::FenceCreateFlagBits::eSignaled;
+				m_ImmFence = m_State.logicalDevice.createFence(createInfo);
+			}
 		}
 	}
 	void GraphicsDeviceVulkan::present_impl()
@@ -170,7 +176,7 @@ namespace tur::vulkan
 			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
 			stagingDescriptor.type = BufferType::TRANSFER_SRC;
 		}
-		Buffer& stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
+		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
 
 		// Buffer data:
 		if(data.data)
@@ -184,7 +190,7 @@ namespace tur::vulkan
 		}
 
 		// Buffer copy:
-		{
+		submit_immediate_command([&]() {
 			vk::BufferCopy region;
 			{
 				region.dstOffset = 0;
@@ -192,12 +198,8 @@ namespace tur::vulkan
 				region.size = data.size;
 			}
 
-			vk::CommandBufferBeginInfo beginInfo = {};
-
-			m_ImmCommandBuffer.begin(beginInfo);
 			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, buffer.buffer, region);
-			m_ImmCommandBuffer.end();
-		}
+		});
 
 		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		return m_Buffers.add(buffer);
@@ -290,5 +292,43 @@ namespace tur::vulkan
 		initialize_swapchain(m_State, requirements);
 
 		initialize_frame_data(m_State);
+	}
+
+	void GraphicsDeviceVulkan::submit_immediate_command(std::function<void()>&& function)
+	{
+		m_State.logicalDevice.resetFences(m_ImmFence);
+		m_ImmCommandBuffer.reset();
+
+		vk::CommandBufferBeginInfo beginInfo = {};
+		beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
+
+		m_ImmCommandBuffer.begin(beginInfo);
+		
+		function();
+
+		m_ImmCommandBuffer.end();
+
+		vk::CommandBufferSubmitInfo submitCommandInfo = {};
+		{
+			submitCommandInfo.commandBuffer = m_ImmCommandBuffer;
+			submitCommandInfo.deviceMask = 0;
+		}
+		
+		vk::SubmitInfo2 submitInfo = {};
+		{
+			submitInfo.flags = vk::SubmitFlags::Flags();
+
+			submitInfo.signalSemaphoreInfoCount = 0;
+			submitInfo.pSignalSemaphoreInfos = nullptr;
+
+			submitInfo.waitSemaphoreInfoCount = 0;
+			submitInfo.pWaitSemaphoreInfos = nullptr;
+
+			submitInfo.commandBufferInfoCount = 1;
+			submitInfo.pCommandBufferInfos = &submitCommandInfo;
+		}
+
+		m_State.queueList.get(QueueUsage::TRANSFER).submit2(submitInfo, m_ImmFence);
+		m_State.logicalDevice.waitForFences(m_ImmFence, true, 1000000000);
 	}
 }

@@ -20,7 +20,7 @@ namespace tur
 		m_Commands->begin();
 		m_Commands->begin_render();
 		m_Commands->set_viewport(m_Viewport);
-		m_Commands->set_scissor(Rect2D{ m_Viewport.width, m_Viewport.height });
+		m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
 		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 		
 		m_Commands->bind_vertex_buffer(buffer, 0);
@@ -29,19 +29,19 @@ namespace tur
 		
 		for (const auto& quad : m_Quads)
 		{
-			bind_mvp(quad.transform);
+			// bind_mvp(quad.transform);
 
-			if (quad.texture != invalid_handle)
+			/*if (quad.texture != invalid_handle)
 				m_Commands->bind_texture(quad.texture);
 
 			else
 			{
 				if (defaultTexture != invalid_handle)
 					m_Commands->bind_texture(defaultTexture);
-			}
+			}*/
 
-			m_Commands->draw_indexed(6);
 		}
+		m_Commands->draw_indexed(6);
 
 		m_Commands->end_render();
 		m_Commands->end();
@@ -99,7 +99,7 @@ namespace tur
 				layout.add_binding(description);
 			}
 		}
-		
+
 		// Vertex Input:
 		VertexInputDescriptor vertexInput;
 		{
