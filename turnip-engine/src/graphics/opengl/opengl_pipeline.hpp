@@ -110,36 +110,37 @@ namespace tur::gl
 
 namespace tur::gl
 {
-    constexpr inline gl_handle get_format(AttributeFormat format)
+    constexpr inline gl_handle get_attribute_format(AttributeFormat format)
     {
         switch (format)
         {
-        case AttributeFormat::R32_SFLOAT:
-            return GL_FLOAT;
+            case AttributeFormat::R32_SFLOAT:
+                return GL_FLOAT;
 
-        case AttributeFormat::R64_SFLOAT:
-            return GL_FLOAT;
+            case AttributeFormat::R64_SFLOAT:
+                return GL_FLOAT;
 
-        case AttributeFormat::R32G32_SFLOAT:
-            return GL_FLOAT;
+            case AttributeFormat::R32G32_SFLOAT:
+                return GL_FLOAT;
 
-        case AttributeFormat::R32G32B32_SFLOAT:
-            return GL_FLOAT;
+            case AttributeFormat::R32G32B32_SFLOAT:
+                return GL_FLOAT;
 
-        case AttributeFormat::R32G32B32A32_SFLOAT:
-            return GL_FLOAT;
+            case AttributeFormat::R32G32B32A32_SFLOAT:
+                return GL_FLOAT;
 
-        case AttributeFormat::R32G32_SINT:
-            return GL_INT;
+            case AttributeFormat::R32G32_SINT:
+                return GL_INT;
 
-        case AttributeFormat::R32G32B32A32_UINT:
-            return GL_UNSIGNED_INT;
+            case AttributeFormat::R32G32B32A32_UINT:
+                return GL_UNSIGNED_INT;
         }
 
         TUR_LOG_CRITICAL("Invalid Attribute Format: {}", static_cast<u32>(format));
+        return 0;
     }
 
-    constexpr inline u64 get_format_size(AttributeFormat format)
+    constexpr inline u64 get_attribute_format_size(AttributeFormat format)
     {
         switch (format)
         {
@@ -166,6 +167,7 @@ namespace tur::gl
         }
 
         TUR_LOG_CRITICAL("Invalid Attribute Format [Size]: {}", static_cast<u64>(format));
+        return 0;
     }
 }
 

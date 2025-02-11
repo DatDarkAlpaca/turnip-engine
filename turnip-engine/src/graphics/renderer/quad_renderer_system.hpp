@@ -15,6 +15,11 @@ namespace tur
 		}
 
 	public:
+		void on_event(Event& event)
+		{
+
+		}
+
 		void render()
 		{
 			auto& registry = r_Scene->get_registry();

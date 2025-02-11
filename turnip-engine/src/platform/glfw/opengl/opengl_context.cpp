@@ -30,7 +30,7 @@ static void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int,
 
 namespace tur
 {
-	void initialize_opengl_windowing(Window* window, const GraphicsSpecification& specification)
+	void initialize_opengl_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
 #ifdef TUR_DEBUG
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
@@ -49,7 +49,7 @@ namespace tur
 		glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		initialize_window(window);
+		initialize_window(window, properties);
 
 		glfwMakeContextCurrent(window->window);
 
@@ -66,5 +66,10 @@ namespace tur
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		}
 #endif
+	}
+
+	void present_opengl_window(Window* window)
+	{
+		glfwSwapBuffers(window->window);
 	}
 }

@@ -19,26 +19,12 @@ namespace tur
 		m_WorkerPool.initialize();
 
 		// Window:
-		{
-			m_Window.title = configData.windowSpecification.windowTitle;
-			m_Window.size = configData.windowSpecification.dimensions;
-			m_Window.position = configData.windowSpecification.position;
-			m_Window.minSize = configData.windowSpecification.minSize;
-			m_Window.maxSize = configData.windowSpecification.maxSize;
-		}
 		initialize_windowing_system();
 		set_callback_window(&m_Window, BIND(&TurnipEngine::on_event, this));
-		{
-			GraphicsSpecification specification;
-			specification.major = configData.graphicsConfig.major;
-			specification.minor = configData.graphicsConfig.minor;
-			specification.api = configData.graphicsConfig.api;
-
-			initialize_opengl_windowing(&m_Window, specification);
-		}
+		initialize_graphics_system(&m_Window, configData.windowProperties, configData.graphicsSpecification);
 
 		// Graphics:
-		m_GraphicsDevice.initialize(&m_Window);
+		m_GraphicsDevice.initialize(&m_Window, configData);
 	}
 
 	void TurnipEngine::run()

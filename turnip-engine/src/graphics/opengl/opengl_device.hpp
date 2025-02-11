@@ -17,20 +17,17 @@ namespace tur::gl
 		friend class BaseGraphicsDevice<GraphicsDeviceGL>;
 
 	protected:
-		void initialize_impl(NON_OWNING Window* window);
-
+		void initialize_impl(NON_OWNING Window* window, const ConfigData&);
 		void present_impl();
 
 	public:
 		CommandBufferGL create_command_buffer_impl();
 
 	protected:
-		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 bufferSize);
-		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
-
-		void update_buffer_impl(buffer_handle handle, const DataBuffer& data);
-		void* map_buffer_impl(buffer_handle handle);
-		void unmap_buffer_impl(buffer_handle handle);
+		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
+		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
+		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
+		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
 		void destroy_buffer_impl(buffer_handle handle);
 
 	protected:
@@ -42,17 +39,15 @@ namespace tur::gl
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:
-		pipeline_handle create_pipeline_impl(const PipelineDescriptor& descriptor);
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	public:
-		free_list<Buffer>&   get_buffers()   { return m_Buffers; }
-		free_list<Texture>&  get_textures()  { return m_Textures; }
-		free_list<Shader>&   get_shaders()   { return m_Shaders; }
-		free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }
+		inline free_list<Texture>&  get_textures()  { return m_Textures; }
+		inline free_list<Shader>&   get_shaders()   { return m_Shaders; }
+		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 
 	private:
-		tur_unique<Swapbuffer> m_Swapbuffer;
-
 		free_list<Buffer>   m_Buffers;
 		free_list<Texture>  m_Textures;
 		free_list<Shader>   m_Shaders;

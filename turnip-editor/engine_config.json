@@ -1,35 +1,62 @@
 {
-    "engineSpecification": {
-        "applicationName": "Turnip Engine",
+    "applicationSpecification": {
+        "applicationName": "Turnip Editor",
         "major": 1,
         "minor": 0,
         "patch": 0,
         "variant": 0
     },
-    "graphicsConfig": {
-        "api": "OPENGL",
-        "major": 4,
+    "engineSpecification": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0,
+        "variant": 0
+    },
+    "graphicsSpecification": {
+        "api": "VULKAN",
+        "major": 1,
         "minor": 3,
         "patch": 0,
         "variant": 0
     },
-    "windowSpecification": {
+    "vulkanConfiguration": {
+        "instanceRequirements": {
+            "enableDrawing": true,
+            "enableValidationLayers": false,
+            "extensions": [],
+            "layers": []
+        },
+        "logicalDeviceRequirements": {
+            "requiredQueueOperations": [
+                "graphics",
+                "present"
+            ]
+        },
+        "physicalDeviceRequirements": {
+            "extensions": [
+                "VK_KHR_dynamic_rendering",
+                "VK_KHR_synchronization2"
+            ],
+            "preferDiscrete": true
+        }
+    },
+    "windowProperties": {
         "dimensions": {
-            "x": 640.0,
-            "y": 480.0
+            "x": 640,
+            "y": 480
         },
         "maxSize": {
-            "x": 640.0,
-            "y": 480.0
+            "x": 640,
+            "y": 480
         },
         "minSize": {
-            "x": 0.0,
-            "y": 0.0
+            "x": 0,
+            "y": 0
         },
         "position": {
-            "x": -1.0,
-            "y": -1.0
+            "x": "default",
+            "y": "default"
         },
-        "windowTitle": "TurnipEngine v1.0"
+        "title": "TurnipEngine v1.0"
     }
 }

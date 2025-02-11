@@ -1,13 +1,10 @@
 #pragma once
-#include "graphics/graphics.hpp"
+#include "graphics/graphics_specification.hpp"
 #include "platform/window.hpp"
 
 namespace tur
 {
-	struct Swapbuffer
-	{
-		Window* window;
-	};
+	extern void initialize_opengl_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification);
 
-	extern void initialize_opengl_windowing(Window* window, const GraphicsSpecification& specification);
+	extern void present_opengl_window(Window* window);
 }

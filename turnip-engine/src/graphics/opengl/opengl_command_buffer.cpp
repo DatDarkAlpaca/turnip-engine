@@ -15,7 +15,16 @@ namespace tur::gl
 		glGenVertexArrays(1, &m_VAO);
 		glBindVertexArray(m_VAO);
 	}
+
 	void CommandBufferGL::begin_impl()
+	{
+		// * Blank
+	}
+	void CommandBufferGL::begin_render_impl()
+	{
+		// * Blank
+	}
+	void CommandBufferGL::end_render_impl()
 	{
 		// * Blank
 	}
@@ -26,7 +35,11 @@ namespace tur::gl
 
 	void CommandBufferGL::set_viewport_impl(const Viewport& viewport)
 	{
-		glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+		glViewport(
+			static_cast<i32>(viewport.x), 
+			static_cast<i32>(viewport.y), 
+			static_cast<i32>(viewport.width), 
+			static_cast<i32>(viewport.height));
 	}
 	void CommandBufferGL::set_scissor_impl(const Rect2D& scissor)
 	{
@@ -56,6 +69,7 @@ namespace tur::gl
 
 		glClear(setBits);
 	}
+	
 	void CommandBufferGL::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
 	{
 		Buffer buffer = r_Device->get_buffers().get(handle);
@@ -80,46 +94,24 @@ namespace tur::gl
 		setup_pipeline_bindings(descriptor);
 
 		// Descriptors:
-		for (const auto& [binding, type, stages] : descriptor.pipelineLayout.bindingDescriptors)
+		for (const auto& [binding, type, stages, amount] : descriptor.pipelineLayout.bindingDescriptors)
 		{
-			if (type == BindingTypes::IMAGE_SAMPLER)
+			if (type == DescriptorType::SAMPLED_IMAGE)
 			{
 				glActiveTexture(GL_TEXTURE0 + binding);
 			}
 		}
-
-		// Push Constants:
-#ifdef TUR_USE_PUSH_CONSTANTS
-		const auto& pushConstants = m_ActivePipeline.descriptor.pipelineLayout.pushConstants;
-		
-		u32 totalSize = 0;
-		for (const auto& constant : pushConstants)
-			totalSize += constant.byteSize;
-
-		// TODO: use cached push constants.
-		BufferDescriptor pushDescriptor;
-		{
-			pushDescriptor.type = BufferType::UNIFORM_BUFFER;
-			pushDescriptor.usage = BufferUsage::DYNAMIC;
-		}
-
-		if (m_PushConstantsBuffers.find(handle) == m_PushConstantsBuffers.end())
-			m_PushConstantsBuffers[handle] = r_Device->create_buffer(pushDescriptor, totalSize);
-
-		m_ActivePushConstantBuffer = m_PushConstantsBuffers[handle];
-
-		glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_Device->get_buffers().get(m_ActivePushConstantBuffer).handle, 0, totalSize);
-#endif
 	}
 	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 	{
 		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
 		m_BufferBindings[binding] = bufferHandle;
 	}
-	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle)
+	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type)
 	{
 		Buffer buffer = r_Device->get_buffers().get(handle);
 		m_IndexBuffer = buffer;
+		m_IndexType = type;
 	}
 	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle)
 	{
@@ -141,29 +133,30 @@ namespace tur::gl
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding, r_Device->get_buffers().get(handle).handle);
 	}
-	void CommandBufferGL::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
-	{
-		bind_uniform_buffer(m_ActivePushConstantBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, offset, data.size, data.data);
-		bind_uniform_buffer();
-	}
 
-	void CommandBufferGL::draw_impl(u32 first, u32 vertexCount)
+	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawArrays(topology, first, vertexCount);
+		
+		if (instanceCount == 1)
+			glDrawArrays(topology, firstVertex, vertexCount);
+		else
+			glDrawArraysInstanced(topology, firstVertex, vertexCount, instanceCount);
 	}
-	void CommandBufferGL::draw_impl(u32 count, BufferIndexType type)
+	void CommandBufferGL::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
+		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer.handle);
 
-		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawElements(topology, count, get_buffer_index_type(type), nullptr);
+		if (instanceCount == 1)
+			glDrawElements(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr);
+		else
+			glDrawElementsInstanced(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr, instanceCount);
 	}
-	void CommandBufferGL::draw_instanced_impl(u32 first, u32 vertexCount, u32 instanceCount)
+	
+	void CommandBufferGL::submit_impl()
 	{
-		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glDrawArraysInstanced(topology, first, vertexCount, instanceCount);
+		/* Blank */
 	}
 }
 
@@ -182,14 +175,14 @@ namespace tur::gl
 
 				gl_handle bufferHandle = m_BufferBindings[binding.binding];
 				glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
-
+				
 				glVertexAttribPointer(
 					attribute.location,
-					get_format_size(attribute.format),
-					get_format(attribute.format),
+					static_cast<i32>(get_attribute_format_size(attribute.format)),
+					get_attribute_format(attribute.format),
 					attribute.normalized,
 					binding.stride,
-					(void*)attribute.offset
+					reinterpret_cast<void*>(attribute.offset)
 				);
 
 				int divisor = binding.inputRate == InputRate::VERTEX ? 0 : 1;

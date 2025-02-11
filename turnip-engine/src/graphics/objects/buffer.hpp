@@ -17,10 +17,18 @@ namespace tur
 
 	enum class BufferType
 	{
-		VERTEX_BUFFER,
-		INDEX_BUFFER,
-		UNIFORM_BUFFER,
+		NONE				= 0,
+		VERTEX_BUFFER		= 1 << 0,
+		INDEX_BUFFER		= 1 << 1,
+		UNIFORM_BUFFER		= 1 << 2,
+		TRANSFER_SRC		= 1 << 3,
+		TRANSFER_DST		= 1 << 4,
 	};
+
+	inline BufferType operator| (BufferType lhs, BufferType rhs)
+	{
+		return static_cast<BufferType>(static_cast<u32>(lhs) | static_cast<u32>(rhs));
+	}
 
 	enum class BufferUsage
 	{
@@ -29,11 +37,18 @@ namespace tur
 		STREAM
 	};
 
+	enum class BufferMemoryUsage
+	{
+		CPU_ONLY,
+		GPU_ONLY,
+		GPU_TO_CPU,
+		CPU_TO_GPU
+	};
+
 	struct BufferDescriptor
 	{
 		BufferType type;
 		BufferUsage usage;
-		bool hostVisible;
-		bool hostCoherent;
+		BufferMemoryUsage memoryUsage;
 	};
 }

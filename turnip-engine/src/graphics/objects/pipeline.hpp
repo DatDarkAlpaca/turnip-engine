@@ -81,16 +81,16 @@ namespace tur
         NONE                = 0,
         VERTEX_STAGE        = 1 << 0,
         FRAGMENT_STAGE      = 1 << 2,
-        ALL                 = VERTEX_STAGE | FRAGMENT_STAGE
+        GRAPHICS_ALL        = 1 << 3
     };
 }
 
 namespace tur
 {
-    enum class BindingTypes
+    enum class DescriptorType
     {
         SAMPLER,
-        IMAGE_SAMPLER,
+        SAMPLED_IMAGE,
         UNIFORM_BUFFER,
         STORAGE_BUFFER
     };
@@ -98,8 +98,9 @@ namespace tur
     struct DescriptorDescripion
     {
         uint32_t binding;
-        BindingTypes type;
+        DescriptorType type;
         PipelineStage stages;
+        u32 amount = 1;
     };
 
     struct PushConstant
@@ -175,7 +176,6 @@ namespace tur
 
     struct PipelineDescriptor
     {
-        // Dynamic States: Scissor and Viewport
         VertexInputDescriptor vertexInputStage;
         InputAssemblyDescriptor inputAssemblyStage;
         RasterizerDescriptor rasterizerStage;
@@ -187,5 +187,14 @@ namespace tur
         shader_handle tesselationEvaluationShader = invalid_handle;
         shader_handle geometryShader = invalid_handle;
         shader_handle fragmentShader = invalid_handle;
+
+        // Viewport & Scissor:
+        std::vector<Viewport> viewports = {};
+        std::vector<Rect2D> scissors = {};
+
+        u32 viewportCount = 1;
+        u32 scissorCount = 1;
+        bool useDynamicViewport = true;
+        bool useDynamicScissor = true;
     };
 }

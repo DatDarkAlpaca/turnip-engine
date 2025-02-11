@@ -1,9 +1,9 @@
 #pragma once
 #include "common.hpp"
+#include "type/types.hpp"
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
-#include "type/types.hpp"
 
 namespace tur
 {
@@ -21,6 +21,14 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->begin_impl();
 		};
+		void begin_render()
+		{
+			static_cast<CommandBuffer*>(this)->begin_render_impl();
+		}
+		void end_render()
+		{
+			static_cast<CommandBuffer*>(this)->end_render_impl();
+		}
 		void end()
 		{
 			static_cast<CommandBuffer*>(this)->end_impl();
@@ -53,9 +61,9 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding);
 		}
-		void bind_index_buffer(buffer_handle handle)
+		void bind_index_buffer(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 		{
-			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle);
+			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
 		}
 		void bind_uniform_buffer(buffer_handle handle = invalid_handle)
 		{
@@ -69,29 +77,20 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_descriptors_impl(handle, binding);
 		}
-
-		void push_constants(u32 offset, PipelineStage stages, const DataBuffer& data)
+			
+		void draw(u32 vertexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)
 		{
-			static_cast<CommandBuffer*>(this)->push_constants_impl(offset, stages, data);
-		}
-
-		void draw(u32 first, u32 vertexCount)
-		{
-			static_cast<CommandBuffer*>(this)->draw_impl(first, vertexCount);
+			static_cast<CommandBuffer*>(this)->draw_impl(vertexCount, instanceCount, firstVertex, firstInstance);
 		};
-		void draw(u32 count, BufferIndexType type)
+		void draw_indexed(u32 indexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)
 		{
-			static_cast<CommandBuffer*>(this)->draw_impl(count, type);
-		}
-		void draw_instanced(u32 first, u32 vertexCount, u32 instanceCount) 
-		{
-			static_cast<CommandBuffer*>(this)->draw_instanced_impl(first, vertexCount, instanceCount);
+			static_cast<CommandBuffer*>(this)->draw_indexed_impl(indexCount, instanceCount, firstVertex, firstInstance);
 		};
 
-		void submit(u32 first, u32 vertexCount)
+		void submit()
 		{
 			static_cast<CommandBuffer*>(this)->submit_impl();
-		};
+		}
 
 	protected:
 		BaseCommandBuffer() = default;

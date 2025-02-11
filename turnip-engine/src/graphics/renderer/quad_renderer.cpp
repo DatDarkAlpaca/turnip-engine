@@ -18,33 +18,35 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
-		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
+		m_Commands->begin_render();
 		m_Commands->set_viewport(m_Viewport);
-
+		m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
+		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
+		
 		m_Commands->bind_vertex_buffer(buffer, 0);
 		m_Commands->bind_index_buffer(indexBuffer);
+		m_Commands->bind_pipeline(pipeline);
+		
+		for (const auto& quad : m_Quads)
 		{
-			m_Commands->bind_pipeline(pipeline);
+			// bind_mvp(quad.transform);
 
-			for (const auto& quad : m_Quads)
+			/*if (quad.texture != invalid_handle)
+				m_Commands->bind_texture(quad.texture);
+
+			else
 			{
-				bind_mvp(quad.transform);
+				if (defaultTexture != invalid_handle)
+					m_Commands->bind_texture(defaultTexture);
+			}*/
 
-				if (quad.texture != invalid_handle)
-				{
-					m_Commands->bind_texture(quad.texture);
-				}
-				else
-				{
-					if(defaultTexture != invalid_handle)
-						m_Commands->bind_texture(defaultTexture);
-				}
-			
-				m_Commands->draw(6, BufferIndexType::UNSIGNED_INT);
-			}
 		}
+		m_Commands->draw_indexed(6);
 
+		m_Commands->end_render();
 		m_Commands->end();
+
+		m_Commands->submit();
 	}
 
 	void QuadRenderer::set_clear_color(const glm::vec4& color)
@@ -76,30 +78,30 @@ namespace tur
 	{
 		// TODO: allow for different filepaths.
 		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/quad.vert", ShaderType::VERTEX
+			{ "res/shaders/vertex.spv", ShaderType::VERTEX
 		});
 		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/quad.frag", ShaderType::FRAGMENT
+			{ "res/shaders/fragment.spv", ShaderType::FRAGMENT
 		});
 
 		// Pipeline Layout (Push constants):
 		PipelineLayout layout;
 		{
-			DescriptorDescripion description;
+			DescriptorDescripion description = {};
 			{
 				description.binding = 0;
 				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = BindingTypes::UNIFORM_BUFFER;
+				description.type = DescriptorType::UNIFORM_BUFFER;
 				layout.add_binding(description);
 			}
 			{
-				description.binding = 1;
+				/*description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = BindingTypes::IMAGE_SAMPLER;
-				layout.add_binding(description);
+				description.type = DescriptorType::UNIFORM_BUFFER;
+				layout.add_binding(description);*/
 			}
 		}
-		
+
 		// Vertex Input:
 		VertexInputDescriptor vertexInput;
 		{
@@ -130,17 +132,16 @@ namespace tur
 		descriptor.vertexShader = vertexShader;
 		descriptor.pipelineLayout = layout;
 
-		pipeline = r_GraphicsDevice->create_pipeline(descriptor);
+		pipeline = r_GraphicsDevice->create_graphics_pipeline(descriptor);
 	}
 
 	void QuadRenderer::initialize_buffers()
 	{
 		// Vertex Buffer:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::VERTEX_BUFFER;
-				bufferDesc.usage = BufferUsage::STATIC;
 			}
 
 			DataBuffer data;
@@ -154,15 +155,14 @@ namespace tur
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			buffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
+			buffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Index:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::INDEX_BUFFER;
-				bufferDesc.usage = BufferUsage::STATIC;
 			}
 
 			DataBuffer data;
@@ -171,17 +171,19 @@ namespace tur
 				data.data = vertices;
 				data.size = sizeof(vertices);
 			}
-			indexBuffer = r_GraphicsDevice->create_buffer(bufferDesc, data);
+			indexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Uniform Buffer:
 		{
-			BufferDescriptor bufferDesc;
+			BufferDescriptor bufferDesc = {};
 			{
 				bufferDesc.type = BufferType::UNIFORM_BUFFER;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
-			uniformBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(glm::mat4) * 3);
+			DataBuffer data;
+			data.size = sizeof(glm::mat4) * 3;
+			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 	}
 
