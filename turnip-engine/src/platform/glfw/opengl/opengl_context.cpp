@@ -1,5 +1,7 @@
 #include "pch.hpp"
 #include <GLFW/glfw3.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include "platform/glfw/window_glfw.hpp"
 #include "graphics/graphics.hpp"
@@ -71,5 +73,11 @@ namespace tur
 	void present_opengl_window(Window* window)
 	{
 		glfwSwapBuffers(window->window);
+	}
+
+	void initialize_opengl_gui(Window* window)
+	{
+		ImGui_ImplGlfw_InitForOpenGL(window->window, true);
+		ImGui_ImplOpenGL3_Init("#version 450");
 	}
 }

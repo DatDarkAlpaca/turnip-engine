@@ -27,6 +27,10 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_command_buffer_impl();
 		}
+		void initialize_gui_graphics_system()
+		{
+			static_cast<Backend*>(this)->initialize_gui_graphics_system_impl();
+		}
 
 	public:
 		buffer_handle create_default_buffer(const BufferDescriptor& descriptor, const DataBuffer& data)

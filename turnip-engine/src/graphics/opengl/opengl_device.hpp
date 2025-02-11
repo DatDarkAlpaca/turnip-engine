@@ -20,8 +20,9 @@ namespace tur::gl
 		void initialize_impl(NON_OWNING Window* window, const ConfigData&);
 		void present_impl();
 
-	public:
+	protected:
 		CommandBufferGL create_command_buffer_impl();
+		void initialize_gui_graphics_system_impl();
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);

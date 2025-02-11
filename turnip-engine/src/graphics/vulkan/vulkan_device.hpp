@@ -20,6 +20,7 @@ namespace tur::vulkan
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
+		void initialize_gui_graphics_system_impl();
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);

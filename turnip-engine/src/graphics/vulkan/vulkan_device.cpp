@@ -133,6 +133,9 @@ namespace tur::vulkan
 	{
 		return CommandBufferVulkan(this);
 	}
+	void GraphicsDeviceVulkan::initialize_gui_graphics_system_impl()
+	{
+	}
 
 	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{	
