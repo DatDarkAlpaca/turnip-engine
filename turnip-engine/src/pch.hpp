@@ -20,4 +20,6 @@
 
 	#include <entt/entt.hpp>
 	#include <nlohmann/json.hpp>
+
+	#include <imgui.h>
 #pragma warning(pop)

@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "engine.hpp"
+#include "graphics/gui/gui.hpp"
 #include "core/config/config_data.hpp"
 
 namespace tur
@@ -23,8 +24,12 @@ namespace tur
 		set_callback_window(&m_Window, BIND(&TurnipEngine::on_event, this));
 		initialize_graphics_system(&m_Window, configData.windowProperties, configData.graphicsSpecification);
 
+		// Gui:
+		initialize_gui(&m_Window);
+
 		// Graphics:
 		m_GraphicsDevice.initialize(&m_Window, configData);
+		m_GraphicsDevice.initialize_gui_graphics_system();
 	}
 
 	void TurnipEngine::run()
@@ -76,8 +81,12 @@ namespace tur
 
 	void TurnipEngine::on_render_gui()
 	{
+		m_GraphicsDevice.begin_gui_frame();
+
 		for (const auto& view : m_ViewSystem.views)
 			view->on_render_gui();
+
+		m_GraphicsDevice.end_gui_frame();
 	}
 
 	void TurnipEngine::on_update()

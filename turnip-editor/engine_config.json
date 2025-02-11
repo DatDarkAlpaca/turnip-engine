@@ -13,8 +13,8 @@
         "variant": 0
     },
     "graphicsSpecification": {
-        "api": "VULKAN",
-        "major": 1,
+        "api": "OPENGL",
+        "major": 4,
         "minor": 3,
         "patch": 0,
         "variant": 0
