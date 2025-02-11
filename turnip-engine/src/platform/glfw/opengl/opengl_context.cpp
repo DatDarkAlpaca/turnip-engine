@@ -80,4 +80,24 @@ namespace tur
 		ImGui_ImplGlfw_InitForOpenGL(window->window, true);
 		ImGui_ImplOpenGL3_Init("#version 450");
 	}
+
+	void begin_opengl_frame(Window* window)
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+	}
+
+	void end_opengl_frame(Window* window)
+	{
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
+	}
 }

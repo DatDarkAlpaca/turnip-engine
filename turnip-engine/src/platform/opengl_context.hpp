@@ -8,5 +8,9 @@ namespace tur
 
 	extern void initialize_opengl_gui(Window* window);
 
+	extern void begin_opengl_frame(Window* window);
+
+	extern void end_opengl_frame(Window* window);
+
 	extern void present_opengl_window(Window* window);
 }

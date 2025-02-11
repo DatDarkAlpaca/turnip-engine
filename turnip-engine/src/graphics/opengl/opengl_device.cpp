@@ -23,9 +23,18 @@ namespace tur::gl
 	{
 		return CommandBufferGL(this);
 	}
+
 	void GraphicsDeviceGL::initialize_gui_graphics_system_impl()
 	{
 		initialize_opengl_gui(r_Window);
+	}
+	void GraphicsDeviceGL::begin_gui_frame_impl()
+	{
+		begin_opengl_frame(r_Window);
+	}
+	void GraphicsDeviceGL::end_gui_frame_impl()
+	{
+		end_opengl_frame(r_Window);
 	}
 
 	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
