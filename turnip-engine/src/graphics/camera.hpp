@@ -29,12 +29,15 @@ namespace tur
 
 		void update_view()
 		{
-			m_View = glm::lookAt(m_Position, m_Position + m_Target, Camera::s_Up);
+			m_View = glm::lookAt(m_Position, m_Target, Camera::s_Up);
 		}
 
 	public:
 		glm::mat4 view() { return m_View; }
 		glm::mat4 projection() { return m_Projection; }
+
+		glm::vec3 position() const { return m_Position; }
+		glm::vec3 target() const { return m_Target; }
 
 	private:
 		static inline const glm::vec3 s_Up = glm::vec3(0.0f, 1.0f, 0.f);

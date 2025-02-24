@@ -4,6 +4,7 @@
 
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
+#include "objects/pipeline.hpp"
 #include "objects/vulkan_state.hpp"
 
 namespace tur::vulkan
@@ -46,6 +47,9 @@ namespace tur::vulkan
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
+
+	protected:
+		void update_descriptor_set_impl(buffer_handle handle);
 
 	private:
 		void submit_immediate_command(std::function<void()>&& function);

@@ -36,7 +36,6 @@ namespace tur
         RG,
         RGB,
         RGBA,
-
         RGBA16SFloat,
 
         DEPTH_COMPONENT,

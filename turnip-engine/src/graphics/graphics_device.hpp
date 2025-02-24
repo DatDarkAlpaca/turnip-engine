@@ -89,7 +89,13 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
 		}
-	
+
+	public:
+		void update_descriptor_set(buffer_handle handle)
+		{
+			static_cast<Backend*>(this)->update_descriptor_set_impl(handle);
+		}
+
 	protected:
 		BaseGraphicsDevice() = default;
 	};

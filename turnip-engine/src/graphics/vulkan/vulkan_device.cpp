@@ -189,9 +189,8 @@ namespace tur::vulkan
 		Pipeline pipeline;
 
 		// Pipeline Creation:
-		pipeline.pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
-		pipeline.type = PipelineType::GRAPHICS;
-
+		pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+		
 		destroy_shader(descriptor.vertexShader);
 
 		if (descriptor.tesselationControlShader != invalid_handle)
@@ -208,6 +207,7 @@ namespace tur::vulkan
 		// Descriptor Set Allocation:
 		for (auto& frame : m_State.frameDataHolder.get_frames())
 		{
+			// Descriptor Set:
 			vk::DescriptorSetAllocateInfo allocationInfo = {};
 			allocationInfo.descriptorPool = m_State.descriptorPool;
 			allocationInfo.descriptorSetCount = 1;
@@ -223,7 +223,7 @@ namespace tur::vulkan
 			}
 		}
 
-		return m_Pipelines.add({ pipeline, PipelineType::GRAPHICS });
+		return m_Pipelines.add(pipeline);
 	}
 	
 	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
@@ -244,15 +244,13 @@ namespace tur::vulkan
 			stagingDescriptor.type = BufferType::TRANSFER_SRC;
 		}
 		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
-
+		
 		// Buffer data:
 		if (data.data)
 		{
 			void* bufferData = nullptr;
 			vmaMapMemory(m_State.vmaAllocator, stagingBuffer.allocation, &bufferData);
-
 			std::memcpy(bufferData, (u8*)data.data, data.size);
-
 			vmaUnmapMemory(m_State.vmaAllocator, stagingBuffer.allocation);
 		}
 
@@ -266,7 +264,7 @@ namespace tur::vulkan
 			}
 
 			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, buffer.buffer, region);
-			});
+		});
 
 		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		return m_Buffers.add(buffer);
@@ -277,12 +275,36 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
 	{
-		Buffer& buffer = m_Buffers.get(handle);
-		void* bufferData = nullptr;
+		Buffer& targetBuffer = m_Buffers.get(handle);
 
-		vmaMapMemory(m_State.vmaAllocator, buffer.allocation, &bufferData);
-		std::memcpy(bufferData, (u8*)data.data + offset, data.size);
-		vmaUnmapMemory(m_State.vmaAllocator, buffer.allocation);
+		// Staging buffer:
+		BufferDescriptor stagingDescriptor = {};
+		{
+			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
+			stagingDescriptor.type = BufferType::TRANSFER_SRC;
+		}
+		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
+		
+		{
+			void* bufferData = nullptr;
+			vmaMapMemory(m_State.vmaAllocator, stagingBuffer.allocation, &bufferData);
+			std::memcpy(bufferData, (u8*)data.data + offset, data.size);
+			vmaUnmapMemory(m_State.vmaAllocator, stagingBuffer.allocation);
+		}
+		
+		// Buffer copy:
+		submit_immediate_command([&]() {
+			vk::BufferCopy region;
+			{
+				region.dstOffset = 0;
+				region.srcOffset = 0;
+				region.size = data.size;
+			}
+
+			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, targetBuffer.buffer, region);
+		});
+
+		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 	}
 	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
@@ -316,6 +338,35 @@ namespace tur::vulkan
 		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 
 		m_Textures.remove(handle);
+	}
+	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle)
+	{
+		const Buffer& buffer = m_Buffers.get(handle);
+
+		for (auto& frame : m_State.frameDataHolder.get_frames())
+		{
+			vk::DescriptorBufferInfo bufferInfo = {};
+			{
+				bufferInfo.buffer = buffer.buffer;
+				bufferInfo.offset = 0;
+				bufferInfo.range = buffer.size;
+			}
+
+			vk::WriteDescriptorSet descriptorWrite = {};
+			{
+				descriptorWrite.dstSet = frame.descriptorSet;
+				descriptorWrite.dstBinding = 0;
+				descriptorWrite.dstArrayElement = 0;
+				descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
+				descriptorWrite.descriptorCount = 1;
+
+				descriptorWrite.pBufferInfo = &bufferInfo;
+				descriptorWrite.pImageInfo = nullptr;
+				descriptorWrite.pTexelBufferView = nullptr;
+			}
+
+			m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+		}
 	}
 }
 

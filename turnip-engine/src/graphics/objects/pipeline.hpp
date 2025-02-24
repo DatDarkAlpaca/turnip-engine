@@ -197,14 +197,3 @@ namespace tur
         bool useDynamicScissor = true;
     };
 }
-
-namespace tur::vulkan
-{
-    struct Pipeline
-    {
-        PipelineType type;
-        vk::Pipeline pipeline;
-        vk::PipelineLayout layout;
-        PipelineDescriptor descriptor;
-    };
-}

@@ -5,8 +5,12 @@
 
 namespace tur::vulkan
 {
-	vk::Pipeline tur::vulkan::create_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
+	Pipeline create_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
 	{
+		Pipeline pipeline;
+		pipeline.type = PipelineType::GRAPHICS;
+		pipeline.descriptor = descriptor;
+
 		auto& logicalDevice = device.get_state().logicalDevice;
 		auto& shaders = device.get_shader_modules();
 
@@ -211,12 +215,12 @@ namespace tur::vulkan
 			);
 
 			colorBlendAttachmentState.blendEnable = false;
-			colorBlendAttachmentState.srcColorBlendFactor = vk::BlendFactor::eZero;
+			colorBlendAttachmentState.srcColorBlendFactor = vk::BlendFactor::eOne;
 			colorBlendAttachmentState.dstColorBlendFactor = vk::BlendFactor::eZero;
 
 			colorBlendAttachmentState.colorBlendOp = vk::BlendOp::eAdd;
 
-			colorBlendAttachmentState.srcAlphaBlendFactor = vk::BlendFactor::eZero;
+			colorBlendAttachmentState.srcAlphaBlendFactor = vk::BlendFactor::eOne;
 			colorBlendAttachmentState.dstAlphaBlendFactor = vk::BlendFactor::eZero;
 
 			colorBlendAttachmentState.alphaBlendOp = vk::BlendOp::eAdd;
@@ -227,14 +231,13 @@ namespace tur::vulkan
 		{
 			pipelineColorBlendStateCreateInfo.flags = vk::PipelineColorBlendStateCreateFlags();
 			pipelineColorBlendStateCreateInfo.logicOpEnable = false;
-			pipelineColorBlendStateCreateInfo.logicOp = vk::LogicOp::eNoOp;
+			pipelineColorBlendStateCreateInfo.logicOp = vk::LogicOp::eCopy;
 			pipelineColorBlendStateCreateInfo.attachmentCount = 1;
 			pipelineColorBlendStateCreateInfo.pAttachments = &colorBlendAttachmentState;
-			pipelineColorBlendStateCreateInfo.blendConstants = { { 1.0f, 1.0f, 1.0f, 1.0f } };
+			pipelineColorBlendStateCreateInfo.blendConstants = { { 0.0f, 0.0f, 0.0f, 0.0f } };
 		}
 	
 		// Pipeline Layout:
-		vk::PipelineLayout pipelineLayout;
 		{
 			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
 			auto& state = device.get_state();
@@ -268,7 +271,7 @@ namespace tur::vulkan
 
 			try
 			{
-				pipelineLayout = device.get_state().logicalDevice.createPipelineLayout(pipelineLayoutCreateInfo);
+				pipeline.layout = device.get_state().logicalDevice.createPipelineLayout(pipelineLayoutCreateInfo);
 			}
 			catch (vk::SystemError& err)
 			{
@@ -280,7 +283,7 @@ namespace tur::vulkan
 		const u32 frameAmount = device.get_state().frameDataHolder.get_frames().size();
 		{
 			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
-			std::vector<vk::DescriptorPoolSize> poolSizes(bindingDescriptors.size());
+			std::vector<vk::DescriptorPoolSize> poolSizes;
 
 			for (const auto& bindingDescriptor : bindingDescriptors)
 			{
@@ -327,10 +330,9 @@ namespace tur::vulkan
 			pipelineInfo.pDepthStencilState = nullptr;
 			pipelineInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
 
-			pipelineInfo.layout = pipelineLayout;
+			pipelineInfo.layout = pipeline.layout;
 		}
 
-		vk::Pipeline graphicsPipeline;
 		try 
 		{
 			auto result = device.get_state().logicalDevice.createGraphicsPipeline(nullptr, pipelineInfo);
@@ -347,13 +349,13 @@ namespace tur::vulkan
 					TUR_LOG_CRITICAL("Pipeline creation gone wild");
 			}
 
-			graphicsPipeline = result.value;
+			pipeline.pipeline = result.value;
 		}
 		catch (vk::SystemError& err)
 		{
 			TUR_LOG_CRITICAL("Failed to create graphics pipeline. {}", err.what());
 		}
 		
-		return graphicsPipeline;
+		return pipeline;
 	}
 }

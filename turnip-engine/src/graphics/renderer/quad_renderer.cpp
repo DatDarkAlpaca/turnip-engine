@@ -80,7 +80,14 @@ namespace tur
 
 	void QuadRenderer::initialize_pipeline()
 	{
-		// Pipeline Layout (Push constants):
+		// Rasterizer:
+		RasterizerDescriptor rasterizer = {};
+		{
+			rasterizer.cullMode = CullMode::FRONT;
+			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
+		}
+
+		// Pipeline Layout:
 		PipelineLayout layout;
 		{
 			DescriptorDescription description = {};
@@ -137,6 +144,7 @@ namespace tur
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
 		descriptor.pipelineLayout = layout;
+		descriptor.rasterizerStage = rasterizer;
 
 		pipeline = r_GraphicsDevice->create_graphics_pipeline(descriptor);
 	}
@@ -188,24 +196,20 @@ namespace tur
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 			DataBuffer data;
-			data.size = sizeof(glm::mat4) * 3;
+			data.size = sizeof(UBO);
 			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 	}
 
 	void QuadRenderer::bind_mvp(const glm::mat4& transform)
 	{
-		glm::mat4 matrices[3] = {
-			transform,
-			r_Camera->view(),
-			r_Camera->projection()
-		};
+		UBO ubo { transform, r_Camera->view(), r_Camera->projection() };
 
 		DataBuffer dataBuffer;
-		dataBuffer.size = sizeof(matrices);
-		dataBuffer.data = matrices;
+		dataBuffer.size = sizeof(ubo);
+		dataBuffer.data = &ubo;
 
-		m_Commands->update_buffer(uniformBuffer, 0, dataBuffer);
-		m_Commands->bind_descriptors(uniformBuffer, 0);
+		r_GraphicsDevice->update_buffer(uniformBuffer, dataBuffer);
+		r_GraphicsDevice->update_descriptor_set(uniformBuffer);
 	}
 }

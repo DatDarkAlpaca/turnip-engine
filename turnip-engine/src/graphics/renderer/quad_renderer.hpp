@@ -21,6 +21,13 @@ namespace tur
 			glm::vec2 uvs;
 		};
 
+		struct UBO
+		{
+			alignas(16) glm::mat4 model;
+			alignas(16) glm::mat4 view;
+			alignas(16) glm::mat4 projection;
+		};
+
 	public:
 		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
 
