@@ -8,9 +8,9 @@ namespace tur
 	struct QuadRendererSystem
 	{
 	public:
-		void initialize(Scene* scene, GraphicsDevice* device, Camera* camera)
+		void initialize(const ConfigData& configData, Scene* scene, GraphicsDevice* device, Camera* camera)
 		{
-			m_Renderer.initialize(device, camera);
+			m_Renderer.initialize(configData, device, camera);
 			r_Scene = scene;
 		}
 
@@ -29,7 +29,7 @@ namespace tur
 			{
 				const auto& transform = transformComponent.transform;
 
-				QuadRenderer::QuadData quadData;
+				QuadRenderer::QuadData quadData = {};
 				quadData.transform = transform;
 				quadData.texture = invalid_handle;
 
@@ -42,7 +42,7 @@ namespace tur
 				const auto& transform = transformComponent.transform;
 				const auto& texture = textureComponent.handle;
 
-				QuadRenderer::QuadData quadData;
+				QuadRenderer::QuadData quadData = {};
 				quadData.transform = transform;
 				quadData.texture = texture;
 

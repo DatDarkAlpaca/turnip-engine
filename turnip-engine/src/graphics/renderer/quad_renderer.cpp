@@ -3,13 +3,15 @@
 
 namespace tur
 {
-	void QuadRenderer::initialize(GraphicsDevice* graphicsDevice, Camera* camera)
+	void QuadRenderer::initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera)
 	{
 		r_GraphicsDevice = graphicsDevice;
 		r_Camera = camera;
 
 		m_Commands = tur::make_unique<CommandBuffer>(r_GraphicsDevice->create_command_buffer());
 		m_Commands->initialize();
+
+		m_QuadRendererInfo = configData.quadRendererInformation;
 
 		initialize_pipeline();
 		initialize_buffers();
@@ -29,16 +31,16 @@ namespace tur
 		
 		for (const auto& quad : m_Quads)
 		{
-			// bind_mvp(quad.transform);
+			bind_mvp(quad.transform);
 
-			/*if (quad.texture != invalid_handle)
+			if (quad.texture != invalid_handle)
 				m_Commands->bind_texture(quad.texture);
 
 			else
 			{
 				if (defaultTexture != invalid_handle)
 					m_Commands->bind_texture(defaultTexture);
-			}*/
+			}
 
 		}
 		m_Commands->draw_indexed(6);
@@ -76,14 +78,6 @@ namespace tur
 
 	void QuadRenderer::initialize_pipeline()
 	{
-		// TODO: allow for different filepaths.
-		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/vertex.spv", ShaderType::VERTEX
-		});
-		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor
-			{ "res/shaders/fragment.spv", ShaderType::FRAGMENT
-		});
-
 		// Pipeline Layout (Push constants):
 		PipelineLayout layout;
 		{
@@ -95,10 +89,10 @@ namespace tur
 				layout.add_binding(description);
 			}
 			{
-				/*description.binding = 1;
+				description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::UNIFORM_BUFFER;
-				layout.add_binding(description);*/
+				description.type = DescriptorType::SAMPLED_IMAGE;
+				layout.add_binding(description);
 			}
 		}
 
@@ -125,6 +119,16 @@ namespace tur
 			attribute1.offset = offsetof(QuadRenderer::Vertex, uvs);
 			vertexInput.attributes.push_back(attribute1);
 		}
+
+		// Shaders:
+		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor {
+			m_QuadRendererInfo.vertexFilepath,
+			ShaderType::VERTEX
+		});
+		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor {
+			m_QuadRendererInfo.fragmentFilepath,
+			ShaderType::FRAGMENT
+		});
 
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;

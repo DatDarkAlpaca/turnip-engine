@@ -8,12 +8,11 @@ newoption {
 
     allowed = {
         { "opengl",    "OpenGL" },
-        { "vulkan",    "Vulkan (Currently Unsupported)" }
+        { "vulkan",    "Vulkan" }
     }
 }
 
 function define_graphics_api()
-    buildmessage ("hi")
     if not _OPTIONS["graphics_api"] then
         defines { "DAT_API_VULKAN" }
         return
@@ -28,5 +27,4 @@ function define_graphics_api()
     else
         error("Invalid graphics API specified. Use 'opengl' or 'vulkan'.")
     end
-    buildmessage (api)
 end

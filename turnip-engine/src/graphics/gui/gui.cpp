@@ -26,16 +26,4 @@ namespace tur
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 	}
-
-    void begin_gui(GraphicsDevice& device)
-    {
-        device.begin_gui_frame();
-        ImGui::NewFrame();
-    }
-
-    void end_gui(GraphicsDevice& device)
-    {
-        ImGui::Render();
-        device.end_gui_frame();
-    }
 }

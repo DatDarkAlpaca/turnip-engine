@@ -42,11 +42,14 @@ namespace tur
 		AssetLibrary& get_asset_library() { return m_AssetLibrary; }
 		WorkerPool& get_worker_pool() { return m_WorkerPool; }
 		GraphicsDevice& get_graphics_device() { return m_GraphicsDevice; }
+		
+		const ConfigData& get_config_data() const { return m_ConfigData; }
 
 	private:
 		Window m_Window;
 		ViewSystem m_ViewSystem;
 		AssetLibrary m_AssetLibrary;
+		ConfigData m_ConfigData;
 		WorkerPool m_WorkerPool;
 		GraphicsDevice m_GraphicsDevice;
 	};

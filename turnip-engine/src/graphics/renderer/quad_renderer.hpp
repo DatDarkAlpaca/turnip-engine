@@ -1,5 +1,8 @@
 #pragma once
+#include "quad_renderer_data.hpp"
+
 #include "graphics/graphics.hpp"
+#include "core/config/config_data.hpp"
 
 namespace tur
 {
@@ -19,7 +22,7 @@ namespace tur
 		};
 
 	public:
-		void initialize(GraphicsDevice* graphicsDevice, Camera* camera);
+		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
 
 		void render();
 
@@ -46,8 +49,11 @@ namespace tur
 		NON_OWNING GraphicsDevice* r_GraphicsDevice;
 		NON_OWNING Camera* r_Camera;
 
-		tur_unique<CommandBuffer> m_Commands;
+		QuadRendererInformation m_QuadRendererInfo;
 
+	private:
+		tur_unique<CommandBuffer> m_Commands;
+	
 		std::vector<QuadData> m_Quads;
 		glm::vec4 m_ClearColor;
 		Viewport m_Viewport;

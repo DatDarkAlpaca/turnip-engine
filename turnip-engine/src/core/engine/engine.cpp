@@ -14,7 +14,7 @@ namespace tur
 		initialize_config_data(configPath);
 
 		ConfigReader configReader(configPath);
-		ConfigData configData = configReader.parse<ConfigData>();
+		m_ConfigData = configReader.parse<ConfigData>();
 
 		// Worker Pool:
 		m_WorkerPool.initialize();
@@ -22,13 +22,13 @@ namespace tur
 		// Window:
 		initialize_windowing_system();
 		set_callback_window(&m_Window, BIND(&TurnipEngine::on_event, this));
-		initialize_graphics_system(&m_Window, configData.windowProperties, configData.graphicsSpecification);
+		initialize_graphics_system(&m_Window, m_ConfigData.windowProperties, m_ConfigData.graphicsSpecification);
 
 		// Gui:
 		initialize_gui(&m_Window);
 
 		// Graphics:
-		m_GraphicsDevice.initialize(&m_Window, configData);
+		m_GraphicsDevice.initialize(&m_Window, m_ConfigData);
 		m_GraphicsDevice.initialize_gui_graphics_system();
 	}
 

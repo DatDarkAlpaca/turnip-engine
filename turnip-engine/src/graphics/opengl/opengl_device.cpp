@@ -31,9 +31,11 @@ namespace tur::gl
 	void GraphicsDeviceGL::begin_gui_frame_impl()
 	{
 		begin_opengl_frame(r_Window);
+		ImGui::NewFrame();
 	}
 	void GraphicsDeviceGL::end_gui_frame_impl()
 	{
+		ImGui::Render();
 		end_opengl_frame(r_Window);
 	}
 

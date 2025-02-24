@@ -2,6 +2,8 @@
 #include <turnip_engine.hpp>
 #include <platform/platform.hpp>
 
+#include <imgui.h>
+
 using namespace tur;
 
 // View:
@@ -39,9 +41,15 @@ public:
 		}
 
 		// Render System:
-		m_RenderSystem.initialize(&m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
+		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
 		m_RenderSystem.get_renderer().set_clear_color({ 0.16f, 0.16f, 0.16f, 1.f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+	}
+
+	void on_render_gui() override
+	{
+		ImGui::Begin("Entity List");
+		ImGui::End();
 	}
 
 	void on_event(Event& event) override

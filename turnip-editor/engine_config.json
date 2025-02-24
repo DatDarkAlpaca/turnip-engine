@@ -1,6 +1,6 @@
 {
     "applicationSpecification": {
-        "applicationName": "Turnip Editor",
+        "applicationName": "Default Application",
         "major": 1,
         "minor": 0,
         "patch": 0,
@@ -15,9 +15,13 @@
     "graphicsSpecification": {
         "api": "OPENGL",
         "major": 4,
-        "minor": 3,
+        "minor": 5,
         "patch": 0,
         "variant": 0
+    },
+    "quadRendererInformation": {
+        "fragmentFilepath": "res/shaders/quad.frag",
+        "vertexFilepath": "res/shaders/quad.vert"
     },
     "vulkanConfiguration": {
         "instanceRequirements": {
@@ -27,15 +31,12 @@
             "layers": []
         },
         "logicalDeviceRequirements": {
-            "requiredQueueOperations": [
-                "graphics",
-                "present"
-            ]
+            "requiredQueueOperations": []
         },
         "physicalDeviceRequirements": {
             "extensions": [
                 "VK_KHR_dynamic_rendering",
-                "VK_KHR_synchronization2"
+                "VK_EXT_descriptor_buffer"
             ],
             "preferDiscrete": true
         }
