@@ -8,32 +8,24 @@ namespace tur::vulkan
 {
 	void initialize_frame_data(VulkanState& state)
 	{
-		// Command Pool & Buffers:
-		vk::CommandPoolCreateInfo poolCreateInfo = {};
-		{
-			poolCreateInfo.flags = vk::CommandPoolCreateFlags() | vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
-			poolCreateInfo.queueFamilyIndex = state.queueList.get_family_index(QueueUsage::TRANSFER);
-		}
-		
+		// Command buffers:
 		for (auto& frame : state.frameDataHolder.get_frames())
 		{
-			try
-			{
-				frame.commandPool = state.logicalDevice.createCommandPool(poolCreateInfo);
-			}
-			catch (vk::SystemError& err)
-			{
-				TUR_LOG_CRITICAL("Failed to create frame command pools. {}", err.what());
-			}
-
 			vk::CommandBufferAllocateInfo allocateInfo = {};
 			{
-				allocateInfo.commandPool = frame.commandPool;
+				allocateInfo.commandPool = state.commandPool;
 				allocateInfo.commandBufferCount = 1;
 				allocateInfo.level = vk::CommandBufferLevel::ePrimary;
 			}
 
-			frame.commandBuffer = state.logicalDevice.allocateCommandBuffers(allocateInfo).front();
+			try
+			{
+				frame.commandBuffer = state.logicalDevice.allocateCommandBuffers(allocateInfo).front();
+			}
+			catch (vk::SystemError err)
+			{
+				TUR_LOG_CRITICAL("Failed to allocate frame command buffer");
+			}
 		}
 
 		// Synchonization primitives:
@@ -41,7 +33,6 @@ namespace tur::vulkan
 		{
 			vk::FenceCreateInfo createInfo = {};
 			createInfo.flags = vk::FenceCreateFlagBits::eSignaled;
-
 			frame.recordingFence = state.logicalDevice.createFence(createInfo);
 		}
 

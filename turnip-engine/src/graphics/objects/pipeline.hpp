@@ -89,13 +89,12 @@ namespace tur
 {
     enum class DescriptorType
     {
-        SAMPLER,
-        SAMPLED_IMAGE,
+        COMBINED_IMAGE_SAMPLER,
         UNIFORM_BUFFER,
         STORAGE_BUFFER
     };
 
-    struct DescriptorDescripion
+    struct DescriptorDescription
     {
         uint32_t binding;
         DescriptorType type;
@@ -118,14 +117,14 @@ namespace tur
             pushConstants.push_back(pushConstant);
         }
 
-        void add_binding(const DescriptorDescripion& binding)
+        void add_binding(const DescriptorDescription& binding)
         {
             bindingDescriptors.push_back(binding);
         }
 
     public:
         std::vector<PushConstant> pushConstants;
-        std::vector<DescriptorDescripion> bindingDescriptors;
+        std::vector<DescriptorDescription> bindingDescriptors;
     };
 }
 
@@ -196,5 +195,16 @@ namespace tur
         u32 scissorCount = 1;
         bool useDynamicViewport = true;
         bool useDynamicScissor = true;
+    };
+}
+
+namespace tur::vulkan
+{
+    struct Pipeline
+    {
+        PipelineType type;
+        vk::Pipeline pipeline;
+        vk::PipelineLayout layout;
+        PipelineDescriptor descriptor;
     };
 }

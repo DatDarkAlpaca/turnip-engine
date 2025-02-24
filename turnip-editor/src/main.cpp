@@ -48,8 +48,7 @@ public:
 
 	void on_render_gui() override
 	{
-		ImGui::Begin("Entity List");
-		ImGui::End();
+		
 	}
 
 	void on_event(Event& event) override

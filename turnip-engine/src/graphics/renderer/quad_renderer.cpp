@@ -81,19 +81,19 @@ namespace tur
 		// Pipeline Layout (Push constants):
 		PipelineLayout layout;
 		{
-			DescriptorDescripion description = {};
+			DescriptorDescription description = {};
 			{
 				description.binding = 0;
 				description.stages = PipelineStage::VERTEX_STAGE;
 				description.type = DescriptorType::UNIFORM_BUFFER;
 				layout.add_binding(description);
 			}
-			{
+			/*{
 				description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::SAMPLED_IMAGE;
+				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
-			}
+			}*/
 		}
 
 		// Vertex Input:

@@ -14,14 +14,14 @@
     },
     "graphicsSpecification": {
         "api": "OPENGL",
-        "major": 4,
-        "minor": 5,
+        "major": 1,
+        "minor": 3,
         "patch": 0,
         "variant": 0
     },
     "quadRendererInformation": {
-        "fragmentFilepath": "res/shaders/quad.frag",
-        "vertexFilepath": "res/shaders/quad.vert"
+        "fragmentFilepath": "res/shaders/fragment.spv",
+        "vertexFilepath": "res/shaders/vertex.spv"
     },
     "vulkanConfiguration": {
         "instanceRequirements": {
@@ -31,10 +31,14 @@
             "layers": []
         },
         "logicalDeviceRequirements": {
-            "requiredQueueOperations": []
+            "requiredQueueOperations": [
+                "GRAPHICS",
+                "PRESENT"
+            ]
         },
         "physicalDeviceRequirements": {
             "extensions": [
+                "VK_KHR_synchronization2",
                 "VK_KHR_dynamic_rendering",
                 "VK_EXT_descriptor_buffer"
             ],

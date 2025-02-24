@@ -66,6 +66,7 @@ namespace tur::vulkan
 	private:
 		NON_OWNING GraphicsDeviceVulkan* r_Device = nullptr;
 		vk::CommandBuffer m_CommandBuffer;
+		Pipeline m_BoundPipeline;
 
 		ClearValue m_ClearValue;
 	};

@@ -171,11 +171,8 @@ namespace tur::vulkan
     {
         switch (type)
         {
-            case DescriptorType::SAMPLER:
-                return vk::DescriptorType::eSampler;
-
-            case DescriptorType::SAMPLED_IMAGE:
-                return vk::DescriptorType::eSampledImage;
+            case DescriptorType::COMBINED_IMAGE_SAMPLER:
+                return vk::DescriptorType::eCombinedImageSampler;
 
             case DescriptorType::UNIFORM_BUFFER:
                 return vk::DescriptorType::eUniformBuffer;

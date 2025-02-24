@@ -21,7 +21,16 @@ namespace tur::vulkan
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
 		void initialize_gui_graphics_system_impl();
+		void begin_gui_frame_impl()
+		{
+			
+		}
 
+		void end_gui_frame_impl()
+		{
+			
+		}
+	
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
@@ -51,7 +60,7 @@ namespace tur::vulkan
 
 	public:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
-		inline free_list<std::pair<vk::Pipeline, PipelineType>>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
 		inline VulkanState& get_state() { return m_State; }
@@ -63,7 +72,7 @@ namespace tur::vulkan
 
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
-		free_list<std::pair<vk::Pipeline, PipelineType>> m_Pipelines;
+		free_list<Pipeline> m_Pipelines;
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
 

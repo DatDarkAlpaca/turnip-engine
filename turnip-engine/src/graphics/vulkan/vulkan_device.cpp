@@ -7,6 +7,7 @@
 #include "builders/physical_device_builder.hpp"
 #include "builders/logical_device_builder.hpp"
 #include "builders/vma_allocator_builder.hpp"
+#include "builders/command_pool_builder.hpp"
 #include "builders/swapchain_builder.hpp"
 #include "builders/frame_data_builder.hpp"
 
@@ -42,6 +43,9 @@ namespace tur::vulkan
 
 		// Swapchain:
 		initialize_swapchain(m_State, {});
+
+		// Pools:
+		initialize_command_pool(m_State);
 
 		// Frame Data:
 		initialize_frame_data(m_State);
@@ -236,8 +240,12 @@ namespace tur::vulkan
 
 	pipeline_handle GraphicsDeviceVulkan::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
 	{
-		vk::Pipeline pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
-	
+		Pipeline pipeline;
+
+		// Pipeline Creation:
+		pipeline.pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+		pipeline.type = PipelineType::GRAPHICS;
+
 		destroy_shader(descriptor.vertexShader);
 
 		if (descriptor.tesselationControlShader != invalid_handle)
@@ -250,6 +258,24 @@ namespace tur::vulkan
 			destroy_shader(descriptor.geometryShader);
 
 		destroy_shader(descriptor.fragmentShader);
+
+		// Descriptor Set Allocation:
+		for (auto& frame : m_State.frameDataHolder.get_frames())
+		{
+			vk::DescriptorSetAllocateInfo allocationInfo = {};
+			allocationInfo.descriptorPool = m_State.descriptorPool;
+			allocationInfo.descriptorSetCount = 1;
+			allocationInfo.pSetLayouts = &m_State.descriptorSetLayout;
+
+			try
+			{
+				frame.descriptorSet = m_State.logicalDevice.allocateDescriptorSets(allocationInfo)[0];
+			}
+			catch (vk::SystemError err)
+			{
+				TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
+			}
+		}
 
 		return m_Pipelines.add({ pipeline, PipelineType::GRAPHICS });
 	}

@@ -155,8 +155,10 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
 	{
-		auto [pipeline, type] = r_Device->get_pipelines().get(handle);
-		m_CommandBuffer.bindPipeline(get_pipeline_type(type), pipeline);
+		auto pipeline = r_Device->get_pipelines().get(handle);
+		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
+
+		m_BoundPipeline = pipeline;
 	}
 	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 	{
@@ -172,14 +174,14 @@ namespace tur::vulkan
 
 		m_CommandBuffer.bindIndexBuffer(buffer.buffer, offset, get_buffer_index_type(type));
 	}
-	void CommandBufferVulkan::bind_uniform_buffer_impl(buffer_handle handle)
-	{
-	}
 	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
 	}
 	void CommandBufferVulkan::bind_descriptors_impl(buffer_handle handle, uint32_t binding)
 	{
+		auto pipeline = m_BoundPipeline;
+
+		m_CommandBuffer.bindDescriptorSets(get_pipeline_type(pipeline.type), pipeline.layout, 0, &set, {});
 	}
 
 	void CommandBufferVulkan::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)

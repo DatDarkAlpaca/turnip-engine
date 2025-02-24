@@ -96,7 +96,7 @@ namespace tur::gl
 		// Descriptors:
 		for (const auto& [binding, type, stages, amount] : descriptor.pipelineLayout.bindingDescriptors)
 		{
-			if (type == DescriptorType::SAMPLED_IMAGE)
+			if (type == DescriptorType::COMBINED_IMAGE_SAMPLER)
 			{
 				glActiveTexture(GL_TEXTURE0 + binding);
 			}
