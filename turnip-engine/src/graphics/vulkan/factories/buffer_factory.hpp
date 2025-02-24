@@ -14,7 +14,7 @@ namespace tur::vulkan
 			createInfo.size = size;
 			createInfo.usage = get_buffer_usage(descriptor.type);
 		}
-
+		VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT;
 		VmaAllocationCreateInfo vmaAllocationCreateInfo = {};
 		{
 			vmaAllocationCreateInfo.usage = get_buffer_memory_usage(descriptor.memoryUsage);
@@ -22,6 +22,7 @@ namespace tur::vulkan
 		}
 
 		Buffer buffer = {};
+		buffer.size = size;
 
 		VkResult result = vmaCreateBuffer(
 			allocator,

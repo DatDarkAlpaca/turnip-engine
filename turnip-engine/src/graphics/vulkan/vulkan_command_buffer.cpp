@@ -11,7 +11,7 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::initialize_impl()
 	{
-		
+
 	}
 
 	void CommandBufferVulkan::begin_impl()
@@ -21,11 +21,13 @@ namespace tur::vulkan
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 		auto& frameData = frameDataHolder.get_frame_data();
 
-		try {
+		try 
+		{
 			auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
 			device.resetFences(frameData.recordingFence);
 		}
-		catch (vk::SystemError& err) {
+		catch (vk::SystemError& err) 
+		{
 			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
 		}
 
@@ -56,7 +58,7 @@ namespace tur::vulkan
 		}
 
 		auto& drawTexture = r_Device->get_state().drawTexture;
-		transition_image(drawTexture.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eGeneral);
+		transition_image(drawTexture.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 	}
 	void CommandBufferVulkan::begin_render_impl()
 	{
@@ -73,14 +75,14 @@ namespace tur::vulkan
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
 				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
-				colorAttachmentInfo.clearValue = vk::ClearValue({ 
+				colorAttachmentInfo.clearValue = vk::ClearValue({
 					m_ClearValue.color.r,
 					m_ClearValue.color.g,
 					m_ClearValue.color.b,
-					m_ClearValue.color.a 
+					m_ClearValue.color.a
 				});
 			}
-			
+
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};
 			{
 				colorAttachmentInfo.imageView;
@@ -100,7 +102,7 @@ namespace tur::vulkan
 			// render_info.pDepthAttachment = &depthAttachmentInfo;
 			// render_info.pStencilAttachment = &depthAttachmentInfo;
 		}
-		
+
 		m_CommandBuffer.beginRendering(renderInfo);
 	}
 	void CommandBufferVulkan::end_render_impl()
@@ -112,24 +114,24 @@ namespace tur::vulkan
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 		auto& swapchainExtent = r_Device->get_state().swapchainExtent;
 
-		auto& images = r_Device->get_state().swapChainImages;
+		auto& swapchainImages = r_Device->get_state().swapChainImages;
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
 		auto& drawTexture = r_Device->get_state().drawTexture;
 
-		transition_image(drawTexture.image, vk::ImageLayout::eGeneral, vk::ImageLayout::eTransferSrcOptimal);
-		transition_image(images.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+		transition_image(drawTexture.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
+		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
 
-		copy_image(drawTexture.image, images.at(currentImage),
+		copy_image(drawTexture.image, swapchainImages.at(currentImage),
 			{ drawTexture.extent.width, drawTexture.extent.height }, swapchainExtent);
 
-		transition_image(images.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
+		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 
-		try 
+		try
 		{
 			m_CommandBuffer.end();
 		}
-		catch (vk::SystemError err) 
+		catch (vk::SystemError err)
 		{
 			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
@@ -137,7 +139,7 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::set_viewport_impl(const Viewport& viewport)
 	{
-		m_CommandBuffer.setViewport(0, vk::Viewport(viewport.x, viewport.y, viewport.width, viewport.height));
+		m_CommandBuffer.setViewport(0, vk::Viewport(viewport.x, viewport.y, viewport.width, viewport.height, viewport.minDepth, viewport.maxDepth));
 	}
 	void CommandBufferVulkan::set_scissor_impl(const Rect2D& scissor)
 	{
@@ -149,14 +151,22 @@ namespace tur::vulkan
 		m_ClearValue = clearValue;
 	}
 
-	void CommandBufferVulkan::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
-	{
-	}
-
 	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
 	{
-		auto [pipeline, type] = r_Device->get_pipelines().get(handle);
-		m_CommandBuffer.bindPipeline(get_pipeline_type(type), pipeline);
+		auto& frameData = r_Device->get_state().frameDataHolder.get_frame_data();
+
+		// Bind pipeline:
+		auto pipeline = r_Device->get_pipelines().get(handle);
+		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
+
+		// Bind descriptor sets:
+		m_CommandBuffer.bindDescriptorSets(
+			get_pipeline_type(pipeline.type), 
+			pipeline.layout, 
+			0, 1, 
+			&frameData.descriptorSet, 0, 
+			nullptr
+		);
 	}
 	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
 	{
@@ -172,20 +182,10 @@ namespace tur::vulkan
 
 		m_CommandBuffer.bindIndexBuffer(buffer.buffer, offset, get_buffer_index_type(type));
 	}
-	void CommandBufferVulkan::bind_uniform_buffer_impl(buffer_handle handle)
-	{
-	}
 	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
 	}
-	void CommandBufferVulkan::bind_descriptors_impl(buffer_handle handle, uint32_t binding)
-	{
-	}
-
-	void CommandBufferVulkan::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
-	{
-	}
-
+	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		m_CommandBuffer.draw(vertexCount, instanceCount, firstVertex, firstInstance);
@@ -200,9 +200,7 @@ namespace tur::vulkan
 		auto& state = r_Device->get_state();
 
 		auto& graphicsQueue = state.queueList.get(QueueUsage::GRAPHICS);
-		auto& presentQueue = state.queueList.get(QueueUsage::PRESENT);
-		auto& frameDataHolder = state.frameDataHolder;
-		const auto& frameData = frameDataHolder.get_frame_data();
+		auto& frameData = state.frameDataHolder.get_frame_data();
 
 		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
 		vk::Semaphore waitSemaphores[] = { frameData.imageAvailableSemaphore };
@@ -230,7 +228,10 @@ namespace tur::vulkan
 			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
 		}
 	}
+}
 
+namespace tur::vulkan
+{
 	void CommandBufferVulkan::transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout)
 	{
 		vk::ImageAspectFlags aspectMask;
@@ -239,7 +240,7 @@ namespace tur::vulkan
 		vk::ImageMemoryBarrier2 imageBarrier = {};
 		{
 			imageBarrier.srcStageMask = vk::PipelineStageFlagBits2::eAllCommands;
-			imageBarrier.srcAccessMask = vk::AccessFlagBits2::eMemoryWrite;
+			imageBarrier.srcAccessMask = vk::AccessFlagBits2::eMemoryRead;
 
 			imageBarrier.dstStageMask = vk::PipelineStageFlagBits2::eAllCommands;
 			imageBarrier.dstAccessMask = vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead;
@@ -309,7 +310,7 @@ namespace tur::vulkan
 			blitInfo.regionCount = 1;
 			blitInfo.pRegions = &blitRegion;
 		}
-		
+
 		m_CommandBuffer.blitImage2(blitInfo);
 	}
 }

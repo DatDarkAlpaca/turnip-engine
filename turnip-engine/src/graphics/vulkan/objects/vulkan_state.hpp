@@ -39,6 +39,13 @@ namespace tur::vulkan
 		std::vector<vk::Image> swapChainImages;
 		std::vector<vk::ImageView> swapChainImageViews;
 
+		// Command Pool:
+		vk::CommandPool commandPool;
+
+		// Descriptors:
+		vk::DescriptorSetLayout descriptorSetLayout;
+		vk::DescriptorPool descriptorPool;
+
 		// Frame:
 		FrameDataHolder frameDataHolder;
 		Texture drawTexture;

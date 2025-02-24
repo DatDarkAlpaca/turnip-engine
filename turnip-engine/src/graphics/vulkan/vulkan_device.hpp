@@ -4,6 +4,7 @@
 
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
+#include "objects/pipeline.hpp"
 #include "objects/vulkan_state.hpp"
 
 namespace tur::vulkan
@@ -14,13 +15,27 @@ namespace tur::vulkan
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 
+	public:
+		void recreate_swapchain();
+
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
 		void present_impl();
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
+
+	protected:
 		void initialize_gui_graphics_system_impl();
+		void begin_gui_frame_impl();
+		void end_gui_frame_impl();
+	
+	protected:
+		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
+		void destroy_shader_impl(shader_handle handle);
+
+	protected:
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
@@ -31,27 +46,17 @@ namespace tur::vulkan
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
-		void destroy_texture_impl(texture_handle handle)
-		{
-
-		}
+		void destroy_texture_impl(texture_handle handle);
 
 	protected:
-		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
-		void destroy_shader_impl(shader_handle handle);
-
-	protected:
-		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
-
-	public:
-		void recreate_swapchain();
+		void update_descriptor_set_impl(buffer_handle handle);
 
 	private:
 		void submit_immediate_command(std::function<void()>&& function);
 
 	public:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
-		inline free_list<std::pair<vk::Pipeline, PipelineType>>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
 		inline VulkanState& get_state() { return m_State; }
@@ -63,7 +68,7 @@ namespace tur::vulkan
 
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
-		free_list<std::pair<vk::Pipeline, PipelineType>> m_Pipelines;
+		free_list<Pipeline> m_Pipelines;
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
 

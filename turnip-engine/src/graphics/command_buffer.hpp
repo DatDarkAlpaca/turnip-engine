@@ -48,11 +48,7 @@ namespace tur
 			static_cast<CommandBuffer*>(this)->clear_impl(flags, clearValue);
 		}
 
-		void update_buffer(buffer_handle handle, u32 offset, const DataBuffer& data)
-		{
-			static_cast<CommandBuffer*>(this)->update_buffer_impl(handle, offset, data);
-		}
-
+	public:
 		void bind_pipeline(pipeline_handle handle)
 		{
 			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);
@@ -65,19 +61,12 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
 		}
-		void bind_uniform_buffer(buffer_handle handle = invalid_handle)
-		{
-			static_cast<CommandBuffer*>(this)->bind_uniform_buffer_impl(handle);
-		}
 		void bind_texture(texture_handle handle, u32 textureUnit = invalid_handle)
 		{
 			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
 		}
-		void bind_descriptors(buffer_handle handle, uint32_t binding)
-		{
-			static_cast<CommandBuffer*>(this)->bind_descriptors_impl(handle, binding);
-		}
-			
+
+	public:
 		void draw(u32 vertexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)
 		{
 			static_cast<CommandBuffer*>(this)->draw_impl(vertexCount, instanceCount, firstVertex, firstInstance);
@@ -87,6 +76,7 @@ namespace tur
 			static_cast<CommandBuffer*>(this)->draw_indexed_impl(indexCount, instanceCount, firstVertex, firstInstance);
 		};
 
+	public:
 		void submit()
 		{
 			static_cast<CommandBuffer*>(this)->submit_impl();

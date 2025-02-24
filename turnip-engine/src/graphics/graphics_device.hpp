@@ -33,15 +33,29 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_gui_graphics_system_impl();
 		}
-
 		void begin_gui_frame()
 		{
 			static_cast<Backend*>(this)->begin_gui_frame_impl();
 		}
-		
 		void end_gui_frame()
 		{
 			static_cast<Backend*>(this)->end_gui_frame_impl();
+		}
+
+	public:
+		shader_handle create_shader(const ShaderDescriptor& descriptor)
+		{
+			return static_cast<Backend*>(this)->create_shader_impl(descriptor);
+		}
+		void destroy_shader(shader_handle handle)
+		{
+			static_cast<Backend*>(this)->destroy_shader_impl(handle);
+		}
+
+	public:
+		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
+		{
+			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
 		}
 
 	public:
@@ -77,20 +91,9 @@ namespace tur
 		}
 
 	public:
-		shader_handle create_shader(const ShaderDescriptor& descriptor)
+		void update_descriptor_set(buffer_handle handle)
 		{
-			return static_cast<Backend*>(this)->create_shader_impl(descriptor);
-		}
-
-		void destroy_shader(shader_handle handle)
-		{
-			static_cast<Backend*>(this)->destroy_shader_impl(handle);
-		}
-
-	public:
-		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
-		{
-			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
+			static_cast<Backend*>(this)->update_descriptor_set_impl(handle);
 		}
 
 	protected:

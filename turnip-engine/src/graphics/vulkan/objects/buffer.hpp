@@ -10,6 +10,8 @@ namespace tur::vulkan
 		vk::Buffer buffer;
 		VmaAllocation allocation;
 		VmaAllocationInfo allocationInfo;
+
+		u32 size = 0;
 	};
 }
 

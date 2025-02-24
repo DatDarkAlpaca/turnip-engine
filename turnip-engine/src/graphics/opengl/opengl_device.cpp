@@ -39,54 +39,6 @@ namespace tur::gl
 		end_opengl_frame(r_Window);
 	}
 
-	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
-	{
-		gl_handle bufferID;
-		glGenBuffers(1, &bufferID);
-
-		gl_handle bufferType = get_buffer_type(descriptor.type);
-
-		glBindBuffer(bufferType, bufferID);
-		glBufferData(
-			bufferType,
-			data.size,
-			data.data,
-			get_buffer_usage(descriptor.usage)
-		);
-		glBindBuffer(bufferType, 0);
-
-		gl::Buffer buffer;
-		buffer.descriptor = descriptor;
-		buffer.handle = bufferID;
-
-		return static_cast<buffer_handle>(m_Buffers.add(buffer));
-	}
-	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
-	{
-		return create_default_buffer_impl(descriptor, { nullptr, size });
-	}
-	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
-	{
-		auto& buffer = m_Buffers.get(handle);
-		const auto& type = get_buffer_type(buffer.descriptor.type);
-		
-		glBindBuffer(type, buffer.handle);
-		glBufferSubData(type, offset, data.size, data.data);
-		glBindBuffer(type, 0);
-	}
-	void GraphicsDeviceGL::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
-	{
-		auto& srcBuffer = m_Buffers.get(source);
-		auto& dstBuffer = m_Buffers.get(destination);
-
-		glCopyBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
-	}
-	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
-	{
-		auto& buffer = m_Buffers.get(handle);
-		glDeleteBuffers(1, &buffer.handle);
-	}
-
 	shader_handle GraphicsDeviceGL::create_shader_impl(const ShaderDescriptor& descriptor)
 	{
 		std::string contents = read_file(descriptor.filepath);
@@ -108,6 +60,65 @@ namespace tur::gl
 		m_Shaders.remove(handle);
 	}
 
+	pipeline_handle GraphicsDeviceGL::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
+	{
+		gl_handle pipelineID = glCreateProgram();
+
+		const shader_handle& vertexShader = descriptor.vertexShader;
+		const shader_handle& tesselationControlShader = descriptor.tesselationControlShader;
+		const shader_handle& tesselationEvaluationShader = descriptor.tesselationEvaluationShader;
+		const shader_handle& geometryShader = descriptor.geometryShader;
+		const shader_handle& fragmentShader = descriptor.fragmentShader;
+
+		{
+			if (vertexShader == invalid_handle)
+				TUR_LOG_CRITICAL("Vertex shader not specified in a graphics pipeline");
+
+			glAttachShader(pipelineID, m_Shaders.get(vertexShader).handle);
+
+			if (tesselationControlShader != invalid_handle)
+				glAttachShader(pipelineID, m_Shaders.get(tesselationControlShader).handle);
+
+			if (tesselationEvaluationShader != invalid_handle)
+				glAttachShader(pipelineID, m_Shaders.get(tesselationEvaluationShader).handle);
+
+			if (geometryShader != invalid_handle)
+				glAttachShader(pipelineID, m_Shaders.get(geometryShader).handle);
+
+			if (fragmentShader == invalid_handle)
+				TUR_LOG_CRITICAL("Fragment shader not specified in a graphics pipeline");
+
+			glAttachShader(pipelineID, m_Shaders.get(fragmentShader).handle);
+		}
+
+		glLinkProgram(pipelineID);
+		glValidateProgram(pipelineID);
+
+		check_program_link_errors(pipelineID);
+
+		// Shader destruction:
+		{
+			destroy_shader(vertexShader);
+
+			if (tesselationControlShader != invalid_handle)
+				destroy_shader(tesselationControlShader);
+
+			if (tesselationEvaluationShader != invalid_handle)
+				destroy_shader(tesselationEvaluationShader);
+
+			if (geometryShader != invalid_handle)
+				destroy_shader(geometryShader);
+
+			destroy_shader(fragmentShader);
+		}
+
+		Pipeline pipeline;
+		pipeline.handle = pipelineID;
+		pipeline.descriptor = descriptor;
+
+		return static_cast<texture_handle>(m_Pipelines.add(pipeline));
+	}
+	
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
 		gl_handle textureID;
@@ -181,62 +192,52 @@ namespace tur::gl
 		auto& texture = m_Textures.get(handle);
 		glDeleteTextures(1, &texture.handle);
 	}
-	pipeline_handle GraphicsDeviceGL::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
+
+	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
-		gl_handle pipelineID = glCreateProgram();
-		
-		const shader_handle& vertexShader = descriptor.vertexShader;
-		const shader_handle& tesselationControlShader = descriptor.tesselationControlShader;
-		const shader_handle& tesselationEvaluationShader = descriptor.tesselationEvaluationShader;
-		const shader_handle& geometryShader = descriptor.geometryShader;
-		const shader_handle& fragmentShader = descriptor.fragmentShader;
+		gl_handle bufferID;
+		glGenBuffers(1, &bufferID);
 
-		{
-			if (vertexShader == invalid_handle)
-				TUR_LOG_CRITICAL("Vertex shader not specified in a graphics pipeline");
+		gl_handle bufferType = get_buffer_type(descriptor.type);
 
-			glAttachShader(pipelineID, m_Shaders.get(vertexShader).handle);
+		glBindBuffer(bufferType, bufferID);
+		glBufferData(
+			bufferType,
+			data.size,
+			data.data,
+			get_buffer_usage(descriptor.usage)
+		);
+		glBindBuffer(bufferType, 0);
 
-			if (tesselationControlShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(tesselationControlShader).handle);
+		gl::Buffer buffer;
+		buffer.descriptor = descriptor;
+		buffer.handle = bufferID;
 
-			if (tesselationEvaluationShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(tesselationEvaluationShader).handle);
+		return static_cast<buffer_handle>(m_Buffers.add(buffer));
+	}
+	buffer_handle GraphicsDeviceGL::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
+	{
+		return create_default_buffer_impl(descriptor, { nullptr, size });
+	}
+	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	{
+		auto& buffer = m_Buffers.get(handle);
+		const auto& type = get_buffer_type(buffer.descriptor.type);
 
-			if (geometryShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(geometryShader).handle);
+		glBindBuffer(type, buffer.handle);
+		glBufferSubData(type, offset, data.size, data.data);
+		glBindBuffer(type, 0);
+	}
+	void GraphicsDeviceGL::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
+	{
+		auto& srcBuffer = m_Buffers.get(source);
+		auto& dstBuffer = m_Buffers.get(destination);
 
-			if (fragmentShader == invalid_handle)
-				TUR_LOG_CRITICAL("Fragment shader not specified in a graphics pipeline");
-
-			glAttachShader(pipelineID, m_Shaders.get(fragmentShader).handle);
-		}
-
-		glLinkProgram(pipelineID);
-		glValidateProgram(pipelineID);
-
-		check_program_link_errors(pipelineID);
-
-		// Shader destruction:
-		{
-			destroy_shader(vertexShader);
-
-			if (tesselationControlShader != invalid_handle)
-				destroy_shader(tesselationControlShader);
-
-			if (tesselationEvaluationShader != invalid_handle)
-				destroy_shader(tesselationEvaluationShader);
-
-			if (geometryShader != invalid_handle)
-				destroy_shader(geometryShader);
-
-			destroy_shader(fragmentShader);
-		}
-
-		Pipeline pipeline;
-		pipeline.handle = pipelineID;
-		pipeline.descriptor = descriptor;
-
-		return static_cast<texture_handle>(m_Pipelines.add(pipeline));
+		glCopyBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
+	}
+	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
+	{
+		auto& buffer = m_Buffers.get(handle);
+		glDeleteBuffers(1, &buffer.handle);
 	}
 }

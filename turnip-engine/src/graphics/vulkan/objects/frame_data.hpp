@@ -6,8 +6,8 @@ namespace tur::vulkan
 {
 	struct FrameData
 	{
-		vk::CommandPool commandPool;
 		vk::CommandBuffer commandBuffer;
+		vk::DescriptorSet descriptorSet;
 
 		vk::Fence recordingFence;
 		vk::Semaphore imageAvailableSemaphore, renderFinishedSemaphore;

@@ -20,34 +20,36 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
+		
 		m_Commands->begin_render();
-		m_Commands->set_viewport(m_Viewport);
-		m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
-		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
-		
-		m_Commands->bind_vertex_buffer(buffer, 0);
-		m_Commands->bind_index_buffer(indexBuffer);
-		m_Commands->bind_pipeline(pipeline);
-		
-		for (const auto& quad : m_Quads)
 		{
-			bind_mvp(quad.transform);
+			m_Commands->set_viewport(m_Viewport);
+			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
+			m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
-			if (quad.texture != invalid_handle)
-				m_Commands->bind_texture(quad.texture);
+			m_Commands->bind_vertex_buffer(buffer, 0);
+			m_Commands->bind_index_buffer(indexBuffer);
+			m_Commands->bind_pipeline(pipeline);
 
-			else
+			for (const auto& quad : m_Quads)
 			{
-				if (defaultTexture != invalid_handle)
-					m_Commands->bind_texture(defaultTexture);
+				bind_mvp(quad.transform);
+
+				if (quad.texture != invalid_handle)
+					m_Commands->bind_texture(quad.texture);
+
+				else
+				{
+					if (defaultTexture != invalid_handle)
+						m_Commands->bind_texture(defaultTexture);
+				}
+
 			}
-
+			m_Commands->draw_indexed(6);
 		}
-		m_Commands->draw_indexed(6);
-
 		m_Commands->end_render();
+		
 		m_Commands->end();
-
 		m_Commands->submit();
 	}
 
@@ -78,22 +80,29 @@ namespace tur
 
 	void QuadRenderer::initialize_pipeline()
 	{
-		// Pipeline Layout (Push constants):
+		// Rasterizer:
+		RasterizerDescriptor rasterizer = {};
+		{
+			rasterizer.cullMode = CullMode::FRONT;
+			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
+		}
+
+		// Pipeline Layout:
 		PipelineLayout layout;
 		{
-			DescriptorDescripion description = {};
+			DescriptorDescription description = {};
 			{
 				description.binding = 0;
 				description.stages = PipelineStage::VERTEX_STAGE;
 				description.type = DescriptorType::UNIFORM_BUFFER;
 				layout.add_binding(description);
 			}
-			{
+			/*{
 				description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::SAMPLED_IMAGE;
+				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
-			}
+			}*/
 		}
 
 		// Vertex Input:
@@ -135,6 +144,7 @@ namespace tur
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
 		descriptor.pipelineLayout = layout;
+		descriptor.rasterizerStage = rasterizer;
 
 		pipeline = r_GraphicsDevice->create_graphics_pipeline(descriptor);
 	}
@@ -186,24 +196,20 @@ namespace tur
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 			DataBuffer data;
-			data.size = sizeof(glm::mat4) * 3;
+			data.size = sizeof(UBO);
 			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 	}
 
 	void QuadRenderer::bind_mvp(const glm::mat4& transform)
 	{
-		glm::mat4 matrices[3] = {
-			transform,
-			r_Camera->view(),
-			r_Camera->projection()
-		};
+		UBO ubo { transform, r_Camera->view(), r_Camera->projection() };
 
 		DataBuffer dataBuffer;
-		dataBuffer.size = sizeof(matrices);
-		dataBuffer.data = matrices;
+		dataBuffer.size = sizeof(ubo);
+		dataBuffer.data = &ubo;
 
-		m_Commands->update_buffer(uniformBuffer, 0, dataBuffer);
-		m_Commands->bind_descriptors(uniformBuffer, 0);
+		r_GraphicsDevice->update_buffer(uniformBuffer, dataBuffer);
+		r_GraphicsDevice->update_descriptor_set(uniformBuffer);
 	}
 }
