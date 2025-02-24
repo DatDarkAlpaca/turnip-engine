@@ -14,23 +14,28 @@ namespace tur::vulkan
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 
+	public:
+		void recreate_swapchain();
+
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
 		void present_impl();
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
-		void initialize_gui_graphics_system_impl();
-		void begin_gui_frame_impl()
-		{
-			
-		}
 
-		void end_gui_frame_impl()
-		{
-			
-		}
+	protected:
+		void initialize_gui_graphics_system_impl();
+		void begin_gui_frame_impl();
+		void end_gui_frame_impl();
 	
+	protected:
+		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
+		void destroy_shader_impl(shader_handle handle);
+
+	protected:
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
+
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
@@ -40,20 +45,7 @@ namespace tur::vulkan
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
-		void destroy_texture_impl(texture_handle handle)
-		{
-
-		}
-
-	protected:
-		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
-		void destroy_shader_impl(shader_handle handle);
-
-	protected:
-		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
-
-	public:
-		void recreate_swapchain();
+		void destroy_texture_impl(texture_handle handle);
 
 	private:
 		void submit_immediate_command(std::function<void()>&& function);

@@ -70,16 +70,6 @@ namespace tur::gl
 		glClear(setBits);
 	}
 	
-	void CommandBufferGL::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
-	{
-		Buffer buffer = r_Device->get_buffers().get(handle);
-		const auto& type = get_buffer_type(buffer.descriptor.type);
-
-		glBindBuffer(type, buffer.handle);
-		glBufferSubData(type, offset, data.size, data.data);
-		glBindBuffer(type, 0);
-	}
-
 	void CommandBufferGL::bind_pipeline_impl(pipeline_handle handle)
 	{
 		m_ActivePipeline = r_Device->get_pipelines().get(handle);
@@ -112,13 +102,6 @@ namespace tur::gl
 		Buffer buffer = r_Device->get_buffers().get(handle);
 		m_IndexBuffer = buffer;
 		m_IndexType = type;
-	}
-	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle)
-	{
-		if (handle != invalid_handle)
-			glBindBuffer(GL_UNIFORM_BUFFER, r_Device->get_buffers().get(handle).handle);
-		else
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	void CommandBufferGL::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
@@ -154,6 +137,16 @@ namespace tur::gl
 			glDrawElementsInstanced(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr, instanceCount);
 	}
 	
+	void CommandBufferGL::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
+	{
+		Buffer buffer = r_Device->get_buffers().get(handle);
+		const auto& type = get_buffer_type(buffer.descriptor.type);
+
+		glBindBuffer(type, buffer.handle);
+		glBufferSubData(type, offset, data.size, data.data);
+		glBindBuffer(type, 0);
+	}
+
 	void CommandBufferGL::submit_impl()
 	{
 		/* Blank */

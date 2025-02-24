@@ -20,34 +20,36 @@ namespace tur
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();
+		
 		m_Commands->begin_render();
-		m_Commands->set_viewport(m_Viewport);
-		m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
-		m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
-		
-		m_Commands->bind_vertex_buffer(buffer, 0);
-		m_Commands->bind_index_buffer(indexBuffer);
-		m_Commands->bind_pipeline(pipeline);
-		
-		for (const auto& quad : m_Quads)
 		{
-			bind_mvp(quad.transform);
+			m_Commands->set_viewport(m_Viewport);
+			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
+			m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
-			if (quad.texture != invalid_handle)
-				m_Commands->bind_texture(quad.texture);
+			m_Commands->bind_vertex_buffer(buffer, 0);
+			m_Commands->bind_index_buffer(indexBuffer);
+			m_Commands->bind_pipeline(pipeline);
 
-			else
+			for (const auto& quad : m_Quads)
 			{
-				if (defaultTexture != invalid_handle)
-					m_Commands->bind_texture(defaultTexture);
+				bind_mvp(quad.transform);
+
+				if (quad.texture != invalid_handle)
+					m_Commands->bind_texture(quad.texture);
+
+				else
+				{
+					if (defaultTexture != invalid_handle)
+						m_Commands->bind_texture(defaultTexture);
+				}
+
 			}
-
+			m_Commands->draw_indexed(6);
 		}
-		m_Commands->draw_indexed(6);
-
 		m_Commands->end_render();
+		
 		m_Commands->end();
-
 		m_Commands->submit();
 	}
 

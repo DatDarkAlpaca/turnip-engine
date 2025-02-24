@@ -27,20 +27,21 @@ namespace tur::vulkan
 		void set_scissor_impl(const Rect2D& scissor);
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
-		void update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data);
-
+	protected:
 		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding);
 		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType type);
-		void bind_uniform_buffer_impl(buffer_handle handle = invalid_handle);
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 		void bind_descriptors_impl(buffer_handle handle, uint32_t binding);
 
-		void push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data);
-
+	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
-		
+
+	protected:
+		void update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data);
+
+	protected:
 		void submit_impl();
 
 	private:
@@ -52,12 +53,10 @@ namespace tur::vulkan
 		{
 			return r_Device->get_state().frameDataHolder.get_frame_data();
 		}
-		
 		inline vk::Device& get_device() 
 		{
 			return r_Device->get_state().logicalDevice;
 		}
-		
 		inline vk::CommandBuffer get_command_buffer()
 		{
 			return get_frame_data().commandBuffer;

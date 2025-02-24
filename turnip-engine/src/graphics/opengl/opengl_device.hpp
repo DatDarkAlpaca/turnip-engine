@@ -29,22 +29,22 @@ namespace tur::gl
 		void end_gui_frame_impl();
 
 	protected:
-		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
-		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
-		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
-		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
-		void destroy_buffer_impl(buffer_handle handle);
-
-	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
 		void destroy_shader_impl(shader_handle handle);
+
+	protected:
+		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:
-		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
+		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
+		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
+		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
+		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
+		void destroy_buffer_impl(buffer_handle handle);
 
 	public:
 		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }

@@ -11,7 +11,7 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::initialize_impl()
 	{
-		
+
 	}
 
 	void CommandBufferVulkan::begin_impl()
@@ -21,11 +21,13 @@ namespace tur::vulkan
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 		auto& frameData = frameDataHolder.get_frame_data();
 
-		try {
+		try 
+		{
 			auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
 			device.resetFences(frameData.recordingFence);
 		}
-		catch (vk::SystemError& err) {
+		catch (vk::SystemError& err) 
+		{
 			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
 		}
 
@@ -73,14 +75,14 @@ namespace tur::vulkan
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
 				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
-				colorAttachmentInfo.clearValue = vk::ClearValue({ 
+				colorAttachmentInfo.clearValue = vk::ClearValue({
 					m_ClearValue.color.r,
 					m_ClearValue.color.g,
 					m_ClearValue.color.b,
-					m_ClearValue.color.a 
-				});
+					m_ClearValue.color.a
+					});
 			}
-			
+
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};
 			{
 				colorAttachmentInfo.imageView;
@@ -100,7 +102,7 @@ namespace tur::vulkan
 			// render_info.pDepthAttachment = &depthAttachmentInfo;
 			// render_info.pStencilAttachment = &depthAttachmentInfo;
 		}
-		
+
 		m_CommandBuffer.beginRendering(renderInfo);
 	}
 	void CommandBufferVulkan::end_render_impl()
@@ -125,11 +127,11 @@ namespace tur::vulkan
 
 		transition_image(images.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 
-		try 
+		try
 		{
 			m_CommandBuffer.end();
 		}
-		catch (vk::SystemError err) 
+		catch (vk::SystemError err)
 		{
 			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
@@ -147,10 +149,6 @@ namespace tur::vulkan
 	void CommandBufferVulkan::clear_impl(ClearFlags flags, const ClearValue& clearValue)
 	{
 		m_ClearValue = clearValue;
-	}
-
-	void CommandBufferVulkan::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
-	{
 	}
 
 	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
@@ -184,10 +182,6 @@ namespace tur::vulkan
 		m_CommandBuffer.bindDescriptorSets(get_pipeline_type(pipeline.type), pipeline.layout, 0, &set, {});
 	}
 
-	void CommandBufferVulkan::push_constants_impl(u32 offset, PipelineStage stages, const DataBuffer& data)
-	{
-	}
-
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		m_CommandBuffer.draw(vertexCount, instanceCount, firstVertex, firstInstance);
@@ -195,6 +189,10 @@ namespace tur::vulkan
 	void CommandBufferVulkan::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		m_CommandBuffer.drawIndexed(indexCount, instanceCount, 0, firstVertex, firstInstance);
+	}
+
+	void CommandBufferVulkan::update_buffer_impl(buffer_handle handle, u32 offset, const DataBuffer& data)
+	{
 	}
 
 	void CommandBufferVulkan::submit_impl()
@@ -232,7 +230,10 @@ namespace tur::vulkan
 			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
 		}
 	}
+}
 
+namespace tur::vulkan
+{
 	void CommandBufferVulkan::transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout)
 	{
 		vk::ImageAspectFlags aspectMask;

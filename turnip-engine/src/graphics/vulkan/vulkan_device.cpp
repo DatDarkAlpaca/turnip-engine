@@ -20,6 +20,27 @@
 
 namespace tur::vulkan
 {
+	void GraphicsDeviceVulkan::recreate_swapchain()
+	{
+		auto size = get_window_size(r_Window);
+
+		while (size.x == 0 || size.y == 0)
+			size = get_window_size(r_Window);
+
+		m_State.logicalDevice.waitIdle();
+		cleanup_swapchain(m_State);
+
+		// New Swapchain:
+		SwapchainRequirements requirements;
+		requirements.oldSwapchain = m_State.swapchain;
+		initialize_swapchain(m_State, requirements);
+
+		initialize_frame_data(m_State);
+	}
+}
+
+namespace tur::vulkan
+{
 	void GraphicsDeviceVulkan::initialize_impl(NON_OWNING Window* window, const ConfigData& configData)
 	{
 		const auto& vulkanConfig = configData.vulkanConfiguration;
@@ -137,93 +158,18 @@ namespace tur::vulkan
 	{
 		return CommandBufferVulkan(this);
 	}
+
 	void GraphicsDeviceVulkan::initialize_gui_graphics_system_impl()
 	{
+		// TODO: Implement Vulkan ImGUI 
 	}
-
-	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
-	{	
-		// Source Buffer:
-		BufferDescriptor srcDescriptor = {};
-		{
-			srcDescriptor.usage = descriptor.usage;
-			srcDescriptor.type = descriptor.type | BufferType::TRANSFER_DST;
-			srcDescriptor.memoryUsage = BufferMemoryUsage::GPU_ONLY;
-		}
-		Buffer buffer = vulkan::create_buffer(m_State.vmaAllocator, srcDescriptor, data.size);
-		
-		// Staging buffer:
-		BufferDescriptor stagingDescriptor = {};
-		{
-			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
-			stagingDescriptor.type = BufferType::TRANSFER_SRC;
-		}
-		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
-
-		// Buffer data:
-		if(data.data)
-		{
-			void* bufferData = nullptr;
-			vmaMapMemory(m_State.vmaAllocator, stagingBuffer.allocation, &bufferData);
-
-			std::memcpy(bufferData, (u8*)data.data, data.size);
-
-			vmaUnmapMemory(m_State.vmaAllocator, stagingBuffer.allocation);
-		}
-
-		// Buffer copy:
-		submit_immediate_command([&]() {
-			vk::BufferCopy region;
-			{
-				region.dstOffset = 0;
-				region.srcOffset = 0;
-				region.size = data.size;
-			}
-
-			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, buffer.buffer, region);
-		});
-
-		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
-		return m_Buffers.add(buffer);
-	}
-	buffer_handle GraphicsDeviceVulkan::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
+	void GraphicsDeviceVulkan::begin_gui_frame_impl()
 	{
-		return m_Buffers.add(vulkan::create_buffer(m_State.vmaAllocator, descriptor, size));
+		// TODO: Implement Vulkan ImGUI 
 	}
-	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	void GraphicsDeviceVulkan::end_gui_frame_impl()
 	{
-		Buffer& buffer = m_Buffers.get(handle);
-		void* bufferData = nullptr;
-
-		vmaMapMemory(m_State.vmaAllocator, buffer.allocation, &bufferData);
-		std::memcpy(bufferData, (u8*)data.data + offset, data.size);
-		vmaUnmapMemory(m_State.vmaAllocator, buffer.allocation);
-	}
-	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
-	{
-		vk::BufferCopy region;
-		{
-			region.dstOffset = dstOffset;
-			region.srcOffset = srcOffset;
-			region.size = size;
-		}
-
-		Buffer& srcBuffer = m_Buffers.get(source);
-		Buffer& dstBuffer = m_Buffers.get(destination);
-
-		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
-	}
-	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
-	{
-		Buffer& buffer = m_Buffers.get(handle);
-		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
-
-		m_Buffers.remove(handle);
-	}
-
-	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
-	{
-		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
+		// TODO: Implement Vulkan ImGUI 
 	}
 
 	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)
@@ -280,24 +226,101 @@ namespace tur::vulkan
 		return m_Pipelines.add({ pipeline, PipelineType::GRAPHICS });
 	}
 	
-	void GraphicsDeviceVulkan::recreate_swapchain()
+	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
-		auto size = get_window_size(r_Window);
+		// Source Buffer:
+		BufferDescriptor srcDescriptor = {};
+		{
+			srcDescriptor.usage = descriptor.usage;
+			srcDescriptor.type = descriptor.type | BufferType::TRANSFER_DST;
+			srcDescriptor.memoryUsage = BufferMemoryUsage::GPU_ONLY;
+		}
+		Buffer buffer = vulkan::create_buffer(m_State.vmaAllocator, srcDescriptor, data.size);
 
-		while (size.x == 0 || size.y == 0)
-			size = get_window_size(r_Window);
+		// Staging buffer:
+		BufferDescriptor stagingDescriptor = {};
+		{
+			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
+			stagingDescriptor.type = BufferType::TRANSFER_SRC;
+		}
+		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
 
-		m_State.logicalDevice.waitIdle();
-		cleanup_swapchain(m_State);
-		
-		// New Swapchain:
-		SwapchainRequirements requirements;
-		requirements.oldSwapchain = m_State.swapchain;
-		initialize_swapchain(m_State, requirements);
+		// Buffer data:
+		if (data.data)
+		{
+			void* bufferData = nullptr;
+			vmaMapMemory(m_State.vmaAllocator, stagingBuffer.allocation, &bufferData);
 
-		initialize_frame_data(m_State);
+			std::memcpy(bufferData, (u8*)data.data, data.size);
+
+			vmaUnmapMemory(m_State.vmaAllocator, stagingBuffer.allocation);
+		}
+
+		// Buffer copy:
+		submit_immediate_command([&]() {
+			vk::BufferCopy region;
+			{
+				region.dstOffset = 0;
+				region.srcOffset = 0;
+				region.size = data.size;
+			}
+
+			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, buffer.buffer, region);
+			});
+
+		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
+		return m_Buffers.add(buffer);
+	}
+	buffer_handle GraphicsDeviceVulkan::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
+	{
+		return m_Buffers.add(vulkan::create_buffer(m_State.vmaAllocator, descriptor, size));
+	}
+	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	{
+		Buffer& buffer = m_Buffers.get(handle);
+		void* bufferData = nullptr;
+
+		vmaMapMemory(m_State.vmaAllocator, buffer.allocation, &bufferData);
+		std::memcpy(bufferData, (u8*)data.data + offset, data.size);
+		vmaUnmapMemory(m_State.vmaAllocator, buffer.allocation);
+	}
+	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
+	{
+		vk::BufferCopy region;
+		{
+			region.dstOffset = dstOffset;
+			region.srcOffset = srcOffset;
+			region.size = size;
+		}
+
+		Buffer& srcBuffer = m_Buffers.get(source);
+		Buffer& dstBuffer = m_Buffers.get(destination);
+
+		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
+	}
+	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
+	{
+		Buffer& buffer = m_Buffers.get(handle);
+		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
+
+		m_Buffers.remove(handle);
 	}
 
+	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
+	{
+		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
+	}
+	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
+	{
+		Texture& texture = m_Textures.get(handle);
+		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+
+		m_Textures.remove(handle);
+	}
+}
+
+namespace tur::vulkan
+{
 	void GraphicsDeviceVulkan::submit_immediate_command(std::function<void()>&& function)
 	{
 		m_State.logicalDevice.resetFences(m_ImmFence);
@@ -307,7 +330,7 @@ namespace tur::vulkan
 		beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
 
 		m_ImmCommandBuffer.begin(beginInfo);
-		
+
 		function();
 
 		m_ImmCommandBuffer.end();
@@ -317,7 +340,7 @@ namespace tur::vulkan
 			submitCommandInfo.commandBuffer = m_ImmCommandBuffer;
 			submitCommandInfo.deviceMask = 0;
 		}
-		
+
 		vk::SubmitInfo2 submitInfo = {};
 		{
 			submitInfo.flags = vk::SubmitFlags::Flags();
