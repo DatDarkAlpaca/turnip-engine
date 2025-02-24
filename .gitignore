@@ -11,6 +11,10 @@
 *.filters
 *.vcxproj
 
+# Makefiles:
+Makefile
+*.make
+
 # Visual studio cache/options:
 .vs/
 
