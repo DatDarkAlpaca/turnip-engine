@@ -43,7 +43,6 @@ namespace tur
 					if (defaultTexture != invalid_handle)
 						m_Commands->bind_texture(defaultTexture);
 				}
-
 			}
 			m_Commands->draw_indexed(6);
 		}

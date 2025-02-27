@@ -51,7 +51,7 @@ namespace tur::vulkan
 	protected:
 		void update_descriptor_set_impl(buffer_handle handle);
 
-	private:
+	public:
 		void submit_immediate_command(std::function<void()>&& function);
 
 	public:
@@ -59,7 +59,10 @@ namespace tur::vulkan
 		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
+
 		inline VulkanState& get_state() { return m_State; }
+		inline vk::CommandBuffer get_imm_command_buffer() const { return m_ImmCommandBuffer; }
+		inline Window* get_window() { return r_Window; }
 
 	private:
 		Window* r_Window = nullptr;

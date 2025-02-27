@@ -53,8 +53,8 @@ namespace tur
 		void bind_mvp(const glm::mat4& transform);
 
 	private:
-		NON_OWNING GraphicsDevice* r_GraphicsDevice;
-		NON_OWNING Camera* r_Camera;
+		NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
+		NON_OWNING Camera* r_Camera = nullptr;
 
 		QuadRendererInformation m_QuadRendererInfo;
 
@@ -66,11 +66,10 @@ namespace tur
 		Viewport m_Viewport;
 
 	private:
-		buffer_handle uniformBuffer;
-		buffer_handle indexBuffer;
-		buffer_handle buffer;
+		buffer_handle uniformBuffer = invalid_handle;
+		buffer_handle indexBuffer = invalid_handle;
+		buffer_handle buffer = invalid_handle;
 		texture_handle defaultTexture = invalid_handle;
-
- 		pipeline_handle pipeline;
+ 		pipeline_handle pipeline = invalid_handle;
 	};
 }

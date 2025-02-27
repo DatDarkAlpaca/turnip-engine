@@ -161,15 +161,15 @@ namespace tur::vulkan
 
 	void GraphicsDeviceVulkan::initialize_gui_graphics_system_impl()
 	{
-		// TODO: Implement Vulkan ImGUI 
+		initialize_vulkan_gui(this);
 	}
 	void GraphicsDeviceVulkan::begin_gui_frame_impl()
 	{
-		// TODO: Implement Vulkan ImGUI 
+		begin_vulkan_frame();
 	}
 	void GraphicsDeviceVulkan::end_gui_frame_impl()
 	{
-		// TODO: Implement Vulkan ImGUI 
+		end_vulkan_frame(this);
 	}
 
 	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)

@@ -58,6 +58,6 @@ namespace tur
 
 	private:
 		QuadRenderer m_Renderer;
-		NON_OWNING Scene* r_Scene;
+		NON_OWNING Scene* r_Scene = nullptr;
 	};
 }

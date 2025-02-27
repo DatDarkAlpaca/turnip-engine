@@ -5,9 +5,17 @@
 #include "graphics/graphics_specification.hpp"
 #include "platform/window.hpp"
 
-namespace tur
+namespace tur::vulkan
 {
+	class GraphicsDeviceVulkan;
+
 	extern void initialize_vulkan_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification);
+
+	extern void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device);
+
+	extern void begin_vulkan_frame();
+
+	extern void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device);
 
 	extern std::vector<const char*> get_windowing_vulkan_extensions();
 

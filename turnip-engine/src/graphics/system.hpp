@@ -21,10 +21,10 @@ namespace tur
 	inline void initialize_graphics_system(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
 #ifdef DAT_API_OPENGL
-		initialize_opengl_windowing(window, properties, specification);
+		gl::initialize_opengl_windowing(window, properties, specification);
 
 #elif DAT_API_VULKAN
-		initialize_vulkan_windowing(window, properties, specification);
+		vulkan::initialize_vulkan_windowing(window, properties, specification);
 #endif
 	}
 }

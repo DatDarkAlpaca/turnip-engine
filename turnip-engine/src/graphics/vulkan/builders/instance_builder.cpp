@@ -116,7 +116,7 @@ namespace tur::vulkan
 		{
 			extensions.push_back(SurfaceExtensionName);
 
-			auto availableExtensionNames = tur::get_vulkan_extension_platform_surface_names();
+			auto availableExtensionNames = get_vulkan_extension_platform_surface_names();
 			for (const char* extensionName : availableExtensionNames)
 				extensions.push_back(extensionName);
 		}

@@ -30,7 +30,7 @@ static void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int,
 	TUR_LOG_INFO("[OpenGL][Unknown severity]: {}", message);
 }
 
-namespace tur
+namespace tur::gl
 {
 	void initialize_opengl_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
@@ -81,14 +81,17 @@ namespace tur
 		ImGui_ImplOpenGL3_Init("#version 450");
 	}
 
-	void begin_opengl_frame(Window* window)
+	void begin_opengl_frame()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 	}
 
-	void end_opengl_frame(Window* window)
+	void end_opengl_frame()
 	{
+		ImGui::Render();
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		ImGuiIO& io = ImGui::GetIO();

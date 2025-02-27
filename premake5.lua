@@ -33,6 +33,7 @@ group "dependencies"
     end
 
     include "vendor/imgui-opengl.lua"
+    include "vendor/imgui-vulkan.lua"
 group ""
 
 include "turnip-engine/engine.lua"

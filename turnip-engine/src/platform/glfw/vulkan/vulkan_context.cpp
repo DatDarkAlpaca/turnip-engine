@@ -1,12 +1,19 @@
 #include "pch.hpp"
-#include <vulkan/vulkan.hpp>
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.hpp>
+
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
 
 #include "graphics/vulkan/vulkan_constants.hpp"
+#include "graphics/vulkan/vulkan_device.hpp"
+#include "graphics/system.hpp"
+
 #include "platform/vulkan_context.hpp"
 #include "platform/glfw/window_glfw.hpp"
 
-namespace tur
+namespace tur::vulkan
 {
 	void initialize_vulkan_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
@@ -20,6 +27,119 @@ namespace tur
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		initialize_window(window, properties);
+	}
+
+	void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
+	{
+		auto& state = device->get_state();
+
+		vk::DescriptorPoolSize poolSizes[] = 
+		{
+			{ vk::DescriptorType::eSampler, 1000 },
+			{ vk::DescriptorType::eCombinedImageSampler, 1000 },
+			{ vk::DescriptorType::eSampledImage, 1000 },
+			{ vk::DescriptorType::eStorageImage, 1000 },
+			{ vk::DescriptorType::eUniformTexelBuffer, 1000 },
+			{ vk::DescriptorType::eStorageTexelBuffer, 1000 },
+			{ vk::DescriptorType::eUniformBuffer, 1000 },
+			{ vk::DescriptorType::eStorageBuffer, 1000 },
+			{ vk::DescriptorType::eUniformBufferDynamic, 1000 },
+			{ vk::DescriptorType::eStorageBufferDynamic, 1000 },
+			{ vk::DescriptorType::eInputAttachment, 1000 }
+		};
+
+		vk::DescriptorPoolCreateInfo poolInfo = {};
+		{
+			poolInfo.maxSets = 1000;
+			poolInfo.poolSizeCount = std::size(poolSizes);
+			poolInfo.pPoolSizes = poolSizes;
+		}
+
+		vk::DescriptorPool imguiPool;
+		{
+			try
+			{
+				imguiPool = state.logicalDevice.createDescriptorPool(poolInfo);
+			}
+			catch (vk::SystemError)
+			{
+				TUR_LOG_CRITICAL("Failed to create imgui descriptor pool");
+			}
+		}
+	
+		ImGui_ImplGlfw_InitForVulkan(device->get_window()->window, true);
+
+		ImGui_ImplVulkan_InitInfo initInfo = {};
+		VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
+		{
+			initInfo.Instance = state.instance;
+			initInfo.PhysicalDevice = state.physicalDevice;
+			initInfo.Device = state.logicalDevice;
+			initInfo.Queue = state.queueList.get(QueueUsage::GRAPHICS);
+			initInfo.DescriptorPool = imguiPool;
+			initInfo.MinImageCount = 3;
+			initInfo.ImageCount = 3;
+			initInfo.UseDynamicRendering = true;
+			initInfo.PipelineRenderingCreateInfo = {};
+			{
+				initInfo.PipelineRenderingCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
+				initInfo.PipelineRenderingCreateInfo.colorAttachmentCount = 1;
+				initInfo.PipelineRenderingCreateInfo.pColorAttachmentFormats = formats;
+			}
+			initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+		}
+
+		ImGui_ImplVulkan_Init(&initInfo);
+
+		ImGui_ImplVulkan_CreateFontsTexture();
+	}
+
+	void begin_vulkan_frame()
+	{
+		ImGui_ImplVulkan_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	{
+		const auto& drawTexture = device->get_state().drawTexture;
+		const auto& commandBuffer = device->get_imm_command_buffer();
+
+		ImGui::Render();
+
+		vk::RenderingInfo renderInfo = {};
+		{
+			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
+			{
+				colorAttachmentInfo.imageView = drawTexture.imageView;
+				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
+				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
+				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
+				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
+				colorAttachmentInfo.clearValue = vk::ClearValue({ 0.0f, 0.0f, 0.0f, 1.0f });
+			}
+
+			renderInfo.renderArea = vk::Rect2D({}, { drawTexture.extent.width, drawTexture.extent.height });
+			renderInfo.colorAttachmentCount = 1;
+			renderInfo.pColorAttachments = &colorAttachmentInfo;
+			renderInfo.layerCount = 1;
+		}
+
+		/*device->submit_immediate_command([&]() {
+			commandBuffer.beginRendering(&renderInfo);
+
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+
+			commandBuffer.endRendering();
+		});*/
+		
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 	}
 
 	std::vector<const char*> get_windowing_vulkan_extensions()

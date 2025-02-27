@@ -11,9 +11,9 @@ newaction {
         os.rmdir("./bin")
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
-		os.rmdir("**.make")
-		os.rmdir("Makeile")
-
+        
+		os.remove("Makefile")
+		os.remove("**.make")
         os.remove('**.sln')
         os.remove('**.vcxproj')
         os.remove('**.vcxproj.filters')

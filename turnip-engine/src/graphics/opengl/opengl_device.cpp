@@ -30,13 +30,11 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::begin_gui_frame_impl()
 	{
-		begin_opengl_frame(r_Window);
-		ImGui::NewFrame();
+		begin_opengl_frame();
 	}
 	void GraphicsDeviceGL::end_gui_frame_impl()
 	{
-		ImGui::Render();
-		end_opengl_frame(r_Window);
+		end_opengl_frame();
 	}
 
 	shader_handle GraphicsDeviceGL::create_shader_impl(const ShaderDescriptor& descriptor)

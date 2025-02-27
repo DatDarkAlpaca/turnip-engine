@@ -17,18 +17,8 @@ public:
 		auto windowSize = r_Engine->get_window().properties.dimensions;
 
 		// Camera:
-		// m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, (float)windowSize.y, 0.f, -1.f, 1.f);
 		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
-
-		/*m_MainCamera.set_orthogonal(
-			-(float)windowSize.x, 
-			(float)windowSize.x,
-			-(float)windowSize.y, 
-			(float)windowSize.y, 
-			-1.f, 1.f
-		);*/
-
-
+		
 		// Scene:
 		m_Entity = m_Scene.add_entity();
 		{
@@ -44,7 +34,7 @@ public:
 				auto newEntity = m_Scene.add_entity();
 				glm::mat4 model(1.f);
 				float scale = 50.f;
-				model = glm::translate(model, glm::vec3(20.f + scale * x, 20.f, 1.f));
+				model = glm::translate(model, glm::vec3(640.f / 2 + x * scale, 480.f / 2, 1.f));
 				model = glm::scale(model, glm::vec3(scale, scale, 1.f));
 				newEntity.add_component<TransformComponent>(model);
 			}*/
@@ -52,17 +42,14 @@ public:
 
 		// Render System:
 		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
-		m_RenderSystem.get_renderer().set_clear_color(
-			{ 40.f/255.f, 40.f / 255.f, 40.f / 255.f, 1.0f }
-		);
-		m_RenderSystem.get_renderer().set_viewport({ 
-			0.f, 0.f, (float)windowSize.x, (float)windowSize.y,
-		});
+		m_RenderSystem.get_renderer().set_clear_color({ 40.f/255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
+		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 	}
 
 	void on_render_gui() override
 	{
-		
+		ImGui::Begin("Hello World");
+		ImGui::End();
 	}
 
 	void on_event(Event& event) override

@@ -1,4 +1,4 @@
-project "imgui-opengl"
+project "imgui-vulkan"
 	kind "StaticLib"
     warnings "off"
     language "C++"
@@ -11,11 +11,12 @@ project "imgui-opengl"
 
     includedirs {
         vendor_include_dirs["imgui"],
+        vendor_include_dirs["vulkan-headers"]
     }
 
     files {
-		"imgui/backends/imgui_impl_opengl3.h",
-		"imgui/backends/imgui_impl_opengl3.cpp",
+		"imgui/backends/imgui_impl_vulkan.h",
+        "imgui/backends/imgui_impl_vulkan.cpp",
 	}
 
 	filter "system:linux"
