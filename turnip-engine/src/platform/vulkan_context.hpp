@@ -15,6 +15,8 @@ namespace tur::vulkan
 
 	extern void begin_vulkan_frame();
 
+	extern void render_vulkan_frame(vk::CommandBuffer commandBuffer);
+
 	extern void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device);
 
 	extern std::vector<const char*> get_windowing_vulkan_extensions();

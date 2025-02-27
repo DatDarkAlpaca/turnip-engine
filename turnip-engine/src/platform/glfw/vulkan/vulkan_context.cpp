@@ -101,39 +101,14 @@ namespace tur::vulkan
 		ImGui::NewFrame();
 	}
 
-	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	void render_vulkan_frame(vk::CommandBuffer commandBuffer)
 	{
-		const auto& drawTexture = device->get_state().drawTexture;
-		const auto& commandBuffer = device->get_imm_command_buffer();
-
 		ImGui::Render();
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+	}
 
-		vk::RenderingInfo renderInfo = {};
-		{
-			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
-			{
-				colorAttachmentInfo.imageView = drawTexture.imageView;
-				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
-				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
-				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
-				colorAttachmentInfo.storeOp = vk::AttachmentStoreOp::eStore;
-				colorAttachmentInfo.clearValue = vk::ClearValue({ 0.0f, 0.0f, 0.0f, 1.0f });
-			}
-
-			renderInfo.renderArea = vk::Rect2D({}, { drawTexture.extent.width, drawTexture.extent.height });
-			renderInfo.colorAttachmentCount = 1;
-			renderInfo.pColorAttachments = &colorAttachmentInfo;
-			renderInfo.layerCount = 1;
-		}
-
-		/*device->submit_immediate_command([&]() {
-			commandBuffer.beginRendering(&renderInfo);
-
-			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
-
-			commandBuffer.endRendering();
-		});*/
-		
+	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	{		
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{

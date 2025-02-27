@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "vulkan_command_buffer.hpp"
+#include "platform/vulkan_context.hpp"
 #include "graphics/vulkan/objects/pipeline.hpp"
 
 namespace tur::vulkan
@@ -104,6 +105,9 @@ namespace tur::vulkan
 		}
 
 		m_CommandBuffer.beginRendering(renderInfo);
+
+		// Todo: Move ImGUI:
+		render_vulkan_frame(m_CommandBuffer);
 	}
 	void CommandBufferVulkan::end_render_impl()
 	{

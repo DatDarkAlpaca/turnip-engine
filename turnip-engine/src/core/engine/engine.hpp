@@ -28,8 +28,6 @@ namespace tur
 			 
 		void on_render();
 			 
-		void on_render_gui();
-			 
 		void on_update();
 			 
 		void on_event(Event& event);

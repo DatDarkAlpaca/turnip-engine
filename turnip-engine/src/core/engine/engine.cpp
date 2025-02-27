@@ -45,8 +45,6 @@ namespace tur
 
 			on_render();
 
-			on_render_gui();
-
 			m_GraphicsDevice.present();
 		}
 
@@ -75,18 +73,15 @@ namespace tur
 
 	void TurnipEngine::on_render()
 	{
-		for (const auto& view : m_ViewSystem.views)
-			view->on_render();
-	}
-
-	void TurnipEngine::on_render_gui()
-	{
 		m_GraphicsDevice.begin_gui_frame();
-		
+
 		for (const auto& view : m_ViewSystem.views)
+		{
 			view->on_render_gui();
-		
-		 m_GraphicsDevice.end_gui_frame();
+			view->on_render();
+		}
+
+		m_GraphicsDevice.end_gui_frame();
 	}
 
 	void TurnipEngine::on_update()

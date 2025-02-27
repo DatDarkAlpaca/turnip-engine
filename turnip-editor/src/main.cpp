@@ -24,7 +24,7 @@ public:
 		{
 			glm::mat4 model(1.f);
 			float scale = 50.f;
-			model = glm::translate(model, glm::vec3(640.f / 2, 480.f / 2, 1.f));
+			model = glm::translate(model, glm::vec3(640.f / 2, 480.f / 2, 0.f));
 			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
 			m_Entity.add_component<TransformComponent>(model);
 		}
