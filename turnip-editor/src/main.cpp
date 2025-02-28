@@ -42,7 +42,7 @@ public:
 
 		// Render System:
 		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
-		m_RenderSystem.get_renderer().set_clear_color({ 40.f/255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
+		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 	}
 

@@ -74,7 +74,7 @@ namespace tur::vulkan
 		// Texture:
 		TextureDescriptor descriptor;
 		{
-			descriptor.format = TextureFormat::RGBA16SFloat;
+			descriptor.format = TextureFormat::RGBA;
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));
@@ -330,15 +330,21 @@ namespace tur::vulkan
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
+		auto textureHandle = create_texture(descriptor);
+	}
+	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
+	{
 		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
 	}
 	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
 	{
 		Texture& texture = m_Textures.get(handle);
+		m_State.logicalDevice.destroyImageView(texture.imageView);
 		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 
 		m_Textures.remove(handle);
 	}
+
 	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle)
 	{
 		const Buffer& buffer = m_Buffers.get(handle);
@@ -407,6 +413,6 @@ namespace tur::vulkan
 		}
 
 		m_State.queueList.get(QueueUsage::TRANSFER).submit2(submitInfo, m_ImmFence);
-		m_State.logicalDevice.waitForFences(m_ImmFence, true, 1000000000);
+		auto result = m_State.logicalDevice.waitForFences(m_ImmFence, true, 1000000000);
 	}
 }

@@ -6,6 +6,6 @@ namespace tur
 	struct DataBuffer
 	{
 		void* data = nullptr;
-		u64 size = 0;
+		u32 size = 0;
 	};
 }

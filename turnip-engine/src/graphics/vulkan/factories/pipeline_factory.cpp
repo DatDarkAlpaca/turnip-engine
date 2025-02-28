@@ -280,7 +280,7 @@ namespace tur::vulkan
 		}
 		
 		// Descriptor Pool:
-		const u32 frameAmount = device.get_state().frameDataHolder.get_frames().size();
+		const u64 frameAmount = device.get_state().frameDataHolder.get_frames().size();
 		{
 			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
 			std::vector<vk::DescriptorPoolSize> poolSizes;

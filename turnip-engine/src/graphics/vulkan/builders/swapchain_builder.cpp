@@ -8,11 +8,11 @@ namespace tur::vulkan
 	{
 		for (const auto& surfaceFormat : formats) 
 		{
-			if (surfaceFormat.format == vk::Format::eB8G8R8A8Srgb && surfaceFormat.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
+			if (surfaceFormat.format == vk::Format::eB8G8R8A8Unorm && surfaceFormat.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
 				return surfaceFormat;
 		}
 
-		TUR_LOG_WARN("Failed to retrieve a surface format with the default format 'B8G8R8A8_SRGB' that supports SRGB");
+		TUR_LOG_WARN("Failed to retrieve a surface format with the default format 'B8G8R8A8_UNORM' that supports SRGB non linear color space");
 		return formats[0];
 	}
 	

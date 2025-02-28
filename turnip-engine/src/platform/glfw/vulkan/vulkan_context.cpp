@@ -51,7 +51,7 @@ namespace tur::vulkan
 		vk::DescriptorPoolCreateInfo poolInfo = {};
 		{
 			poolInfo.maxSets = 1000;
-			poolInfo.poolSizeCount = std::size(poolSizes);
+			poolInfo.poolSizeCount = static_cast<u32>(std::size(poolSizes));
 			poolInfo.pPoolSizes = poolSizes;
 		}
 
@@ -70,7 +70,8 @@ namespace tur::vulkan
 		ImGui_ImplGlfw_InitForVulkan(device->get_window()->window, true);
 
 		ImGui_ImplVulkan_InitInfo initInfo = {};
-		VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
+		//VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
+		VkFormat formats[] = { VK_FORMAT_R8G8B8A8_UNORM };
 		{
 			initInfo.Instance = state.instance;
 			initInfo.PhysicalDevice = state.physicalDevice;

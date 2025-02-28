@@ -185,6 +185,41 @@ namespace tur::gl
 
 		return static_cast<texture_handle>(m_Textures.add(texture));
 	}
+	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor)
+	{
+		gl_handle textureID;
+		glGenTextures(1, &textureID);
+
+		gl_handle textureType = get_texture_type(descriptor.type);
+		gl_handle textureFormat = get_texture_format(descriptor.format);
+		bool generateMipmaps = descriptor.generateMipmaps;
+
+		glBindTexture(textureType, textureID);
+
+		// Parameters:
+		{
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_S, get_wrap_mode(descriptor.wrapS));
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_T, get_wrap_mode(descriptor.wrapT));
+			if (descriptor.type == TextureType::TEXTURE_3D)
+				glTexParameteri(textureType, GL_TEXTURE_WRAP_R, get_wrap_mode(descriptor.wrapR));
+
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, get_filter_mode(descriptor.minFilter, generateMipmaps));
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, get_filter_mode(descriptor.magFilter, false));
+
+			if (generateMipmaps)
+				glGenerateMipmap(textureType);
+		}
+
+		gl::Texture texture;
+		{
+			texture.handle = textureID;
+			texture.descriptor = descriptor;
+		}
+
+		glBindTexture(textureType, 0);
+
+		return static_cast<texture_handle>(m_Textures.add(texture));
+	}
 	void GraphicsDeviceGL::destroy_texture_impl(texture_handle handle)
 	{
 		auto& texture = m_Textures.get(handle);

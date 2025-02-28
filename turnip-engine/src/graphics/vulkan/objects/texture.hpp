@@ -81,7 +81,7 @@ namespace tur::vulkan
 				return vk::Format::eR16G16B16A16Sfloat;
 
 			case TextureFormat::B8G8R8A8_UNORM:
-				return vk::Format::eB8G8R8A8Unorm;
+				return vk::Format::eB8G8R8A8Srgb;
 		}
 
 		TUR_LOG_ERROR("Invalid Texture Format: {}. Default: RGBA (32-bit)", static_cast<int>(format));

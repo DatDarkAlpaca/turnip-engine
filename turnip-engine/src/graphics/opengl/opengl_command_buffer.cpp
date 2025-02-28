@@ -43,7 +43,12 @@ namespace tur::gl
 	}
 	void CommandBufferGL::set_scissor_impl(const Rect2D& scissor)
 	{
-		glScissor(scissor.x, scissor.y, scissor.width, scissor.height);
+		glScissor(
+			static_cast<u32>(scissor.x), 
+			static_cast<u32>(scissor.y), 
+			static_cast<u32>(scissor.width), 
+			static_cast<u32>(scissor.height)
+		);
 	}
 	void CommandBufferGL::clear_impl(ClearFlags flags, const ClearValue& clearValue)
 	{

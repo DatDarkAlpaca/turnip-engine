@@ -25,7 +25,7 @@ namespace tur::vulkan
 		{
 			for (const auto& [index, usage] : m_Usage)
 			{
-				if (requestedUsage == QueueUsage::TRANSFER)
+				if (requestedUsage & QueueUsage::TRANSFER)
 				{
 					if (usage & QueueUsage::GRAPHICS)
 						return m_Queues[index].first;
@@ -46,7 +46,7 @@ namespace tur::vulkan
 		{
 			for (const auto& [index, usage] : m_Usage)
 			{
-				if (requestedUsage == QueueUsage::TRANSFER)
+				if (requestedUsage & QueueUsage::TRANSFER)
 				{
 					if (usage & QueueUsage::GRAPHICS)
 						return m_Queues[index].second;
