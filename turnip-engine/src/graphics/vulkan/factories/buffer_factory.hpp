@@ -14,7 +14,8 @@ namespace tur::vulkan
 			createInfo.size = size;
 			createInfo.usage = get_buffer_usage(descriptor.type);
 		}
-		VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT;
+		
+		// TODO: add buffer flags.
 		VmaAllocationCreateInfo vmaAllocationCreateInfo = {};
 		{
 			vmaAllocationCreateInfo.usage = get_buffer_memory_usage(descriptor.memoryUsage);

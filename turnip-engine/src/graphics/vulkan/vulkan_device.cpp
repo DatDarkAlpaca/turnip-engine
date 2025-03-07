@@ -223,6 +223,8 @@ namespace tur::vulkan
 			}
 		}
 
+		// Use descriptor set (pipeline layout) info to create a descriptor write array and memory mappings
+
 		return m_Pipelines.add(pipeline);
 	}
 	
@@ -331,6 +333,8 @@ namespace tur::vulkan
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
 		auto textureHandle = create_texture(descriptor);
+		// TODO: update data
+		return textureHandle;
 	}
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
 	{

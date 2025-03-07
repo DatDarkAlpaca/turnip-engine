@@ -24,20 +24,17 @@ public:
 		{
 			glm::mat4 model(1.f);
 			float scale = 50.f;
-			model = glm::translate(model, glm::vec3(640.f / 2, 480.f / 2, 0.f));
+			model = glm::translate(model, glm::vec3(140.f / 2, 480.f / 2, 0.f));
 			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
 			m_Entity.add_component<TransformComponent>(model);
 		}
 		{
-			/*for (int x = 0; x < 10; ++x)
-			{
-				auto newEntity = m_Scene.add_entity();
-				glm::mat4 model(1.f);
-				float scale = 50.f;
-				model = glm::translate(model, glm::vec3(640.f / 2 + x * scale, 480.f / 2, 1.f));
-				model = glm::scale(model, glm::vec3(scale, scale, 1.f));
-				newEntity.add_component<TransformComponent>(model);
-			}*/
+			auto entity = m_Scene.add_entity();
+			glm::mat4 model(1.f);
+			float scale = 50.f;
+			model = glm::translate(model, glm::vec3(240.f / 2, 480.f / 2, 0.f));
+			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
+			entity.add_component<TransformComponent>(model);
 		}
 
 		// Render System:

@@ -43,8 +43,9 @@ namespace tur
 					if (defaultTexture != invalid_handle)
 						m_Commands->bind_texture(defaultTexture);
 				}
+
+				m_Commands->draw_indexed(6);
 			}
-			m_Commands->draw_indexed(6);
 		}
 		m_Commands->end_render();
 		
@@ -197,6 +198,7 @@ namespace tur
 			DataBuffer data;
 			data.size = sizeof(UBO);
 			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
+			r_GraphicsDevice->update_descriptor_set(uniformBuffer);
 		}
 	}
 
@@ -209,6 +211,5 @@ namespace tur
 		dataBuffer.data = &ubo;
 
 		r_GraphicsDevice->update_buffer(uniformBuffer, dataBuffer);
-		r_GraphicsDevice->update_descriptor_set(uniformBuffer);
 	}
 }
