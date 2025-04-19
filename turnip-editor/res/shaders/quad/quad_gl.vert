@@ -1,8 +1,8 @@
 #version 450 core
-layout(location = 0) in vec3 a_position;
-layout(location = 1) in vec2 a_uvs;
+layout (location = 0) in vec3 a_position;
+layout (location = 1) in vec2 a_uvs;
 
-out vec2 v_uvs;
+layout (location = 0) out vec2 v_uvs;
 
 layout(binding = 0, std140) uniform u_mvp {
     mat4 model;

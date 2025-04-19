@@ -5,6 +5,6 @@ namespace tur::vulkan
 {	
 	struct LogicalDeviceRequirements
 	{
-		std::vector<QueueUsage> requiredQueueOperations;
+		std::vector<QueueUsage> requiredQueueOperations = { QueueUsage::GRAPHICS, QueueUsage::PRESENT };
 	};
 }

@@ -352,6 +352,7 @@ namespace tur::vulkan
 	// TODO: FIND ANOTHER WAY TO DO THIS
 	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle)
 	{
+		// TODO: allows for sampled images too
 		const Buffer& buffer = m_Buffers.get(handle);
 
 		for (auto& frame : m_State.frameDataHolder.get_frames())
@@ -417,7 +418,8 @@ namespace tur::vulkan
 			submitInfo.pCommandBufferInfos = &submitCommandInfo;
 		}
 
-		m_State.queueList.get(QueueUsage::TRANSFER).submit2(submitInfo, m_ImmFence);
+		auto a = m_State.queueList.get(QueueUsage::TRANSFER);
+		a.submit2(submitInfo, m_ImmFence);
 		auto result = m_State.logicalDevice.waitForFences(m_ImmFence, true, 1000000000);
 	}
 }

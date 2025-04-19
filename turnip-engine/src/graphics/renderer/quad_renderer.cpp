@@ -128,12 +128,12 @@ namespace tur
 				description.type = DescriptorType::UNIFORM_BUFFER;
 				layout.add_binding(description);
 			}
-			/*{
+			{
 				description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
 				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
-			}*/
+			}
 		}
 
 		// Shaders:

@@ -179,6 +179,10 @@ namespace tur::vulkan
 
 		m_CommandBuffer.bindVertexBuffers(binding, buffer.buffer, offset);
 	}
+	void CommandBufferVulkan::bind_uniform_buffer_impl(buffer_handle handle, u32 binding)
+	{
+		/* Blank */
+	}
 	void CommandBufferVulkan::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 	{
 		const Buffer& buffer = r_Device->get_buffers().get(handle);

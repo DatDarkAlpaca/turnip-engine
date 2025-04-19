@@ -9,7 +9,7 @@ namespace tur::vulkan
 		// Mandatory:
 		std::vector<std::string> extensions = {
 			"VK_KHR_dynamic_rendering",
-			"VK_EXT_descriptor_buffer"
+			"VK_KHR_synchronization2"
 		};
 
 		// Optional:

@@ -311,8 +311,12 @@ namespace tur::vulkan
 			}
 		}
 
-		// Pipeline:
-		// ! No renderpass since the vulkan device will use dynamic rendering.
+		// Pipeline (! No renderpass since the vulkan device is using dynamic rendering):
+		vk::PipelineRenderingCreateInfo renderingInfo = {};
+		auto format = vk::Format::eR8G8B8A8Unorm;
+		renderingInfo.colorAttachmentCount = 1;
+		renderingInfo.pColorAttachmentFormats = &format;
+		
 		vk::GraphicsPipelineCreateInfo pipelineInfo;
 		{
 			pipelineInfo.flags = vk::PipelineCreateFlags();
@@ -331,6 +335,7 @@ namespace tur::vulkan
 			pipelineInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
 
 			pipelineInfo.layout = pipeline.layout;
+			pipelineInfo.pNext = &renderingInfo;
 		}
 
 		try 
