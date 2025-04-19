@@ -2,7 +2,7 @@ require "scripts/clear"
 require "scripts/project"
 require "scripts/graphics"
 require "scripts/platform"
-require "vendor/dependencies"
+require "scripts/dependencies"
 
 workspace "turnip-engine"
     architecture "x64"

@@ -11,7 +11,7 @@ project "vma"
 
 	includedirs {
 		vendor_include_dirs["vulkan-headers"],
-		"VulkanMemoryAllocator/include",
+		vendor_include_dirs["vma"]
 	}
 
     files {
