@@ -38,6 +38,7 @@ namespace tur::gl
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
+		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:
@@ -46,6 +47,9 @@ namespace tur::gl
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
 		void destroy_buffer_impl(buffer_handle handle);
+
+	protected:
+		void update_descriptor_set_impl(buffer_handle handle);
 
 	public:
 		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }

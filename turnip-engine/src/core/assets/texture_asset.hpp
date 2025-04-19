@@ -13,7 +13,12 @@ namespace tur
 
 		u32 width    = 0;
 		u32 height   = 0;
+		u32 depth    = 0;
 		u32 channels = 0;
+
+        u32 xOffset = 0;
+        u32 yOffset = 0;
+        u32 zOffset = 0;
 
 		bool floatTexture = false;
 	};
@@ -25,7 +30,7 @@ namespace tur
     {
         TextureDescriptor descriptor;
         {
-            descriptor.format = TextureFormat::RGBA;
+            descriptor.format = TextureFormat::RGBA8_UNORM;
             descriptor.type = TextureType::TEXTURE_2D;
             descriptor.width = 2;
             descriptor.height = 2;

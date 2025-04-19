@@ -9,7 +9,7 @@ namespace tur
     {
         TEXTURE_2D,
         TEXTURE_3D,
-        ARRAY_TEXTURE,
+        ARRAY_TEXTURE_2D,
         CUBE_MAP,
     };
 
@@ -32,14 +32,14 @@ namespace tur
     // Represents a texture on the GPU
     enum class TextureFormat
     {
-        RED,
-        RG,
-        RGB,
-        RGBA,
-        RGBA16SFloat,
+        R8_UNORM,
+        RG8_UNORM,
+        RGB8_UNORM,
+        RGBA8_UNORM,
+        RGBA16_SFLOAT,
 
-        DEPTH_COMPONENT,
-        DEPTH_STENCIL,
+        DEPTH_16_UNORM,
+        DEPTH_STENCIL16_S8U_INT,
 
         B8G8R8A8_UNORM
     };
@@ -71,7 +71,7 @@ namespace tur
         u32 depth = 1;
         u32 mipLevels = 1;
 
-        TextureFormat format = TextureFormat::RGBA;
+        TextureFormat format = TextureFormat::RGBA8_UNORM;
         TextureType type = TextureType::TEXTURE_2D;
 
         bool generateMipmaps = false;

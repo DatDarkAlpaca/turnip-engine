@@ -55,12 +55,11 @@ namespace tur
 	private:
 		NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
 		NON_OWNING Camera* r_Camera = nullptr;
+		tur_unique<CommandBuffer> m_Commands;
 
 		QuadRendererInformation m_QuadRendererInfo;
 
 	private:
-		tur_unique<CommandBuffer> m_Commands;
-	
 		std::vector<QuadData> m_Quads;
 		glm::vec4 m_ClearColor;
 		Viewport m_Viewport;
