@@ -38,6 +38,7 @@ namespace tur::gl
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
+		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
 
 	protected:

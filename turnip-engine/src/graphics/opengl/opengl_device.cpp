@@ -119,95 +119,60 @@ namespace tur::gl
 	
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
-		gl_handle textureID;
-		glGenTextures(1, &textureID);
+		texture_handle textureIndex = create_texture(descriptor);
+		auto& texture = m_Textures.get(textureIndex);
 
-		gl_handle textureType = get_texture_type(descriptor.type);
 		gl_handle textureFormat = get_texture_format(descriptor.format);
-		bool generateMipmaps = descriptor.generateMipmaps;
 
-		// TODO: implement float textures | texture formats.
-
-		gl_handle dataFormat = get_texture_data_format(asset.dataFormat);
-		gl_handle dataFormatType = asset.floatTexture ? GL_FLOAT : GL_UNSIGNED_BYTE;
-
-		glBindTexture(textureType, textureID);
 		switch (descriptor.type)
 		{
 			case TextureType::TEXTURE_2D:
-			{
-				glTexImage2D(
-					textureType,
-					0,
+				glTextureStorage2D(
+					texture.handle,
+					1,
+					textureFormat,
+					descriptor.width,
+					descriptor.height
+				);
+				break;
+
+			case TextureType::CUBE_MAP:
+			case TextureType::ARRAY_TEXTURE_2D:
+			case TextureType::TEXTURE_3D:
+				glTextureStorage3D(
+					texture.handle,
+					1,
 					textureFormat,
 					descriptor.width,
 					descriptor.height,
-					0,
-					dataFormat,
-					dataFormatType,
-					asset.data.data
+					descriptor.depth
 				);
-				
-			} break;
-
-			case TextureType::TEXTURE_3D:
-			{
-				// TODO: implement
-			} break;
-
-			case TextureType::CUBE_MAP:
-			{
-				// TODO: implement
-			} break;
+				break;
 		}
 
-		// Parameters:
-		{
-			glTexParameteri(textureType, GL_TEXTURE_WRAP_S, get_wrap_mode(descriptor.wrapS));
-			glTexParameteri(textureType, GL_TEXTURE_WRAP_T, get_wrap_mode(descriptor.wrapT));
-			if (descriptor.type == TextureType::TEXTURE_3D)
-				glTexParameteri(textureType, GL_TEXTURE_WRAP_R, get_wrap_mode(descriptor.wrapR));
-
-			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, get_filter_mode(descriptor.minFilter, generateMipmaps));
-			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, get_filter_mode(descriptor.magFilter, false));
-
-			if (generateMipmaps)
-				glGenerateMipmap(textureType);
-		}
-		
-		gl::Texture texture;
-		{
-			texture.handle = textureID;
-			texture.descriptor = descriptor;
-		}
-		
-		glBindTexture(textureType, 0);
-
-		return static_cast<texture_handle>(m_Textures.add(texture));
+		update_texture_impl(textureIndex, asset);
+		return textureIndex;
 	}
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor)
 	{
-		gl_handle textureID;
-		glGenTextures(1, &textureID);
-
 		gl_handle textureType = get_texture_type(descriptor.type);
-		gl_handle textureFormat = get_texture_format(descriptor.format);
-		bool generateMipmaps = descriptor.generateMipmaps;
 
-		glBindTexture(textureType, textureID);
+		gl_handle textureID;
+		glCreateTextures(textureType, 1, &textureID);
 
-		// Parameters:
 		{
-			glTexParameteri(textureType, GL_TEXTURE_WRAP_S, get_wrap_mode(descriptor.wrapS));
-			glTexParameteri(textureType, GL_TEXTURE_WRAP_T, get_wrap_mode(descriptor.wrapT));
-			if (descriptor.type == TextureType::TEXTURE_3D)
-				glTexParameteri(textureType, GL_TEXTURE_WRAP_R, get_wrap_mode(descriptor.wrapR));
+			bool generateMipmaps = descriptor.generateMipmaps;
 
-			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, get_filter_mode(descriptor.minFilter, generateMipmaps));
-			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, get_filter_mode(descriptor.magFilter, false));
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, get_wrap_mode(descriptor.wrapS));
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, get_wrap_mode(descriptor.wrapT));
+			if (descriptor.type == TextureType::TEXTURE_3D)
+				glTextureParameteri(textureID, GL_TEXTURE_WRAP_R, get_wrap_mode(descriptor.wrapR));
+
+			glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, get_filter_mode(descriptor.minFilter, generateMipmaps));
+			glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, get_filter_mode(descriptor.magFilter, false));
 
 			if (generateMipmaps)
-				glGenerateMipmap(textureType);
+				glGenerateTextureMipmap(textureID);
 		}
 
 		gl::Texture texture;
@@ -216,9 +181,32 @@ namespace tur::gl
 			texture.descriptor = descriptor;
 		}
 
-		glBindTexture(textureType, 0);
-
 		return static_cast<texture_handle>(m_Textures.add(texture));
+	}
+	void GraphicsDeviceGL::update_texture_impl(texture_handle handle, const TextureAsset& asset)
+	{
+		auto& texture = m_Textures.get(handle);
+		
+		gl_handle dataFormat = get_texture_data_format(asset.dataFormat);
+		gl_handle dataType = !asset.floatTexture ? GL_UNSIGNED_BYTE : GL_FLOAT;
+
+		switch (texture.descriptor.type)
+		{
+			case TextureType::TEXTURE_2D:
+				glTextureSubImage2D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.width, asset.height,
+					dataFormat, dataType, asset.data.data);
+				break;
+
+			case TextureType::CUBE_MAP:
+			case TextureType::ARRAY_TEXTURE_2D:
+			case TextureType::TEXTURE_3D:
+				glTextureSubImage3D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.zOffset,
+					asset.width, asset.height, asset.depth, dataFormat, dataType, asset.data.data);
+				break;
+
+			default:
+				TUR_LOG_ERROR("Invalid texture descriptor type on update");
+		}
 	}
 	void GraphicsDeviceGL::destroy_texture_impl(texture_handle handle)
 	{
@@ -229,18 +217,8 @@ namespace tur::gl
 	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
 		gl_handle bufferID;
-		glGenBuffers(1, &bufferID);
-
-		gl_handle bufferType = get_buffer_type(descriptor.type);
-
-		glBindBuffer(bufferType, bufferID);
-		glBufferData(
-			bufferType,
-			data.size,
-			data.data,
-			get_buffer_usage(descriptor.usage)
-		);
-		glBindBuffer(bufferType, 0);
+		glCreateBuffers(1, &bufferID);
+		glNamedBufferStorage(bufferID, data.size, data.data, get_buffer_usage(descriptor.usage));
 
 		gl::Buffer buffer;
 		buffer.descriptor = descriptor;
@@ -254,19 +232,15 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
 	{
-		auto& buffer = m_Buffers.get(handle);
-		const auto& type = get_buffer_type(buffer.descriptor.type);
-
-		glBindBuffer(type, buffer.handle);
-		glBufferSubData(type, offset, data.size, data.data);
-		glBindBuffer(type, 0);
+		auto& buffer = m_Buffers.get(handle);		
+		glNamedBufferSubData(buffer.handle, offset, data.size, data.data);
 	}
 	void GraphicsDeviceGL::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
 		auto& srcBuffer = m_Buffers.get(source);
 		auto& dstBuffer = m_Buffers.get(destination);
 
-		glCopyBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
+		glCopyNamedBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
 	}
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{

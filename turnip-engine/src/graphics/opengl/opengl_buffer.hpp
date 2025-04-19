@@ -38,45 +38,25 @@ namespace tur::gl
 
 namespace tur::gl
 {
-	constexpr static inline gl_handle get_buffer_type(BufferType type)
+	static inline gl_handle get_buffer_usage(BufferUsage usage)
 	{
-		switch (type)
-		{
-			case BufferType::VERTEX_BUFFER:
-				return GL_ARRAY_BUFFER;
+		u32 flags = 0;
 
-			case BufferType::INDEX_BUFFER:
-				return GL_ELEMENT_ARRAY_BUFFER;
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::DYNAMIC))
+			flags |= GL_DYNAMIC_STORAGE_BIT;
 
-			case BufferType::UNIFORM_BUFFER:
-				return GL_UNIFORM_BUFFER;
-		}
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::READ))
+			flags |= GL_MAP_READ_BIT;
 
-		TUR_LOG_ERROR("Invalid Buffer Type: {}. Default: GL_ARRAY_BUFFER",
-			static_cast<int>(type));
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::WRITE))
+			flags |= GL_MAP_WRITE_BIT;
 
-		return GL_ARRAY_BUFFER;
-	}
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::PERSISTENT))
+			flags |= GL_MAP_PERSISTENT_BIT;
 
-	constexpr static inline gl_handle get_buffer_usage(BufferUsage usage)
-	{
-		// TODO: add copy & other usages
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::COHERENT))
+			flags |= GL_MAP_COHERENT_BIT;
 
-		switch (usage)
-		{
-			case BufferUsage::STATIC:
-				return GL_STATIC_DRAW;
-
-			case BufferUsage::DYNAMIC:
-				return GL_DYNAMIC_DRAW;
-
-			case BufferUsage::STREAM:
-				return GL_STREAM_DRAW;
-		}
-
-		TUR_LOG_ERROR("Invalid Buffer Usage: {}. Default: GL_STATIC_DRAW",
-			static_cast<int>(usage));
-
-		return GL_STATIC_DRAW;
+		return flags;
 	}
 }

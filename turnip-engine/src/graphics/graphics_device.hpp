@@ -89,6 +89,10 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_texture_impl(descriptor);
 		}
+		void update_texture(texture_handle handle, const TextureAsset& asset)
+		{
+			return static_cast<Backend*>(this)->update_texture_impl(handle, descriptor);
+		}
 		void destroy_texture(texture_handle handle)
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);

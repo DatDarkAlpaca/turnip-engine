@@ -23,6 +23,9 @@ namespace tur::gl
 			case TextureType::TEXTURE_3D:
 				return GL_TEXTURE_3D;
 
+			case TextureType::ARRAY_TEXTURE_2D:
+				return GL_TEXTURE_2D_ARRAY;
+
 			case TextureType::CUBE_MAP:
 				return GL_TEXTURE_CUBE_MAP;
 		}
@@ -103,23 +106,23 @@ namespace tur::gl
 	{
 		switch (format)
 		{
-			case TextureFormat::DEPTH_COMPONENT:
+			case TextureFormat::DEPTH_16_UNORM:
 				return GL_DEPTH_COMPONENT;
 
-			case TextureFormat::DEPTH_STENCIL:
+			case TextureFormat::DEPTH_STENCIL16_S8U_INT:
 				return GL_DEPTH_STENCIL;
 
-			case TextureFormat::RED:
-				return GL_RED;
+			case TextureFormat::R8_UNORM:
+				return GL_R8;
 
-			case TextureFormat::RG:
-				return GL_RG;
+			case TextureFormat::RG8_UNORM:
+				return GL_RG8;
 
-			case TextureFormat::RGB:
-				return GL_RGB;
+			case TextureFormat::RGB8_UNORM:
+				return GL_RGB8;
 
-			case TextureFormat::RGBA:
-				return GL_RGBA;
+			case TextureFormat::RGBA8_UNORM:
+				return GL_RGBA8;
 
 			case TextureFormat::B8G8R8A8_UNORM:
 				return GL_BGRA;

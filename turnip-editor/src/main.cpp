@@ -65,7 +65,7 @@ private:
 
 			TextureDescriptor descriptor;
 			{
-				descriptor.format = TextureFormat::RGBA;
+				descriptor.format = TextureFormat::RGBA8_UNORM;
 				descriptor.type = TextureType::TEXTURE_2D;
 				descriptor.width = texture.width;
 				descriptor.height = texture.height;

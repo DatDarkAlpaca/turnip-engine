@@ -74,7 +74,7 @@ namespace tur::vulkan
 		// Texture:
 		TextureDescriptor descriptor;
 		{
-			descriptor.format = TextureFormat::RGBA;
+			descriptor.format = TextureFormat::RGBA8_UNORM;
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));

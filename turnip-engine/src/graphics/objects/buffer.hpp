@@ -21,8 +21,9 @@ namespace tur
 		VERTEX_BUFFER		= 1 << 0,
 		INDEX_BUFFER		= 1 << 1,
 		UNIFORM_BUFFER		= 1 << 2,
-		TRANSFER_SRC		= 1 << 3,
-		TRANSFER_DST		= 1 << 4,
+		STORAGE_BUFFER		= 1 << 3,
+		TRANSFER_SRC		= 1 << 4,
+		TRANSFER_DST		= 1 << 5,
 	};
 
 	inline BufferType operator| (BufferType lhs, BufferType rhs)
@@ -32,9 +33,12 @@ namespace tur
 
 	enum class BufferUsage
 	{
-		STATIC,
-		DYNAMIC,
-		STREAM
+		NONE		= 0,
+		DYNAMIC		= 1 << 0,
+		READ		= 1 << 1,
+		WRITE		= 1 << 2,
+		PERSISTENT	= 1 << 3,
+		COHERENT	= 1 << 4,
 	};
 
 	enum class BufferMemoryUsage

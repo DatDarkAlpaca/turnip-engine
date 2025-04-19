@@ -59,25 +59,25 @@ namespace tur::vulkan
 	{
 		switch (format)
 		{
-			case TextureFormat::DEPTH_COMPONENT:
+			case TextureFormat::DEPTH_16_UNORM:
 				return vk::Format::eD16Unorm;
 
-			case TextureFormat::DEPTH_STENCIL:
+			case TextureFormat::DEPTH_STENCIL16_S8U_INT:
 				return vk::Format::eD16UnormS8Uint;
 
-			case TextureFormat::RED:
+			case TextureFormat::R8_UNORM:
 				return vk::Format::eR8Unorm;
 
-			case TextureFormat::RG:
+			case TextureFormat::RG8_UNORM:
 				return vk::Format::eR8G8Unorm;
 
-			case TextureFormat::RGB:
+			case TextureFormat::RGB8_UNORM:
 				return vk::Format::eR8G8B8Unorm;
 
-			case TextureFormat::RGBA:
+			case TextureFormat::RGBA8_UNORM:
 				return vk::Format::eR8G8B8A8Unorm;
 
-			case TextureFormat::RGBA16SFloat:
+			case TextureFormat::RGBA16_SFLOAT:
 				return vk::Format::eR16G16B16A16Sfloat;
 
 			case TextureFormat::B8G8R8A8_UNORM:
