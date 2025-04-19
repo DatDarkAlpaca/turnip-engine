@@ -110,6 +110,22 @@ namespace tur::gl
 
 namespace tur::gl
 {
+    constexpr inline gl_handle get_descriptor_set_type(DescriptorType type)
+    {
+        switch (type)
+        {
+            case DescriptorType::UNIFORM_BUFFER:
+                return GL_UNIFORM_BUFFER;
+
+            case DescriptorType::STORAGE_BUFFER:
+                return GL_SHADER_STORAGE_BUFFER;
+
+            // TODO: one must ponder.
+            /*case DescriptorType::COMBINED_IMAGE_SAMPLER:
+                return GL_UNIFORM_BUFFER;*/
+        }
+    }
+
     constexpr inline gl_handle get_attribute_format(AttributeFormat format)
     {
         switch (format)

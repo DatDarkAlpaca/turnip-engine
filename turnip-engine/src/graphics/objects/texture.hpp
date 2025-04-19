@@ -76,9 +76,9 @@ namespace tur
 
         bool generateMipmaps = false;
 
-        WrapMode wrapS = WrapMode::REPEAT;
-        WrapMode wrapT = WrapMode::REPEAT;
-        WrapMode wrapR = WrapMode::REPEAT;
+        WrapMode wrapS = WrapMode::CLAMP_TO_BORDER;
+        WrapMode wrapT = WrapMode::CLAMP_TO_BORDER;
+        WrapMode wrapR = WrapMode::CLAMP_TO_BORDER;
         FilterMode minFilter = FilterMode::NEAREST;
         FilterMode magFilter = FilterMode::NEAREST;
     };

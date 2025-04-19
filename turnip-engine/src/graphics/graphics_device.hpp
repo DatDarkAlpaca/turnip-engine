@@ -71,9 +71,17 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->update_buffer_impl(handle, data, offset);
 		}
+		void* map_buffer(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+		{
+			return static_cast<Backend*>(this)->map_buffer_impl(handle, offset, length, flags);
+		}
 		void copy_buffer(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0)
 		{
 			static_cast<Backend*>(this)->copy_buffer_impl(source, destination, size, srcOffset, dstOffset);
+		}
+		void update_descriptor_set_buffer(buffer_handle handle, DescriptorType type, u32 binding)
+		{
+			static_cast<Backend*>(this)->update_descriptor_set_buffer_impl(handle, type, binding);
 		}
 		void destroy_buffer(buffer_handle handle)
 		{
@@ -91,17 +99,11 @@ namespace tur
 		}
 		void update_texture(texture_handle handle, const TextureAsset& asset)
 		{
-			return static_cast<Backend*>(this)->update_texture_impl(handle, descriptor);
+			return static_cast<Backend*>(this)->update_texture_impl(handle, asset);
 		}
 		void destroy_texture(texture_handle handle)
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
-		}
-
-	public:
-		void update_descriptor_set(buffer_handle handle)
-		{
-			static_cast<Backend*>(this)->update_descriptor_set_impl(handle);
 		}
 
 	protected:

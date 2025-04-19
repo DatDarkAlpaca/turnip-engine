@@ -9,10 +9,11 @@ namespace tur
 	class InstancedQuadRenderer
 	{
 	private:
-		struct QuadData
+		struct InstanceData
 		{
-			glm::mat4 transform;
-			u32 textureID = invalid_handle;
+			glm::vec3 position;
+			glm::vec2 scale;
+			u32 textureLayer;
 		};
 
 		struct Vertex
@@ -20,32 +21,28 @@ namespace tur
 			glm::vec3 position;
 			glm::vec2 uvs;
 		};
-
-		struct RendererDrawCommand
+		
+		struct VPUBO
 		{
-			u32 count;
-			u32 instanceCount;
-			u32 firstIndex;
-			u32 baseIndex;
-			u32 baseInstance;
+			glm::mat4 view;
+			glm::mat4 projection;
 		};
-
-		struct renderer_arguments
-		{
-			std::string vertexFilepath, fragmentFilepath;
-
-			u32 maxInstanceCount = 0;
-			u32 textureCount = 0;
-			u32 textureWidth = 0, textureHeight = 0;
-		};
-
+	
 	public:
 		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
-
 		void render();
+
+	public:
+		void set_clear_color(const glm::vec4& color);
+		void set_viewport(const Viewport& viewport);
+
+		void add_quad(const InstanceData& quadData);
+		void add_texture(const TextureAsset& asset);
 
 	private:
 		void initialize_pipeline();
+		void initialize_buffers();
+		void initialize_textures();
 
 	private:
 		NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
@@ -54,19 +51,21 @@ namespace tur
 
 		InstancedQuadRendererInformation m_RendererInfo;
 
-	private:
-		void* instanceBufferMappedData = nullptr;
-		u32 quadAmount = 0;
+		glm::vec4 m_ClearColor;
+		Viewport m_Viewport;
 
+	private:
 		pipeline_handle pipeline = invalid_handle;
 
 		buffer_handle vertexBuffer      = invalid_handle;
 		buffer_handle indexBuffer       = invalid_handle;
-		buffer_handle drawBuffer        = invalid_handle;
+		buffer_handle vpBuffer          = invalid_handle;
 		buffer_handle instanceBuffer    = invalid_handle;
-		buffer_handle viewProjectionUBO = invalid_handle;
 
 		texture_handle textureArray = invalid_handle;
+
+		void* instanceMappedData = nullptr;
+		u32 quadAmount = 0;
 		u32 textureCount = 0;
 	};
 }

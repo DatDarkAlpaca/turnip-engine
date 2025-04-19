@@ -3,6 +3,7 @@
 
 #include "opengl_common.hpp"
 #include "graphics/objects/buffer.hpp"
+#include "graphics/type/access_flags.hpp"
 
 namespace tur::gl
 {
@@ -58,5 +59,27 @@ namespace tur::gl
 			flags |= GL_MAP_COHERENT_BIT;
 
 		return flags;
+	}
+}
+
+namespace tur::gl
+{
+	static inline gl_handle get_buffer_access_flags(AccessFlags flags)
+	{
+		u32 result = 0;
+
+		if (static_cast<u32>(flags) & static_cast<u32>(AccessFlags::READ))
+			result |= GL_MAP_READ_BIT;
+
+		if (static_cast<u32>(flags) & static_cast<u32>(AccessFlags::WRITE))
+			result |= GL_MAP_WRITE_BIT;
+
+		if (static_cast<u32>(flags) & static_cast<u32>(AccessFlags::PERSISTENT))
+			result |= GL_MAP_PERSISTENT_BIT;
+
+		if (static_cast<u32>(flags) & static_cast<u32>(AccessFlags::COHERENT))
+			result |= GL_MAP_COHERENT_BIT;
+
+		return result;
 	}
 }

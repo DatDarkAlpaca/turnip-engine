@@ -13,23 +13,23 @@
         "variant": 0
     },
     "graphicsSpecification": {
-        "api": "VULKAN",
-        "major": 1,
-        "minor": 3,
+        "api": "OPENGL",
+        "major": 4,
+        "minor": 5,
         "patch": 0,
         "variant": 0
     },
     "instancedQuadRendererInformation": {
-        "fragmentFilepath": "res/shaders/instanced_quad.frag",
-        "maxInstanceCount": 500,
-        "textureCount": 2,
-        "textureHeight": 32,
-        "textureWidth": 32,
-        "vertexFilepath": "res/shaders/instanced_quad.vert"
+        "fragmentFilepath": "res/shaders/instanced/instanced_quad.frag",
+        "maxInstanceCount": 10000,
+        "maxTextureCount": 100,
+        "textureHeight": 144,
+        "textureWidth": 144,
+        "vertexFilepath": "res/shaders/instanced/instanced_quad.vert"
     },
     "quadRendererInformation": {
-        "fragmentFilepath": "res/shaders/quad/quad_vk_frag.spv",
-        "vertexFilepath": "res/shaders/quad/quad_vk_vert.spv"
+        "fragmentFilepath": "res/shaders/quad/quad_gl.frag",
+        "vertexFilepath": "res/shaders/quad/quad_gl.vert"
     },
     "vulkanConfiguration": {
         "instanceRequirements": {
@@ -40,8 +40,8 @@
         },
         "logicalDeviceRequirements": {
             "requiredQueueOperations": [
-                "GRAPHICS",
-                "PRESENT"
+                "graphics",
+                "present"
             ]
         },
         "physicalDeviceRequirements": {

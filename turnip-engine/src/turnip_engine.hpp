@@ -11,6 +11,7 @@
 #include "graphics/graphics.hpp"
 #include "graphics/renderer/quad_renderer.hpp"
 #include "graphics/renderer/quad_renderer_system.hpp"
+#include "graphics/renderer/instanced_quad_renderer.hpp"
 
 #include "platform/platform.hpp"
 #include "common.hpp"

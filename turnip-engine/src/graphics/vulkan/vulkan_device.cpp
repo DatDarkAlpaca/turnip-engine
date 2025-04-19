@@ -308,6 +308,11 @@ namespace tur::vulkan
 
 		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 	}
+	void* GraphicsDeviceVulkan::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+	{
+		TUR_LOG_CRITICAL("map_buffer not implemented");
+		return nullptr;
+	}
 	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
 		vk::BufferCopy region;
@@ -321,6 +326,47 @@ namespace tur::vulkan
 		Buffer& dstBuffer = m_Buffers.get(destination);
 
 		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
+	}
+	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle, DescriptorType type, u32 binding)
+	{
+		const Buffer& buffer = m_Buffers.get(handle);
+
+		vk::DescriptorType descriptorType;
+		switch (type)
+		{
+			case DescriptorType::UNIFORM_BUFFER:
+				descriptorType = vk::DescriptorType::eUniformBuffer;
+				break;
+
+			case DescriptorType::STORAGE_BUFFER:
+				descriptorType = vk::DescriptorType::eStorageBuffer;
+				break;
+		}
+
+		for (auto& frame : m_State.frameDataHolder.get_frames())
+		{
+			vk::DescriptorBufferInfo bufferInfo = {};
+			{
+				bufferInfo.buffer = buffer.buffer;
+				bufferInfo.offset = 0;
+				bufferInfo.range = buffer.size;
+			}
+
+			vk::WriteDescriptorSet descriptorWrite = {};
+			{
+				descriptorWrite.dstSet = frame.descriptorSet;
+				descriptorWrite.dstBinding = binding;
+				descriptorWrite.dstArrayElement = 0;
+				descriptorWrite.descriptorType = descriptorType;
+				descriptorWrite.descriptorCount = 1;
+
+				descriptorWrite.pBufferInfo = &bufferInfo;
+				descriptorWrite.pImageInfo = nullptr;
+				descriptorWrite.pTexelBufferView = nullptr;
+			}
+
+			m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+		}
 	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
 	{
@@ -347,38 +393,6 @@ namespace tur::vulkan
 		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 
 		m_Textures.remove(handle);
-	}
-
-	// TODO: FIND ANOTHER WAY TO DO THIS
-	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle)
-	{
-		// TODO: allows for sampled images too
-		const Buffer& buffer = m_Buffers.get(handle);
-
-		for (auto& frame : m_State.frameDataHolder.get_frames())
-		{
-			vk::DescriptorBufferInfo bufferInfo = {};
-			{
-				bufferInfo.buffer = buffer.buffer;
-				bufferInfo.offset = 0;
-				bufferInfo.range = buffer.size;
-			}
-
-			vk::WriteDescriptorSet descriptorWrite = {};
-			{
-				descriptorWrite.dstSet = frame.descriptorSet;
-				descriptorWrite.dstBinding = 0;
-				descriptorWrite.dstArrayElement = 0;
-				descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
-				descriptorWrite.descriptorCount = 1;
-
-				descriptorWrite.pBufferInfo = &bufferInfo;
-				descriptorWrite.pImageInfo = nullptr;
-				descriptorWrite.pTexelBufferView = nullptr;
-			}
-
-			m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-		}
 	}
 }
 

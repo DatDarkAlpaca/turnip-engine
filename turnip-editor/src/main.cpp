@@ -38,7 +38,8 @@ public:
 
 	void on_render() override
 	{
-		m_RenderSystem.render();
+		//m_RenderSystem.render();
+		m_QuadRenderer.render();
 	};
 
 private:
@@ -74,6 +75,8 @@ private:
 
 			m_Texture = r_Engine->get_graphics_device().create_texture(descriptor, texture);
 			m_Entity.add_component<TextureComponent>(m_Texture);
+
+			m_QuadRenderer.add_texture(texture);
 		});
 	}
 
@@ -83,9 +86,22 @@ private:
 
 		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
 
-		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
+		// Main:
+		m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &m_Scene);
 		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+
+		// Instanced:
+		m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);
+		m_QuadRenderer.set_clear_color({ 1.0f, 0.0f, 0.0f, 1.0f });
+		m_QuadRenderer.set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+
+		float size = 25.0;
+		for (int x = 0; x < 10; ++x)
+		{
+			for (int y = 0; y < 10; ++y)
+				m_QuadRenderer.add_quad({ { x * size + size, y * size, 0.0f }, { size, size }, 0 });
+		}
 	}
 
 	void create_scene()
@@ -105,6 +121,7 @@ private:
 	Entity m_Entity;
 	Camera m_MainCamera;
 	QuadRendererSystem m_RenderSystem;
+	InstancedQuadRenderer m_QuadRenderer;
 
 private:
 	texture_handle m_Texture = invalid_handle;

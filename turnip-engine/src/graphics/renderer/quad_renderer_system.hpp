@@ -8,7 +8,7 @@ namespace tur
 	struct QuadRendererSystem
 	{
 	public:
-		void initialize(const ConfigData& configData, Scene* scene, GraphicsDevice* device, Camera* camera)
+		void initialize(const ConfigData& configData, GraphicsDevice* device, Camera* camera, Scene* scene)
 		{
 			m_Renderer.initialize(configData, device, camera);
 			r_Scene = scene;

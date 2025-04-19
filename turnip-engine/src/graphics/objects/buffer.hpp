@@ -41,6 +41,11 @@ namespace tur
 		COHERENT	= 1 << 4,
 	};
 
+	inline BufferUsage operator| (BufferUsage lhs, BufferUsage rhs)
+	{
+		return static_cast<BufferUsage>(static_cast<u32>(lhs) | static_cast<u32>(rhs));
+	}
+
 	enum class BufferMemoryUsage
 	{
 		CPU_ONLY,

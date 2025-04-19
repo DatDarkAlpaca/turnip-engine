@@ -13,8 +13,8 @@ namespace tur
 
 		m_QuadRendererInfo = configData.quadRendererInformation;
 
-		initialize_pipeline();
 		initialize_buffers();
+		initialize_pipeline();
 	}
 
 	void QuadRenderer::render()
@@ -30,7 +30,6 @@ namespace tur
 			m_Commands->bind_vertex_buffer(buffer, 0, sizeof(Vertex));
 			m_Commands->bind_index_buffer(indexBuffer);
 			m_Commands->bind_pipeline(pipeline);
-			m_Commands->bind_uniform_buffer(uniformBuffer, 0);
 
 			for (const auto& quad : m_Quads)
 			{
@@ -205,7 +204,7 @@ namespace tur
 			DataBuffer data;
 			data.size = sizeof(UBO);
 			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
-			r_GraphicsDevice->update_descriptor_set(uniformBuffer);
+			r_GraphicsDevice->update_descriptor_set_buffer(uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
 		}
 	}
 

@@ -31,7 +31,6 @@ namespace tur::gl
 	protected:
 		void bind_pipeline_impl(pipeline_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride);
-		void bind_uniform_buffer_impl(buffer_handle handle, u32 binding);
 		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType);
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 		

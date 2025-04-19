@@ -87,24 +87,11 @@ namespace tur::gl
 		glCullFace(get_cull_mode(descriptor.rasterizerStage.cullMode));
 
 		setup_pipeline_bindings(descriptor);
-
-		// Descriptors:
-		for (const auto& [binding, type, stages, amount] : descriptor.pipelineLayout.bindingDescriptors)
-		{
-			if (type == DescriptorType::COMBINED_IMAGE_SAMPLER)
-			{
-				glActiveTexture(GL_TEXTURE0 + binding);
-			}
-		}
 	}
 	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
 	{
 		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
 		glVertexArrayVertexBuffer(m_VAO, binding, bufferHandle, 0, stride);
-	}
-	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle, u32 binding)
-	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, binding, r_Device->get_buffers().get(handle).handle);
 	}
 	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType)
 	{

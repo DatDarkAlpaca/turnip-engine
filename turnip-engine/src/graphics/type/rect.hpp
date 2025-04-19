@@ -12,8 +12,8 @@ namespace tur
 		float x = 0;
 		float y = 0;
 
-		float width;
-		float height;
+		float width = 0.0f;
+		float height = 0.0f;
 
 		float minDepth = 0.f;
 		float maxDepth = 1.f;

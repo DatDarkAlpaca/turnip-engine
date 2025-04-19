@@ -296,7 +296,7 @@ namespace tur::vulkan
 			vk::DescriptorPoolCreateInfo poolInfo;
 			{
 				poolInfo.flags = vk::DescriptorPoolCreateFlags();
-				poolInfo.maxSets = frameAmount;
+				poolInfo.maxSets = static_cast<u32>(frameAmount);
 				poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 				poolInfo.pPoolSizes = poolSizes.data();
 			}

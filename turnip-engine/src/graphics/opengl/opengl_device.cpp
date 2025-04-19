@@ -122,40 +122,13 @@ namespace tur::gl
 		texture_handle textureIndex = create_texture(descriptor);
 		auto& texture = m_Textures.get(textureIndex);
 
-		gl_handle textureFormat = get_texture_format(descriptor.format);
-
-		switch (descriptor.type)
-		{
-			case TextureType::TEXTURE_2D:
-				glTextureStorage2D(
-					texture.handle,
-					1,
-					textureFormat,
-					descriptor.width,
-					descriptor.height
-				);
-				break;
-
-			case TextureType::CUBE_MAP:
-			case TextureType::ARRAY_TEXTURE_2D:
-			case TextureType::TEXTURE_3D:
-				glTextureStorage3D(
-					texture.handle,
-					1,
-					textureFormat,
-					descriptor.width,
-					descriptor.height,
-					descriptor.depth
-				);
-				break;
-		}
-
 		update_texture_impl(textureIndex, asset);
 		return textureIndex;
 	}
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor)
 	{
 		gl_handle textureType = get_texture_type(descriptor.type);
+		gl_handle textureFormat = get_texture_format(descriptor.format);
 
 		gl_handle textureID;
 		glCreateTextures(textureType, 1, &textureID);
@@ -173,6 +146,32 @@ namespace tur::gl
 
 			if (generateMipmaps)
 				glGenerateTextureMipmap(textureID);
+		}
+
+		switch (descriptor.type)
+		{
+			case TextureType::TEXTURE_2D:
+				glTextureStorage2D(
+					textureID,
+					1,
+					textureFormat,
+					descriptor.width,
+					descriptor.height
+				);
+				break;
+
+			case TextureType::CUBE_MAP:
+			case TextureType::ARRAY_TEXTURE_2D:
+			case TextureType::TEXTURE_3D:
+				glTextureStorage3D(
+					textureID,
+					1,
+					textureFormat,
+					descriptor.width,
+					descriptor.height,
+					descriptor.depth
+				);
+				break;
 		}
 
 		gl::Texture texture;
@@ -235,6 +234,15 @@ namespace tur::gl
 		auto& buffer = m_Buffers.get(handle);		
 		glNamedBufferSubData(buffer.handle, offset, data.size, data.data);
 	}
+	void* GraphicsDeviceGL::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+	{
+		return glMapNamedBufferRange(
+			m_Buffers.get(handle).handle, 
+			offset,
+			length,
+			get_buffer_access_flags(flags)
+		);
+	}
 	void GraphicsDeviceGL::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
 		auto& srcBuffer = m_Buffers.get(source);
@@ -242,14 +250,13 @@ namespace tur::gl
 
 		glCopyNamedBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
 	}
+	void GraphicsDeviceGL::update_descriptor_set_buffer_impl(buffer_handle handle, DescriptorType type, u32 binding)
+	{
+		glBindBufferBase(get_descriptor_set_type(type), binding, m_Buffers.get(handle).handle);
+	}
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{
 		auto& buffer = m_Buffers.get(handle);
 		glDeleteBuffers(1, &buffer.handle);
-	}
-
-	void GraphicsDeviceGL::update_descriptor_set_impl(buffer_handle handle)
-	{
-		/* Blank */
 	}
 }

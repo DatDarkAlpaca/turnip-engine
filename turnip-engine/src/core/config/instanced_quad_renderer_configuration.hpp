@@ -11,7 +11,7 @@ namespace tur
 		json["fragmentFilepath"] = quadInfo.fragmentFilepath;
 
 		json["maxInstanceCount"] = quadInfo.maxInstanceCount;
-		json["textureCount"] = quadInfo.textureCount;
+		json["maxTextureCount"] = quadInfo.maxTextureCount;
 		json["textureWidth"] = quadInfo.textureWidth;
 		json["textureHeight"] = quadInfo.textureHeight;
 	}
@@ -22,7 +22,7 @@ namespace tur
 		quadInfo.fragmentFilepath = json["fragmentFilepath"];
 
 		quadInfo.maxInstanceCount = json["maxInstanceCount"];
-		quadInfo.textureCount = json["textureCount"];
+		quadInfo.maxTextureCount = json["maxTextureCount"];
 		quadInfo.textureWidth = json["textureWidth"];
 		quadInfo.textureHeight = json["textureHeight"];
 	}
