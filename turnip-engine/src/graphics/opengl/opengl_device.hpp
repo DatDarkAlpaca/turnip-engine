@@ -47,6 +47,9 @@ namespace tur::gl
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
 		void destroy_buffer_impl(buffer_handle handle);
 
+	protected:
+		void update_descriptor_set_impl(buffer_handle handle);
+
 	public:
 		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }
 		inline free_list<Texture>&  get_textures()  { return m_Textures; }

@@ -273,4 +273,9 @@ namespace tur::gl
 		auto& buffer = m_Buffers.get(handle);
 		glDeleteBuffers(1, &buffer.handle);
 	}
+
+	void GraphicsDeviceGL::update_descriptor_set_impl(buffer_handle handle)
+	{
+		/* Blank */
+	}
 }

@@ -15,6 +15,7 @@
 #include "graphics_configuration.hpp"
 #include "vulkan_configuration.hpp"
 #include "quad_renderer_configuration.hpp"
+#include "instanced_quad_renderer_configuration.hpp"
 
 namespace tur
 {
@@ -25,6 +26,7 @@ namespace tur
 		WindowProperties windowProperties;
 		GraphicsSpecification graphicsSpecification;
 		QuadRendererInformation quadRendererInformation;
+		InstancedQuadRendererInformation instancedQuadRendererInformation;
 		vulkan::VulkanConfiguration vulkanConfiguration;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigData, 
@@ -33,6 +35,7 @@ namespace tur
 			windowProperties,
 			graphicsSpecification,
 			quadRendererInformation,
+			instancedQuadRendererInformation,
 			vulkanConfiguration
 		);
 	};

@@ -13,34 +13,10 @@ public:
 	void on_engine_startup() override
 	{
 		initialize_textures();
-
-		auto windowSize = r_Engine->get_window().properties.dimensions;
-
-		// Camera:
-		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
 		
-		// Scene:
-		m_Entity = m_Scene.add_entity();
-		{
-			glm::mat4 model(1.f);
-			float scale = 50.f;
-			model = glm::translate(model, glm::vec3(140.f / 2, 480.f / 2, 0.f));
-			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
-			m_Entity.add_component<TransformComponent>(model);
-		}
-		{
-			auto entity = m_Scene.add_entity();
-			glm::mat4 model(1.f);
-			float scale = 50.f;
-			model = glm::translate(model, glm::vec3(240.f / 2, 480.f / 2, 0.f));
-			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
-			entity.add_component<TransformComponent>(model);
-		}
+		initialize_renderer_system();
 
-		// Render System:
-		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
-		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
-		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+		create_scene();
 	}
 
 	void on_render_gui() override
@@ -99,6 +75,29 @@ private:
 			m_Texture = r_Engine->get_graphics_device().create_texture(descriptor, texture);
 			m_Entity.add_component<TextureComponent>(m_Texture);
 		});
+	}
+
+	void initialize_renderer_system()
+	{
+		auto windowSize = r_Engine->get_window().properties.dimensions;
+
+		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
+
+		m_RenderSystem.initialize(r_Engine->get_config_data(), &m_Scene, &r_Engine->get_graphics_device(), &m_MainCamera);
+		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
+		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+	}
+
+	void create_scene()
+	{
+		m_Entity = m_Scene.add_entity();
+		
+		glm::mat4 model(1.f);
+		float scale = 50.f;
+		model = glm::translate(model, glm::vec3(140.f / 2, 480.f / 2, 0.f));
+		model = glm::scale(model, glm::vec3(scale, scale, 1.f));
+		
+		m_Entity.add_component<TransformComponent>(model);
 	}
 
 private:
