@@ -97,29 +97,25 @@ namespace tur::gl
 			}
 		}
 	}
-	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
+	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
 	{
 		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
-		m_BufferBindings[binding] = bufferHandle;
+		glVertexArrayVertexBuffer(m_VAO, binding, bufferHandle, 0, stride);
 	}
-	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type)
+	void CommandBufferGL::bind_uniform_buffer_impl(buffer_handle handle, u32 binding)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding, r_Device->get_buffers().get(handle).handle);
+	}
+	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType)
 	{
 		Buffer buffer = r_Device->get_buffers().get(handle);
-		m_IndexBuffer = buffer;
-		m_IndexType = type;
+		m_IndexType = indexType;
+		glVertexArrayElementBuffer(m_VAO, buffer.handle);
 	}
 	void CommandBufferGL::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
 		Texture texture = r_Device->get_textures().get(handle);
-
-		if(textureUnit != invalid_handle)
-			glActiveTexture(GL_TEXTURE0 + textureUnit);
-
-		glBindTexture(get_texture_type(texture.descriptor.type), texture.handle);
-	}
-	void CommandBufferGL::bind_descriptors_impl(buffer_handle handle, uint32_t binding)
-	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, binding, r_Device->get_buffers().get(handle).handle);
+		glBindTextureUnit(textureUnit, texture.handle);
 	}
 
 	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
@@ -134,7 +130,6 @@ namespace tur::gl
 	void CommandBufferGL::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer.handle);
 
 		if (instanceCount == 1)
 			glDrawElements(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr);
@@ -158,24 +153,22 @@ namespace tur::gl
 			{
 				if (attribute.binding != binding.binding)
 					continue;
-
-				glEnableVertexAttribArray(attribute.location);
-
-				gl_handle bufferHandle = m_BufferBindings[binding.binding];
-				glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
 				
-				glVertexAttribPointer(
+				glEnableVertexAttribArray(attribute.location);
+				glVertexArrayAttribFormat(
+					m_VAO,
 					attribute.location,
 					static_cast<i32>(get_attribute_format_size(attribute.format)),
 					get_attribute_format(attribute.format),
 					attribute.normalized,
-					binding.stride,
-					reinterpret_cast<void*>(attribute.offset)
+					attribute.offset
 				);
 
-				int divisor = binding.inputRate == InputRate::VERTEX ? 0 : 1;
-				glVertexAttribDivisor(attribute.location, divisor);
+				glVertexArrayAttribBinding(m_VAO, attribute.location, binding.binding);
+
+				u32 divisor = binding.inputRate == InputRate::VERTEX ? 0 : 1;
+				glVertexArrayBindingDivisor(m_VAO, binding.binding, divisor);
 			}
-		}
+		}		
 	}
 }

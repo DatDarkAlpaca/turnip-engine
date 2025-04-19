@@ -349,6 +349,7 @@ namespace tur::vulkan
 		m_Textures.remove(handle);
 	}
 
+	// TODO: FIND ANOTHER WAY TO DO THIS
 	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle)
 	{
 		const Buffer& buffer = m_Buffers.get(handle);

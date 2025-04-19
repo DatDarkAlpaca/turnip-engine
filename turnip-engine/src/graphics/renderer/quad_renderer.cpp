@@ -27,9 +27,10 @@ namespace tur
 			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
 			m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
 
-			m_Commands->bind_vertex_buffer(buffer, 0);
+			m_Commands->bind_vertex_buffer(buffer, 0, sizeof(Vertex));
 			m_Commands->bind_index_buffer(indexBuffer);
 			m_Commands->bind_pipeline(pipeline);
+			m_Commands->bind_uniform_buffer(uniformBuffer, 0);
 
 			for (const auto& quad : m_Quads)
 			{
@@ -80,6 +81,36 @@ namespace tur
 
 	void QuadRenderer::initialize_pipeline()
 	{
+		// Vertex Input:
+		VertexInputDescriptor vertexInput;
+		{
+			BindingDescription bindingDescription;
+			{
+				bindingDescription.binding = 0;
+				bindingDescription.stride = sizeof(Vertex);
+				bindingDescription.inputRate = InputRate::VERTEX;
+				vertexInput.bindings.push_back(bindingDescription);
+			}
+
+			Attribute attribute0;
+			{
+				attribute0.binding = 0;
+				attribute0.location = 0;
+				attribute0.format = AttributeFormat::R32G32B32_SFLOAT;
+				attribute0.offset = offsetof(QuadRenderer::Vertex, position);
+				vertexInput.attributes.push_back(attribute0);
+			}
+
+			Attribute attribute1;
+			{
+				attribute1.binding = 0;
+				attribute1.location = 1;
+				attribute1.format = AttributeFormat::R32G32_SFLOAT;
+				attribute1.offset = offsetof(QuadRenderer::Vertex, uvs);
+				vertexInput.attributes.push_back(attribute1);
+			}
+		}
+
 		// Rasterizer:
 		RasterizerDescriptor rasterizer = {};
 		{
@@ -103,36 +134,6 @@ namespace tur
 				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
 			}*/
-		}
-
-		// Vertex Input:
-		VertexInputDescriptor vertexInput;
-		{
-			BindingDescription bindingDescription;
-			{
-				bindingDescription.binding = 0;
-				bindingDescription.stride = sizeof(Vertex);
-				bindingDescription.inputRate = InputRate::VERTEX;
-				vertexInput.bindings.push_back(bindingDescription);
-			}
-
-			Attribute attribute0;
-			{
-				attribute0.binding = 0;
-				attribute0.location = 0;
-				attribute0.format = AttributeFormat::R32G32B32_SFLOAT;
-				attribute0.offset = offsetof(QuadRenderer::Vertex, position);
-				vertexInput.attributes.push_back(attribute0);
-			}
-			
-			Attribute attribute1;
-			{
-				attribute1.binding = 0;
-				attribute1.location = 1;
-				attribute1.format = AttributeFormat::R32G32_SFLOAT;
-				attribute1.offset = offsetof(QuadRenderer::Vertex, uvs);
-				vertexInput.attributes.push_back(attribute1);
-			}
 		}
 
 		// Shaders:

@@ -71,9 +71,9 @@ namespace tur
         R64_SFLOAT,             // DOUBLE
         R32G32_SFLOAT,          // VEC2
         R32G32B32_SFLOAT,       // VEC3
-        R32G32B32A32_SFLOAT,    // VEC3
+        R32G32B32A32_SFLOAT,    // VEC4
         R32G32_SINT,            // IVEC2
-        R32G32B32A32_UINT,      // VEC4
+        R32G32B32A32_UINT,      // UVEC4
     };
 
     enum class PipelineStage

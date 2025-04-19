@@ -97,7 +97,7 @@ private:
 		model = glm::translate(model, glm::vec3(140.f / 2, 480.f / 2, 0.f));
 		model = glm::scale(model, glm::vec3(scale, scale, 1.f));
 		
-		m_Entity.add_component<TransformComponent>(model);
+		m_Entity.add_component<TransformComponent>(model);	
 	}
 
 private:

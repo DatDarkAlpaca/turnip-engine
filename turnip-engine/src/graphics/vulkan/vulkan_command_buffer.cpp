@@ -172,7 +172,7 @@ namespace tur::vulkan
 			nullptr
 		);
 	}
-	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding)
+	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
 	{
 		const Buffer& buffer = r_Device->get_buffers().get(handle);
 		const vk::DeviceSize offset = 0;

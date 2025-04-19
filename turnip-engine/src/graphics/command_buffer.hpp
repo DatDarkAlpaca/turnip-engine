@@ -53,15 +53,19 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);
 		}
-		void bind_vertex_buffer(buffer_handle handle, u32 binding)
+		void bind_vertex_buffer(buffer_handle handle, u32 binding, u32 stride)
 		{
-			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding);
+			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding, stride);
+		}
+		void bind_uniform_buffer(buffer_handle handle, u32 binding)
+		{
+			static_cast<CommandBuffer*>(this)->bind_uniform_buffer_impl(handle, binding);
 		}
 		void bind_index_buffer(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 		{
 			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
 		}
-		void bind_texture(texture_handle handle, u32 textureUnit = invalid_handle)
+		void bind_texture(texture_handle handle, u32 textureUnit = 0)
 		{
 			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
 		}

@@ -56,8 +56,6 @@ namespace tur
 			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
 		}
 
-		
-
 		// Pipeline Layout:
 		PipelineLayout layout;
 		{
