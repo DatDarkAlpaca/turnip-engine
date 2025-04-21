@@ -33,6 +33,8 @@ namespace tur::vulkan
 		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType type);
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 
+		void set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding);
+
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
@@ -45,6 +47,10 @@ namespace tur::vulkan
 		void copy_image(vk::Image source, vk::Image target, vk::Extent2D sourceSize, vk::Extent2D targetSize);
 
 	private:
+		inline VulkanState& get_state()
+		{
+			return r_Device->get_state();
+		}
 		inline FrameData& get_frame_data()
 		{
 			return r_Device->get_state().frameDataHolder.get_frame_data();
@@ -62,7 +68,6 @@ namespace tur::vulkan
 		NON_OWNING GraphicsDeviceVulkan* r_Device = nullptr;
 		vk::CommandBuffer m_CommandBuffer;
 		Pipeline m_BoundPipeline;
-
 		ClearValue m_ClearValue;
 	};
 }

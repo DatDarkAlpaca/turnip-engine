@@ -9,6 +9,7 @@
 
 namespace tur
 {
+	// TODO: exists filepath
 	inline std::string read_file(const std::filesystem::path& filepath)
 	{
 		std::ifstream file(filepath);

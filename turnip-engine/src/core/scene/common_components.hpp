@@ -37,6 +37,17 @@ namespace tur
 		glm::mat4 transform;
 	};
 
+	struct SceneGraphComponent
+	{
+	public:
+		SceneGraphComponent() = default;
+		SceneGraphComponent(const SceneGraphComponent&) = default;
+
+	public:
+		entt::entity parent = entt::null;
+		std::vector<entt::entity> children;
+	};
+
 	struct TextureComponent
 	{
 	public:

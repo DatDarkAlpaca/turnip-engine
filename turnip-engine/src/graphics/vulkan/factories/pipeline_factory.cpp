@@ -258,7 +258,7 @@ namespace tur::vulkan
 			descriptorSetLayoutInfo.bindingCount = static_cast<u32>(descriptorBindings.size());
 			descriptorSetLayoutInfo.pBindings = descriptorBindings.data();
 
-			state.descriptorSetLayout = state.logicalDevice.createDescriptorSetLayout(descriptorSetLayoutInfo);
+			pipeline.descriptorSetLayout = state.logicalDevice.createDescriptorSetLayout(descriptorSetLayoutInfo);
 
 			vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
 			{
@@ -303,11 +303,30 @@ namespace tur::vulkan
 
 			try 
 			{
-				device.get_state().descriptorPool = logicalDevice.createDescriptorPool(poolInfo);
+				pipeline.descriptorPool = logicalDevice.createDescriptorPool(poolInfo);
 			}
 			catch (vk::SystemError err) 
 			{
 				TUR_LOG_CRITICAL("Failed to create descriptor pool");
+			}
+		}
+
+		// Descriptor sets:
+		for (auto& descriptorSet : pipeline.descriptorSets)
+		{
+			// Descriptor Set:
+			vk::DescriptorSetAllocateInfo allocationInfo = {};
+			allocationInfo.descriptorPool = device.get_state().descriptorPool;
+			allocationInfo.descriptorSetCount = 1;
+			allocationInfo.pSetLayouts = &device.get_state().descriptorSetLayout;
+
+			try
+			{
+				descriptorSet = logicalDevice.allocateDescriptorSets(allocationInfo)[0];
+			}
+			catch (vk::SystemError err)
+			{
+				TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
 			}
 		}
 

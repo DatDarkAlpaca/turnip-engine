@@ -7,8 +7,6 @@ namespace tur::vulkan
 	struct FrameData
 	{
 		vk::CommandBuffer commandBuffer;
-		vk::DescriptorSet descriptorSet;
-
 		vk::Fence recordingFence;
 		vk::Semaphore imageAvailableSemaphore, renderFinishedSemaphore;
 	};
@@ -42,6 +40,7 @@ namespace tur::vulkan
 
 		inline u32 get_color_buffer() { return m_ColorBuffer; }
 		inline void set_color_buffer(u32 value) { m_ColorBuffer = value; }
+		inline u32 get_frame_number() const { return m_FrameNumber; }
 
 	private:
 		std::vector<FrameData> m_FrameData;

@@ -20,12 +20,12 @@
         "variant": 0
     },
     "instancedQuadRendererInformation": {
-        "fragmentFilepath": "res/shaders/instanced/instanced_quad.frag",
+        "fragmentFilepath": "res/shaders/instanced/iquad_gl.frag",
         "maxInstanceCount": 10000,
         "maxTextureCount": 100,
         "textureHeight": 144,
         "textureWidth": 144,
-        "vertexFilepath": "res/shaders/instanced/instanced_quad.vert"
+        "vertexFilepath": "res/shaders/instanced/iquad_gl.vert"
     },
     "quadRendererInformation": {
         "fragmentFilepath": "res/shaders/quad/quad_gl.frag",

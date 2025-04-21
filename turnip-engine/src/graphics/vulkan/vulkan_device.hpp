@@ -43,12 +43,12 @@ namespace tur::vulkan
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset);
 		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset);
-		void update_descriptor_set_impl(buffer_handle handle, DescriptorType type, u32 binding);
 		void destroy_buffer_impl(buffer_handle handle);
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
+		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
 
 	public:

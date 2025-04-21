@@ -204,25 +204,6 @@ namespace tur::vulkan
 
 		destroy_shader(descriptor.fragmentShader);
 
-		// Descriptor Set Allocation:
-		for (auto& frame : m_State.frameDataHolder.get_frames())
-		{
-			// Descriptor Set:
-			vk::DescriptorSetAllocateInfo allocationInfo = {};
-			allocationInfo.descriptorPool = m_State.descriptorPool;
-			allocationInfo.descriptorSetCount = 1;
-			allocationInfo.pSetLayouts = &m_State.descriptorSetLayout;
-
-			try
-			{
-				frame.descriptorSet = m_State.logicalDevice.allocateDescriptorSets(allocationInfo)[0];
-			}
-			catch (vk::SystemError err)
-			{
-				TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
-			}
-		}
-
 		// Use descriptor set (pipeline layout) info to create a descriptor write array and memory mappings
 
 		return m_Pipelines.add(pipeline);
@@ -327,47 +308,6 @@ namespace tur::vulkan
 
 		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
 	}
-	void GraphicsDeviceVulkan::update_descriptor_set_impl(buffer_handle handle, DescriptorType type, u32 binding)
-	{
-		const Buffer& buffer = m_Buffers.get(handle);
-
-		vk::DescriptorType descriptorType;
-		switch (type)
-		{
-			case DescriptorType::UNIFORM_BUFFER:
-				descriptorType = vk::DescriptorType::eUniformBuffer;
-				break;
-
-			case DescriptorType::STORAGE_BUFFER:
-				descriptorType = vk::DescriptorType::eStorageBuffer;
-				break;
-		}
-
-		for (auto& frame : m_State.frameDataHolder.get_frames())
-		{
-			vk::DescriptorBufferInfo bufferInfo = {};
-			{
-				bufferInfo.buffer = buffer.buffer;
-				bufferInfo.offset = 0;
-				bufferInfo.range = buffer.size;
-			}
-
-			vk::WriteDescriptorSet descriptorWrite = {};
-			{
-				descriptorWrite.dstSet = frame.descriptorSet;
-				descriptorWrite.dstBinding = binding;
-				descriptorWrite.dstArrayElement = 0;
-				descriptorWrite.descriptorType = descriptorType;
-				descriptorWrite.descriptorCount = 1;
-
-				descriptorWrite.pBufferInfo = &bufferInfo;
-				descriptorWrite.pImageInfo = nullptr;
-				descriptorWrite.pTexelBufferView = nullptr;
-			}
-
-			m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-		}
-	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
 	{
 		Buffer& buffer = m_Buffers.get(handle);
@@ -385,6 +325,10 @@ namespace tur::vulkan
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
 	{
 		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
+	}
+	void GraphicsDeviceVulkan::update_texture_impl(texture_handle handle, const TextureAsset& asset)
+	{
+		// TODO
 	}
 	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
 	{

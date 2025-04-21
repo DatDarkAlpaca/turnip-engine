@@ -79,10 +79,6 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->copy_buffer_impl(source, destination, size, srcOffset, dstOffset);
 		}
-		void update_descriptor_set_buffer(buffer_handle handle, DescriptorType type, u32 binding)
-		{
-			static_cast<Backend*>(this)->update_descriptor_set_buffer_impl(handle, type, binding);
-		}
 		void destroy_buffer(buffer_handle handle)
 		{
 			static_cast<Backend*>(this)->destroy_buffer_impl(handle);

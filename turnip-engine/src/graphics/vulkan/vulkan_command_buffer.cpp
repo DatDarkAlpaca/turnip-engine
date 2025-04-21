@@ -12,7 +12,6 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::initialize_impl()
 	{
-
 	}
 
 	void CommandBufferVulkan::begin_impl()
@@ -158,6 +157,7 @@ namespace tur::vulkan
 	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
 	{
 		auto& frameData = r_Device->get_state().frameDataHolder.get_frame_data();
+		u32 frameNumber = r_Device->get_state().frameDataHolder.get_frame_number();
 
 		// Bind pipeline:
 		auto pipeline = r_Device->get_pipelines().get(handle);
@@ -168,7 +168,7 @@ namespace tur::vulkan
 			get_pipeline_type(pipeline.type), 
 			pipeline.layout, 
 			0, 1, 
-			&frameData.descriptorSet, 0, 
+			&pipeline.descriptorSets[frameNumber], 0,
 			nullptr
 		);
 	}
@@ -188,6 +188,78 @@ namespace tur::vulkan
 	}
 	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
+	}
+
+	void CommandBufferVulkan::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
+	{
+		vk::DescriptorType descriptorType = get_descriptor_type(type);;
+		const u32 frameNumber = get_state().frameDataHolder.get_frame_number();
+
+		switch (type)
+		{
+			case DescriptorType::UNIFORM_BUFFER:
+			case DescriptorType::STORAGE_BUFFER:
+			{
+				const Buffer& buffer = r_Device->get_buffers().get(handle);
+
+				vk::DescriptorBufferInfo bufferInfo = {};
+				{
+					bufferInfo.buffer = buffer.buffer;
+					bufferInfo.offset = 0;
+					bufferInfo.range = buffer.size;
+				}
+
+				vk::WriteDescriptorSet descriptorWrite = {};
+				{
+					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[frameNumber];
+					descriptorWrite.dstBinding = binding;
+					descriptorWrite.dstArrayElement = 0;
+					descriptorWrite.descriptorType = descriptorType;
+					descriptorWrite.descriptorCount = 1;
+
+					descriptorWrite.pBufferInfo = &bufferInfo;
+				}
+
+				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+			} break;
+				
+			case DescriptorType::COMBINED_IMAGE_SAMPLER:
+			{
+				const Texture& texture = r_Device->get_textures().get(handle);
+
+				vk::DescriptorImageInfo imageInfo = {};
+				{
+					imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
+					imageInfo.imageView = texture.imageView;
+					imageInfo.sampler = texture.sampler;
+				}
+
+				vk::WriteDescriptorSet descriptorWrite = {};
+				{
+					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[frameNumber];
+					descriptorWrite.dstBinding = binding;
+					descriptorWrite.dstArrayElement = 0;
+					descriptorWrite.descriptorType = descriptorType;
+					descriptorWrite.descriptorCount = 1;
+
+					descriptorWrite.pImageInfo = &imageInfo;
+				}
+			} break;
+		}
+
+
+
+
+
+
+
+
+
+		
+		
+
+
+		
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)

@@ -31,6 +31,9 @@ namespace tur
 			m_Commands->bind_index_buffer(indexBuffer);
 			m_Commands->bind_pipeline(pipeline);
 
+			m_Commands->set_descriptor_resource(vpBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+			m_Commands->set_descriptor_resource(instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
+
 			m_Commands->bind_texture(textureArray, 0);
 			m_Commands->draw_indexed(6, quadAmount);
 		}
@@ -187,7 +190,7 @@ namespace tur
 			
 			indexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
-
+		
 		// VP (View & Projection) Uniform Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
@@ -204,9 +207,8 @@ namespace tur
 			data.data = &uboData;
 			data.size = sizeof(VPUBO);
 			vpBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
-			r_GraphicsDevice->update_descriptor_set_buffer(vpBuffer, DescriptorType::UNIFORM_BUFFER, 0);
 		}
-
+		
 		// Instance Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
@@ -217,7 +219,6 @@ namespace tur
 
 			u32 instanceBufferSize = sizeof(InstanceData) * m_RendererInfo.maxInstanceCount;
 			instanceBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(InstanceData) * m_RendererInfo.maxInstanceCount);
-			r_GraphicsDevice->update_descriptor_set_buffer(instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
 
 			instanceMappedData = r_GraphicsDevice->map_buffer(instanceBuffer, 0, instanceBufferSize,
 				AccessFlags::PERSISTENT | AccessFlags::WRITE | AccessFlags::COHERENT);

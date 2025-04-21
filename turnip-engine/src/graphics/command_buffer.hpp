@@ -66,6 +66,11 @@ namespace tur
 			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
 		}
 
+		void set_descriptor_resource(handle_type handle, DescriptorType type, u32 binding)
+		{
+			static_cast<CommandBuffer*>(this)->set_descriptor_resource_impl(handle, type, binding);
+		}
+
 	public:
 		void draw(u32 vertexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)
 		{

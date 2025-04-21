@@ -62,6 +62,15 @@ namespace tur::vulkan
 		return vk::BufferUsageFlags(valueFlags);
 	}
 
+	constexpr static inline VmaAllocationCreateFlags get_buffer_memory_flags(BufferUsage usage)
+	{
+		VmaAllocationCreateFlags flags = 0;
+		if (static_cast<u32>(usage) & static_cast<u32>(BufferUsage::PERSISTENT))
+			flags |= VMA_ALLOCATION_CREATE_MAPPED_BIT;
+
+		return flags;
+	}
+
 	constexpr static inline VmaMemoryUsage get_buffer_memory_usage(BufferMemoryUsage memoryUsage)
 	{
 		switch (memoryUsage)

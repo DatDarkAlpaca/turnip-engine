@@ -65,34 +65,34 @@ namespace tur::gl
 		{
 			switch (mode)
 			{
-			case FilterMode::NEAREST:
-				return GL_NEAREST;
+				case FilterMode::NEAREST:
+					return GL_NEAREST;
 
-			case FilterMode::LINEAR:
-				return GL_LINEAR;
+				case FilterMode::LINEAR:
+					return GL_LINEAR;
 
-			case FilterMode::BILINEAR:
-				return GL_LINEAR_MIPMAP_NEAREST;
+				case FilterMode::BILINEAR:
+					return GL_LINEAR_MIPMAP_NEAREST;
 
-			case FilterMode::TRILINEAR:
-				return GL_LINEAR_MIPMAP_LINEAR;
+				case FilterMode::TRILINEAR:
+					return GL_LINEAR_MIPMAP_LINEAR;
 			}
 		}
 		else
 		{
 			switch (mode)
 			{
-			case FilterMode::NEAREST:
-				return GL_NEAREST;
+				case FilterMode::NEAREST:
+					return GL_NEAREST;
 
-			case FilterMode::LINEAR:
-				return GL_LINEAR;
+				case FilterMode::LINEAR:
+					return GL_LINEAR;
 
-			case FilterMode::BILINEAR:
-				return GL_LINEAR;
+				case FilterMode::BILINEAR:
+					return GL_LINEAR;
 
-			case FilterMode::TRILINEAR:
-				return GL_LINEAR;
+				case FilterMode::TRILINEAR:
+					return GL_LINEAR;
 			}
 		}
 

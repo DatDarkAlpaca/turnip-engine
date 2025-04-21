@@ -34,6 +34,8 @@ namespace tur::gl
 		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType);
 		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 		
+		void set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding);
+
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);

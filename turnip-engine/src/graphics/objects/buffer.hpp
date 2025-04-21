@@ -56,8 +56,8 @@ namespace tur
 
 	struct BufferDescriptor
 	{
-		BufferType type;
-		BufferUsage usage;
-		BufferMemoryUsage memoryUsage;
+		BufferType type = BufferType::NONE;
+		BufferUsage usage = BufferUsage::NONE;
+		BufferMemoryUsage memoryUsage = BufferMemoryUsage::CPU_ONLY;
 	};
 }

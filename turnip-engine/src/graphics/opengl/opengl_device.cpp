@@ -250,10 +250,6 @@ namespace tur::gl
 
 		glCopyNamedBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
 	}
-	void GraphicsDeviceGL::update_descriptor_set_buffer_impl(buffer_handle handle, DescriptorType type, u32 binding)
-	{
-		glBindBufferBase(get_descriptor_set_type(type), binding, m_Buffers.get(handle).handle);
-	}
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{
 		auto& buffer = m_Buffers.get(handle);

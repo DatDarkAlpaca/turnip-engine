@@ -12,13 +12,12 @@ namespace tur::gl
 
 	void CommandBufferGL::initialize_impl()
 	{
-		glGenVertexArrays(1, &m_VAO);
-		glBindVertexArray(m_VAO);
+		glCreateVertexArrays(1, &m_VAO);
 	}
 
 	void CommandBufferGL::begin_impl()
 	{
-		// * Blank
+		glBindVertexArray(m_VAO);
 	}
 	void CommandBufferGL::begin_render_impl()
 	{
@@ -105,6 +104,23 @@ namespace tur::gl
 		glBindTextureUnit(textureUnit, texture.handle);
 	}
 
+	void CommandBufferGL::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
+	{
+		gl_handle glType = get_descriptor_set_type(type);
+
+		switch (type)
+		{
+			case DescriptorType::STORAGE_BUFFER:
+			case DescriptorType::UNIFORM_BUFFER:
+				glBindBufferBase(glType, binding, r_Device->get_buffers().get(handle).handle);
+				break;
+
+			case DescriptorType::COMBINED_IMAGE_SAMPLER:
+				glBindTextureUnit(binding, r_Device->get_textures().get(handle).handle);
+				break;
+		}
+	}
+
 	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		gl_handle topology = get_primitive_topology(m_ActivePipeline.descriptor.inputAssemblyStage.topology);
@@ -141,7 +157,7 @@ namespace tur::gl
 				if (attribute.binding != binding.binding)
 					continue;
 				
-				glEnableVertexAttribArray(attribute.location);
+				glEnableVertexArrayAttrib(m_VAO, attribute.location);
 				glVertexArrayAttribFormat(
 					m_VAO,
 					attribute.location,

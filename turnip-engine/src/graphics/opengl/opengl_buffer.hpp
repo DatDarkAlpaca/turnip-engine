@@ -9,7 +9,7 @@ namespace tur::gl
 {
 	struct Buffer
 	{
-		BufferDescriptor descriptor;
+		BufferDescriptor descriptor = {};
 		gl_handle handle = invalid_handle;
 	};
 }

@@ -194,5 +194,9 @@ namespace tur::vulkan
         vk::Pipeline pipeline;
         vk::PipelineLayout layout;
         PipelineDescriptor descriptor;
+
+        vk::DescriptorPool descriptorPool;
+        std::vector<vk::DescriptorSet> descriptorSets;
+        vk::DescriptorSetLayout descriptorSetLayout;
     };
 }

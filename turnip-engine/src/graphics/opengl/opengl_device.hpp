@@ -47,7 +47,6 @@ namespace tur::gl
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
 		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
-		void update_descriptor_set_buffer_impl(buffer_handle handle, DescriptorType type, u32 binding);
 		void destroy_buffer_impl(buffer_handle handle);
 
 	public:

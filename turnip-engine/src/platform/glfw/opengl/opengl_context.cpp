@@ -6,8 +6,12 @@
 #include "platform/glfw/window_glfw.hpp"
 #include "graphics/graphics.hpp"
 
-static void OpenGLCallback(unsigned, unsigned, unsigned, unsigned severity, int, const char* message, const void*)
+static void OpenGLCallback(unsigned, unsigned type, unsigned, unsigned severity, int, const char* message, const void*)
 {
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
+
 	switch (severity)
 	{
 		case GL_DEBUG_SEVERITY_HIGH:

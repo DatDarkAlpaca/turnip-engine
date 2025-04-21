@@ -9,15 +9,18 @@ namespace tur::vulkan
 	{
 		vk::Image image;
 		vk::ImageView imageView;
+		vk::Sampler sampler;
+		
 		VmaAllocation allocation = nullptr;
-		vk::Extent3D extent;		
+		
+		vk::Extent3D extent;
 		vk::Format format = vk::Format::eR8G8B8A8Unorm;
 	};
 }
 
 namespace tur::vulkan
 {
-	constexpr static vk::ImageType get_texture_type(TextureType type)
+	constexpr static inline vk::ImageType get_texture_type(TextureType type)
 	{
 		switch (type)
 		{
@@ -34,7 +37,7 @@ namespace tur::vulkan
 		TUR_LOG_ERROR("Invalid Texture Type: {}. Default: e2D", static_cast<int>(type));
 		return vk::ImageType::e2D;
 	}
-	constexpr static vk::ImageViewType get_texture_view_type(TextureType type)
+	constexpr static inline vk::ImageViewType get_texture_view_type(TextureType type)
 	{
 		switch (type)
 		{
@@ -52,10 +55,69 @@ namespace tur::vulkan
 		return vk::ImageViewType::e2D;
 	}
 
-	// wrapmode
-	// filtermode
+	constexpr static inline vk::SamplerAddressMode get_wrap_mode(WrapMode mode)
+	{
+		switch (mode)
+		{
+			case WrapMode::REPEAT:
+				return vk::SamplerAddressMode::eRepeat;
 
-	constexpr static vk::Format get_texture_format(TextureFormat format)
+			case WrapMode::MIRRORED_REPEAT:
+				return vk::SamplerAddressMode::eMirroredRepeat;
+
+			case WrapMode::CLAMP_TO_EDGE:
+				return vk::SamplerAddressMode::eClampToEdge;
+
+			case WrapMode::CLAMP_TO_BORDER:
+				return vk::SamplerAddressMode::eClampToBorder;
+		}
+
+		TUR_LOG_ERROR("Invalid Texture Wrap Mode: {}. Default: eRepeat", static_cast<int>(mode));
+		return vk::SamplerAddressMode::eRepeat;
+	}
+
+	struct FilterData
+	{
+		vk::Filter magFilter;
+		vk::Filter minFilter;
+		vk::SamplerMipmapMode mipmapMode;
+	};
+
+	constexpr static inline vk::Filter get_filter_mode(FilterMode mode, bool isMinFilter)
+	{
+		switch (mode)
+		{
+			case FilterMode::NEAREST:
+				return vk::Filter::eNearest;
+
+			case FilterMode::LINEAR:
+			case FilterMode::BILINEAR:
+			case FilterMode::TRILINEAR:
+				return vk::Filter::eLinear;
+		}
+
+		TUR_LOG_ERROR("Invalid Texture Wrap Mode: {}. Default: eNearest", static_cast<int>(mode));
+		return vk::Filter::eNearest;
+	}
+
+	constexpr static inline vk::SamplerMipmapMode get_mipmap_mode(FilterMode minFilter)
+	{
+		switch (minFilter)
+		{
+			case FilterMode::NEAREST:
+				return vk::SamplerMipmapMode::eNearest;
+
+			case FilterMode::LINEAR:
+			case FilterMode::BILINEAR:
+			case FilterMode::TRILINEAR:
+				return vk::SamplerMipmapMode::eLinear;
+		}
+
+		TUR_LOG_ERROR("Invalid Texture Wrap Mode: {}. Default: eNearest", static_cast<int>(minFilter));
+		return vk::SamplerMipmapMode::eNearest;
+	}
+
+	constexpr static inline vk::Format get_texture_format(TextureFormat format)
 	{
 		switch (format)
 		{

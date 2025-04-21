@@ -120,10 +120,12 @@ namespace tur::gl
             case DescriptorType::STORAGE_BUFFER:
                 return GL_SHADER_STORAGE_BUFFER;
 
-            // TODO: one must ponder.
-            /*case DescriptorType::COMBINED_IMAGE_SAMPLER:
-                return GL_UNIFORM_BUFFER;*/
+            case DescriptorType::COMBINED_IMAGE_SAMPLER:
+                return GL_UNIFORM_BUFFER;
         }
+
+        TUR_LOG_CRITICAL("Invalid Descriptor Type: {}", static_cast<u32>(type));
+        return invalid_handle;
     }
 
     constexpr inline gl_handle get_attribute_format(AttributeFormat format)
@@ -153,7 +155,7 @@ namespace tur::gl
         }
 
         TUR_LOG_CRITICAL("Invalid Attribute Format: {}", static_cast<u32>(format));
-        return 0;
+        return invalid_handle;
     }
 
     constexpr inline u64 get_attribute_format_size(AttributeFormat format)
@@ -183,7 +185,7 @@ namespace tur::gl
         }
 
         TUR_LOG_CRITICAL("Invalid Attribute Format [Size]: {}", static_cast<u64>(format));
-        return 0;
+        return invalid_handle;
     }
 }
 

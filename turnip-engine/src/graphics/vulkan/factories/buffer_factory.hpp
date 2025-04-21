@@ -19,7 +19,7 @@ namespace tur::vulkan
 		VmaAllocationCreateInfo vmaAllocationCreateInfo = {};
 		{
 			vmaAllocationCreateInfo.usage = get_buffer_memory_usage(descriptor.memoryUsage);
-			vmaAllocationCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+			vmaAllocationCreateInfo.flags = get_buffer_memory_flags(descriptor.usage);
 		}
 
 		Buffer buffer = {};

@@ -74,6 +74,34 @@ namespace tur::vulkan
 		}
 
 		texture.imageView = device.createImageView(imageViewCreateInfo);
+
+		vk::SamplerCreateInfo samplerInfo = {};
+		{
+			samplerInfo.minFilter = get_filter_mode(descriptor.minFilter, true);
+			samplerInfo.magFilter = get_filter_mode(descriptor.magFilter, false);
+			samplerInfo.mipmapMode = get_mipmap_mode(descriptor.minFilter);
+
+			samplerInfo.addressModeU = get_wrap_mode(descriptor.wrapR);
+			samplerInfo.addressModeV = get_wrap_mode(descriptor.wrapS);
+			samplerInfo.addressModeW = get_wrap_mode(descriptor.wrapT);
+
+			// TODO: fill in the rest of the sampler options
+			samplerInfo.anisotropyEnable;
+			samplerInfo.maxAnisotropy;
+
+			samplerInfo.compareEnable;
+			samplerInfo.compareOp;
+			samplerInfo.minLod = 0.0f;
+			samplerInfo.maxLod = 0.0f;
+			samplerInfo.mipLodBias = 0.0f;
+
+			samplerInfo.borderColor = vk::BorderColor::eIntOpaqueBlack;
+			samplerInfo.unnormalizedCoordinates = false;
+		}
+
+		texture.sampler = device.createSampler(samplerInfo);
+
+		
 		return texture;
 	}
 }

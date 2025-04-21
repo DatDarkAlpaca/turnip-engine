@@ -13,8 +13,8 @@ namespace tur
 
 		m_QuadRendererInfo = configData.quadRendererInformation;
 
-		initialize_buffers();
 		initialize_pipeline();
+		initialize_buffers();
 	}
 
 	void QuadRenderer::render()
@@ -30,6 +30,8 @@ namespace tur
 			m_Commands->bind_vertex_buffer(buffer, 0, sizeof(Vertex));
 			m_Commands->bind_index_buffer(indexBuffer);
 			m_Commands->bind_pipeline(pipeline);
+
+			m_Commands->set_descriptor_resource(uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
 
 			for (const auto& quad : m_Quads)
 			{
@@ -128,7 +130,7 @@ namespace tur
 				layout.add_binding(description);
 			}
 			{
-				description.binding = 1;
+				description.binding = 0;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
 				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
@@ -165,16 +167,15 @@ namespace tur
 			}
 
 			DataBuffer data;
-			{
-				Vertex vertices[4] = {
-					{{ -0.5f, -0.5f, 0.0f },	{ 0.0f, 0.0f }},
-					{{  0.5f, -0.5f, 0.0f },	{ 1.0f, 0.0f }},
-					{{  0.5f,  0.5f, 0.0f },	{ 1.0f, 1.0f }},
-					{{ -0.5f,  0.5f, 0.0f },	{ 0.0f, 1.0f }},
-				};
-				data.data = vertices;
-				data.size = sizeof(vertices);
-			}
+			Vertex vertices[4] = {
+				{{ -0.5f, -0.5f, 0.0f },	{ 0.0f, 0.0f }},
+				{{  0.5f, -0.5f, 0.0f },	{ 1.0f, 0.0f }},
+				{{  0.5f,  0.5f, 0.0f },	{ 1.0f, 1.0f }},
+				{{ -0.5f,  0.5f, 0.0f },	{ 0.0f, 1.0f }},
+			};
+			data.data = vertices;
+			data.size = sizeof(vertices);
+
 			buffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
@@ -186,11 +187,10 @@ namespace tur
 			}
 
 			DataBuffer data;
-			{
-				unsigned int vertices[] = { 0, 1, 2, 2, 3, 0 };
-				data.data = vertices;
-				data.size = sizeof(vertices);
-			}
+			unsigned int vertices[] = { 0, 1, 2, 2, 3, 0 };
+			data.data = vertices;
+			data.size = sizeof(vertices);
+
 			indexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
@@ -201,10 +201,8 @@ namespace tur
 				bufferDesc.type = BufferType::UNIFORM_BUFFER;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
-			DataBuffer data;
-			data.size = sizeof(UBO);
-			uniformBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
-			r_GraphicsDevice->update_descriptor_set_buffer(uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+
+			uniformBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(UBO));
 		}
 	}
 

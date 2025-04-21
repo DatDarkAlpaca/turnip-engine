@@ -15,7 +15,7 @@ namespace tur
 		return add_entity({ }, entityName);
 	}
 
-	Entity Scene::add_entity(UUID uuid, const std::string& entityName)
+	Entity Scene::add_entity(UUID uuid, const std::string& entityName, entt::entity parent)
 	{
 		Entity entity = { m_Registry.create(), this };
 		
@@ -29,6 +29,10 @@ namespace tur
 				? "Entity #" + std::to_string(m_Diagnostics.entityCount) 
 				: entityName;
 		}
+
+		// Scene Graph:
+		SceneGraphComponent& sceneGraphComp = entity.add_component<SceneGraphComponent>();
+		sceneGraphComp.parent = parent;
 
 		// Record:
 		m_EntityMap[uuidComp.uuid] = entity;

@@ -102,28 +102,15 @@ namespace tur
         u32 amount = 1;
     };
 
-    struct PushConstant
-    {
-        u32 offset;
-        u32 byteSize;
-        PipelineStage stages;
-    };
-    
     struct PipelineLayout
     {
     public:
-        void add_push_constant(const PushConstant& pushConstant)
-        {
-            pushConstants.push_back(pushConstant);
-        }
-
         void add_binding(const DescriptorDescription& binding)
         {
             bindingDescriptors.push_back(binding);
         }
 
     public:
-        std::vector<PushConstant> pushConstants;
         std::vector<DescriptorDescription> bindingDescriptors;
     };
 }
