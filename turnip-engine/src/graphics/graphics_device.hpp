@@ -108,6 +108,10 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_render_target_impl(descriptor);
 		}
+		void resize_render_target(render_target_handle handle, u32 width, u32 height)
+		{
+			static_cast<Backend*>(this)->resize_render_target_impl(handle, width, height);
+		}
 
 	protected:
 		BaseGraphicsDevice() = default;

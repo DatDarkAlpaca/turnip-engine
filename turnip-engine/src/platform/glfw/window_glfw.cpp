@@ -40,6 +40,8 @@ namespace tur
 		glfwSetWindowSizeCallback(window->window, [](GLFWwindow* window, int width, int height) {
 			auto* data = static_cast<Window::Data*>(glfwGetWindowUserPointer(window));
 
+			data->properties.dimensions = { width, height };
+
 			WindowResizeEvent event(width, height);
 			data->eventCallback(event);
 		});
@@ -47,6 +49,8 @@ namespace tur
 		glfwSetFramebufferSizeCallback(window->window, [](GLFWwindow* window, int width, int height) {
 			auto* data = static_cast<Window::Data*>(glfwGetWindowUserPointer(window));
 			data->framebufferResized = true;
+
+			data->properties.dimensions = { width, height };
 
 			WindowFramebufferEvent event(width, height);
 			data->eventCallback(event);
@@ -62,6 +66,8 @@ namespace tur
 		// Position:
 		glfwSetWindowPosCallback(window->window, [](GLFWwindow* window, int xPos, int yPos) {
 			auto* data = static_cast<Window::Data*>(glfwGetWindowUserPointer(window));
+
+			data->properties.position = { xPos, yPos };
 
 			WindowMovedEvent event(xPos, yPos);
 			data->eventCallback(event);
@@ -175,7 +181,7 @@ namespace tur
 			nullptr
 		);
 
-		window->properties = properties;
+		window->data.properties = properties;
 
 		if (!window->window)
 		{

@@ -12,10 +12,10 @@ namespace tur
 	struct Window
 	{
 		GLFWwindow* window = nullptr;
-		WindowProperties properties;
 
 		struct Data
 		{
+			WindowProperties properties;
 			EventCallback eventCallback;
 			bool framebufferResized = false;
 		} data;

@@ -3,6 +3,7 @@
 
 #include "graphics/graphics.hpp"
 #include "core/config/config_data.hpp"
+#include "core/event/events.hpp"
 
 namespace tur
 {
@@ -30,6 +31,8 @@ namespace tur
 
 	public:
 		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
+
+		void on_event(Event& event);
 
 		void render();
 

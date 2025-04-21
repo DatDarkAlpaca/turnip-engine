@@ -209,7 +209,7 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::destroy_texture_impl(texture_handle handle)
 	{
-		auto& texture = m_Textures.get(handle);
+		auto& texture = m_Textures.remove(handle);
 		glDeleteTextures(1, &texture.handle);
 	}
 
@@ -252,7 +252,7 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
 	{
-		auto& buffer = m_Buffers.get(handle);
+		auto& buffer = m_Buffers.remove(handle);
 		glDeleteBuffers(1, &buffer.handle);
 	}
 
@@ -280,6 +280,33 @@ namespace tur::gl
 		if (glCheckNamedFramebufferStatus(framebufferID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			TUR_LOG_CRITICAL("Incomplete framebuffer: ", framebufferID);
 
-		return m_RenderTargets.add({ framebufferID });
+		return m_RenderTargets.add({ framebufferID, descriptor });
+	}
+	void GraphicsDeviceGL::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
+	{
+		RenderTarget renderTarget = m_RenderTargets.get(handle);
+		renderTarget.descriptor.width  = width;
+		renderTarget.descriptor.height = height;
+
+		size_t index = 0;
+		for (texture_handle& colorAttachment : renderTarget.descriptor.colorAttachments)
+		{
+			TextureDescriptor textureDescriptor = m_Textures.get(colorAttachment).descriptor;
+			destroy_texture(colorAttachment);
+			
+			textureDescriptor.width = width;
+			textureDescriptor.height = height;
+
+			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).handle;
+			glNamedFramebufferTexture(renderTarget.handle, GL_COLOR_ATTACHMENT0 + index, colorAttachment, 0);
+		}
+
+		u32 rbo;
+		glCreateRenderbuffers(1, &rbo);
+		glNamedRenderbufferStorage(rbo, GL_DEPTH24_STENCIL8, width, height);
+		glNamedFramebufferRenderbuffer(renderTarget.handle, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		if (glCheckNamedFramebufferStatus(renderTarget.handle, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			TUR_LOG_CRITICAL("Incomplete framebuffer: ", renderTarget.handle);
 	}
 }

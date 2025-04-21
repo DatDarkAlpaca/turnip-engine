@@ -17,6 +17,18 @@ namespace tur
 		initialize_buffers();
 	}
 
+	void QuadRenderer::on_event(Event& event)
+	{
+		Subscriber subscriber(event);
+		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
+			if (renderTarget == invalid_handle)
+				return false;
+
+			r_GraphicsDevice->resize_render_target(renderTarget, event.width, event.height);
+			return false;
+		});
+	}
+
 	void QuadRenderer::render()
 	{
 		m_Commands->begin();

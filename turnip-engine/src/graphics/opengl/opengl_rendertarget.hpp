@@ -6,5 +6,6 @@ namespace tur::gl
 	struct RenderTarget
 	{
 		render_target_handle handle;
+		RenderTargetDescriptor descriptor;
 	};
 }

@@ -4,4 +4,5 @@
 struct SceneData
 {
 	entt::entity viewerSelectedEntity;
+	texture_handle sceneTexture;
 };

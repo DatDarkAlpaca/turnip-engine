@@ -8,6 +8,7 @@ using namespace tur;
 #include "widget/scene_data.hpp"
 #include "widget/scene_viewer.hpp"
 #include "widget/entity_inspector.hpp"
+#include "widget/scene_editor.h"
 
 // View:
 struct MainView : public View
@@ -15,8 +16,6 @@ struct MainView : public View
 public:
 	MainView()
 	{
-		m_EntityInspector.initialize(&m_Scene, &m_SceneData);
-		m_SceneViewer.initialize(&m_Scene, &m_SceneData);
 	}
 
 public:
@@ -27,19 +26,18 @@ public:
 		initialize_renderer_system();
 
 		create_scene();
+
+		// Widgets:
+		m_EntityInspector.initialize(&m_Scene, &m_SceneData);
+		m_SceneViewer.initialize(&m_Scene, &m_SceneData);
+		m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &r_Engine->get_window(), &m_SceneData);
 	}
 
 	void on_render_gui() override
 	{
 		ImGui::DockSpaceOverViewport();
 		
-		auto windowSize = r_Engine->get_window().properties.dimensions;
-
-		ImGui::Begin("Playtest");
-			auto sceneTextureHandle = r_Engine->get_graphics_device().get_textures().get(m_SceneTexture).handle;
-			ImGui::Image((void*)sceneTextureHandle, { (float)windowSize.x, (float)windowSize.y });
-		ImGui::End();
-
+		m_SceneEditor.on_render_gui();
 		m_SceneViewer.on_render_gui();
 		m_EntityInspector.on_render_gui();
 	}
@@ -50,11 +48,11 @@ public:
 		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
 			m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
 			m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
-			
-			// TODO: update render target on resize
-			
+						
 			return false;
 		});
+
+		m_RenderSystem.get_renderer().on_event(event);
 	}
 
 	void on_render() override
@@ -79,8 +77,11 @@ private:
 
 		// Scene Texture:
 		{
-			auto [descriptor, asset] = create_default_texture(640, 480);
-			m_SceneTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
+			TextureDescriptor descriptor;
+			descriptor.width = 640.0f;
+			descriptor.height = 480.0f;
+
+			m_SceneData.sceneTexture = r_Engine->get_graphics_device().create_texture(descriptor);
 		}
 
 		// Face:
@@ -109,7 +110,7 @@ private:
 
 	void initialize_renderer_system()
 	{
-		auto windowSize = r_Engine->get_window().properties.dimensions;
+		auto windowSize = r_Engine->get_window().data.properties.dimensions;
 
 		m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
 
@@ -117,7 +118,7 @@ private:
 		m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &m_Scene);
 		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneTexture);
+		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
 
 		// Instanced:
 		m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);
@@ -160,12 +161,12 @@ private:
 	InstancedQuadRenderer m_QuadRenderer;
 
 private:
-	texture_handle m_SceneTexture = invalid_handle;
 	texture_handle m_Texture = invalid_handle;
 
 private:
 	SceneData m_SceneData;
 	SceneViewer m_SceneViewer;
+	SceneEditor m_SceneEditor;
 	EntityInspector m_EntityInspector;
 };
 

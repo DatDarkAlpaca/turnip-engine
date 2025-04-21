@@ -52,6 +52,7 @@ namespace tur::gl
 
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
+		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
 
 	public:
 		inline free_list<Buffer>&		get_buffers()			{ return m_Buffers; }
