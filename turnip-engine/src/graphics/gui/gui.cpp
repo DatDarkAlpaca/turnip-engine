@@ -17,6 +17,8 @@ namespace tur
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+        io.ConfigWindowsResizeFromEdges = true;
+
         ImGui::StyleColorsDark();
 
         ImGuiStyle& style = ImGui::GetStyle();

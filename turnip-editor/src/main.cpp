@@ -5,7 +5,9 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 using namespace tur;
 
+#include "widget/scene_data.hpp"
 #include "widget/scene_viewer.hpp"
+#include "widget/entity_inspector.hpp"
 
 // View:
 struct MainView : public View
@@ -13,7 +15,8 @@ struct MainView : public View
 public:
 	MainView()
 	{
-		m_SceneViewer.initialize(&m_Scene);
+		m_EntityInspector.initialize(&m_Scene, &m_SceneData);
+		m_SceneViewer.initialize(&m_Scene, &m_SceneData);
 	}
 
 public:
@@ -28,7 +31,10 @@ public:
 
 	void on_render_gui() override
 	{
+		ImGui::DockSpaceOverViewport();
+
 		m_SceneViewer.on_render_gui();
+		m_EntityInspector.on_render_gui();
 	}
 
 	void on_event(Event& event) override
@@ -45,7 +51,7 @@ public:
 	void on_render() override
 	{
 		m_RenderSystem.render();
-		m_QuadRenderer.render();
+		// m_QuadRenderer.render();
 	};
 
 private:
@@ -60,6 +66,12 @@ private:
 			auto [descriptor, asset] = create_default_texture();
 			auto defaultTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
 			m_RenderSystem.get_renderer().set_default_texture(defaultTexture);
+		}
+
+		// Scene Texture:
+		{
+			auto [descriptor, asset] = create_default_texture(640, 480);
+			m_SceneTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
 		}
 
 		// Face:
@@ -97,13 +109,11 @@ private:
 		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 
-		
 		// Instanced:
 		m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);
 		m_QuadRenderer.set_clear_color({ 1.0f, 0.0f, 0.0f, 1.0f });
 		m_QuadRenderer.set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 
-		
 		float size = 25.0;
 		for (int x = 0; x < 10; ++x)
 		{
@@ -114,20 +124,22 @@ private:
 
 	void create_scene()
 	{
-		m_Entity = m_Scene.add_entity();
-		glm::mat4 model(1.f);
-		{
-			glm::mat4 model(1.f);
-			float scale = 50.f;
-			model = glm::translate(model, glm::vec3(640.f / 2.f, 480.f / 2.f, 0.f));
-			model = glm::scale(model, glm::vec3(scale, scale, 1.f));
+		float size = 50.f;
 
-			m_Entity.add_component<TransformComponent>(model);
+		m_Entity = m_Scene.add_entity();
+		{
+			glm::vec3 position = glm::vec3(640.f / 2.f, 480.f / 2.f, 0.f);
+			glm::vec3 rotation = glm::vec3(0.f);
+			glm::vec3 scale = glm::vec3(size, size, 1.f);
+
+			m_Entity.add_component<TransformComponent>(position, rotation, scale);
 		}
 
 		auto e0 = m_Scene.add_entity();
-		model = glm::translate(model, glm::vec3(50.f, 50.f, 0.f));
-		e0.add_component<TransformComponent>(model);
+		glm::vec3 position = glm::vec3(640.f / 2.f + size, 480.f / 2.f, 0.f);
+		glm::vec3 scale = glm::vec3(size, size, 1.f);
+		glm::vec3 rotation = glm::vec3(0.f);
+		e0.add_component<TransformComponent>(position, rotation, scale);
 	}
 
 private:
@@ -138,10 +150,13 @@ private:
 	InstancedQuadRenderer m_QuadRenderer;
 
 private:
+	texture_handle m_SceneTexture = invalid_handle;
 	texture_handle m_Texture = invalid_handle;
 
 private:
+	SceneData m_SceneData;
 	SceneViewer m_SceneViewer;
+	EntityInspector m_EntityInspector;
 };
 
 int main()

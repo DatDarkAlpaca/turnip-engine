@@ -26,14 +26,14 @@ namespace tur
 
 namespace tur
 {
-    inline std::pair<TextureDescriptor, TextureAsset> create_default_texture()
+    inline std::pair<TextureDescriptor, TextureAsset> create_default_texture(u32 width = 2, u32 height = 2)
     {
         TextureDescriptor descriptor;
         {
             descriptor.format = TextureFormat::RGBA8_UNORM;
             descriptor.type = TextureType::TEXTURE_2D;
-            descriptor.width = 2;
-            descriptor.height = 2;
+            descriptor.width = width;
+            descriptor.height = height;
         }
 
         u8 DefaultTextureData[] = {

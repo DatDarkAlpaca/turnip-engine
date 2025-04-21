@@ -1,12 +1,14 @@
 #pragma once
 #include <common.hpp>
+#include "scene_data.hpp"
 
 class SceneViewer
 {
 public:
-	void initialize(NON_OWNING Scene* scene)
+	void initialize(NON_OWNING Scene* scene, SceneData* sceneData)
 	{
 		m_Scene = scene;
+		m_SceneData = sceneData;
 	}
 
 public:
@@ -35,7 +37,7 @@ private:
 		SceneGraphComponent& entitySceneGraph = registry.get<SceneGraphComponent>(entity);
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-		if (m_SelectedEntity == entity)
+		if (m_SceneData->viewerSelectedEntity == entity)
 			flags |= ImGuiTreeNodeFlags_Selected;
 
 		NameComponent& entityName = registry.get<NameComponent>(entity);
@@ -46,7 +48,7 @@ private:
 			ImGui::TreeNodeEx((void*)(u64)entity, flags, "%s", entityName.name.c_str());
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-				m_SelectedEntity = entity;
+				m_SceneData->viewerSelectedEntity = entity;
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
@@ -66,7 +68,8 @@ private:
 
 private:
 	NON_OWNING Scene* m_Scene = nullptr;
-	entt::entity m_SelectedEntity;
+	SceneData* m_SceneData = nullptr;
+
 	entt::entity m_RenamingEntity;
 	std::string m_RenameString;
 };
