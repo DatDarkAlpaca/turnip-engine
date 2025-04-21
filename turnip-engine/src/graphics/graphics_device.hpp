@@ -2,6 +2,7 @@
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
+#include "objects/render_target.hpp"
 
 #include "core/config/config_data.hpp"
 #include "graphics_specification.hpp"
@@ -100,6 +101,12 @@ namespace tur
 		void destroy_texture(texture_handle handle)
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
+		}
+
+	public:
+		render_target_handle create_render_target(const RenderTargetDescriptor& descriptor)
+		{
+			return static_cast<Backend*>(this)->create_render_target_impl(descriptor);
 		}
 
 	protected:

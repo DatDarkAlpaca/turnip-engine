@@ -19,13 +19,16 @@ namespace tur::gl
 	{
 		glBindVertexArray(m_VAO);
 	}
-	void CommandBufferGL::begin_render_impl()
+	void CommandBufferGL::begin_render_impl(render_target_handle handle)
 	{
-		// * Blank
+		if(handle == invalid_handle)
+			return glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, r_Device->get_render_targets().get(handle).handle);
 	}
 	void CommandBufferGL::end_render_impl()
 	{
-		// * Blank
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	void CommandBufferGL::end_impl()
 	{

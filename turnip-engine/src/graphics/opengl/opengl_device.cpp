@@ -255,4 +255,31 @@ namespace tur::gl
 		auto& buffer = m_Buffers.get(handle);
 		glDeleteBuffers(1, &buffer.handle);
 	}
+
+	render_target_handle GraphicsDeviceGL::create_render_target_impl(const RenderTargetDescriptor& descriptor)
+	{
+		u32 framebufferID;
+		glCreateFramebuffers(1, &framebufferID);
+
+		u32 index = 0;
+		for (const auto& colorAttachment : descriptor.colorAttachments)
+		{
+			gl_handle colorAttachmentHandle = m_Textures.get(colorAttachment).handle;
+			glNamedFramebufferTexture(framebufferID, GL_COLOR_ATTACHMENT0 + index, colorAttachmentHandle, 0);
+			
+			++index;
+		}
+
+		u32 rbo;
+		glCreateRenderbuffers(1, &rbo);
+		glNamedRenderbufferStorage(rbo, GL_DEPTH24_STENCIL8, descriptor.width, descriptor.height);
+		glNamedFramebufferRenderbuffer(framebufferID, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		// use depth texture
+
+		if (glCheckNamedFramebufferStatus(framebufferID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			TUR_LOG_CRITICAL("Incomplete framebuffer: ", framebufferID);
+
+		return m_RenderTargets.add({ framebufferID });
+	}
 }

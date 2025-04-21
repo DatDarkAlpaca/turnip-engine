@@ -32,6 +32,16 @@ public:
 	void on_render_gui() override
 	{
 		ImGui::DockSpaceOverViewport();
+		
+		ImGui::Begin("hi");
+			static glm::vec2 size = { 640, 480 };
+			ImGui::DragFloat2("a", &size[0]);
+		ImGui::End();
+
+		ImGui::Begin("Playtest");
+			auto sceneTextureHandle = r_Engine->get_graphics_device().get_textures().get(m_SceneTexture).handle;
+			ImGui::Image((void*)sceneTextureHandle, { size.x, size.y });
+		ImGui::End();
 
 		m_SceneViewer.on_render_gui();
 		m_EntityInspector.on_render_gui();
@@ -41,8 +51,8 @@ public:
 	{
 		Subscriber subscriber(event);
 		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
-			m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
-			m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
+			//m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
+			//m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
 
 			return false;
 		});
@@ -108,6 +118,7 @@ private:
 		m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &m_Scene);
 		m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneTexture);
 
 		// Instanced:
 		m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);

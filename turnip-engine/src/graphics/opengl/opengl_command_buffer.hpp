@@ -19,7 +19,7 @@ namespace tur::gl
 
 	protected:
 		void begin_impl();
-		void begin_render_impl();
+		void begin_render_impl(render_target_handle handle);
 		void end_render_impl();
 		void end_impl();
 

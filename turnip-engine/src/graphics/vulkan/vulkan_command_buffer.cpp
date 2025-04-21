@@ -60,7 +60,7 @@ namespace tur::vulkan
 		auto& drawTexture = r_Device->get_state().drawTexture;
 		transition_image(drawTexture.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 	}
-	void CommandBufferVulkan::begin_render_impl()
+	void CommandBufferVulkan::begin_render_impl(render_target_handle handle)
 	{
 		const auto& currentFrame = r_Device->get_state().frameDataHolder.get_color_buffer();
 		auto& drawTexture = r_Device->get_state().drawTexture;

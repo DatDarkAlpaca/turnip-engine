@@ -7,6 +7,7 @@
 #include "opengl_texture.hpp"
 #include "opengl_shader.hpp"
 #include "opengl_pipeline.hpp"
+#include "opengl_rendertarget.hpp"
 
 namespace tur::gl
 {
@@ -49,17 +50,22 @@ namespace tur::gl
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
 		void destroy_buffer_impl(buffer_handle handle);
 
+	protected:
+		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
+
 	public:
-		inline free_list<Buffer>&   get_buffers()   { return m_Buffers; }
-		inline free_list<Texture>&  get_textures()  { return m_Textures; }
-		inline free_list<Shader>&   get_shaders()   { return m_Shaders; }
-		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
+		inline free_list<Buffer>&		get_buffers()			{ return m_Buffers; }
+		inline free_list<Texture>&		get_textures()			{ return m_Textures; }
+		inline free_list<Shader>&		get_shaders()			{ return m_Shaders; }
+		inline free_list<Pipeline>&		get_pipelines()			{ return m_Pipelines; }
+		inline free_list<RenderTarget>& get_render_targets()	{ return m_RenderTargets; }
 
 	private:
-		free_list<Buffer>   m_Buffers;
-		free_list<Texture>  m_Textures;
-		free_list<Shader>   m_Shaders;
-		free_list<Pipeline> m_Pipelines;
+		free_list<Buffer>		m_Buffers;
+		free_list<Texture>		m_Textures;
+		free_list<Shader>		m_Shaders;
+		free_list<Pipeline>		m_Pipelines;
+		free_list<RenderTarget> m_RenderTargets;
 
 	private:
 		NON_OWNING Window* r_Window = nullptr;

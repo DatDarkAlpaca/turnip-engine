@@ -40,6 +40,8 @@ namespace tur
 
 		void set_viewport(const Viewport& viewport);
 
+		void set_render_target_texture(texture_handle handle = invalid_handle);
+
 	public:
 		void add_quad(const QuadData& quad);
 
@@ -70,5 +72,7 @@ namespace tur
 		buffer_handle buffer = invalid_handle;
 		texture_handle defaultTexture = invalid_handle;
  		pipeline_handle pipeline = invalid_handle;
+
+		render_target_handle renderTarget = invalid_handle;
 	};
 }

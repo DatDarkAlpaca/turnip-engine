@@ -21,7 +21,7 @@ namespace tur
 	{
 		m_Commands->begin();
 		
-		m_Commands->begin_render();
+		m_Commands->begin_render(renderTarget);
 		{
 			m_Commands->set_viewport(m_Viewport);
 			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
@@ -68,6 +68,18 @@ namespace tur
 	void QuadRenderer::set_viewport(const Viewport& viewport)
 	{
 		m_Viewport = viewport;
+	}
+
+	void QuadRenderer::set_render_target_texture(texture_handle handle)
+	{
+		auto textDesc = r_GraphicsDevice->get_textures().get(handle).descriptor;
+		RenderTargetDescriptor descriptor = {};
+		{
+			descriptor.colorAttachments.push_back(handle);
+			descriptor.width = textDesc.width;
+			descriptor.height = textDesc.height;
+		}
+		renderTarget = r_GraphicsDevice->create_render_target(descriptor);
 	}
 
 	void QuadRenderer::add_quad(const QuadData& quad)
