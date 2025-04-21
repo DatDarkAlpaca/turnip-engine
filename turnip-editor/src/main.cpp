@@ -33,14 +33,11 @@ public:
 	{
 		ImGui::DockSpaceOverViewport();
 		
-		ImGui::Begin("hi");
-			static glm::vec2 size = { 640, 480 };
-			ImGui::DragFloat2("a", &size[0]);
-		ImGui::End();
+		auto windowSize = r_Engine->get_window().properties.dimensions;
 
 		ImGui::Begin("Playtest");
 			auto sceneTextureHandle = r_Engine->get_graphics_device().get_textures().get(m_SceneTexture).handle;
-			ImGui::Image((void*)sceneTextureHandle, { size.x, size.y });
+			ImGui::Image((void*)sceneTextureHandle, { (float)windowSize.x, (float)windowSize.y });
 		ImGui::End();
 
 		m_SceneViewer.on_render_gui();
@@ -51,9 +48,11 @@ public:
 	{
 		Subscriber subscriber(event);
 		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
-			//m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
-			//m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
-
+			m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
+			m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
+			
+			// TODO: update render target on resize
+			
 			return false;
 		});
 	}
