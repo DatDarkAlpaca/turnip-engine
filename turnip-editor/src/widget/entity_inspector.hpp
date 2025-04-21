@@ -25,8 +25,14 @@ public:
 
 			ImGui::BeginGroup();
 
-			ImGui::Text("Position"); 
-			ImGui::DragFloat3("##position", &transform.position[0]);
+				ImGui::Text("Position"); 
+				ImGui::DragFloat3("##position", &transform.transform.position[0]);
+
+				ImGui::Text("Rotation"); 
+				ImGui::DragFloat3("##rotation", &transform.transform.rotation[0], 0.5f, 0.0f, 360.f);
+			
+				ImGui::Text("Scale"); 
+				ImGui::DragFloat3("##scale", &transform.transform.scale[0]);
 
 			ImGui::EndGroup();
 		}

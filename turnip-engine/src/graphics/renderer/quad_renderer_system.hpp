@@ -22,13 +22,8 @@ namespace tur
 			auto view0 = registry.view<TransformComponent>(entt::exclude<TextureComponent>);
 			for (auto [entity, transformComponent] : view0.each())
 			{
-				glm::mat4 model(1.0f);
-				model = glm::translate(model, transformComponent.position);
-				model = glm::scale(model, transformComponent.scale);
-				transformComponent.transform = model;
-
 				QuadRenderer::QuadData quadData = {};
-				quadData.transform = transformComponent.transform;
+				quadData.transform = transformComponent.transform.transform();
 				quadData.texture = invalid_handle;
 
 				m_Renderer.add_quad(quadData);
@@ -39,12 +34,8 @@ namespace tur
 			{
 				const auto& texture = textureComponent.handle;
 				
-				glm::mat4 model(1.0f);
-				model = glm::translate(model, transformComponent.position);
-				model = glm::scale(model, transformComponent.scale);
-
 				QuadRenderer::QuadData quadData = {};
-				quadData.transform = model;
+				quadData.transform = transformComponent.transform.transform();
 				quadData.texture = texture;
 
 				m_Renderer.add_quad(quadData);

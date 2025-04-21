@@ -2,6 +2,7 @@
 #include <string>
 #include "graphics/graphics.hpp"
 #include "utils/uuid/uuid.hpp"
+#include "utils/transform.hpp"
 
 namespace tur
 {
@@ -31,19 +32,28 @@ namespace tur
 	public:
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform) : transform(transform) { }
+		TransformComponent(const glm::mat4& transform) 
+			: transform(transform) 
+		{ 
+		}
 		TransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
-			: position(position) 
-			, rotation(rotation)
-			, scale(scale)
-		{ }
+			: transform(position, rotation, scale) 
+		{
+		}
 
 	public:
-		glm::vec3 position;
-		glm::vec3 rotation;
-		glm::vec3 scale;
+		operator Transform()
+		{
+			return transform;
+		}
 
-		glm::mat4 transform;
+		operator glm::mat4()
+		{
+			return transform.transform();
+		}
+
+	public:
+		Transform transform;
 	};
 
 	struct SceneGraphComponent
