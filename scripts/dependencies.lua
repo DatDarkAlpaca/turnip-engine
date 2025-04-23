@@ -12,9 +12,12 @@ vendor_include_dirs["vulkan-headers"]   = "%{vendor_path}/Vulkan-Headers/include
 vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/include"
 vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
 vendor_include_dirs["stb"]         	    = "%{vendor_path}/stb"
+vendor_include_dirs["mono"]         	= path.join(os.getenv("MONO_SDK"), 'include', 'mono-2.0')
 
 vendor_lib_dirs = { }
-vendor_lib_dirs["vulkan"]         	    = os.getenv("VULKAN_SDK") .. '/Lib/'
+vendor_lib_dirs["vulkan"]         	    = path.join(os.getenv("VULKAN_SDK"), 'Lib')
+vendor_lib_dirs["mono"]                 = path.join(os.getenv("MONO_SDK"), 'Lib')
+vendor_lib_dirs["mono-dll"]             = path.join(os.getenv("MONO_SDK"), 'bin')
 
 vendor_links = {}
 vendor_links[0] = "glad"
@@ -25,6 +28,7 @@ vendor_links[4] = "imgui-opengl"
 vendor_links[5] = "imgui-vulkan"
 vendor_links[6] = "vma"
 vendor_links[7] = "vulkan-1.lib"
+vendor_links[8] = "mono-2.0-sgen.lib"
 
 vendor_defines = {}
 vendor_defines[0] = "GLFW_INCLUDE_NONE"

@@ -3,10 +3,24 @@
 #include "graphics/gui/gui.hpp"
 #include "core/config/config_data.hpp"
 
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
+
 namespace tur
 {
 	void TurnipEngine::initialize(const std::filesystem::path& configPath)
 	{
+		std::string a = getenv("MONO_SDK");
+		a += "/lib/";
+
+		std::string b = getenv("MONO_SDK");
+		b += "/etc";
+
+		mono_set_dirs(a.c_str(), b.c_str());
+
+		MonoDomain* domain;
+		domain = mono_jit_init("hi");
+
 		// Logger:
 		initialize_logger_system();
 
