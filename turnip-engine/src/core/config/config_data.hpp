@@ -16,6 +16,7 @@
 #include "vulkan_configuration.hpp"
 #include "quad_renderer_configuration.hpp"
 #include "instanced_quad_renderer_configuration.hpp"
+#include "scripting_data.hpp"
 
 namespace tur
 {
@@ -28,6 +29,7 @@ namespace tur
 		QuadRendererInformation quadRendererInformation;
 		InstancedQuadRendererInformation instancedQuadRendererInformation;
 		vulkan::VulkanConfiguration vulkanConfiguration;
+		ScriptingInfo scriptingInfo;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigData, 
 			engineSpecification, 
@@ -36,7 +38,8 @@ namespace tur
 			graphicsSpecification,
 			quadRendererInformation,
 			instancedQuadRendererInformation,
-			vulkanConfiguration
+			vulkanConfiguration,
+			scriptingInfo
 		);
 	};
 

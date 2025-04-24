@@ -18,8 +18,8 @@ namespace tur
 
 		mono_set_dirs(a.c_str(), b.c_str());
 
-		MonoDomain* domain;
-		domain = mono_jit_init("hi");
+		MonoDomain* domain = mono_jit_init_version("MyDomain", "v4.0.30319");
+
 
 		// Logger:
 		initialize_logger_system();

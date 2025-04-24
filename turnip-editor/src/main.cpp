@@ -8,7 +8,7 @@ using namespace tur;
 #include "widget/scene_data.hpp"
 #include "widget/scene_viewer.hpp"
 #include "widget/entity_inspector.hpp"
-#include "widget/scene_editor.h"
+#include "widget/scene_editor.hpp"
 
 // View:
 struct MainView : public View
@@ -78,8 +78,8 @@ private:
 		// Scene Texture:
 		{
 			TextureDescriptor descriptor;
-			descriptor.width = 640.0f;
-			descriptor.height = 480.0f;
+			descriptor.width  = 640;
+			descriptor.height = 480;
 
 			m_SceneData.sceneTexture = r_Engine->get_graphics_device().create_texture(descriptor);
 		}

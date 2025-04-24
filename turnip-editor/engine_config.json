@@ -20,16 +20,22 @@
         "variant": 0
     },
     "instancedQuadRendererInformation": {
-        "fragmentFilepath": "res/shaders/instanced/iquad_gl.frag",
-        "maxInstanceCount": 10000,
-        "maxTextureCount": 100,
-        "textureHeight": 144,
-        "textureWidth": 144,
-        "vertexFilepath": "res/shaders/instanced/iquad_gl.vert"
+        "fragmentFilepath": "./res/shaders/instanced/iquad_gl.frag",
+        "maxInstanceCount": 1200,
+        "maxTextureCount": 2,
+        "textureHeight": 32,
+        "textureWidth": 32,
+        "vertexFilepath": "./res/shaders/instanced/iquad_gl.vert"
     },
     "quadRendererInformation": {
-        "fragmentFilepath": "res/shaders/quad/quad_gl.frag",
-        "vertexFilepath": "res/shaders/quad/quad_gl.vert"
+        "fragmentFilepath": "./res/shaders/quad/quad_gl.frag",
+        "vertexFilepath": "./res/shaders/quad/quad_gl.vert"
+    },
+    "scriptingInfo": {
+        "assembliesPath": "mono/lib",
+        "domainName": "TurScript",
+        "monoSDKvariable": "MONO_SDK",
+        "monoVersion": "v4.0.30319"
     },
     "vulkanConfiguration": {
         "instanceRequirements": {
@@ -58,12 +64,12 @@
             "y": 480
         },
         "maxSize": {
-            "x": 3000,
-            "y": 3000
+            "x": 4000,
+            "y": 4000
         },
         "minSize": {
-            "x": 0,
-            "y": 0
+            "x": 640,
+            "y": 480
         },
         "position": {
             "x": "default",

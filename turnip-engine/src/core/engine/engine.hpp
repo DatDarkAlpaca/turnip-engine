@@ -2,6 +2,7 @@
 #include <filesystem>
 
 #include "core/assets/asset_library.hpp"
+#include "core/script/script_system.hpp"
 #include "core/worker/worker_pool.hpp"
 #include "core/event/events.hpp"
 #include "core/view/view.hpp"
@@ -40,6 +41,7 @@ namespace tur
 		AssetLibrary& get_asset_library() { return m_AssetLibrary; }
 		WorkerPool& get_worker_pool() { return m_WorkerPool; }
 		GraphicsDevice& get_graphics_device() { return m_GraphicsDevice; }
+		ScriptSystem& get_script_system() { return m_ScriptSystem; }
 		
 		const ConfigData& get_config_data() const { return m_ConfigData; }
 
@@ -50,5 +52,6 @@ namespace tur
 		ConfigData m_ConfigData;
 		WorkerPool m_WorkerPool;
 		GraphicsDevice m_GraphicsDevice;
+		ScriptSystem m_ScriptSystem;
 	};
 }
