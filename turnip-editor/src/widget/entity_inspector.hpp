@@ -48,13 +48,22 @@ private:
 		if (ImGui::CollapsingHeader("Transform"))
 		{
 			ImGui::Text("Position");
+			ImGui::SameLine();
+			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
 			ImGui::DragFloat3("##position", &transform.position[0]);
+			ImGui::PopItemWidth();
 
 			ImGui::Text("Rotation");
-			ImGui::DragFloat3("##rotation", &transform.rotation[0], 0.5f, 0.0f, 360.f);
+			ImGui::SameLine();
+			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+			ImGui::DragFloat3("##rotation", &transform.rotation[0]);
+			ImGui::PopItemWidth();
 
 			ImGui::Text("Scale");
+			ImGui::SameLine();
+			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
 			ImGui::DragFloat3("##scale", &transform.scale[0]);
+			ImGui::PopItemWidth();
 		}		
 	}
 
