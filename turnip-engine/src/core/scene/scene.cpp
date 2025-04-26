@@ -1,20 +1,29 @@
 #include "pch.hpp"
 #include "scene.hpp"
 #include "entity.hpp"
-#include "common_components.hpp"
+#include "components.hpp"
 
 namespace tur
 {
+	void Scene::on_update_runtime()
+	{
+		for (const auto& [entity, scripts] : m_Registry.view<EntityScriptsComponent>().each())
+		{
+			for (const auto& script : scripts.scriptComponents)
+			{
+				script.instance;
+			}
+		}
+	}
+
 	Entity Scene::add_entity()
 	{
 		return add_entity({ }, { });
 	}
-
 	Entity Scene::add_entity(const std::string& entityName)
 	{
 		return add_entity({ }, entityName);
 	}
-
 	Entity Scene::add_entity(UUID uuid, const std::string& entityName, entt::entity parent)
 	{
 		Entity entity = { m_Registry.create(), this };
@@ -33,6 +42,9 @@ namespace tur
 		// Scene Graph:
 		SceneGraphComponent& sceneGraphComp = entity.add_component<SceneGraphComponent>();
 		sceneGraphComp.parent = parent;
+
+		// Script:
+		entity.add_component<EntityScriptsComponent>();
 
 		// Record:
 		m_EntityMap[uuidComp.uuid] = entity;
@@ -54,7 +66,6 @@ namespace tur
 
 		m_Registry.destroy(entityOption.value());
 	}
-
 	void Scene::remove_entity(Entity entity)
 	{
 		m_EntityMap.erase(entity.UUID());
@@ -68,7 +79,6 @@ namespace tur
 
 		return std::nullopt;
 	}
-
 	std::vector<Entity> Scene::find_entities_by_name(const std::string& name)
 	{
 		std::vector<Entity> entities;

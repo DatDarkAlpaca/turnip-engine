@@ -45,8 +45,12 @@
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="src\components\component.cs" />
+    <Compile Include="src\components\transform.cs" />
+    <Compile Include="src\internals.cs" />
+    <Compile Include="src\scriptable_entity.cs" />
+    <Compile Include="test.cs" />
+    <Compile Include="src\vector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

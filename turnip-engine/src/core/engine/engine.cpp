@@ -2,6 +2,7 @@
 #include "engine.hpp"
 #include "graphics/gui/gui.hpp"
 #include "core/config/config_data.hpp"
+#include "core/script/script_system.hpp"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -10,17 +11,6 @@ namespace tur
 {
 	void TurnipEngine::initialize(const std::filesystem::path& configPath)
 	{
-		std::string a = getenv("MONO_SDK");
-		a += "/lib/";
-
-		std::string b = getenv("MONO_SDK");
-		b += "/etc";
-
-		mono_set_dirs(a.c_str(), b.c_str());
-
-		MonoDomain* domain = mono_jit_init_version("MyDomain", "v4.0.30319");
-
-
 		// Logger:
 		initialize_logger_system();
 
@@ -44,6 +34,9 @@ namespace tur
 		// Graphics:
 		m_GraphicsDevice.initialize(&m_Window, m_ConfigData);
 		m_GraphicsDevice.initialize_gui_graphics_system();
+
+		// Scripting:
+		ScriptSystem::initialize(m_ConfigData, this);
 	}
 
 	void TurnipEngine::run()

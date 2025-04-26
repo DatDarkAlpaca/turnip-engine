@@ -27,16 +27,23 @@ public:
 
 		create_scene();
 
+		ScriptSystem::on_scene_play(&m_Scene);
+
 		// Widgets:
 		m_EntityInspector.initialize(&m_Scene, &m_SceneData);
 		m_SceneViewer.initialize(&m_Scene, &m_SceneData);
 		m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &r_Engine->get_window(), &m_SceneData);
 	}
 
+	void on_update() override
+	{
+		m_Scene.on_update_runtime();
+	}
+
 	void on_render_gui() override
 	{
 		ImGui::DockSpaceOverViewport();
-		
+
 		m_SceneEditor.on_render_gui();
 		m_SceneViewer.on_render_gui();
 		m_EntityInspector.on_render_gui();
@@ -161,13 +168,13 @@ private:
 	InstancedQuadRenderer m_QuadRenderer;
 
 private:
-	texture_handle m_Texture = invalid_handle;
-
-private:
 	SceneData m_SceneData;
 	SceneViewer m_SceneViewer;
 	SceneEditor m_SceneEditor;
 	EntityInspector m_EntityInspector;
+
+private:
+	texture_handle m_Texture = invalid_handle;
 };
 
 int main()

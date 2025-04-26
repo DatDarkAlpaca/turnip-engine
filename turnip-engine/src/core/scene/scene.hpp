@@ -16,6 +16,9 @@ namespace tur
 		Scene() = default;
 
 	public:
+		void on_update_runtime();
+
+	public:
 		Entity add_entity();
 		Entity add_entity(const std::string& entityName);
 		Entity add_entity(UUID uuid, const std::string& entityName, entt::entity parent = entt::null);
@@ -28,7 +31,6 @@ namespace tur
 
 	public:
 		inline u64 get_entity_count() const { return m_Diagnostics.entityCount; }
-
 		inline entt::registry& get_registry() { return m_Registry; }
 
 	private:

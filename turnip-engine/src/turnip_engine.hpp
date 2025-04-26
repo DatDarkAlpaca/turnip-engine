@@ -7,6 +7,9 @@
 
 #include "core/scene/entity.hpp"
 #include "core/scene/scene.hpp"
+#include "core/scene/components.hpp"
+
+#include "core/script/script_system.hpp"
 
 #include "graphics/graphics.hpp"
 #include "graphics/renderer/quad_renderer.hpp"

@@ -4,6 +4,7 @@
 #include <mono/metadata/debug-helpers.h>
 
 #include "core/config/config_data.hpp"
+#include "core/scene/scene.hpp"
 #include "core/event/event.hpp"
 #include "common.hpp"
 
@@ -14,32 +15,23 @@ namespace tur
 	class ScriptSystem
 	{
 	public:
-		void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
-
-		void shutdown();
+		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
 
 	public:
-		void load(const std::filesystem::path& filepath, const std::string& className);
-
-	public:	
-		void on_update();
+		static void on_scene_play(Scene* scene);
 
 	private:
-		MonoMethod* get_method(MonoImage* image, const std::string& methodName) const;
-
-		void register_internal_calls();
+		static void register_internal_calls();
 
 	private:
-		NON_OWNING TurnipEngine* r_Engine = nullptr;
-		MonoDomain* m_Domain = nullptr;
+		static inline NON_OWNING TurnipEngine* r_Engine = nullptr;
 
-	private:
-		struct ScriptMethods
-		{
-			MonoMethod* onLoadMethod;
-			MonoMethod* updateMethod;
-		};
+	public:
+		static inline MonoDomain* s_Domain = nullptr;
+		static inline MonoAssembly* s_LoadedAssembly = nullptr;
+		static inline MonoImage* s_LoadedImage = nullptr;
 
-		std::vector<ScriptMethods> m_ScriptMethods;
+		static inline MonoClass* s_InternalsClass = nullptr;
+		static inline tur::Scene* s_Scene = nullptr;
 	};
 }

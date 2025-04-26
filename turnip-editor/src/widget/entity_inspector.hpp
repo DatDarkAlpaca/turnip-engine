@@ -39,6 +39,8 @@ private:
 	{
 		if (selectedEntity.has_component<TransformComponent>())
 			render_transform_component(selectedEntity);
+		
+		render_script_component(selectedEntity);
 	}
 
 	void render_transform_component(Entity selectedEntity)
@@ -67,6 +69,14 @@ private:
 		}		
 	}
 
+	void render_script_component(Entity selectedEntity)
+	{
+		auto& scripts = selectedEntity.get_component<EntityScriptsComponent>().scriptComponents;
+
+		if (scripts.empty())
+			return;
+	}
+
 private:
 	void render_component_list(Entity selectedEntity)
 	{
@@ -79,6 +89,12 @@ private:
 			{
 				Transform transform(glm::mat4(1.0f));
 				selectedEntity.add_component<Transform>(transform);
+			}
+
+			if (ImGui::MenuItem("Entity Script"))
+			{
+				InternalEntityScript script("Test");
+				selectedEntity.get_component<EntityScriptsComponent>().add(script);
 			}
 			
 			ImGui::EndPopup();

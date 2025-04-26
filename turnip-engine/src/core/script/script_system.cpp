@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "script_system.hpp"
+
 #include "core/engine/engine.hpp"
+#include "script_internals.hpp"
 
 namespace tur
 {
@@ -10,58 +12,54 @@ namespace tur
 		const auto& scriptData = configData.scriptingInfo;
 
 		r_Engine = engine;
-		configData.scriptingInfo;
 
 		path sdkVariable = std::getenv(scriptData.monoSDKvariable.c_str());
-		path assembliesPath = scriptData.assembliesPath;
-		path fullPath = sdkVariable / assembliesPath;
-		mono_set_assemblies_path(fullPath.string().c_str());
-	
-		m_Domain = mono_jit_init_version(scriptData.domainName.c_str(), scriptData.monoVersion.c_str());
+		path assembliesFullPath = sdkVariable / scriptData.assembliesPath;
+		path configFullPath = sdkVariable / scriptData.configPath;
+		mono_set_dirs(assembliesFullPath.string().c_str(), configFullPath.string().c_str());
 
-		register_internal_calls();		
+		s_Domain = mono_jit_init_version(scriptData.domainName.c_str(), scriptData.monoVersion.c_str());
+		mono_domain_set(s_Domain, false);
 	}
 
-	void ScriptSystem::shutdown()
+	void ScriptSystem::on_scene_play(Scene* scene)
 	{
-		mono_jit_cleanup(m_Domain);
-		m_Domain = nullptr;
+		s_Scene = scene;
+
+		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, "turnip-script.dll");
+		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
+
+		register_internal_calls();
+
+		MonoClass* entityClass = mono_class_from_name(s_LoadedImage, "TurnipScript", "Test");
+		MonoObject* entityInstance = mono_object_new(s_Domain, entityClass);
+
+		mono_runtime_object_init(entityInstance);
+
+		// Sets entity ID:
+		{
+			MonoClassField* field = mono_class_get_field_from_name(entityClass, "_id");
+			uint32_t id = 0;
+			mono_field_set_value(entityInstance, field, &id);
+		}
+
+		// Calls OnUpdate:
+		MonoMethodDesc* desc = mono_method_desc_new("Test::OnUpdate", false);
+		MonoMethod* m = mono_method_desc_search_in_class(desc, entityClass);
+		mono_runtime_invoke(m, entityInstance, nullptr, nullptr);
 	}
 
-	void ScriptSystem::load(const std::filesystem::path& filepath, const std::string& className)
-	{
-		MonoAssembly* assembly = mono_domain_assembly_open(m_Domain, filepath.string().c_str());
-		if (!assembly)
-			return TUR_LOG_ERROR("Failed to load assemblies from: {}", filepath.string());
-
-		MonoImage* image = mono_assembly_get_image(assembly);
-		
-		ScriptMethods methods = {};
-		methods.onLoadMethod        = get_method(image, className + ":OnLoadScript()");
-		methods.updateMethod		= get_method(image, className + ":OnUpdate()");
-
-		m_ScriptMethods.push_back(methods);
-	}
-
-	void ScriptSystem::on_update()
-	{
-		for (const auto& methods : m_ScriptMethods)
-			mono_runtime_invoke(methods.updateMethod, nullptr, nullptr, nullptr);
-	}
-
-	MonoMethod* ScriptSystem::get_method(MonoImage* image, const std::string& methodName) const
-	{
-		MonoMethodDesc* methodDesc = mono_method_desc_new(methodName.c_str(), false);
-		MonoMethod* method = mono_method_desc_search_in_image(methodDesc, image);
-		mono_method_desc_free(methodDesc);
-
-		return method;
-	}
-	
 	void ScriptSystem::register_internal_calls()
 	{
-		r_Engine->get_window().data.properties;
+		// Logging:
+		mono_add_internal_call("TurnipScript.Internal::LogInfo", log_info);
+		mono_add_internal_call("TurnipScript.Internal::LogTrace", log_trace);
+		mono_add_internal_call("TurnipScript.Internal::LogDebug", log_debug);
+		mono_add_internal_call("TurnipScript.Internal::LogWarn", log_warn);
+		mono_add_internal_call("TurnipScript.Internal::LogError", log_error);
+		mono_add_internal_call("TurnipScript.Internal::LogCritical", log_critical);
 
-		// mono_add_internal_call("Engine.Input::IsKeyPressed", (void*)IsKeyPressed);
+		mono_add_internal_call("TurnipScript.Internal::GetComponent_InternalNative", get_component_internal_native);
 	}
 }
+
