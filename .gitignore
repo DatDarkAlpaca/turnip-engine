@@ -10,6 +10,7 @@
 *.sln
 *.filters
 *.vcxproj
+*.csproj
 
 # Makefiles:
 Makefile
