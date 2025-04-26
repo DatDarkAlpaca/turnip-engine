@@ -29,9 +29,6 @@ public:
 	void on_render_gui()
 	{
 		ImGui::SetNextWindowViewport(0);
-		// ImGui::SetNextWindowPos(ImVec2(200, 200), ImGuiCond_Always);
-		//ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);
-
 		if (ImGui::Begin("Project Editor", &m_IsOpen, ImGuiWindowFlags_NoCollapse))
 		{
 			if (ImGui::Button("Create New Project"))
@@ -228,6 +225,7 @@ int main()
 	TurnipEngine engine;
 	engine.initialize("engine_config.json");
 	engine.add_view(tur::make_unique<ProjectView>());
+	engine.add_view(tur::make_unique<MainView>());
 
 	engine.run();
 
