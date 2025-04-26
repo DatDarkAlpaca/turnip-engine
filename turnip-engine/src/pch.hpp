@@ -29,4 +29,6 @@
 	#include <mono/metadata/threads.h>
 	#include <mono/metadata/assembly.h>
 	#include <mono/metadata/debug-helpers.h>
+
+	#include <portable-file-dialogs.h>
 #pragma warning(pop)

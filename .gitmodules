@@ -29,3 +29,6 @@
 	path = vendor/imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking
+[submodule "vendor/pfd"]
+	path = vendor/pfd
+	url = https://github.com/samhocevar/portable-file-dialogs

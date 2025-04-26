@@ -12,6 +12,7 @@ vendor_include_dirs["vulkan-headers"]   = "%{vendor_path}/Vulkan-Headers/include
 vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/include"
 vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
 vendor_include_dirs["stb"]         	    = "%{vendor_path}/stb"
+vendor_include_dirs["pfd"]         	    = "%{vendor_path}/pfd/"
 vendor_include_dirs["mono"]         	= path.join(os.getenv("MONO_SDK"), 'include', 'mono-2.0')
 
 vendor_lib_dirs = { }
