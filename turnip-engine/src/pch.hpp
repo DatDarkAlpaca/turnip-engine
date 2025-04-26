@@ -3,6 +3,7 @@
 	#include <unordered_set>
 	#include <unordered_map>
 	#include <functional>
+	#include <filesystem>
 	#include <algorithm>
 	#include <numeric>
 	#include <fstream>
@@ -23,4 +24,9 @@
 	#include <nlohmann/json.hpp>
 
 	#include <imgui.h>
+
+	#include <mono/jit/jit.h>
+	#include <mono/metadata/threads.h>
+	#include <mono/metadata/assembly.h>
+	#include <mono/metadata/debug-helpers.h>
 #pragma warning(pop)

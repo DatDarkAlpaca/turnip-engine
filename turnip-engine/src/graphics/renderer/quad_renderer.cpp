@@ -24,6 +24,9 @@ namespace tur
 			if (renderTarget == invalid_handle)
 				return false;
 
+			if (event.width == 0 || event.height == 0)
+				return false;
+
 			r_GraphicsDevice->resize_render_target(renderTarget, event.width, event.height);
 			return false;
 		});

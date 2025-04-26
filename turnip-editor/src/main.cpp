@@ -8,7 +8,7 @@ using namespace tur;
 #include "widget/scene_data.hpp"
 #include "widget/scene_viewer.hpp"
 #include "widget/entity_inspector.hpp"
-#include "widget/scene_editor.h"
+#include "widget/scene_editor.hpp"
 
 // View:
 struct MainView : public View
@@ -33,10 +33,27 @@ public:
 		m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &r_Engine->get_window(), &m_SceneData);
 	}
 
+	void on_update() override
+	{
+		m_Scene.on_update_runtime();
+	}
+
 	void on_render_gui() override
 	{
 		ImGui::DockSpaceOverViewport();
-		
+
+		ImGui::Begin("Runtime");
+		if (ImGui::Button("Start"))
+		{
+			m_Scene.start_runtime();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			m_Scene.stop_runtime();
+		}
+		ImGui::End();
+
 		m_SceneEditor.on_render_gui();
 		m_SceneViewer.on_render_gui();
 		m_EntityInspector.on_render_gui();
@@ -78,8 +95,8 @@ private:
 		// Scene Texture:
 		{
 			TextureDescriptor descriptor;
-			descriptor.width = 640.0f;
-			descriptor.height = 480.0f;
+			descriptor.width  = 640;
+			descriptor.height = 480;
 
 			m_SceneData.sceneTexture = r_Engine->get_graphics_device().create_texture(descriptor);
 		}
@@ -161,13 +178,13 @@ private:
 	InstancedQuadRenderer m_QuadRenderer;
 
 private:
-	texture_handle m_Texture = invalid_handle;
-
-private:
 	SceneData m_SceneData;
 	SceneViewer m_SceneViewer;
 	SceneEditor m_SceneEditor;
 	EntityInspector m_EntityInspector;
+
+private:
+	texture_handle m_Texture = invalid_handle;
 };
 
 int main()

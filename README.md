@@ -13,12 +13,21 @@ It uses [Premake 5](https://github.com/premake/premake-core/releases) to generat
 
 ## Prerequisites
 
-You'll need to install the following to build this project:
+To build this project, you'll need to install the following:
 
 * [Python 3](https://www.python.org/downloads/)
 * [Conan 2.0](https://conan.io/downloads)
 * [Vulkan](https://vulkan.lunarg.com/#new_tab)
 * [Premake 5](https://github.com/premake/premake-core/releases)
+
+You may need to set these environment variables if they aren't automatically detected:
+1. **Vulkan**:
+    Set `VULKAN_SDK` to point to your Vulkan SDK installation (e.g., C:/Vulkan/<version>).
+2. **Mono**:
+    Likewise, set `MONO_SDK` to point to your Mono installation directory (e.g., C:/Program Files (x86)/Mono).
+3. **Premake**:
+    Ensure the directory containing premake5 is added to your system's PATH.
+
 
 If the SDK fails to include it automatically, you must provide an environment variable named VULKAN_SDK under `VulkanSDK/<version>`. Additionally, you may need to add an environment variable to use premake5.
 

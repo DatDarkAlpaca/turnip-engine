@@ -3,6 +3,6 @@
 
 struct SceneData
 {
-	entt::entity viewerSelectedEntity;
+	entt::entity viewerSelectedEntity = entt::null;
 	texture_handle sceneTexture;
 };

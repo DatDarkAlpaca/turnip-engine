@@ -2,6 +2,10 @@
 #include "engine.hpp"
 #include "graphics/gui/gui.hpp"
 #include "core/config/config_data.hpp"
+#include "core/script/script_system.hpp"
+
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
 
 namespace tur
 {
@@ -30,6 +34,10 @@ namespace tur
 		// Graphics:
 		m_GraphicsDevice.initialize(&m_Window, m_ConfigData);
 		m_GraphicsDevice.initialize_gui_graphics_system();
+
+		// Scripting:
+		ScriptSystem::initialize(m_ConfigData, this);
+		ScriptSystem::load_assembly("turnip-script.dll");
 	}
 
 	void TurnipEngine::run()
