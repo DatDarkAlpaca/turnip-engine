@@ -8,16 +8,16 @@ namespace tur
 	struct ScriptingInfo
 	{
 		std::string monoSDKvariable = "MONO_SDK";
-		std::string assembliesPath = "lib";
+		std::string monoAssembliesPath = "lib";
 		std::string domainName = "TurScript";
-		std::string configPath = "etc";
+		std::string monoConfigPath = "etc";
 		std::string monoVersion = "v4.0.30319";
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
 			ScriptingInfo,
 			monoSDKvariable,
-			assembliesPath,
-			configPath,
+			monoAssembliesPath,
+			monoConfigPath,
 			domainName,
 			monoVersion
 		);

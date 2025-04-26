@@ -32,10 +32,10 @@
         "vertexFilepath": "./res/shaders/quad/quad_gl.vert"
     },
     "scriptingInfo": {
-        "assembliesPath": "lib",
+        "monoAssembliesPath": "lib",
         "domainName": "TurScript",
         "monoSDKvariable": "MONO_SDK",
-        "configPath": "etc",
+        "monoConfigPath": "etc",
         "monoVersion": "v4.0.30319"
     },
     "vulkanConfiguration": {

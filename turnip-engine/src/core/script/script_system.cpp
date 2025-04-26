@@ -14,11 +14,9 @@ namespace tur
 		r_Engine = engine;
 
 		path sdkVariable = std::getenv(scriptData.monoSDKvariable.c_str());
-		path assembliesFullPath = sdkVariable / scriptData.assembliesPath;
-		path configFullPath = sdkVariable / scriptData.configPath;
+		path assembliesFullPath = sdkVariable / scriptData.monoAssembliesPath;
+		path configFullPath = sdkVariable / scriptData.monoConfigPath;
 		mono_set_dirs(assembliesFullPath.string().c_str(), configFullPath.string().c_str());
-
-		mono_set_assemblies_path(assembliesFullPath.string().c_str());
 
 		s_Domain = mono_jit_init_version(scriptData.domainName.c_str(), scriptData.monoVersion.c_str());
 		TUR_ASSERT(s_Domain, "Failed to initialize JIT");
@@ -28,7 +26,7 @@ namespace tur
 	}
 	void ScriptSystem::load_assembly(const std::filesystem::path& filepath)
 	{
-		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, "C:\\Users\\paulo\\Projects\\turnip-engine\\build\\bin\\Debug-windows-x86_64\\turnip-script\\turnip-script.dll");
+		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, "turnip-script.dll");
 		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
 	}
 
@@ -99,14 +97,12 @@ namespace tur
 			TUR_ASS(sceneStartMethodDesc);
 
 			data.sceneStartMethod = mono_method_desc_search_in_class(sceneStartMethodDesc, entityClass);
-			TUR_ASS(data.sceneStartMethod);
 
 			std::string sceneEndMethodName = className + "::OnSceneEnd";
 			MonoMethodDesc* sceneEndMethodDesc = mono_method_desc_new(sceneEndMethodName.c_str(), false);
 			TUR_ASS(sceneEndMethodDesc);
 
 			data.sceneEndMethod = mono_method_desc_search_in_class(sceneEndMethodDesc, entityClass);
-			TUR_ASS(data.sceneEndMethod);
 		}
 
 		// Entity methods:
@@ -121,7 +117,6 @@ namespace tur
 			TUR_ASS(updateDesc);
 
 			data.updateMethod = mono_method_desc_search_in_class(updateDesc, entityClass);
-			TUR_ASS(data.updateMethod);
 		}
 	}
 }
