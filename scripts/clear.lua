@@ -12,6 +12,9 @@ newaction {
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
         
+        os.remove("**.dll")
+        os.remove("**.user")
+        os.remove("**.csproj")
 		os.remove("Makefile")
 		os.remove("**.make")
         os.remove('**.sln')

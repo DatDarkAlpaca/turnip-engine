@@ -44,7 +44,7 @@ namespace tur
 	{
 		on_engine_startup();
 
-		while (is_open_window(&m_Window))
+		while (is_open_window(&m_Window) && !m_RequestShutdown)
 		{
 			poll_events(&m_Window);
 			m_WorkerPool.poll_tasks();
@@ -56,15 +56,15 @@ namespace tur
 			m_GraphicsDevice.present();
 		}
 
-		shutdown();
-	}
-
-	void TurnipEngine::shutdown()
-	{
 		on_engine_shutdown();
 
 		shutdown_window(&m_Window);
 		shutdown_windowing_system();
+	}
+
+	void TurnipEngine::shutdown()
+	{
+		m_RequestShutdown = true;
 	}
 
 	void TurnipEngine::add_view(tur_unique<View> view)

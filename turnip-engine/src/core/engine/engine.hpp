@@ -50,5 +50,8 @@ namespace tur
 		ConfigData m_ConfigData;
 		WorkerPool m_WorkerPool;
 		GraphicsDevice m_GraphicsDevice;
+
+	private:
+		bool m_RequestShutdown = false;
 	};
 }

@@ -11,6 +11,42 @@ using namespace tur;
 #include "widget/scene_editor.hpp"
 
 // View:
+struct ProjectView : public View
+{
+public:
+	void on_engine_startup()
+	{
+		show_window(&r_Engine->get_window());
+	}
+
+public:
+	void on_update()
+	{
+		if (!m_IsOpen)
+			r_Engine->shutdown();		
+	}
+
+	void on_render_gui()
+	{
+		ImGui::SetNextWindowViewport(0);
+		// ImGui::SetNextWindowPos(ImVec2(200, 200), ImGuiCond_Always);
+		//ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);
+
+		if (ImGui::Begin("Project Editor", &m_IsOpen, ImGuiWindowFlags_NoCollapse))
+		{
+			if (ImGui::Button("Create New Project"))
+			{
+
+			}
+
+			ImGui::End();
+		}
+	}
+
+private:
+	bool m_IsOpen = true;
+};
+
 struct MainView : public View
 {
 public:
@@ -191,8 +227,7 @@ int main()
 {
 	TurnipEngine engine;
 	engine.initialize("engine_config.json");
-
-	engine.add_view(tur::make_unique<MainView>());
+	engine.add_view(tur::make_unique<ProjectView>());
 
 	engine.run();
 
