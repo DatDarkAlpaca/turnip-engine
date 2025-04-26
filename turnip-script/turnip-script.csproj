@@ -48,7 +48,7 @@
     <Compile Include="src\components\component.cs" />
     <Compile Include="src\components\transform.cs" />
     <Compile Include="src\internals.cs" />
-    <Compile Include="src\scriptable_entity.cs" />
+    <Compile Include="src\components\scriptable_entity.cs" />
     <Compile Include="test.cs" />
     <Compile Include="src\vector.cs" />
   </ItemGroup>

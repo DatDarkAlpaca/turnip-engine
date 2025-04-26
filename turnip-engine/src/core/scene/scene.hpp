@@ -16,7 +16,9 @@ namespace tur
 		Scene() = default;
 
 	public:
+		void start_runtime();
 		void on_update_runtime();
+		void stop_runtime();
 
 	public:
 		Entity add_entity();
@@ -35,11 +37,15 @@ namespace tur
 
 	private:
 		entt::registry m_Registry;
+		entt::registry m_BackupRegistry;
 		std::unordered_map<UUID, Entity> m_EntityMap;
 
 		struct Diagnostics
 		{
 			u64 entityCount = 0;
 		} m_Diagnostics;
+
+	private:
+		bool m_RuntimePlaying = false;
 	};
 }

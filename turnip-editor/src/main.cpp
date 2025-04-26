@@ -27,8 +27,6 @@ public:
 
 		create_scene();
 
-		ScriptSystem::on_scene_play(&m_Scene);
-
 		// Widgets:
 		m_EntityInspector.initialize(&m_Scene, &m_SceneData);
 		m_SceneViewer.initialize(&m_Scene, &m_SceneData);
@@ -43,6 +41,18 @@ public:
 	void on_render_gui() override
 	{
 		ImGui::DockSpaceOverViewport();
+
+		ImGui::Begin("Runtime");
+		if (ImGui::Button("Start"))
+		{
+			m_Scene.start_runtime();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			m_Scene.stop_runtime();
+		}
+		ImGui::End();
 
 		m_SceneEditor.on_render_gui();
 		m_SceneViewer.on_render_gui();

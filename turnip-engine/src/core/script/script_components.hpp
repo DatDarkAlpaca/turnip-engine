@@ -5,6 +5,17 @@
 
 namespace tur
 {
+	struct EntityScriptData
+	{
+		MonoObject* instance = nullptr;
+
+		MonoMethod* sceneStartMethod = nullptr;
+		MonoMethod* sceneEndMethod = nullptr;
+		MonoMethod* entityInstanceCreatedMethod = nullptr;
+		MonoMethod* entityInstanceDestroyedMethod = nullptr;
+		MonoMethod* updateMethod = nullptr;
+	};
+
 	struct InternalEntityScript
 	{
 	public:
@@ -14,7 +25,7 @@ namespace tur
 
 	public:
 		std::string className;
-		MonoObject* instance = nullptr;
+		EntityScriptData scriptData;
 	};
 
 	struct EntityScriptsComponent

@@ -37,6 +37,7 @@ namespace tur
 
 		// Scripting:
 		ScriptSystem::initialize(m_ConfigData, this);
+		ScriptSystem::load_assembly("turnip-script.dll");
 	}
 
 	void TurnipEngine::run()

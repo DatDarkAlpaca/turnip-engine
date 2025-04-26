@@ -4,6 +4,7 @@
 #include <mono/metadata/debug-helpers.h>
 
 #include "core/config/config_data.hpp"
+#include "core/scene/components.hpp"
 #include "core/scene/scene.hpp"
 #include "core/event/event.hpp"
 #include "common.hpp"
@@ -16,12 +17,18 @@ namespace tur
 	{
 	public:
 		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
+		static void load_assembly(const std::filesystem::path& filepath);
 
 	public:
-		static void on_scene_play(Scene* scene);
+		static void on_scene_runtime_start(Scene* scene);
+		static void on_scene_runtime_update();
 
 	private:
 		static void register_internal_calls();
+
+		static void populate_script_components();
+
+		static void instantiate_entity_object(const std::string& className, entt::entity entityID, EntityScriptData& data);
 
 	private:
 		static inline NON_OWNING TurnipEngine* r_Engine = nullptr;

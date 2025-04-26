@@ -5,16 +5,16 @@ namespace TurnipScript
 {
     public class Test : ScriptableEntity
     {
-        Transform transform;
+        private Transform transform;
 
         public Test()
         {
-            Internal.LogInfo(String.Format("Test() constructor invoked: EID: {0}", _id));
+            transform = GetComponent<Transform>();
         }
 
         public override void OnUpdate()
         {
-            Internal.LogInfo(GetComponent<Transform>().position.x.ToString());
+            transform.position += new Vector3D(0.0f, 0.1f, 0.0f);
         }
     }
 }

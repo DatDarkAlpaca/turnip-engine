@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-
-namespace TurnipScript
+﻿namespace TurnipScript
 {
     public class ScriptableEntity
     {
@@ -9,9 +6,16 @@ namespace TurnipScript
 
         protected ScriptableEntity() { _id = 0; }
         internal ScriptableEntity(uint id) { _id = id; }
-        
-        // TODO: EntityInstantiated, EntityDestroyed, SceneStart, SceneEnd, etc
+
+        #region Script Methods
+        public virtual void OnSceneStart() { }
+        public virtual void OnSceneEnd() { }
+
+        public virtual void OnEntityInstanceCreated() { }
+        public virtual void OnEntityInstanceDestroyed() { }
+
         public virtual void OnUpdate()  { }
+        #endregion
 
         protected T GetComponent<T>() where T : Component
         {

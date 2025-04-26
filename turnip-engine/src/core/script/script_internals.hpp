@@ -14,5 +14,8 @@ extern "C"
 
 extern "C"
 {
-	MonoObject* get_component_internal_native(tur::u32 entityID, MonoReflectionType* reflectionType);
+	MonoObject* get_component_native(tur::u32 entityID, MonoReflectionType* reflectionType);
+
+	void get_transform_position_native(tur::u32 entityID, glm::vec3* outPosition);
+	void set_transform_position_native(tur::u32 entityID, glm::vec3* inPosition);
 }

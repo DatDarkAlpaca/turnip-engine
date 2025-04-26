@@ -2,18 +2,25 @@
 #include "scene.hpp"
 #include "entity.hpp"
 #include "components.hpp"
+#include "core/script/script_system.hpp"
 
 namespace tur
 {
+	void Scene::start_runtime()
+	{
+		ScriptSystem::on_scene_runtime_start(this);
+		m_RuntimePlaying = true;
+	}
 	void Scene::on_update_runtime()
 	{
-		for (const auto& [entity, scripts] : m_Registry.view<EntityScriptsComponent>().each())
-		{
-			for (const auto& script : scripts.scriptComponents)
-			{
-				script.instance;
-			}
-		}
+		if (!m_RuntimePlaying)
+			return;
+
+		ScriptSystem::on_scene_runtime_update();
+	}
+	void Scene::stop_runtime()
+	{
+		m_RuntimePlaying = false;
 	}
 
 	Entity Scene::add_entity()

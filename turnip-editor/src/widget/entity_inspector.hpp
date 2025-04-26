@@ -29,7 +29,7 @@ public:
 
 		ImGui::Separator();
 		
-		render_component_list(entity);
+		render_component_add_list(entity);
 
 		ImGui::End();
 	}
@@ -75,10 +75,16 @@ private:
 
 		if (scripts.empty())
 			return;
+
+		for (const auto& script : scripts)
+		{
+			if (ImGui::CollapsingHeader(script.className.c_str()))
+				ImGui::Text(script.className.c_str());
+		}
 	}
 
 private:
-	void render_component_list(Entity selectedEntity)
+	void render_component_add_list(Entity selectedEntity)
 	{
 		if (ImGui::Button("Add Component"))
 			ImGui::OpenPopup("AddComponentPopup");
@@ -93,6 +99,7 @@ private:
 
 			if (ImGui::MenuItem("Entity Script"))
 			{
+				// TODO: create a new .cs file. Ask which directory etc
 				InternalEntityScript script("Test");
 				selectedEntity.get_component<EntityScriptsComponent>().add(script);
 			}

@@ -1,4 +1,5 @@
 #include "pch.hpp"
+
 #include "script_internals.hpp"
 
 #include "core/script/script_system.hpp"
@@ -29,7 +30,7 @@ void log_critical(MonoString* message)
 	TUR_LOG_CRITICAL(mono_string_to_utf8(message));
 }
 
-MonoObject* get_component_internal_native(tur::u32 entityID, MonoReflectionType* reflectionType)
+MonoObject* get_component_native(tur::u32 entityID, MonoReflectionType* reflectionType)
 {
 	using namespace tur;
 
@@ -42,11 +43,28 @@ MonoObject* get_component_internal_native(tur::u32 entityID, MonoReflectionType*
 		MonoClass* transformClass = mono_class_from_name(ScriptSystem::s_LoadedImage, "TurnipScript", "Transform");
 		MonoObject* transformObject = mono_object_new(ScriptSystem::s_Domain, transformClass);
 
-		void* transformUnboxed = mono_object_unbox(transformObject);
+		MonoMethod* constructor = mono_class_get_method_from_name(transformClass, ".ctor", 1);
 
-		auto transform = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID)).transform;
-		memcpy(transformUnboxed, &transform, sizeof(Transform));
+		void* args[1] = { &entityID };
+		mono_runtime_invoke(constructor, transformObject, args, nullptr);
 
 		return transformObject;
 	}
+
+	return nullptr;
+}
+
+void get_transform_position_native(tur::u32 entityID, glm::vec3* outPosition)
+{
+	using namespace tur;
+
+	const auto& transform = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID)).transform;
+	*outPosition = transform.position;
+}
+void set_transform_position_native(tur::u32 entityID, glm::vec3* inPosition)
+{
+	using namespace tur;
+
+	auto& transform = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID)).transform;
+	transform.position = *inPosition;
 }

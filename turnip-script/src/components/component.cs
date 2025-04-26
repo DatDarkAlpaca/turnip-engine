@@ -1,6 +1,16 @@
-﻿namespace TurnipScript
+﻿using System;
+
+namespace TurnipScript
 {
-    public interface Component
+    public abstract class Component
     {
+        protected uint _entityID;
+
+        internal Component(uint entityID)
+        {
+            _entityID = entityID;
+        }
+
+        public uint ID => _entityID;
     }
 }
