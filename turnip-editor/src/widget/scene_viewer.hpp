@@ -1,6 +1,8 @@
 #pragma once
-#include <common.hpp>
+#include <turnip_engine.hpp>
 #include "scene_data.hpp"
+
+using namespace tur;
 
 class SceneViewer
 {
@@ -22,6 +24,10 @@ public:
 			if (sceneGraphComp.parent == entt::null)
 				render_scene_graph_node(entity);
 		}
+
+		ImGui::Dummy(ImVec2(0, ImGui::GetContentRegionAvail().y - ImGui::GetFrameHeight()));
+		if (ImGui::Button("Add Entity", ImVec2(-FLT_MIN, 0)))
+			add_empty_entity();
 
 		ImGui::End();
 	}
@@ -67,9 +73,12 @@ private:
 	}
 
 private:
+	void add_empty_entity()
+	{
+		m_SceneData->viewerSelectedEntity = m_Scene->add_entity();
+	}
+
+private:
 	NON_OWNING Scene* m_Scene = nullptr;
 	SceneData* m_SceneData = nullptr;
-
-	entt::entity m_RenamingEntity;
-	std::string m_RenameString;
 };

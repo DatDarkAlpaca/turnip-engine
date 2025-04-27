@@ -7,12 +7,6 @@ namespace tur
 	struct Transform
 	{
 	public:
-		Transform(const glm::mat4& transform)
-			: m_Transform(transform)
-		{
-
-		}
-
 		Transform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
 			: position(position)
 			, rotation(rotation)
@@ -20,6 +14,14 @@ namespace tur
 		{
 
 		}
+
+		Transform(const glm::mat4& transform)
+			: m_Transform(transform)
+		{
+
+		}
+		
+		Transform() = default;
 
 	public:
 		glm::mat4& transform()
@@ -37,11 +39,11 @@ namespace tur
 		}
 
 	public:
-		glm::vec3 position;
-		glm::vec3 rotation;
-		glm::vec3 scale;
+		glm::vec3 position = glm::vec3(0.0f);
+		glm::vec3 rotation = glm::vec3(0.0f);
+		glm::vec3 scale	   = glm::vec3(1.0f);
 
 	private:
-		glm::mat4 m_Transform;
+		glm::mat4 m_Transform = glm::mat4(1.0f);
 	};
 }

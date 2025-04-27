@@ -5,10 +5,7 @@ includedirs {
     "%{wks.location}/turnip-engine/src"
 }
 
-filter "system:windows"
-    postbuildcommands {
-        "{COPYFILE} %[%{binaries_path}/turnip-script/turnip-script.dll] %[%{prj.location}]" 
-    }
-    
-filter { }
+libdirs { ".", "bin" }
+links { "turnip-script.dll", "mono-2.0-sgen.dll" }
 
+debugdir "%{wks.location}/turnip-engine/"

@@ -3,8 +3,8 @@
 #include <vulkan/vulkan.hpp>
 #include <filesystem>
 
-#include "core/config/config_reader.hpp"
-#include "core/config/config_writer.hpp"
+#include "utils/json/json_reader.hpp"
+#include "utils/json/json_writer.hpp"
 
 #include "graphics/graphics_api.hpp"
 #include "common.hpp"
@@ -49,7 +49,7 @@ namespace tur
 		{
 			std::ofstream file(filepath.string());
 
-			ConfigWriter writer(filepath);
+			JsonWriter writer(filepath);
 			ConfigData defaultData;
 			writer.write(defaultData);
 		}

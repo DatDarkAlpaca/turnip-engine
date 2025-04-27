@@ -11,6 +11,7 @@ newaction {
         os.rmdir("./bin")
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
+        os.rmdir("./bin")
         
         os.remove("**.dll")
         os.remove("**.user")

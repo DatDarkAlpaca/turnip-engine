@@ -1,4 +1,5 @@
 #pragma once
+#include <portable-file-dialogs.h>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -37,5 +38,15 @@ namespace tur
 		file.close();
 
 		return data;
+	}
+
+	inline std::vector<std::string> open_file_dialog(const std::string& title, const std::vector<std::string>& filters = {}, bool allowMulti = false)
+	{
+		return pfd::open_file::open_file(title, "", filters, allowMulti).result();
+	}
+
+	inline std::string open_folder_dialog(const std::string& title)
+	{
+		return pfd::select_folder::select_folder(title, "").result();
 	}
 }

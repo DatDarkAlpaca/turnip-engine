@@ -32,10 +32,6 @@ namespace tur
 	public:
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform) 
-			: transform(transform) 
-		{ 
-		}
 		TransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
 			: transform(position, rotation, scale) 
 		{
@@ -46,7 +42,6 @@ namespace tur
 		{
 			return transform;
 		}
-
 		operator glm::mat4()
 		{
 			return transform.transform();

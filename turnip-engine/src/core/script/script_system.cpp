@@ -26,7 +26,7 @@ namespace tur
 	}
 	void ScriptSystem::load_assembly(const std::filesystem::path& filepath)
 	{
-		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, "turnip-script.dll");
+		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, filepath.string().c_str());
 		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
 	}
 

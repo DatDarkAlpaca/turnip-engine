@@ -1,11 +1,13 @@
 #pragma once
-#include <common.hpp>
+#include <turnip_engine.hpp>
 #include "scene_data.hpp"
+
+using namespace tur;
 
 class SceneEditor
 {
 public:
-	void initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING tur::Window* window, NON_OWNING SceneData* sceneData)
+	void initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING Window* window, NON_OWNING SceneData* sceneData)
 	{
 		r_GraphicsDevice = graphicsDevice;
 		r_SceneData = sceneData;
@@ -24,7 +26,7 @@ public:
 	}
 
 private:
-	NON_OWNING tur::GraphicsDevice* r_GraphicsDevice = nullptr;
-	NON_OWNING tur::Window* r_Window = nullptr;
+	NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
+	NON_OWNING Window* r_Window = nullptr;
 	NON_OWNING SceneData* r_SceneData = nullptr;
 };

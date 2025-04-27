@@ -18,10 +18,7 @@ public:
 		ImGui::Begin("Entity Inspector");
 
 		if (m_SceneData->viewerSelectedEntity == entt::null)
-		{
-			ImGui::End();
-			return;
-		}
+			return ImGui::End();
 		
 		Entity entity(m_SceneData->viewerSelectedEntity, m_Scene);
 
@@ -40,7 +37,8 @@ private:
 		if (selectedEntity.has_component<TransformComponent>())
 			render_transform_component(selectedEntity);
 		
-		render_script_component(selectedEntity);
+		if(!selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.empty())
+			render_script_component(selectedEntity);
 	}
 
 	void render_transform_component(Entity selectedEntity)
@@ -73,9 +71,6 @@ private:
 	{
 		auto& scripts = selectedEntity.get_component<EntityScriptsComponent>().scriptComponents;
 
-		if (scripts.empty())
-			return;
-
 		for (const auto& script : scripts)
 		{
 			if (ImGui::CollapsingHeader(script.className.c_str()))
@@ -86,16 +81,14 @@ private:
 private:
 	void render_component_add_list(Entity selectedEntity)
 	{
-		if (ImGui::Button("Add Component"))
+		ImGui::Dummy(ImVec2(0, ImGui::GetContentRegionAvail().y - ImGui::GetFrameHeight()));
+		if (ImGui::Button("Add Component", ImVec2(-FLT_MIN, 0)))
 			ImGui::OpenPopup("AddComponentPopup");
 
 		if (ImGui::BeginPopup("AddComponentPopup")) 
 		{
 			if (!selectedEntity.has_component<TransformComponent>() && ImGui::MenuItem("Transform"))
-			{
-				Transform transform(glm::mat4(1.0f));
-				selectedEntity.add_component<Transform>(transform);
-			}
+				selectedEntity.add_component<TransformComponent>();
 
 			if (ImGui::MenuItem("Entity Script"))
 			{
