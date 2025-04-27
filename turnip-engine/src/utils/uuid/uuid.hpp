@@ -15,8 +15,14 @@ namespace tur
 
 		}
 
+		UUID(u64 uuid)
+			: m_UUID(uuid)
+		{
+
+		}
+
 	public:
-		operator uint64_t() const { return m_UUID; }
+		operator u64() const { return m_UUID; }
 
 	private:
 		u64 m_UUID;

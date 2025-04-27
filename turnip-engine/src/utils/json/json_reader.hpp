@@ -43,6 +43,11 @@ namespace tur
 			return result;
 		}
 
+		nlohmann::json parse()
+		{
+			return read_json(m_Filepath);
+		}
+
 	private:
 		std::filesystem::path m_Filepath;
 	};

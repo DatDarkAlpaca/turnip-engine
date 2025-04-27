@@ -10,9 +10,11 @@ namespace tur
 {
 	struct ProjectData
 	{
+	public:
 		std::string projectName;
 		std::filesystem::path projectPath;
 
+	public:
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
 			ProjectData,
 			projectName,

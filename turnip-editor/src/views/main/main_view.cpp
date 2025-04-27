@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "main_view.hpp"
+#include <core/scene/scene_serialization.hpp>
 
 MainView::MainView(const ProjectData& projectData)
 	: m_ProjectData(projectData)
@@ -11,6 +12,17 @@ void MainView::set_project_data(const ProjectData& projectData)
 {
 	m_ProjectData = projectData;
 	append_window_title(m_ProjectData.projectName);
+
+	// Reset:
+	m_Scene.get_registry().clear();
+	m_SceneData.viewerSelectedEntity = entt::null;
+
+	// Deserialize main scene:
+	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
+		return;
+
+	SceneDeserializer deserializer(&m_Scene, projectData.projectPath / "scene.json");
+	deserializer.deserialize();
 }
 
 void MainView::on_view_added()
@@ -27,6 +39,11 @@ void MainView::on_view_added()
 }
 void MainView::on_update()
 {
+	if (m_SceneData.projectEdited)
+		append_window_title(m_ProjectData.projectName + "*");
+	else
+		append_window_title(m_ProjectData.projectName);
+
 	m_Scene.on_update_runtime();
 }
 void MainView::on_render_gui()
@@ -112,11 +129,6 @@ void MainView::initialize_renderer_system()
 		for (int y = 0; y < 10; ++y)
 			m_QuadRenderer.add_quad({ { x * size + size, y * size, 0.0f }, { size, size }, 0 });
 	}
-}
-
-void MainView::render_menu_bar()
-{
-	
 }
 
 void MainView::append_window_title(const std::string& extraText)

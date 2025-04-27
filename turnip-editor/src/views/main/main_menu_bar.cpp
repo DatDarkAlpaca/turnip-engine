@@ -2,6 +2,8 @@
 #include "main_view.hpp"
 #include "main_menu_bar.hpp"
 
+#include <core/scene/scene_serialization.hpp>
+
 void MainMenuBar::initialize(NON_OWNING MainView* mainView)
 {
 	r_MainView = mainView;
@@ -48,7 +50,7 @@ void MainMenuBar::on_file_new()
 
 	auto projectWrap = create_empty_project(projectName, projectFolderPath);
 	if (!projectWrap.has_value())
-		return ImGui::End();
+		return;
 
 	r_MainView->set_project_data(projectWrap.value());
 }
@@ -57,17 +59,18 @@ void MainMenuBar::on_file_open()
 	auto projectFilepaths = open_file_dialog("Open Project Folder", { "Project Files (.json)" });
 
 	if (projectFilepaths.empty())
-		return ImGui::End();
+		return;
 
 	auto projectWrap = read_project_file(projectFilepaths[0]);
 	if (!projectWrap.has_value())
-		return ImGui::End();
+		return;
 
 	r_MainView->set_project_data(projectWrap.value());
 }
 void MainMenuBar::on_file_save()
 {
-	// TODO: scene serialization	
+	SceneSerializer serializer(&r_MainView->m_Scene, r_MainView->m_ProjectData.projectPath / "scene.json");
+	serializer.serialize();
 }
 void MainMenuBar::on_file_save_as()
 {

@@ -70,12 +70,17 @@ private:
 
 			ImGui::TreePop();
 		}
+
+		// TODO: move entities
+		// TODO: entity hierarchy
+		// TODO: use projectEdited
 	}
 
 private:
 	void add_empty_entity()
 	{
 		m_SceneData->viewerSelectedEntity = m_Scene->add_entity();
+		m_SceneData->projectEdited = true;
 	}
 
 private:

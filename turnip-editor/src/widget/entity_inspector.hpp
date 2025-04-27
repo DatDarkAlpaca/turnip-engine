@@ -37,8 +37,11 @@ private:
 		if (selectedEntity.has_component<TransformComponent>())
 			render_transform_component(selectedEntity);
 		
-		if(!selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.empty())
-			render_script_component(selectedEntity);
+		if (selectedEntity.has_component<EntityScriptsComponent>())
+		{
+			if (!selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.empty())
+				render_script_component(selectedEntity);
+		}
 	}
 
 	void render_transform_component(Entity selectedEntity)
@@ -88,13 +91,18 @@ private:
 		if (ImGui::BeginPopup("AddComponentPopup")) 
 		{
 			if (!selectedEntity.has_component<TransformComponent>() && ImGui::MenuItem("Transform"))
+			{
 				selectedEntity.add_component<TransformComponent>();
+				m_SceneData->projectEdited = true;
+			}
 
 			if (ImGui::MenuItem("Entity Script"))
 			{
 				// TODO: create a new .cs file. Ask which directory etc
 				InternalEntityScript script("Test");
 				selectedEntity.get_component<EntityScriptsComponent>().add(script);
+
+				m_SceneData->projectEdited = true;
 			}
 			
 			ImGui::EndPopup();

@@ -10,6 +10,7 @@ namespace tur
 	{
 	public:
 		UUIDComponent() = default;
+		UUIDComponent(UUID uuid) : uuid(uuid) { }
 		UUIDComponent(const UUIDComponent&) = default;
 
 	public:
@@ -25,6 +26,17 @@ namespace tur
 
 	public:
 		std::string name;
+	};
+
+	struct SceneGraphComponent
+	{
+	public:
+		SceneGraphComponent() = default;
+		SceneGraphComponent(const SceneGraphComponent&) = default;
+
+	public:
+		entt::entity parent = entt::null;
+		std::vector<entt::entity> children;
 	};
 
 	struct TransformComponent 
@@ -49,17 +61,6 @@ namespace tur
 
 	public:
 		Transform transform;
-	};
-
-	struct SceneGraphComponent
-	{
-	public:
-		SceneGraphComponent() = default;
-		SceneGraphComponent(const SceneGraphComponent&) = default;
-
-	public:
-		entt::entity parent = entt::null;
-		std::vector<entt::entity> children;
 	};
 
 	struct TextureComponent
