@@ -3,6 +3,7 @@
 #include "script_internals.hpp"
 
 #include "core/engine/engine.hpp"
+#include "script_compiler.hpp"
 
 namespace tur
 {
@@ -29,10 +30,28 @@ namespace tur
 		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, filepath.string().c_str());
 		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
 	}
+	void ScriptSystem::load_user_assembly(const std::filesystem::path& filepath)
+	{
+		s_UserAssembly = mono_domain_assembly_open(s_Domain, filepath.string().c_str());
+		s_UserImage = mono_assembly_get_image(s_UserAssembly);
+	}
+
+	void ScriptSystem::set_project(const ProjectData& projectData)
+	{
+		s_ProjectData = projectData;
+	}
 
 	void ScriptSystem::on_scene_runtime_start(Scene* scene)
 	{
+		using namespace std::filesystem;
+
 		s_Scene = scene;
+
+		compile_solution(s_ProjectData.projectName, s_ProjectData.projectPath);
+	
+		std::string dllName = s_ProjectData.projectName + ".dll";
+		path assemblyPath = s_ProjectData.projectPath / path("bin") / dllName;
+		load_user_assembly(assemblyPath);
 
 		register_internal_calls();
 
@@ -47,7 +66,8 @@ namespace tur
 				if (!script.scriptData.instance)
 					populate_script_components();
 
-				mono_runtime_invoke(script.scriptData.updateMethod, script.scriptData.instance, nullptr, nullptr);
+				if(script.scriptData.updateMethod)
+					mono_runtime_invoke(script.scriptData.updateMethod, script.scriptData.instance, nullptr, nullptr);
 			}
 		}
 	}
@@ -62,8 +82,10 @@ namespace tur
 		mono_add_internal_call("TurnipScript.Internal::LogError", log_error);
 		mono_add_internal_call("TurnipScript.Internal::LogCritical", log_critical);
 
+		// Components:
 		mono_add_internal_call("TurnipScript.Internal::GetComponent_Native", get_component_native);
 
+		// Transform:
 		mono_add_internal_call("TurnipScript.Internal::GetTransformPosition_Native", get_transform_position_native);
 		mono_add_internal_call("TurnipScript.Internal::SetTransformPosition_Native", set_transform_position_native);
 	}
@@ -79,7 +101,7 @@ namespace tur
 
 	void ScriptSystem::instantiate_entity_object(const std::string& className, entt::entity entityID, EntityScriptData& data)
 	{
-		MonoClass* entityClass = mono_class_from_name(s_LoadedImage, "TurnipScript", className.c_str());
+		MonoClass* entityClass = mono_class_from_name(s_UserImage, "TurnipScript", className.c_str());
 		data.instance = mono_object_new(s_Domain, entityClass);
 
 		mono_runtime_object_init(data.instance);

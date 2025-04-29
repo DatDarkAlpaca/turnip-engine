@@ -9,34 +9,6 @@
 
 #include "core/script/script_compiler.hpp"
 
-namespace
-{
-	static inline void create_project_csproj_file(const std::string& projectName, const std::filesystem::path& projectFolder)
-	{
-		std::string fileContents = R"(
-		<Project Sdk="Microsoft.NET.Sdk">
-			<PropertyGroup>
-				<OutputType>Library</OutputType>
-				<TargetFramework>net6.0</TargetFramework>
-				<IsPackable>false</IsPackable>
-			</PropertyGroup>
-
-			<ItemGroup>
-				<Reference Include="MvcMiniProfiler">
-					<HintPath>./bin/turnip-script.dll</HintPath>
-				</Reference>
-			</ItemGroup>
-		</Project>
-		)";
-
-		std::string csFilepath = projectName + ".csproj";
-		std::ofstream scriptFile(projectFolder / csFilepath);
-		scriptFile << fileContents << '\n';
-
-		scriptFile.close();
-	}
-}
-
 namespace tur
 {
 	struct ProjectData
@@ -74,10 +46,8 @@ namespace tur
 		create_directory(binPath);
 		create_directory(options.projectFolder / "assets");
 
-		// copies turnip-script.dll to bin/
+		// copies turnip-script.dll to bin/ and create a solution
 		copy_file(options.domainFilepath, binPath / "turnip-script.dll", std::filesystem::copy_options::overwrite_existing);
-
-		create_project_csproj_file(options.projectName, options.projectFolder);
 		create_solution(options.projectName, options.projectFolder);
 
 		ProjectData projectData;

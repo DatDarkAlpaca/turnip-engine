@@ -11,11 +11,12 @@ MainView::MainView(const ProjectData& projectData)
 void MainView::set_project_data(const ProjectData& projectData)
 {
 	m_ProjectData = projectData;
-	append_window_title(m_ProjectData.projectName);
 
 	// Reset:
 	m_Scene.get_registry().clear();
 	m_SceneData.viewerSelectedEntity = entt::null;
+
+	ScriptSystem::set_project(m_ProjectData);
 
 	// Deserialize main scene:
 	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
