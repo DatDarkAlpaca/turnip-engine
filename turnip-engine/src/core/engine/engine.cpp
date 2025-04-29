@@ -17,7 +17,7 @@ namespace tur
 		// Config:
 		initialize_config_data(configPath);
 
-		ConfigReader configReader(configPath);
+		JsonReader configReader(configPath);
 		m_ConfigData = configReader.parse<ConfigData>();
 
 		// Worker Pool:
@@ -37,14 +37,13 @@ namespace tur
 
 		// Scripting:
 		ScriptSystem::initialize(m_ConfigData, this);
-		ScriptSystem::load_assembly("turnip-script.dll");
+		ScriptSystem::load_assembly(m_ConfigData.scriptingInfo.mainDomainPath);
 	}
-
 	void TurnipEngine::run()
 	{
 		on_engine_startup();
 
-		while (is_open_window(&m_Window))
+		while (is_open_window(&m_Window) && !m_RequestShutdown)
 		{
 			poll_events(&m_Window);
 			m_WorkerPool.poll_tasks();
@@ -56,15 +55,14 @@ namespace tur
 			m_GraphicsDevice.present();
 		}
 
-		shutdown();
-	}
-
-	void TurnipEngine::shutdown()
-	{
 		on_engine_shutdown();
 
 		shutdown_window(&m_Window);
 		shutdown_windowing_system();
+	}
+	void TurnipEngine::shutdown()
+	{
+		m_RequestShutdown = true;
 	}
 
 	void TurnipEngine::add_view(tur_unique<View> view)
@@ -72,13 +70,16 @@ namespace tur
 		view->set_engine(this);
 		view_system_add(&m_ViewSystem, std::move(view));
 	}
-
+	void TurnipEngine::remove_view(u32 handle)
+	{
+		view_system_remove(&m_ViewSystem, handle);
+	}
+	
 	void TurnipEngine::on_engine_startup()
 	{
 		for (const auto& view : m_ViewSystem.views)
 			view->on_engine_startup();
 	}
-
 	void TurnipEngine::on_render()
 	{
 		m_GraphicsDevice.begin_gui_frame();
@@ -91,19 +92,16 @@ namespace tur
 
 		m_GraphicsDevice.end_gui_frame();
 	}
-
 	void TurnipEngine::on_update()
 	{
 		for (const auto& view : m_ViewSystem.views)
 			view->on_update();
 	}
-
 	void TurnipEngine::on_event(Event& event)
 	{
 		for (const auto& view : m_ViewSystem.views)
 			view->on_event(event);
 	}
-
 	void TurnipEngine::on_engine_shutdown()
 	{
 		for (const auto& view : m_ViewSystem.views)

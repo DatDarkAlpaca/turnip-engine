@@ -15,23 +15,18 @@ namespace tur
 	{
 	public:
 		void initialize(const std::filesystem::path& configPath);
-
 		void run();
-
 		void shutdown();
 
 	public:	 
 		void add_view(tur_unique<View> view);
-			 
+		void remove_view(u32 handle);
+
 	public:
 		void on_engine_startup();
-			 
 		void on_render();
-			 
 		void on_update();
-			 
 		void on_event(Event& event);
-			 
 		void on_engine_shutdown();
 
 	public:
@@ -50,5 +45,8 @@ namespace tur
 		ConfigData m_ConfigData;
 		WorkerPool m_WorkerPool;
 		GraphicsDevice m_GraphicsDevice;
+
+	private:
+		bool m_RequestShutdown = false;
 	};
 }

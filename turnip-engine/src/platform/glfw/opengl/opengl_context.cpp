@@ -54,6 +54,7 @@ namespace tur::gl
 		glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 		glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 		initialize_window(window, properties);
 
@@ -94,6 +95,7 @@ namespace tur::gl
 
 	void end_opengl_frame()
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -20,6 +20,10 @@ namespace tur
 		{
 			r_Engine = engine;
 		}
+		void set_handle(u32 handle)
+		{
+			viewHandle = handle;
+		}
 
 	public:
 		virtual void on_engine_startup() { };
@@ -40,6 +44,7 @@ namespace tur
 
 	protected:
 		NON_OWNING TurnipEngine* r_Engine = nullptr;
+		u32 viewHandle;
 	};
 }
 namespace tur
@@ -52,9 +57,12 @@ namespace tur
 	inline view_handle view_system_add(ViewSystem* system, tur_unique<View> view)
 	{
 		view->on_view_added();
-
 		system->views.push_back(std::move(view));
-		return static_cast<view_handle>(system->views.size() - 1);
+
+		u32 handle = static_cast<view_handle>(system->views.size() - 1);
+		system->views[handle]->set_handle(handle);
+
+		return handle;
 	}
 
 	inline void view_system_remove(ViewSystem* system, view_handle handle)

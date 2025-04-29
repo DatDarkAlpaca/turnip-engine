@@ -58,7 +58,9 @@ void get_transform_position_native(tur::u32 entityID, glm::vec3* outPosition)
 {
 	using namespace tur;
 
-	const auto& transform = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID)).transform;
+	auto x = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID));
+
+	const auto& transform = x.transform;
 	*outPosition = transform.position;
 }
 void set_transform_position_native(tur::u32 entityID, glm::vec3* inPosition)

@@ -10,6 +10,7 @@ namespace tur
 	{
 	public:
 		UUIDComponent() = default;
+		UUIDComponent(UUID uuid) : uuid(uuid) { }
 		UUIDComponent(const UUIDComponent&) = default;
 
 	public:
@@ -27,15 +28,22 @@ namespace tur
 		std::string name;
 	};
 
+	struct SceneGraphComponent
+	{
+	public:
+		SceneGraphComponent() = default;
+		SceneGraphComponent(const SceneGraphComponent&) = default;
+
+	public:
+		entt::entity parent = entt::null;
+		std::vector<entt::entity> children;
+	};
+
 	struct TransformComponent 
 	{
 	public:
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform) 
-			: transform(transform) 
-		{ 
-		}
 		TransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
 			: transform(position, rotation, scale) 
 		{
@@ -46,7 +54,6 @@ namespace tur
 		{
 			return transform;
 		}
-
 		operator glm::mat4()
 		{
 			return transform.transform();
@@ -54,17 +61,6 @@ namespace tur
 
 	public:
 		Transform transform;
-	};
-
-	struct SceneGraphComponent
-	{
-	public:
-		SceneGraphComponent() = default;
-		SceneGraphComponent(const SceneGraphComponent&) = default;
-
-	public:
-		entt::entity parent = entt::null;
-		std::vector<entt::entity> children;
 	};
 
 	struct TextureComponent

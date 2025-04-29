@@ -17,6 +17,8 @@ workspace "turnip-engine"
 		"MultiProcessorCompile"
 	}
 
+    os.mkdir("bin")
+
 output_path         = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 binaries_path       = "%{wks.location}/build/bin/" .. "%{output_path}"
 intermediate_path   = "%{wks.location}/build/intermediate/" .. "%{output_path}"

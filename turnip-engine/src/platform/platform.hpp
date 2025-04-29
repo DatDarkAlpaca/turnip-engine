@@ -8,3 +8,11 @@
 	#include "glfw/window_glfw.hpp"
 	#include "glfw/events_glfw.hpp"
 #endif
+
+namespace tur
+{
+	inline int run_command(const std::string& command)
+	{
+		return std::system(command.c_str());
+	}
+}

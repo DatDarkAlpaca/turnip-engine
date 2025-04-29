@@ -1,0 +1,167 @@
+#pragma once
+#include "scene.hpp"
+#include "components.hpp"
+
+#include "utils/json/json_writer.hpp"
+#include "utils/json/json_reader.hpp"
+
+namespace tur
+{
+	class SceneSerializer
+	{
+	public:
+		explicit SceneSerializer(NON_OWNING Scene* scene, const std::filesystem::path& filepath)
+			: r_Scene(scene)
+			, m_Writer(filepath)
+		{
+		}
+
+	public:
+		void serialize()
+		{
+			auto& registry = r_Scene->get_registry();
+
+			nlohmann::json json;
+			
+			auto eid = [&](entt::entity entity) { return std::to_string(static_cast<u32>(entity)); };
+
+			for (const auto& [entity, uuid] : registry.view<UUIDComponent>().each())
+			{
+				json[eid(entity)]["uuid"] = static_cast<u32>(uuid.uuid);
+			}
+
+			for (const auto& [entity, nameComponent] : registry.view<NameComponent>().each())
+			{
+				json[eid(entity)]["name"] = nameComponent.name;
+			}
+
+			for (const auto& [entity, sceneGraph] : registry.view<SceneGraphComponent>().each())
+			{
+				json[eid(entity)]["sceneGraph"]["parent"] = static_cast<u32>(sceneGraph.parent);
+				json[eid(entity)]["sceneGraph"]["children"] = sceneGraph.children;
+			}
+		
+			for (const auto& [entity, tranformComponent] : registry.view<TransformComponent>().each())
+			{
+				const auto& transform = tranformComponent.transform;
+
+				json[eid(entity)]["transform"]["position"]["x"] = transform.position.x;
+				json[eid(entity)]["transform"]["position"]["y"] = transform.position.y;
+				json[eid(entity)]["transform"]["position"]["z"] = transform.position.z;
+
+				json[eid(entity)]["transform"]["rotation"]["x"] = transform.rotation.x;
+				json[eid(entity)]["transform"]["rotation"]["y"] = transform.rotation.y;
+				json[eid(entity)]["transform"]["rotation"]["z"] = transform.rotation.z;
+
+				json[eid(entity)]["transform"]["scale"]["x"]    = transform.scale.x;
+				json[eid(entity)]["transform"]["scale"]["y"]    = transform.scale.y;
+				json[eid(entity)]["transform"]["scale"]["z"]    = transform.scale.z;
+			}
+
+			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
+			{
+				for (const auto& script : scripts.scriptComponents)
+					json[eid(entity)]["scripts"].push_back(script.className);
+			}
+
+			m_Writer.write(json);
+		}
+
+	private:
+		NON_OWNING Scene* r_Scene = nullptr;
+		JsonWriter m_Writer;
+	};
+
+	class SceneDeserializer
+	{
+	public:
+		explicit SceneDeserializer(NON_OWNING Scene* scene, const std::filesystem::path& filepath)
+			: r_Scene(scene)
+			, m_Reader(filepath)
+		{
+		}
+
+	public:
+		void deserialize()
+		{
+			auto& registry = r_Scene->get_registry();
+
+			nlohmann::json json = m_Reader.parse();
+
+			for (const auto& [entityKey, entityObj] : json.items())
+			{
+				u32 eid = static_cast<u32>(std::stod(entityKey));
+				entt::entity entity = registry.create(entt::entity(eid));
+
+				if (entityObj.contains("uuid"))
+				{
+					UUIDComponent uuidComponent({ static_cast<u64>(entityObj["uuid"])});
+					registry.emplace<UUIDComponent>(entity, uuidComponent);
+				}
+
+				if (entityObj.contains("name"))
+				{
+					NameComponent nameComponent(entityObj["name"]);
+					registry.emplace<NameComponent>(entity, nameComponent);
+				}
+
+				if (entityObj.contains("sceneGraph"))
+				{
+					SceneGraphComponent sceneGraphComponent;
+					sceneGraphComponent.parent = entityObj["sceneGraph"]["parent"];
+
+					if (entityObj["sceneGraph"].contains("children"))
+					{
+						for (const auto& child : entityObj["sceneGraph"]["children"])
+							sceneGraphComponent.children.push_back(entt::entity(child));
+					}
+
+					registry.emplace<SceneGraphComponent>(entity, sceneGraphComponent);
+				}
+
+				if (entityObj.contains("transform"))
+				{
+					TransformComponent transformComponent;
+					auto& transform = transformComponent.transform;
+
+					{
+						transform.position.x = entityObj["transform"]["position"]["x"];
+						transform.position.y = entityObj["transform"]["position"]["y"];
+						transform.position.z = entityObj["transform"]["position"]["z"];
+
+						transform.rotation.x = entityObj["transform"]["rotation"]["x"];
+						transform.rotation.y = entityObj["transform"]["rotation"]["y"];
+						transform.rotation.z = entityObj["transform"]["rotation"]["z"];
+
+						transform.scale.x    = entityObj["transform"]["scale"]["x"];
+						transform.scale.y    = entityObj["transform"]["scale"]["y"];
+						transform.scale.z    = entityObj["transform"]["scale"]["z"];
+					}
+					
+					registry.emplace<TransformComponent>(entity, transformComponent);
+				}
+
+				if (entityObj.contains("scripts"))
+				{
+					EntityScriptsComponent scriptsComponent;
+					
+					if (!entityObj["scripts"].empty())
+					{
+						for (const auto& className : entityObj["scripts"])
+						{
+							InternalEntityScript internalScript;
+							internalScript.className = className;
+							scriptsComponent.scriptComponents.push_back(internalScript);
+						}
+					}
+
+					registry.emplace<EntityScriptsComponent>(entity, scriptsComponent);
+				}
+			}
+		}
+
+	private:
+		NON_OWNING Scene* r_Scene = nullptr;
+		JsonReader m_Reader;
+	};
+}

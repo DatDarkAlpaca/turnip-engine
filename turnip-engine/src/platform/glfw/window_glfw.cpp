@@ -165,7 +165,6 @@ namespace tur
 		if (!glfwInit())
 			TUR_LOG_CRITICAL("Failed to initialize the platform system.");
 	}
-
 	void shutdown_windowing_system()
 	{
 		glfwTerminate();
@@ -194,12 +193,10 @@ namespace tur
 		set_properties_window(window, properties);
 		set_window_events(window);
 	}
-
 	void set_callback_window(Window* window, EventCallback&& callback)
 	{
 		window->data.eventCallback = callback;
 	}
-
 	void poll_events(Window* window)
 	{
 		glfwPollEvents();
@@ -228,6 +225,10 @@ namespace tur
 		// Title:
 		glfwSetWindowTitle(windowGlfw, properties.title.c_str());
 	}
+	void set_window_title(Window* window, const std::string& title)
+	{
+		glfwSetWindowTitle(window->window, title.c_str());
+	}
 
 	void shutdown_window(Window* window)
 	{
@@ -243,7 +244,6 @@ namespace tur
 	{
 		glfwShowWindow(window->window);
 	}
-
 	void hide_window(Window* window)
 	{
 		glfwHideWindow(window->window);
