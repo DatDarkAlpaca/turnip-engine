@@ -12,27 +12,39 @@ namespace tur
 		using namespace std::filesystem;
 		const auto& scriptData = configData.scriptingInfo;
 
+		s_ConfigData = configData;
 		r_Engine = engine;
-
+		
 		path sdkVariable = std::getenv(scriptData.monoSDKvariable.c_str());
 		path assembliesFullPath = sdkVariable / scriptData.monoAssembliesPath;
 		path configFullPath = sdkVariable / scriptData.monoConfigPath;
 		mono_set_dirs(assembliesFullPath.string().c_str(), configFullPath.string().c_str());
 
-		s_Domain = mono_jit_init_version(scriptData.domainName.c_str(), scriptData.monoVersion.c_str());
+		load_domain();
+		load_assembly();
+	}
+
+	void ScriptSystem::load_domain()
+	{
+		s_Domain = mono_jit_init_version(s_ConfigData.scriptingInfo.domainName.c_str(), s_ConfigData.scriptingInfo.monoVersion.c_str());
 		TUR_ASSERT(s_Domain, "Failed to initialize JIT");
 
 		mono_domain_set(s_Domain, false);
 		mono_thread_set_main(mono_thread_current());
 	}
-	void ScriptSystem::load_assembly(const std::filesystem::path& filepath)
+	void ScriptSystem::load_assembly()
 	{
-		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, filepath.string().c_str());
+		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, s_ConfigData.scriptingInfo.mainDomainPath.c_str());
 		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
 	}
-	void ScriptSystem::load_user_assembly(const std::filesystem::path& filepath)
+	void ScriptSystem::load_user_assembly()
 	{
-		s_UserAssembly = mono_domain_assembly_open(s_Domain, filepath.string().c_str());
+		using namespace std::filesystem;
+
+		std::string dllName = s_ProjectData.projectName + ".dll";
+		path assemblyPath = s_ProjectData.projectPath / path("bin") / dllName;
+
+		s_UserAssembly = mono_domain_assembly_open(s_Domain, assemblyPath.string().c_str());
 		s_UserImage = mono_assembly_get_image(s_UserAssembly);
 	}
 
@@ -49,9 +61,7 @@ namespace tur
 
 		compile_solution(s_ProjectData.projectName, s_ProjectData.projectPath);
 	
-		std::string dllName = s_ProjectData.projectName + ".dll";
-		path assemblyPath = s_ProjectData.projectPath / path("bin") / dllName;
-		load_user_assembly(assemblyPath);
+		reload_system();
 
 		register_internal_calls();
 
@@ -70,6 +80,12 @@ namespace tur
 					mono_runtime_invoke(script.scriptData.updateMethod, script.scriptData.instance, nullptr, nullptr);
 			}
 		}
+	}
+
+	void ScriptSystem::reload_system()
+	{
+		load_user_assembly();
+		// Unload app domain and restart it all
 	}
 
 	void ScriptSystem::register_internal_calls()

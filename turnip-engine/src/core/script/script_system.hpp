@@ -18,8 +18,10 @@ namespace tur
 	{
 	public:
 		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
-		static void load_assembly(const std::filesystem::path& filepath);
-		static void load_user_assembly(const std::filesystem::path& filepath);
+		
+		static void load_domain();
+		static void load_assembly();
+		static void load_user_assembly();
 
 		static void set_project(const ProjectData& projectData);
 
@@ -28,6 +30,8 @@ namespace tur
 		static void on_scene_runtime_update();
 
 	private:
+		static void reload_system();
+		
 		static void register_internal_calls();
 
 	private:
@@ -43,7 +47,6 @@ namespace tur
 
 		static inline MonoAssembly* s_LoadedAssembly = nullptr;
 		static inline MonoAssembly* s_UserAssembly = nullptr;
-
 		static inline MonoImage* s_LoadedImage = nullptr;
 		static inline MonoImage* s_UserImage = nullptr;
 
@@ -51,6 +54,7 @@ namespace tur
 		static inline tur::Scene* s_Scene = nullptr;
 
 	private:
+		static inline ConfigData s_ConfigData;
 		static inline ProjectData s_ProjectData;
 	};
 }

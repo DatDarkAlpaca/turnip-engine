@@ -61,7 +61,13 @@ namespace tur
 			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
 			{
 				for (const auto& script : scripts.scriptComponents)
-					json[eid(entity)]["scripts"].push_back(script.className);
+				{
+					nlohmann::json scriptJson;
+					scriptJson["className"] = script.className;
+					scriptJson["filepath"] = script.filepath;
+
+					json[eid(entity)]["scripts"].push_back(scriptJson);
+				}
 			}
 
 			m_Writer.write(json);
@@ -147,10 +153,11 @@ namespace tur
 					
 					if (!entityObj["scripts"].empty())
 					{
-						for (const auto& className : entityObj["scripts"])
+						for (const auto& script : entityObj["scripts"])
 						{
 							InternalEntityScript internalScript;
-							internalScript.className = className;
+							internalScript.className = script["className"];
+							internalScript.filepath = std::string(script["filepath"]);
 							scriptsComponent.scriptComponents.push_back(internalScript);
 						}
 					}

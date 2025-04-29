@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <filesystem>
 #include <mono/jit/jit.h>
 
 namespace tur
@@ -21,10 +22,15 @@ namespace tur
 	public:
 		InternalEntityScript() = default;
 		InternalEntityScript(const InternalEntityScript&) = default;
-		InternalEntityScript(const std::string& className) : className(className) {}
+		InternalEntityScript(const std::string& className, const std::filesystem::path& filepath) 
+			: className(className) 
+			, filepath(filepath)
+		{
+		}
 
 	public:
 		std::string className;
+		std::filesystem::path filepath;
 		EntityScriptData scriptData;
 	};
 

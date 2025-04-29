@@ -77,7 +77,11 @@ private:
 		for (const auto& script : scripts)
 		{
 			if (ImGui::CollapsingHeader(script.className.c_str()))
-				ImGui::Text(script.className.c_str());
+			{
+				std::string buttonName = script.className + "##ExplorerButton";
+				if (ImGui::Button(buttonName.c_str()))
+					open_in_explorer(script.filepath);
+			}
 		}
 	}
 
@@ -112,6 +116,7 @@ private:
 				InternalEntityScript script;
 				{
 					script.className = className;
+					script.filepath = correctedPath;
 					selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.push_back(script);
 				}
 				

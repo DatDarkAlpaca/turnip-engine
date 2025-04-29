@@ -36,8 +36,7 @@ namespace tur
 		m_GraphicsDevice.initialize_gui_graphics_system();
 
 		// Scripting:
-		ScriptSystem::initialize(m_ConfigData, this);
-		ScriptSystem::load_assembly(m_ConfigData.scriptingInfo.mainDomainPath);
+		ScriptSystem::initialize(m_ConfigData, this);	
 	}
 	void TurnipEngine::run()
 	{

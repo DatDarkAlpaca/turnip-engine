@@ -15,4 +15,24 @@ namespace tur
 	{
 		return std::system(command.c_str());
 	}
+
+	inline void open_in_explorer(const std::filesystem::path& filepath)
+	{
+#ifdef TUR_PLATFORM_WIN32
+		std::string command = "explorer " + filepath.parent_path().string();
+		std::system(command.c_str());
+#endif
+
+#ifdef TUR_PLATFORM_LINUX
+		// Also handle nautilus, gnome, etc
+		std::string command = "xdg-open " + filepath.string();
+		std::system(command.c_str());
+#endif
+
+#ifdef TUR_PLATFORM_MACOS
+		// If that runs that's a miracle
+		std::string command = "open " + filepath.string();
+		std::system(command.c_str());
+#endif
+	}
 }
