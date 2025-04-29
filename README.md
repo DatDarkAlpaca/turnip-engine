@@ -19,13 +19,16 @@ To build this project, you'll need to install the following:
 * [Conan 2.0](https://conan.io/downloads)
 * [Vulkan](https://vulkan.lunarg.com/#new_tab)
 * [Premake 5](https://github.com/premake/premake-core/releases)
+* [Mono](https://www.mono-project.com/download/stable/)
+* [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 You may need to set these environment variables if they aren't automatically detected:
 1. **Vulkan**:
     Set `VULKAN_SDK` to point to your Vulkan SDK installation (e.g., C:/Vulkan/<version>).
 2. **Mono**:
     Likewise, set `MONO_SDK` to point to your Mono installation directory (e.g., C:/Program Files (x86)/Mono).
-3. **Premake**:
+    You must also have .NET installed and properly configured - the project calls `dotnet` commands internally.
+4. **Premake**:
     Ensure the directory containing premake5 is added to your system's PATH.
 
 
