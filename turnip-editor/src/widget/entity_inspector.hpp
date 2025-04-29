@@ -97,37 +97,25 @@ private:
 			}
 
 			if (ImGui::MenuItem("Entity Script"))
-				m_OpenScriptPopup = true;
-
-			ImGui::EndPopup();
-		}
-
-		if (m_OpenScriptPopup)
-		{
-			ImGui::OpenPopup("EntityScriptAdd");
-			m_OpenScriptPopup = false;
-		}
-
-		if (ImGui::BeginPopupModal("EntityScriptAdd"))
-		{
-			static char scriptName[32] = {};
-			ImGui::Text("Script Name:"); ImGui::SameLine();
-			ImGui::InputText("##ScriptName", scriptName, 32);
-
-			if (ImGui::Button("Add"))
 			{
-				InternalEntityScript script(scriptName);
-				selectedEntity.get_component<EntityScriptsComponent>().add(script);
+				using namespace std::filesystem;
 
+				auto scriptFilepath = path(save_file_dialog("New Script", { "Script files (.cs)", "*.cs" }));
+				if (scriptFilepath.empty())
+					return ImGui::EndPopup();
+
+				path correctedPath = scriptFilepath.replace_extension(".cs");
+
+				std::string className = scriptFilepath.filename().replace_extension("").string();
+				create_empty_script(correctedPath, className);
+
+				InternalEntityScript script;
+				{
+					script.className = className;
+					selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.push_back(script);
+				}
+				
 				m_SceneData->projectEdited = true;
-
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel"))
-			{
-				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::EndPopup();
@@ -137,8 +125,4 @@ private:
 private:
 	NON_OWNING Scene* m_Scene = nullptr;
 	SceneData* m_SceneData = nullptr;
-
-private:
-	bool m_OpenScriptPopup = false;
-	char m_SearchString[32];
 };

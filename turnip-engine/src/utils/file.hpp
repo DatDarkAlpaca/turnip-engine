@@ -40,9 +40,17 @@ namespace tur
 		return data;
 	}
 
+	inline std::string save_file_dialog(const std::string& title, const std::vector<std::string>& filters = {})
+	{
+		return pfd::save_file::save_file(title, "", filters).result();
+	}
+
 	inline std::vector<std::string> open_file_dialog(const std::string& title, const std::vector<std::string>& filters = {}, bool allowMulti = false)
 	{
-		return pfd::open_file::open_file(title, "", filters, allowMulti).result();
+		if (!allowMulti)
+			return pfd::open_file::open_file(title, "", filters).result();
+		else
+			return pfd::open_file::open_file(title, "", filters, pfd::opt::multiselect).result();
 	}
 
 	inline std::string open_folder_dialog(const std::string& title)

@@ -14,6 +14,5 @@ public:
 	void on_render_gui();
 
 private:
-	std::string projectName;
 	bool m_IsOpen = true;
 };

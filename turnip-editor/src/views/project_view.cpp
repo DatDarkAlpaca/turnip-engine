@@ -19,17 +19,19 @@ void ProjectView::on_render_gui()
 
 	if (ImGui::Begin("Project Editor", &m_IsOpen, ImGuiWindowFlags_NoCollapse))
 	{
-		static char projectNameBuffer[256] = "";
-
-		ImGui::InputText("Project Name", projectNameBuffer, 256);
-		
 		if (ImGui::Button("Create New Project"))
 		{
-			projectName = projectNameBuffer;
+			auto projectFolderPath = std::filesystem::path(open_folder_dialog("Open Project Folder"));
+			std::string projectName = projectFolderPath.filename().string();
 
-			auto projectFolderPath = open_folder_dialog("Open Project Folder");
+			ProjectOptions options;
+			{
+				options.projectName = projectName;
+				options.projectFolder = projectFolderPath;
+				options.domainFilepath = r_Engine->get_config_data().scriptingInfo.mainDomainPath;
+			}
 
-			auto projectWrap = create_empty_project(projectName, projectFolderPath);
+			auto projectWrap = create_empty_project(options);
 			if (!projectWrap.has_value())
 				return ImGui::End();
 

@@ -41,14 +41,17 @@ void MainMenuBar::on_render()
 
 void MainMenuBar::on_file_new()
 {
-	// TODO: open popup
+	auto projectFolderPath = std::filesystem::path(open_folder_dialog("Open Project Folder"));
+	std::string projectName = projectFolderPath.filename().string();
 
-	static char projectNameBuffer[256] = "";
-	static std::string projectName = projectNameBuffer;
+	ProjectOptions options;
+	{
+		options.projectName = projectName;
+		options.projectFolder = projectFolderPath;
+		options.domainFilepath = r_MainView->r_Engine->get_config_data().scriptingInfo.mainDomainPath;
+	}
 
-	auto projectFolderPath = open_folder_dialog("Open Project Folder");
-
-	auto projectWrap = create_empty_project(projectName, projectFolderPath);
+	auto projectWrap = create_empty_project(options);
 	if (!projectWrap.has_value())
 		return;
 
