@@ -58,7 +58,11 @@ namespace tur
 				json[eid(entity)]["transform"]["scale"]["z"]    = transform.scale.z;
 			}
 
-			// TODO: add script filepath data to component.
+			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
+			{
+				for (const auto& script : scripts.scriptComponents)
+					json[eid(entity)]["scripts"].push_back(script.className);
+			}
 
 			m_Writer.write(json);
 		}
@@ -135,6 +139,23 @@ namespace tur
 					}
 					
 					registry.emplace<TransformComponent>(entity, transformComponent);
+				}
+
+				if (entityObj.contains("scripts"))
+				{
+					EntityScriptsComponent scriptsComponent;
+					
+					if (!entityObj["scripts"].empty())
+					{
+						for (const auto& className : entityObj["scripts"])
+						{
+							InternalEntityScript internalScript;
+							internalScript.className = className;
+							scriptsComponent.scriptComponents.push_back(internalScript);
+						}
+					}
+
+					registry.emplace<EntityScriptsComponent>(entity, scriptsComponent);
 				}
 			}
 		}

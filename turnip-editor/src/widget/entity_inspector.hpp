@@ -88,7 +88,7 @@ private:
 		if (ImGui::Button("Add Component", ImVec2(-FLT_MIN, 0)))
 			ImGui::OpenPopup("AddComponentPopup");
 
-		if (ImGui::BeginPopup("AddComponentPopup")) 
+		if (ImGui::BeginPopup("AddComponentPopup"))
 		{
 			if (!selectedEntity.has_component<TransformComponent>() && ImGui::MenuItem("Transform"))
 			{
@@ -97,14 +97,39 @@ private:
 			}
 
 			if (ImGui::MenuItem("Entity Script"))
+				m_OpenScriptPopup = true;
+
+			ImGui::EndPopup();
+		}
+
+		if (m_OpenScriptPopup)
+		{
+			ImGui::OpenPopup("EntityScriptAdd");
+			m_OpenScriptPopup = false;
+		}
+
+		if (ImGui::BeginPopupModal("EntityScriptAdd"))
+		{
+			static char scriptName[32] = {};
+			ImGui::Text("Script Name:"); ImGui::SameLine();
+			ImGui::InputText("##ScriptName", scriptName, 32);
+
+			if (ImGui::Button("Add"))
 			{
-				// TODO: create a new .cs file. Ask which directory etc
-				InternalEntityScript script("Test");
+				InternalEntityScript script(scriptName);
 				selectedEntity.get_component<EntityScriptsComponent>().add(script);
 
 				m_SceneData->projectEdited = true;
+
+				ImGui::CloseCurrentPopup();
 			}
-			
+
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 	}
@@ -112,4 +137,8 @@ private:
 private:
 	NON_OWNING Scene* m_Scene = nullptr;
 	SceneData* m_SceneData = nullptr;
+
+private:
+	bool m_OpenScriptPopup = false;
+	char m_SearchString[32];
 };

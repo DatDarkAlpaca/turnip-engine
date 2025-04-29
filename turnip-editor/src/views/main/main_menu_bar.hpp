@@ -3,7 +3,7 @@
 
 class MainView;
 
-struct MainMenuBar
+class MainMenuBar
 {
 public:
 	void initialize(NON_OWNING MainView* mainView);

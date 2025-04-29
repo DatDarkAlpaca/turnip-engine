@@ -71,10 +71,13 @@ void MainMenuBar::on_file_save()
 {
 	SceneSerializer serializer(&r_MainView->m_Scene, r_MainView->m_ProjectData.projectPath / "scene.json");
 	serializer.serialize();
+
+	r_MainView->m_SceneData.projectEdited = false;
 }
 void MainMenuBar::on_file_save_as()
 {
-	// TODO: scene serialization
+	// TODO
+	r_MainView->m_SceneData.projectEdited = false;
 }
 void MainMenuBar::on_file_close()
 {
