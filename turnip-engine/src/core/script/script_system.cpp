@@ -21,6 +21,9 @@ namespace tur
 		mono_set_dirs(assembliesFullPath.string().c_str(), configFullPath.string().c_str());
 
 		load_domain();
+
+		load_app_domain();
+
 		load_assembly();
 	}
 
@@ -32,9 +35,14 @@ namespace tur
 		mono_domain_set(s_Domain, false);
 		mono_thread_set_main(mono_thread_current());
 	}
+	void ScriptSystem::load_app_domain()
+	{
+		s_AppDomain = mono_domain_create_appdomain("TurnipDomain", nullptr);
+		mono_domain_set(s_AppDomain, false);
+	}
 	void ScriptSystem::load_assembly()
 	{
-		s_LoadedAssembly = mono_domain_assembly_open(s_Domain, s_ConfigData.scriptingInfo.mainDomainPath.c_str());
+		s_LoadedAssembly = mono_domain_assembly_open(s_AppDomain, s_ConfigData.scriptingInfo.mainDomainPath.c_str());
 		s_LoadedImage = mono_assembly_get_image(s_LoadedAssembly);
 	}
 	void ScriptSystem::load_user_assembly()
@@ -44,7 +52,7 @@ namespace tur
 		std::string dllName = s_ProjectData.projectName + ".dll";
 		path assemblyPath = s_ProjectData.projectPath / path("bin") / dllName;
 
-		s_UserAssembly = mono_domain_assembly_open(s_Domain, assemblyPath.string().c_str());
+		s_UserAssembly = mono_domain_assembly_open(s_AppDomain, assemblyPath.string().c_str());
 		s_UserImage = mono_assembly_get_image(s_UserAssembly);
 	}
 
@@ -84,8 +92,13 @@ namespace tur
 
 	void ScriptSystem::reload_system()
 	{
+		mono_domain_set(s_Domain, false);
+
+		mono_domain_unload(s_AppDomain);
+		load_app_domain();
+
+		load_assembly();
 		load_user_assembly();
-		// Unload app domain and restart it all
 	}
 
 	void ScriptSystem::register_internal_calls()
@@ -118,7 +131,7 @@ namespace tur
 	void ScriptSystem::instantiate_entity_object(const std::string& className, entt::entity entityID, EntityScriptData& data)
 	{
 		MonoClass* entityClass = mono_class_from_name(s_UserImage, "TurnipScript", className.c_str());
-		data.instance = mono_object_new(s_Domain, entityClass);
+		data.instance = mono_object_new(s_AppDomain, entityClass);
 
 		mono_runtime_object_init(data.instance);
 

@@ -20,6 +20,7 @@ namespace tur
 		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
 		
 		static void load_domain();
+		static void load_app_domain();
 		static void load_assembly();
 		static void load_user_assembly();
 
@@ -44,6 +45,7 @@ namespace tur
 
 	public:
 		static inline MonoDomain* s_Domain = nullptr;
+		static inline MonoDomain* s_AppDomain = nullptr;
 
 		static inline MonoAssembly* s_LoadedAssembly = nullptr;
 		static inline MonoAssembly* s_UserAssembly = nullptr;
