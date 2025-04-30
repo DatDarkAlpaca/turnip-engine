@@ -61,6 +61,8 @@ namespace tur
 	public:
 		operator entt::entity() const { return m_EntityHandle; }
 
+		entt::entity get_handle() const { return m_EntityHandle; }
+
 	private:
 		entt::entity m_EntityHandle = entt::null;
 		NON_OWNING Scene* m_Scene = nullptr;

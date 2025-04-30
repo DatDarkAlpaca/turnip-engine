@@ -34,7 +34,7 @@ void MainView::on_view_added()
 	initialize_renderer_system();
 
 	// Widgets:
-	m_EntityInspector.initialize(&m_Scene, &m_SceneData);
+	m_EntityInspector.initialize(r_Engine, &m_Scene, &m_SceneData);
 	m_SceneViewer.initialize(&m_Scene, &m_SceneData);
 	m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &r_Engine->get_window(), &m_SceneData);
 }

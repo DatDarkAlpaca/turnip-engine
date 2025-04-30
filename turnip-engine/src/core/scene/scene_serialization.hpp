@@ -58,6 +58,11 @@ namespace tur
 				json[eid(entity)]["transform"]["scale"]["z"]    = transform.scale.z;
 			}
 
+			for (const auto& [entity, texture] : registry.view<TextureComponent>().each())
+			{
+				json[eid(entity)]["texture"] = texture.handle;
+			}
+
 			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
 			{
 				for (const auto& script : scripts.scriptComponents)
@@ -145,6 +150,11 @@ namespace tur
 					}
 					
 					registry.emplace<TransformComponent>(entity, transformComponent);
+				}
+				
+				if (entityObj.contains("texture"))
+				{
+					registry.emplace<TextureComponent>(entity, u32(entityObj["texture"]));
 				}
 
 				if (entityObj.contains("scripts"))

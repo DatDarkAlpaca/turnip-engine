@@ -11,6 +11,7 @@ namespace tur
 
 	struct AssetLibrary
 	{
+		// TODO: URGENT - Use filepath to determine if texture is already loaded
 		free_list<TextureAsset> textures;
 	};
 
