@@ -104,25 +104,32 @@ namespace tur
 	void ScriptSystem::register_internal_calls()
 	{
 		// Logging:
-		mono_add_internal_call("TurnipScript.Internal::LogInfo", log_info);
-		mono_add_internal_call("TurnipScript.Internal::LogTrace", log_trace);
-		mono_add_internal_call("TurnipScript.Internal::LogDebug", log_debug);
-		mono_add_internal_call("TurnipScript.Internal::LogWarn", log_warn);
-		mono_add_internal_call("TurnipScript.Internal::LogError", log_error);
-		mono_add_internal_call("TurnipScript.Internal::LogCritical", log_critical);
-
+		{
+			mono_add_internal_call("TurnipScript.Log::LogInfo", log_info);
+			mono_add_internal_call("TurnipScript.Log::Trace", log_trace);
+			mono_add_internal_call("TurnipScript.Log::Debug", log_debug);
+			mono_add_internal_call("TurnipScript.Log::Warn", log_warn);
+			mono_add_internal_call("TurnipScript.Log::Error", log_error);
+			mono_add_internal_call("TurnipScript.Log::Critical", log_critical);
+		}
+		
 		// Components:
-		mono_add_internal_call("TurnipScript.Internal::GetComponent_Native", get_component_native);
+		{
+			mono_add_internal_call("TurnipScript.Internal::GetComponent_Native", get_component_native);
 
-		// Transform:
-		mono_add_internal_call("TurnipScript.Internal::GetTransformPosition_Native", get_transform_position_native);
-		mono_add_internal_call("TurnipScript.Internal::SetTransformPosition_Native", set_transform_position_native);
+			// Transform:
+			mono_add_internal_call("TurnipScript.Internal::GetTransformPosition_Native", get_transform_position_native);
+			mono_add_internal_call("TurnipScript.Internal::SetTransformPosition_Native", set_transform_position_native);
 
-		mono_add_internal_call("TurnipScript.Internal::GetTransformRotation_Native", get_transform_rotation_native);
-		mono_add_internal_call("TurnipScript.Internal::SetTransformRotation_Native", set_transform_rotation_native);
+			mono_add_internal_call("TurnipScript.Internal::GetTransformRotation_Native", get_transform_rotation_native);
+			mono_add_internal_call("TurnipScript.Internal::SetTransformRotation_Native", set_transform_rotation_native);
 
-		mono_add_internal_call("TurnipScript.Internal::GetTransformScale_Native", get_transform_scale_native);
-		mono_add_internal_call("TurnipScript.Internal::SetTransformScale_Native", set_transform_scale_native);
+			mono_add_internal_call("TurnipScript.Internal::GetTransformScale_Native", get_transform_scale_native);
+			mono_add_internal_call("TurnipScript.Internal::SetTransformScale_Native", set_transform_scale_native);
+		}
+		
+		// Input:
+		mono_add_internal_call("TurnipScript.Input::GetMousePositionWindow", get_mouse_position_window_native);
 	}
 
 	void ScriptSystem::populate_script_components()

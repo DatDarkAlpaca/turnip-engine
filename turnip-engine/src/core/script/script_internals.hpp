@@ -24,4 +24,7 @@ extern "C"
 
 	void get_transform_scale_native(tur::u32 entityID, glm::vec3* outScale);
 	void set_transform_scale_native(tur::u32 entityID, glm::vec3* inScale);
+
+	struct PlainVec2D { float x; float y; };
+	PlainVec2D get_mouse_position_window_native();
 }

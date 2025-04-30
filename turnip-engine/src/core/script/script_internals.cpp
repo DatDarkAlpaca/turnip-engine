@@ -2,6 +2,8 @@
 
 #include "script_internals.hpp"
 
+#include "platform/window.hpp"
+#include "core/engine/engine.hpp"
 #include "core/script/script_system.hpp"
 #include "core/scene/common_components.hpp"
 
@@ -118,4 +120,10 @@ void set_transform_scale_native(tur::u32 entityID, glm::vec3* inScale)
 
 	auto& transform = registry.get<tur::TransformComponent>(entity).transform;
 	transform.scale = *inScale;
+}
+
+PlainVec2D get_mouse_position_window_native()
+{
+	glm::vec2 position = tur::get_mouse_cursor_position_window(&tur::ScriptSystem::r_Engine->get_window());
+	return { position.x, position.y };
 }

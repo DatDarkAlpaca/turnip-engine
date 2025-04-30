@@ -249,6 +249,14 @@ namespace tur
 		glfwHideWindow(window->window);
 	}
 
+	glm::vec2 get_mouse_cursor_position_window(Window* window)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window->window, &xpos, &ypos);
+
+		return glm::vec2(xpos, ypos);
+	}
+
 	glm::uvec2 get_window_size(Window* window)
 	{
 		int width = 0, height = 0;

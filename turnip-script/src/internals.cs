@@ -1,31 +1,31 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace TurnipScript
 {
+    public class Log
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Info(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Trace(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Debug(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Warn(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Error(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Critical(string message);
+    }
+
     internal class Internal
     {
-        #region Logging
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogInfo(string message);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogTrace(string message);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogDebug(string message);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogWarn(string message);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogError(string message);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LogCritical(string message);
-        #endregion
-
         #region Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern Component GetComponent_Native(uint entityID, Type type);
@@ -53,5 +53,11 @@ namespace TurnipScript
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTransformScale_Native(uint entityID, ref Vector3D scale);
         #endregion
+    }
+
+    public class Input
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern Vector2D GetMousePositionWindow();
     }
 }

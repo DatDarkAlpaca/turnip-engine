@@ -33,5 +33,7 @@ namespace tur
 	extern void show_window(Window* window);
 	extern void hide_window(Window* window);
 
+	extern glm::vec2  get_mouse_cursor_position_window(Window* window);
+
 	extern glm::uvec2 get_window_size(Window* window);
 }
