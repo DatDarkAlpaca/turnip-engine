@@ -22,7 +22,30 @@ namespace TurnipScript
             }
         }
 
-        public Vector3D rotation;
-        public Vector3D scale;
+        public Vector3D rotation
+        {
+            get
+            {
+                Internal.GetTransformRotation_Native(_entityID, out Vector3D rot);
+                return rot;
+            }
+            set
+            {
+                Internal.SetTransformRotation_Native(_entityID, ref value);
+            }
+        }
+
+        public Vector3D scale
+        {
+            get
+            {
+                Internal.GetTransformScale_Native(_entityID, out Vector3D sca);
+                return sca;
+            }
+            set
+            {
+                Internal.SetTransformScale_Native(_entityID, ref value);
+            }
+        }
     }
 }

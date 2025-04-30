@@ -56,17 +56,66 @@ MonoObject* get_component_native(tur::u32 entityID, MonoReflectionType* reflecti
 
 void get_transform_position_native(tur::u32 entityID, glm::vec3* outPosition)
 {
-	using namespace tur;
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
 
-	auto x = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID));
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
 
-	const auto& transform = x.transform;
-	*outPosition = transform.position;
+	*outPosition = registry.get<tur::TransformComponent>(entity).transform.position;
 }
 void set_transform_position_native(tur::u32 entityID, glm::vec3* inPosition)
 {
-	using namespace tur;
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
 
-	auto& transform = ScriptSystem::s_Scene->get_registry().get<TransformComponent>(static_cast<entt::entity>(entityID)).transform;
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
+
+	auto& transform = registry.get<tur::TransformComponent>(entity).transform;
 	transform.position = *inPosition;
+}
+
+void get_transform_rotation_native(tur::u32 entityID, glm::vec3* outRotation)
+{
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
+
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
+
+	*outRotation = registry.get<tur::TransformComponent>(entity).transform.rotation;
+}
+void set_transform_rotation_native(tur::u32 entityID, glm::vec3* inRotation)
+{
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
+
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
+
+	auto& transform = registry.get<tur::TransformComponent>(entity).transform;
+	transform.rotation = *inRotation;
+}
+
+void get_transform_scale_native(tur::u32 entityID, glm::vec3* outScale)
+{
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
+
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
+
+	*outScale = registry.get<tur::TransformComponent>(entity).transform.scale;
+}
+void set_transform_scale_native(tur::u32 entityID, glm::vec3* inScale)
+{
+	auto& registry = tur::ScriptSystem::s_Scene->get_registry();
+	entt::entity entity = static_cast<entt::entity>(entityID);
+
+	if (!registry.all_of<tur::TransformComponent>(entity))
+		return TUR_LOG_WARN("Entity {} does not have a Transform component", entityID);
+
+	auto& transform = registry.get<tur::TransformComponent>(entity).transform;
+	transform.scale = *inScale;
 }

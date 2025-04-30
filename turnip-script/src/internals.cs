@@ -6,13 +6,6 @@ namespace TurnipScript
 {
     internal class Internal
     {
-        #region Reflection
-        public static IntPtr MakeGenericMethod(MethodInfo methodInfo, Type type)
-        {
-            return methodInfo.MakeGenericMethod(type).MethodHandle.Value;
-        }
-        #endregion
-
         #region Logging
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LogInfo(string message);
@@ -47,6 +40,18 @@ namespace TurnipScript
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTransformPosition_Native(uint entityID, ref Vector3D position);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetTransformRotation_Native(uint entityID, out Vector3D rotation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTransformRotation_Native(uint entityID, ref Vector3D rotation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetTransformScale_Native(uint entityID, out Vector3D scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTransformScale_Native(uint entityID, ref Vector3D scale);
         #endregion
     }
 }

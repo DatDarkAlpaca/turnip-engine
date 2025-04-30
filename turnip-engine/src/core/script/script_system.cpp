@@ -117,6 +117,12 @@ namespace tur
 		// Transform:
 		mono_add_internal_call("TurnipScript.Internal::GetTransformPosition_Native", get_transform_position_native);
 		mono_add_internal_call("TurnipScript.Internal::SetTransformPosition_Native", set_transform_position_native);
+
+		mono_add_internal_call("TurnipScript.Internal::GetTransformRotation_Native", get_transform_rotation_native);
+		mono_add_internal_call("TurnipScript.Internal::SetTransformRotation_Native", set_transform_rotation_native);
+
+		mono_add_internal_call("TurnipScript.Internal::GetTransformScale_Native", get_transform_scale_native);
+		mono_add_internal_call("TurnipScript.Internal::SetTransformScale_Native", set_transform_scale_native);
 	}
 
 	void ScriptSystem::populate_script_components()

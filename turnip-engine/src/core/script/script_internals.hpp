@@ -18,4 +18,10 @@ extern "C"
 
 	void get_transform_position_native(tur::u32 entityID, glm::vec3* outPosition);
 	void set_transform_position_native(tur::u32 entityID, glm::vec3* inPosition);
+
+	void get_transform_rotation_native(tur::u32 entityID, glm::vec3* outRotation);
+	void set_transform_rotation_native(tur::u32 entityID, glm::vec3* inRotation);
+
+	void get_transform_scale_native(tur::u32 entityID, glm::vec3* outScale);
+	void set_transform_scale_native(tur::u32 entityID, glm::vec3* inScale);
 }
