@@ -84,8 +84,8 @@ namespace tur
 				if (!script.scriptData.instance)
 					populate_script_components();
 
-				if(script.scriptData.updateMethod)
-					mono_runtime_invoke(script.scriptData.updateMethod, script.scriptData.instance, nullptr, nullptr);
+				if (script.scriptData.updateMethod)
+					execute_method(script.scriptData.updateMethod, script.scriptData.instance, nullptr);
 			}
 		}
 	}
@@ -182,5 +182,28 @@ namespace tur
 
 			data.updateMethod = mono_method_desc_search_in_class(updateDesc, entityClass);
 		}
+	}
+	
+	void ScriptSystem::execute_method(MonoMethod* method, MonoObject* object, void** params)
+	{
+		MonoObject* exceptionObject = nullptr;
+		mono_runtime_invoke(method, object, params, &exceptionObject);
+
+		if (!exceptionObject)
+			return;
+
+		MonoClass* exceptionClass = mono_object_get_class(exceptionObject);
+		MonoMethod* toStringMethod = mono_class_get_method_from_name(exceptionClass, "ToString", 0);
+
+		if(!toStringMethod)
+			return TUR_LOG_ERROR("MonoRuntime - Unknown exception");
+
+		MonoString* exceptionString = (MonoString*)mono_runtime_invoke(toStringMethod, exceptionObject, nullptr, nullptr);
+
+		char* exceptionStringResult = mono_string_to_utf8(exceptionString);
+
+		std::string exceptionStr(exceptionStringResult);
+		TUR_LOG_ERROR("MonoRuntime - {}", exceptionStr);
+		mono_free(exceptionStringResult);
 	}
 }

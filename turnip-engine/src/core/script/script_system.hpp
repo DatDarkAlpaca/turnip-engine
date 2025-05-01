@@ -39,6 +39,9 @@ namespace tur
 
 		static void instantiate_entity_object(const std::string& className, entt::entity entityID, EntityScriptData& data);
 
+	private:
+		static void execute_method(MonoMethod* method, MonoObject* object, void** params);
+
 	public:
 		static inline NON_OWNING TurnipEngine* r_Engine = nullptr;
 		static inline tur::Scene* s_Scene = nullptr;
