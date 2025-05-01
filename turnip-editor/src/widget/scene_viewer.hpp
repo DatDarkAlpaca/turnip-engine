@@ -48,7 +48,31 @@ private:
 
 		NameComponent& entityName = registry.get<NameComponent>(entity);
 
-		if (entitySceneGraph.children.empty())
+		if (!entitySceneGraph.children.empty())
+		{
+			if (ImGui::TreeNodeEx((void*)(u64)entity, flags, "%s", entityName.name.c_str()))
+			{
+				for (auto child : entitySceneGraph.children)
+					render_scene_graph_node(child);
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (m_RenamingEntity != entt::null)
+		{
+			ImGui::SetNextItemWidth(150.0f);
+
+			std::copy(entityName.name.begin(), entityName.name.end(), m_RenameBuffer);
+
+			if (ImGui::InputText("##Editing", m_RenameBuffer, IM_ARRAYSIZE(m_RenameBuffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll))
+			{
+				entityName.name = std::string(m_RenameBuffer);
+				m_RenamingEntity = entt::null;
+			}
+		}
+
+		else
 		{
 			flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 			ImGui::TreeNodeEx((void*)(u64)entity, flags, "%s", entityName.name.c_str());
@@ -57,18 +81,7 @@ private:
 				m_SceneData->viewerSelectedEntity = entity;
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-			{
-
-			}
-			return;
-		}
-
-		if (ImGui::TreeNodeEx((void*)(u64)entity, flags, "%s", entityName.name.c_str()))
-		{
-			for (auto child : entitySceneGraph.children)
-				render_scene_graph_node(child);
-
-			ImGui::TreePop();
+				m_RenamingEntity = entity;
 		}
 
 		// TODO: move entities
@@ -86,4 +99,8 @@ private:
 private:
 	NON_OWNING Scene* m_Scene = nullptr;
 	SceneData* m_SceneData = nullptr;
+
+private:
+	entt::entity m_RenamingEntity = entt::null;
+	char m_RenameBuffer[32] = {};
 };
