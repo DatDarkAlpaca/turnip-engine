@@ -11,7 +11,7 @@
 
 using namespace tur;
 
-struct MainView : public View
+class MainView : public View
 {
 	friend class MainMenuBar;
 

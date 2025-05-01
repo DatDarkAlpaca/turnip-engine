@@ -14,3 +14,5 @@ filter {}
 postbuildcommands {
     "{COPYFILE} %[%{!binaries_path}/turnip-script/turnip-script.dll] %[%{!wks.location}bin/turnip-script.dll]",
 }
+
+externalwarnings "off"

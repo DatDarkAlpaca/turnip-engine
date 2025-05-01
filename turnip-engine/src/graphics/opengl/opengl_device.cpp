@@ -298,7 +298,7 @@ namespace tur::gl
 			textureDescriptor.height = height;
 
 			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).handle;
-			glNamedFramebufferTexture(renderTarget.handle, GL_COLOR_ATTACHMENT0 + index, colorAttachment, 0);
+			glNamedFramebufferTexture(renderTarget.handle, GL_COLOR_ATTACHMENT0 + static_cast<u32>(index), colorAttachment, 0);
 		}
 
 		u32 rbo;

@@ -19,11 +19,6 @@ namespace tur
 	public:
 		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
 		
-		static void load_domain();
-		static void load_app_domain();
-		static void load_assembly();
-		static void load_user_assembly();
-
 		static void set_project(const ProjectData& projectData);
 
 	public:
@@ -31,8 +26,12 @@ namespace tur
 		static void on_scene_runtime_update();
 
 	private:
+		static void load_domain();
+		static void load_app_domain();
+		static void load_assembly();
+		static void load_user_assembly();
 		static void reload_system();
-		
+
 		static void register_internal_calls();
 
 	private:

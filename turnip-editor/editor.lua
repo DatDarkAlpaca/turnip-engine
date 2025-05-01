@@ -9,3 +9,5 @@ libdirs { ".", "bin" }
 links { "turnip-script.dll", "mono-2.0-sgen.dll" }
 
 debugdir "%{wks.location}/turnip-engine/"
+
+externalwarnings "off"
