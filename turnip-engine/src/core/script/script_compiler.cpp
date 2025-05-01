@@ -26,7 +26,7 @@ static void create_project_csproj_file(const std::string& projectName, const std
 	scriptFile.close();
 }
 
-namespace tur 
+namespace tur
 {
 	void create_solution(const std::string& projectName, const std::filesystem::path& projectFolder)
 	{
@@ -51,5 +51,21 @@ namespace tur
 
 		std::string binFolder = (projectFolder / "bin").string();
 		run_command("dotnet build " + projectFilepath + " -o " + binFolder);
+	}
+
+	void create_empty_script(const std::filesystem::path& filepath, const std::string className)
+	{
+		std::ofstream file(filepath);
+
+		file << fmt::format(R"(using TurnipScript;
+namespace TurnipScript
+{{
+    class {} : ScriptableEntity
+    {{
+        public override void OnSceneStart()
+        {{
+        }}
+    }}
+}})", className);
 	}
 }

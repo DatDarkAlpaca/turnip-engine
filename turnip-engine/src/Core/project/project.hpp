@@ -74,20 +74,4 @@ namespace tur
 		JsonReader reader(filepath);
 		return reader.parse<ProjectData>();
 	}
-
-	inline void create_empty_script(const std::filesystem::path& filepath, const std::string className)
-	{
-		std::ofstream file(filepath);
-
-		file << fmt::format(R"(using TurnipScript;
-namespace TurnipScript
-{{
-    class {} : ScriptableEntity
-    {{
-        public override void OnSceneStart()
-        {{
-        }}
-    }}
-}})", className);
-	}
 }
