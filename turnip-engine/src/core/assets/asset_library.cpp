@@ -5,13 +5,16 @@
 
 namespace tur
 {
-	asset_handle load_texture_asset(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
+	AssetInformation load_texture_asset(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
 	{
 		if (!std::filesystem::exists(filepath))
 		{
 			TUR_LOG_ERROR("Failed to load texture: '{}'. File does not exist.", filepath.string());
-			return invalid_handle;
+			return { invalid_handle };
 		}
+
+		if (assetLibrary->assetFilepathMap.find(filepath.string()) != assetLibrary->assetFilepathMap.end())
+			return { assetLibrary->assetFilepathMap[filepath.string()], true };
 
 		int width, height, channels;
 
@@ -29,16 +32,22 @@ namespace tur
 		asset.channels = static_cast<u32>(channels);
 		asset.data = buffer;
 
-		return static_cast<asset_handle>(assetLibrary->textures.add(asset));
+		asset_handle handle = static_cast<asset_handle>(assetLibrary->textures.add(asset));
+		assetLibrary->assetFilepathMap[filepath.string()] = handle;
+
+		return { handle };
 	}
 
-	asset_handle load_texture_asset_float(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
+	AssetInformation load_texture_asset_float(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
 	{
 		if (!std::filesystem::exists(filepath))
 		{
 			TUR_LOG_ERROR("Failed to load texture: '{}'. File does not exist.", filepath.string());
-			return invalid_handle;
+			return { invalid_handle };
 		}
+
+		if (assetLibrary->assetFilepathMap.find(filepath.string()) != assetLibrary->assetFilepathMap.end())
+			return { assetLibrary->assetFilepathMap[filepath.string()], true };
 
 		int width, height, channels;
 
@@ -57,11 +66,16 @@ namespace tur
 		asset.data = buffer;
 		asset.floatTexture = true;
 
-		return static_cast<asset_handle>(assetLibrary->textures.add(asset));
+		asset_handle handle = static_cast<asset_handle>(assetLibrary->textures.add(asset));
+		assetLibrary->assetFilepathMap[filepath.string()] = handle;
+
+		return { handle };
 	}
 
 	void unload_texture_asset(AssetLibrary* assetLibrary, asset_handle handle)
 	{
+		// TODO: remove from texturefilepathmap
+
 		TextureAsset asset = assetLibrary->textures.remove(handle);
 		stbi_image_free(asset.data.data);
 	}

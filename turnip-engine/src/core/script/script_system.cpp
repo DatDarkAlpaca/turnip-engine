@@ -144,6 +144,9 @@ namespace tur
 	void ScriptSystem::instantiate_entity_object(const std::string& className, entt::entity entityID, EntityScriptData& data)
 	{
 		MonoClass* entityClass = mono_class_from_name(s_UserImage, "TurnipScript", className.c_str());
+		if (!entityClass)
+			return;
+
 		data.instance = mono_object_new(s_AppDomain, entityClass);
 
 		mono_runtime_object_init(data.instance);

@@ -66,47 +66,48 @@ void EntityInspector::render_transform_component(Entity selectedEntity)
 }
 void EntityInspector::render_texture_component(Entity selectedEntity)
 {
-	const auto& textureHandle = selectedEntity.get_component<TextureComponent>().handle;
+	auto* textureComponent = &selectedEntity.get_component<TextureComponent>();
 	const auto& textures = r_Engine->get_graphics_device().get_textures();
+
 	auto* assetLibrary = &r_Engine->get_asset_library();
-	auto* engine = r_Engine;
-	entt::entity entityID = selectedEntity.get_handle();
-	auto& scene = m_Scene;
+	auto* graphicsDevice = &r_Engine->get_graphics_device();
+	
+	auto entityID = selectedEntity.get_handle();
+	auto* scene = m_Scene;
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-		if (ImGui::ImageButton((void*)textures.get(textureHandle).handle, { 50.0f, 50.0f }))
+		if (ImGui::ImageButton((void*)textures.get(textureComponent->handle).handle, { 50.0f, 50.0f }))
 		{
 			auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
 
 			if (filepaths.empty())
 				return;
 
-			auto& filepath = filepaths[0];
+			auto& filepath = std::filesystem::path(filepaths[0]);
 
-			r_Engine->get_worker_pool().submit<asset_handle>([assetLibrary, filepath]()
+			r_Engine->get_worker_pool().submit<AssetInformation>([assetLibrary, filepath]() {
+				return load_texture_asset(assetLibrary, filepath);
+			}, [textureComponent, filepath, assetLibrary, graphicsDevice](AssetInformation information) {
+
+				if (information.isDuplicate)
+					return;
+
+				auto texture = assetLibrary->textures.get(information.handle);
+
+				TextureDescriptor descriptor;
 				{
-					return load_texture_asset(assetLibrary, std::filesystem::path(filepath));
-				}, [scene, assetLibrary, engine, entityID](asset_handle handle)
-					{
-						auto texture = assetLibrary->textures.get(handle);
+					descriptor.format = TextureFormat::RGBA8_UNORM;
+					descriptor.type = TextureType::TEXTURE_2D;
+					descriptor.width = texture.width;
+					descriptor.height = texture.height;
+					descriptor.generateMipmaps = true;
+				}
 
-						// TODO: WARN while no texture hash is created, this will keep creating new textures.
-
-						TextureDescriptor descriptor;
-						{
-							descriptor.format = TextureFormat::RGBA8_UNORM;
-							descriptor.type = TextureType::TEXTURE_2D;
-							descriptor.width = texture.width;
-							descriptor.height = texture.height;
-							descriptor.generateMipmaps = true;
-						}
-
-						auto textureGraphics = engine->get_graphics_device().create_texture(descriptor, texture);
-
-						scene->get_registry().get<TextureComponent>(entityID).handle = textureGraphics;
-					});
-
+				auto textureGraphics = graphicsDevice->create_texture(descriptor, texture);
+				textureComponent->handle = textureGraphics;
+				textureComponent->filepath = filepath;
+			});
 		}
 	}
 }
@@ -167,7 +168,7 @@ void EntityInspector::render_add_script_component(Entity selectedEntity)
 
 		auto scriptFilepath = path(save_file_dialog("New Script", { "Script files (.cs)", "*.cs" }));
 		if (scriptFilepath.empty())
-			return ImGui::EndPopup();
+			return;
 
 		path correctedPath = scriptFilepath.replace_extension(".cs");
 

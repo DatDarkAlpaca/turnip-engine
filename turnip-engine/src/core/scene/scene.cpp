@@ -78,7 +78,7 @@ namespace tur
 		m_EntityMap.erase(entity.UUID());
 		m_Registry.destroy(entity);
 	}
-
+	
 	std::optional<Entity> Scene::find_entity_by_uuid(UUID uuid) const
 	{
 		if (m_EntityMap.find(uuid) != m_EntityMap.end())

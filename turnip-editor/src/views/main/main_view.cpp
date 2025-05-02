@@ -24,6 +24,36 @@ void MainView::set_project_data(const ProjectData& projectData)
 
 	SceneDeserializer deserializer(&m_Scene, projectData.projectPath / "scene.json");
 	deserializer.deserialize();
+
+	// Load assets:
+	for (const auto& [entity, textureComponent] : m_Scene.get_registry().view<TextureComponent>().each())
+	{
+		auto* assetLibrary = &r_Engine->get_asset_library();
+		auto* graphicsDevice = &r_Engine->get_graphics_device();
+
+		r_Engine->get_worker_pool().submit<AssetInformation>([assetLibrary, textureComponent]() {
+			return load_texture_asset(assetLibrary, textureComponent.filepath);
+		}, [&textureComponent, assetLibrary, graphicsDevice](AssetInformation information) {
+			// if (information.isDuplicate)
+			//	return;
+			// TODO: map asset handle to texture handle on create_texture.			[URGENT]
+			// TODO: maybe save this threaded function since i use it everywhere
+
+			auto texture = assetLibrary->textures.get(information.handle);
+
+			TextureDescriptor descriptor;
+			{
+				descriptor.format = TextureFormat::RGBA8_UNORM;
+				descriptor.type = TextureType::TEXTURE_2D;
+				descriptor.width = texture.width;
+				descriptor.height = texture.height;
+				descriptor.generateMipmaps = true;
+			}
+
+			auto textureGraphics = graphicsDevice->create_texture(descriptor, texture);
+			textureComponent.handle = textureGraphics;
+		});
+	}
 }
 
 void MainView::on_view_added()

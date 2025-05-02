@@ -60,7 +60,7 @@ namespace tur
 
 			for (const auto& [entity, texture] : registry.view<TextureComponent>().each())
 			{
-				json[eid(entity)]["texture"] = texture.handle;
+				json[eid(entity)]["texture"]["filepath"] = texture.filepath.string();
 			}
 
 			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
@@ -154,7 +154,12 @@ namespace tur
 				
 				if (entityObj.contains("texture"))
 				{
-					registry.emplace<TextureComponent>(entity, u32(entityObj["texture"]));
+					TextureComponent textureComponent;
+					{
+						textureComponent.filepath = std::string(entityObj["texture"]["filepath"]);					
+					}
+
+					registry.emplace<TextureComponent>(entity, textureComponent);
 				}
 
 				if (entityObj.contains("scripts"))

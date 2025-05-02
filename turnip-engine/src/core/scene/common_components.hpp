@@ -68,9 +68,13 @@ namespace tur
 	public:
 		TextureComponent() = default;
 		TextureComponent(const TextureComponent&) = default;
-		TextureComponent(texture_handle handle) : handle(handle) { }
+		TextureComponent(texture_handle handle, const std::filesystem::path& filepath) 
+			: handle(handle) 
+			, filepath(filepath)
+		{ }
 
 	public:
-		texture_handle handle;
+		std::filesystem::path filepath;
+		texture_handle handle = invalid_handle;
 	};
 }
