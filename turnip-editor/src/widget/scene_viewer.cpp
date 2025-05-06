@@ -81,19 +81,23 @@ void SceneViewer::render_scene_graph_node(entt::entity entity)
 			m_RenamingEntity = entity;
 
 		if (ImGui::BeginPopup("SceneViewerPopup"))
-		{
-			if (ImGui::MenuItem("New", "Ctrl+N"))
-			{
-				ImGui::Text("Nice");
-			}
-
-			ImGui::EndPopup();
-		}
+			render_scene_viewer_popup();
 	}
 
 	// TODO: move entities
 	// TODO: entity hierarchy
 	// TODO: use projectEdited
+}
+
+void SceneViewer::render_scene_viewer_popup()
+{
+	if (ImGui::Button("Export as instance"))
+	{
+		// 1. get all components from entity
+		// 2. save to file
+	}
+
+	ImGui::EndPopup();
 }
 
 void SceneViewer::add_empty_entity()

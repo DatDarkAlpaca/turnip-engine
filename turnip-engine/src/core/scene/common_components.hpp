@@ -75,6 +75,6 @@ namespace tur
 
 	public:
 		std::filesystem::path filepath;
-		texture_handle handle = invalid_handle;
+		texture_handle handle = 0;
 	};
 }

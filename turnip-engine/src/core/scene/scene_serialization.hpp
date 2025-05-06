@@ -65,6 +65,8 @@ namespace tur
 
 			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
 			{
+				json[eid(entity)]["scripts"] = {};
+
 				for (const auto& script : scripts.scriptComponents)
 				{
 					nlohmann::json scriptJson;
