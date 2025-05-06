@@ -7,6 +7,58 @@
 
 namespace tur
 {
+	inline void serialize_entity(const std::filesystem::path& filepath, NON_OWNING Scene* scene, entt::entity entityID)
+	{
+		auto& registry = scene->get_registry();
+
+		nlohmann::json json;
+		std::string eid = std::to_string(static_cast<u32>(entityID));
+
+		json[eid]["uuid"] = static_cast<u32>(registry.get<UUIDComponent>(entityID).uuid);
+		json[eid]["name"] = registry.get<NameComponent>(entityID).name;
+
+		// Scene Graph:
+		const auto& sceneGraph = registry.get<SceneGraphComponent>(entityID);		
+		json[eid]["sceneGraph"]["parent"] = static_cast<u32>(sceneGraph.parent);
+		json[eid]["sceneGraph"]["children"] = sceneGraph.children;
+
+		// Transform:
+		const auto& tranformComponent = registry.get<TransformComponent>(entityID);
+		const auto& transform = tranformComponent.transform;
+
+		json[eid]["transform"]["position"]["x"] = transform.position.x;
+		json[eid]["transform"]["position"]["y"] = transform.position.y;
+		json[eid]["transform"]["position"]["z"] = transform.position.z;
+
+		json[eid]["transform"]["rotation"]["x"] = transform.rotation.x;
+		json[eid]["transform"]["rotation"]["y"] = transform.rotation.y;
+		json[eid]["transform"]["rotation"]["z"] = transform.rotation.z;
+
+		json[eid]["transform"]["scale"]["x"] = transform.scale.x;
+		json[eid]["transform"]["scale"]["y"] = transform.scale.y;
+		json[eid]["transform"]["scale"]["z"] = transform.scale.z;
+
+		// Texture:
+		const auto textureComponent = registry.get<TextureComponent>(entityID);
+		json[eid]["texture"]["filepath"] = textureComponent.filepath.string();
+
+		// Scripts:
+		const auto& scriptComponents = registry.get<EntityScriptsComponent>(entityID);
+		json[eid]["scripts"] = {};
+
+		for (const auto& script : scriptComponents.scriptComponents)
+		{
+			nlohmann::json scriptJson;
+			scriptJson["className"] = script.className;
+			scriptJson["filepath"] = script.filepath;
+
+			json[eid]["scripts"].push_back(scriptJson);
+		}
+
+		JsonWriter writer(filepath);
+		writer.write(json);
+	}
+
 	class SceneSerializer
 	{
 	public:
