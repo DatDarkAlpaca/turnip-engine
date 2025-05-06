@@ -7,6 +7,58 @@
 
 namespace tur
 {
+	inline void serialize_entity(const std::filesystem::path& filepath, NON_OWNING Scene* scene, entt::entity entityID)
+	{
+		auto& registry = scene->get_registry();
+
+		nlohmann::json json;
+		std::string eid = std::to_string(static_cast<u32>(entityID));
+
+		json["uuid"] = static_cast<u32>(registry.get<UUIDComponent>(entityID).uuid);
+		json["name"] = registry.get<NameComponent>(entityID).name;
+
+		// Scene Graph:
+		const auto& sceneGraph = registry.get<SceneGraphComponent>(entityID);		
+		json["sceneGraph"]["parent"] = static_cast<u32>(sceneGraph.parent);
+		json["sceneGraph"]["children"] = sceneGraph.children;
+
+		// Transform:
+		const auto& tranformComponent = registry.get<TransformComponent>(entityID);
+		const auto& transform = tranformComponent.transform;
+
+		json["transform"]["position"]["x"] = transform.position.x;
+		json["transform"]["position"]["y"] = transform.position.y;
+		json["transform"]["position"]["z"] = transform.position.z;
+
+		json["transform"]["rotation"]["x"] = transform.rotation.x;
+		json["transform"]["rotation"]["y"] = transform.rotation.y;
+		json["transform"]["rotation"]["z"] = transform.rotation.z;
+
+		json["transform"]["scale"]["x"] = transform.scale.x;
+		json["transform"]["scale"]["y"] = transform.scale.y;
+		json["transform"]["scale"]["z"] = transform.scale.z;
+
+		// Texture:
+		const auto textureComponent = registry.get<TextureComponent>(entityID);
+		json["texture"]["filepath"] = textureComponent.filepath.string();
+
+		// Scripts:
+		const auto& scriptComponents = registry.get<EntityScriptsComponent>(entityID);
+		json["scripts"] = {};
+
+		for (const auto& script : scriptComponents.scriptComponents)
+		{
+			nlohmann::json scriptJson;
+			scriptJson["className"] = script.className;
+			scriptJson["filepath"] = script.filepath;
+
+			json["scripts"].push_back(scriptJson);
+		}
+
+		JsonWriter writer(filepath);
+		writer.write(json);
+	}
+
 	class SceneSerializer
 	{
 	public:

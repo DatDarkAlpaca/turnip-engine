@@ -81,7 +81,7 @@ void SceneViewer::render_scene_graph_node(entt::entity entity)
 			m_RenamingEntity = entity;
 
 		if (ImGui::BeginPopup("SceneViewerPopup"))
-			render_scene_viewer_popup();
+			render_scene_viewer_popup(entity);
 	}
 
 	// TODO: move entities
@@ -89,12 +89,18 @@ void SceneViewer::render_scene_graph_node(entt::entity entity)
 	// TODO: use projectEdited
 }
 
-void SceneViewer::render_scene_viewer_popup()
+void SceneViewer::render_scene_viewer_popup(entt::entity entity)
 {
+	using namespace std::filesystem;
+
+	const auto& entityExtension = m_Scene->get_registry().get<NameComponent>(entity).name + ".ins";
+
 	if (ImGui::Button("Export as instance"))
 	{
-		// 1. get all components from entity
-		// 2. save to file
+		auto instanceFilepath = path(save_file_dialog("Export instance file", entityExtension, { "Instance files (*.ins)", ".ins" }));
+		std::string instanceFilepathName = instanceFilepath.filename().string();
+
+		serialize_entity(instanceFilepath, m_Scene, entity);
 	}
 
 	ImGui::EndPopup();

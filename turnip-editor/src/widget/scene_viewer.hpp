@@ -15,7 +15,7 @@ public:
 private:
 	void render_scene_graph_node(entt::entity entity);
 
-	void render_scene_viewer_popup();
+	void render_scene_viewer_popup(entt::entity entity);
 
 private:
 	void add_empty_entity();

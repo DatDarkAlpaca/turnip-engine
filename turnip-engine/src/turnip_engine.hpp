@@ -8,7 +8,7 @@
 #include "core/scene/entity.hpp"
 #include "core/scene/scene.hpp"
 #include "core/scene/components.hpp"
-#include "core/scene/scene_instance_holder.hpp"
+#include "core/scene/scene_serialization.hpp"
 
 #include "core/project/project.hpp"
 
