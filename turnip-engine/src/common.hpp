@@ -12,7 +12,11 @@
 
 #include "utils/json/json_common.hpp"
 
-#define TUR_ENGINE_NAME "TurnipEngine"
+#define TUR_ENGINE_NAME				"TurnipEngine"
+#define TUR_ENGINE_FILE_EXTENSION	".tur"
+#define TUR_SCRIPT_DLL_FILENAME		"turnip-script.dll"
+#define TUR_BIN_FOLDERNAME			"bin"
+#define TUR_ASSET_FOLDERNAME		"assets"
 
 #define BIND(function, argument) std::bind(function, argument, std::placeholders::_1)
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 #include <filesystem>
+#include <optional>
 #include <fstream>
 
 #include "utils/json/json_file.hpp"
@@ -18,7 +19,7 @@ namespace tur
 
 	public:
 		template <typename DataType>
-		DataType parse()
+		std::optional<DataType> parse()
 		{
 			nlohmann::json jsonObject;
 			try 
@@ -27,7 +28,8 @@ namespace tur
 			}
 			catch (nlohmann::json::exception& e)
 			{
-				TUR_LOG_CRITICAL("Failed to parse json file at: {}. {}", m_Filepath.string(), e.what());
+				TUR_LOG_ERROR("Failed to parse json file at: {}. {}", m_Filepath.string(), e.what());
+				return std::nullopt;
 			}
 
 			DataType result;
@@ -37,7 +39,8 @@ namespace tur
 			}
 			catch (nlohmann::json::exception& e)
 			{
-				TUR_LOG_CRITICAL("Failed to get element in json file at: {}. {}", m_Filepath.string(), e.what());
+				TUR_LOG_ERROR("Failed to get element in json file at: {}. {}", m_Filepath.string(), e.what());
+				return std::nullopt;
 			}
 			
 			return result;

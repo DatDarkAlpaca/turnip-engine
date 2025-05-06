@@ -13,12 +13,12 @@ namespace tur
 			return std::nullopt;
 		}
 
-		path binPath = options.projectFolder / "bin";
+		path binPath = options.projectFolder / TUR_BIN_FOLDERNAME;
 		create_directory(binPath);
-		create_directory(options.projectFolder / "assets");
+		create_directory(options.projectFolder / TUR_ASSET_FOLDERNAME);
 
 		// copies turnip-script.dll to bin/ and create a solution
-		copy_file(options.domainFilepath, binPath / "turnip-script.dll", std::filesystem::copy_options::overwrite_existing);
+		copy_file(options.domainFilepath, binPath / TUR_SCRIPT_DLL_FILENAME, std::filesystem::copy_options::overwrite_existing);
 		create_solution(options.projectName, options.projectFolder);
 
 		ProjectData projectData;
@@ -27,7 +27,7 @@ namespace tur
 			projectData.projectPath = options.projectFolder;
 		}
 
-		std::string filename = options.projectName + ".json";
+		std::string filename = options.projectName + TUR_ENGINE_FILE_EXTENSION;
 		JsonWriter writer(options.projectFolder / filename);
 		writer.write<ProjectData>(projectData);
 
@@ -43,6 +43,10 @@ namespace tur
 		}
 
 		JsonReader reader(filepath);
-		return reader.parse<ProjectData>();
+		auto parseResult = reader.parse<ProjectData>();
+		if (!parseResult.has_value())
+			return std::nullopt;
+
+		return parseResult.value();
 	}
 }
