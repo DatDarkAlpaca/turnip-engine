@@ -41,7 +41,12 @@ void ProjectView::on_render_gui()
 
 		if (ImGui::Button("Open Project..."))
 		{
-			auto projectFilepaths = open_file_dialog("Open Project Folder", { "Project Files (.json)" });
+			std::vector<std::string> filters = {
+				fmt::format("Project Files ({})", TUR_ENGINE_FILE_EXTENSION),
+				"*" + std::string(TUR_ENGINE_FILE_EXTENSION)
+			};
+
+			auto projectFilepaths = open_file_dialog("Open Project Folder", filters);
 
 			if(projectFilepaths.empty())
 				return ImGui::End();

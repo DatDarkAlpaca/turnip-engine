@@ -18,7 +18,11 @@ namespace tur
 		initialize_config_data(configPath);
 
 		JsonReader configReader(configPath);
-		m_ConfigData = configReader.parse<ConfigData>();
+		auto readerResult = configReader.parse<ConfigData>();
+		if (!readerResult.has_value())
+			return;
+
+		m_ConfigData = readerResult.value();
 
 		// Worker Pool:
 		m_WorkerPool.initialize();

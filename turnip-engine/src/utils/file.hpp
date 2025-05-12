@@ -40,9 +40,9 @@ namespace tur
 		return data;
 	}
 
-	inline std::string save_file_dialog(const std::string& title, const std::vector<std::string>& filters = {})
+	inline std::string save_file_dialog(const std::string& title, const std::string& defaultPath = "", const std::vector<std::string>& filters = {})
 	{
-		return pfd::save_file::save_file(title, "", filters).result();
+		return pfd::save_file::save_file(title, defaultPath, filters).result();
 	}
 
 	inline std::vector<std::string> open_file_dialog(const std::string& title, const std::vector<std::string>& filters = {}, bool allowMulti = false)

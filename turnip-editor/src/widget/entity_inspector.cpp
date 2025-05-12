@@ -166,7 +166,7 @@ void EntityInspector::render_add_script_component(Entity selectedEntity)
 	{
 		using namespace std::filesystem;
 
-		auto scriptFilepath = path(save_file_dialog("New Script", { "Script files (.cs)", "*.cs" }));
+		auto scriptFilepath = path(save_file_dialog("New Script", "", { "Script files (.cs)", "*.cs" }));
 		if (scriptFilepath.empty())
 			return;
 

@@ -81,19 +81,29 @@ void SceneViewer::render_scene_graph_node(entt::entity entity)
 			m_RenamingEntity = entity;
 
 		if (ImGui::BeginPopup("SceneViewerPopup"))
-		{
-			if (ImGui::MenuItem("New", "Ctrl+N"))
-			{
-				ImGui::Text("Nice");
-			}
-
-			ImGui::EndPopup();
-		}
+			render_scene_viewer_popup(entity);
 	}
 
 	// TODO: move entities
 	// TODO: entity hierarchy
 	// TODO: use projectEdited
+}
+
+void SceneViewer::render_scene_viewer_popup(entt::entity entity)
+{
+	using namespace std::filesystem;
+
+	const auto& entityExtension = m_Scene->get_registry().get<NameComponent>(entity).name + ".ins";
+
+	if (ImGui::Button("Export as instance"))
+	{
+		auto instanceFilepath = path(save_file_dialog("Export instance file", entityExtension, { "Instance files (*.ins)", ".ins" }));
+		std::string instanceFilepathName = instanceFilepath.filename().string();
+
+		serialize_entity(instanceFilepath, m_Scene, entity);
+	}
+
+	ImGui::EndPopup();
 }
 
 void SceneViewer::add_empty_entity()
