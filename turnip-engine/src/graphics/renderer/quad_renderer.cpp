@@ -70,6 +70,11 @@ namespace tur
 		m_Commands->submit();
 	}
 
+	void QuadRenderer::set_camera(Camera* camera)
+	{
+		r_Camera = camera;
+	}
+
 	void QuadRenderer::set_clear_color(const glm::vec4& color)
 	{
 		m_ClearColor = color;

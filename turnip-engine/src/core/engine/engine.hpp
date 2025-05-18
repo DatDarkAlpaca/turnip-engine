@@ -6,6 +6,8 @@
 #include "core/event/events.hpp"
 #include "core/view/view.hpp"
 
+#include "graphics/renderer/quad_renderer_system.hpp"
+
 #include "graphics/graphics.hpp"
 #include "platform/platform.hpp"
 
@@ -35,6 +37,8 @@ namespace tur
 		AssetLibrary& get_asset_library() { return m_AssetLibrary; }
 		WorkerPool& get_worker_pool() { return m_WorkerPool; }
 		GraphicsDevice& get_graphics_device() { return m_GraphicsDevice; }
+
+		QuadRendererSystem& get_quad_renderer_system() { return m_QuadRendererSystem; }
 				
 		const ConfigData& get_config_data() const { return m_ConfigData; }
 
@@ -45,6 +49,8 @@ namespace tur
 		ConfigData m_ConfigData;
 		WorkerPool m_WorkerPool;
 		GraphicsDevice m_GraphicsDevice;
+
+		QuadRendererSystem m_QuadRendererSystem;
 
 	private:
 		bool m_RequestShutdown = false;

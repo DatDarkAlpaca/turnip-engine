@@ -8,9 +8,19 @@ namespace tur
 	struct QuadRendererSystem
 	{
 	public:
-		void initialize(const ConfigData& configData, GraphicsDevice* device, Camera* camera, Scene* scene)
+		void initialize(const ConfigData& configData, GraphicsDevice* device, Camera* camera = nullptr, Scene* scene = nullptr)
 		{
 			m_Renderer.initialize(configData, device, camera);
+			r_Scene = scene;
+		}
+
+		void set_camera(Camera* camera)
+		{
+			m_Renderer.set_camera(camera);
+		}
+
+		void set_scene(Scene* scene)
+		{
 			r_Scene = scene;
 		}
 
@@ -47,6 +57,7 @@ namespace tur
 
 	public:
 		QuadRenderer& get_renderer() { return m_Renderer; }
+		QuadRenderer& get() { return m_Renderer; }
 
 	private:
 		QuadRenderer m_Renderer;
