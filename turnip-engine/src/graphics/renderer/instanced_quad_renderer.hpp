@@ -33,6 +33,8 @@ namespace tur
 		void render();
 
 	public:
+		void set_camera(Camera* camera);
+
 		void set_clear_color(const glm::vec4& color);
 		void set_viewport(const Viewport& viewport);
 

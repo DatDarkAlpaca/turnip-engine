@@ -1,11 +1,11 @@
 #pragma once
 #include "core/scene/common_components.hpp"
 #include "core/scene/scene.hpp"
-#include "quad_renderer.hpp"
+#include "instanced_quad_renderer.hpp"
 
 namespace tur
 {
-	struct QuadRendererSystem
+	struct InstancedQuadRendererSystem
 	{
 	public:
 		void initialize(const ConfigData& configData, GraphicsDevice* device, Camera* camera = nullptr, Scene* scene = nullptr)
@@ -18,7 +18,6 @@ namespace tur
 		{
 			m_Renderer.set_camera(camera);
 		}
-
 		void set_scene(Scene* scene)
 		{
 			r_Scene = scene;
@@ -27,40 +26,31 @@ namespace tur
 	public:
 		void render()
 		{
+			TUR_LOG_CRITICAL("Instanced Quad Renderering is not available as an engine system yet");
+
 			auto& registry = r_Scene->get_registry();
 
 			auto view0 = registry.view<TransformComponent>(entt::exclude<TextureComponent>);
 			for (auto [entity, transformComponent] : view0.each())
 			{
-				QuadRenderer::QuadData quadData = {};
-				quadData.transform = transformComponent.transform.transform();
-				quadData.texture = invalid_handle;
-
-				m_Renderer.add_quad(quadData);
+				// TODO: implement
 			}
 
 			auto view1 = registry.view<TransformComponent, TextureComponent>();
 			for (auto [entity, transformComponent, textureComponent] : view1.each())
 			{
-				const auto& texture = textureComponent.handle;
-				
-				QuadRenderer::QuadData quadData = {};
-				quadData.transform = transformComponent.transform.transform();
-				quadData.texture = texture;
-
-				m_Renderer.add_quad(quadData);
+				// TODO: implement
 			}
 
-			m_Renderer.render();
-			m_Renderer.clear_quads();
+			m_Renderer.render();		
 		}
 
 	public:
-		QuadRenderer& get_renderer() { return m_Renderer; }
-		QuadRenderer& get() { return m_Renderer; }
+		InstancedQuadRenderer& get_renderer() { return m_Renderer; }
+		InstancedQuadRenderer& get() { return m_Renderer; }
 
 	private:
-		QuadRenderer m_Renderer;
+		InstancedQuadRenderer m_Renderer;
 		NON_OWNING Scene* r_Scene = nullptr;
 	};
 }
