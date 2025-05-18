@@ -39,7 +39,8 @@ namespace tur
 		m_GraphicsDevice.initialize(&m_Window, m_ConfigData);
 		m_GraphicsDevice.initialize_gui_graphics_system();
 
-		m_QuadRendererSystem.initialize(m_ConfigData, &m_GraphicsDevice, nullptr, nullptr);
+		m_QuadRendererSystem.initialize(m_ConfigData, &m_GraphicsDevice);
+		m_InstancedQuadRendererSystem.initialize(m_ConfigData, &m_GraphicsDevice);
 
 		// Scripting:
 		ScriptSystem::initialize(m_ConfigData, this);	

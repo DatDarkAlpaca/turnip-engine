@@ -43,6 +43,21 @@ namespace tur
 		m_Commands->submit();
 	}
 
+	void InstancedQuadRenderer::set_camera(Camera* camera)
+	{
+		r_Camera = camera;
+
+		VPUBO uboData;
+		uboData.projection = r_Camera->projection();
+		uboData.view = r_Camera->view();
+
+		DataBuffer data;
+		data.data = &uboData;
+		data.size = sizeof(VPUBO);
+
+		r_GraphicsDevice->update_buffer(vpBuffer, data);
+	}
+
 	void InstancedQuadRenderer::set_clear_color(const glm::vec4& color)
 	{
 		m_ClearColor = color;
@@ -200,8 +215,11 @@ namespace tur
 			}
 
 			VPUBO uboData;
-			uboData.projection = r_Camera->projection();
-			uboData.view = r_Camera->view();
+			if (r_Camera)
+			{
+				uboData.projection = r_Camera->projection();
+				uboData.view = r_Camera->view();
+			}
 
 			DataBuffer data;
 			data.data = &uboData;

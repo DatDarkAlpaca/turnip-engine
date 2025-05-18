@@ -7,6 +7,7 @@
 #include "core/view/view.hpp"
 
 #include "graphics/renderer/quad_renderer_system.hpp"
+#include "graphics/renderer/instanced_quad_renderer_system.hpp"
 
 #include "graphics/graphics.hpp"
 #include "platform/platform.hpp"
@@ -39,6 +40,7 @@ namespace tur
 		GraphicsDevice& get_graphics_device() { return m_GraphicsDevice; }
 
 		QuadRendererSystem& get_quad_renderer_system() { return m_QuadRendererSystem; }
+		InstancedQuadRendererSystem& get_instanced_quad_renderer_system() { return m_InstancedQuadRendererSystem; }
 				
 		const ConfigData& get_config_data() const { return m_ConfigData; }
 
@@ -51,6 +53,7 @@ namespace tur
 		GraphicsDevice m_GraphicsDevice;
 
 		QuadRendererSystem m_QuadRendererSystem;
+		InstancedQuadRendererSystem m_InstancedQuadRendererSystem;
 
 	private:
 		bool m_RequestShutdown = false;
