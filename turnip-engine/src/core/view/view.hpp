@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include "core/scene/scene.hpp"
 #include "core/event/event.hpp"
 
 namespace tur
@@ -44,7 +45,8 @@ namespace tur
 
 	protected:
 		NON_OWNING TurnipEngine* r_Engine = nullptr;
-		u32 viewHandle;
+		u32 viewHandle = invalid_handle;
+		Scene scene;
 	};
 }
 namespace tur

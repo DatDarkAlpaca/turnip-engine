@@ -13,7 +13,7 @@ void MainView::set_project_data(const ProjectData& projectData)
 	m_ProjectData = projectData;
 
 	// Reset:
-	m_Scene.get_registry().clear();
+	scene.get_registry().clear();
 	m_SceneData.viewerSelectedEntity = entt::null;
 
 	ScriptSystem::set_project(m_ProjectData);
@@ -22,11 +22,11 @@ void MainView::set_project_data(const ProjectData& projectData)
 	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
 		return;
 
-	SceneDeserializer deserializer(&m_Scene, projectData.projectPath / "scene.json");
+	SceneDeserializer deserializer(&scene, projectData.projectPath / "scene.json");
 	deserializer.deserialize();
 
 	// Load assets:
-	for (const auto& [entity, textureComponent] : m_Scene.get_registry().view<TextureComponent>().each())
+	for (const auto& [entity, textureComponent] : scene.get_registry().view<TextureComponent>().each())
 	{
 		auto* assetLibrary = &r_Engine->get_asset_library();
 		auto* graphicsDevice = &r_Engine->get_graphics_device();
@@ -64,8 +64,8 @@ void MainView::on_view_added()
 	initialize_renderer_system();
 
 	// Widgets:
-	m_EntityInspector.initialize(r_Engine, &m_Scene, &m_SceneData);
-	m_SceneViewer.initialize(&m_Scene, &m_SceneData);
+	m_EntityInspector.initialize(r_Engine, &scene, &m_SceneData);
+	m_SceneViewer.initialize(&scene, &m_SceneData);
 	m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &r_Engine->get_window(), &m_SceneData);
 }
 void MainView::on_update()
@@ -75,7 +75,7 @@ void MainView::on_update()
 	else
 		append_window_title(m_ProjectData.projectName);
 
-	m_Scene.on_update_runtime();
+	scene.on_update_runtime();
 }
 void MainView::on_render_gui()
 {
@@ -87,12 +87,12 @@ void MainView::on_render_gui()
 		ImGui::Begin("Runtime");
 
 		if (ImGui::Button("Start"))
-			m_Scene.start_runtime();
+			scene.start_runtime();
 
 		ImGui::SameLine();
 
 		if (ImGui::Button("Stop"))
-			m_Scene.stop_runtime();
+			scene.stop_runtime();
 
 		ImGui::End();
 	}
@@ -115,6 +115,7 @@ void MainView::on_event(Event& event)
 void MainView::on_render()
 {
 	m_RenderSystem.render();
+	m_QuadRenderer.render();
 }
 
 void MainView::initialize_textures()
@@ -144,7 +145,7 @@ void MainView::initialize_renderer_system()
 	m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
 
 	// Main:
-	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &m_Scene);
+	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &scene);
 	m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
 	m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 	m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
