@@ -32,7 +32,9 @@ namespace tur
 		template<typename T>
 		void remove_component()
 		{
-			// Todo: check whether the component exists.
+			if (has_component<T>())
+				return TUR_LOG_WARN("Component already added");
+
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
@@ -56,11 +58,10 @@ namespace tur
 
 	public:
 		inline UUID UUID() const { return get_component<UUIDComponent>().uuid; }
-		inline std::string Name() const { return get_component<NameComponent>().name; }
+		inline std::string name() const { return get_component<NameComponent>().name; }
 
 	public:
 		operator entt::entity() const { return m_EntityHandle; }
-
 		entt::entity get_handle() const { return m_EntityHandle; }
 
 	private:

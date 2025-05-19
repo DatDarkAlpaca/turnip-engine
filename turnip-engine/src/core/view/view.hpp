@@ -28,20 +28,17 @@ namespace tur
 
 	public:
 		virtual void on_engine_startup() { };
+		virtual void on_engine_shutdown() { };
 
 		virtual void on_view_added() { };
+		virtual void on_view_removed() { };
 
 		virtual void on_render() { };
-
 		virtual void on_render_gui() { };
 
 		virtual void on_update() { };
 
 		virtual void on_event(Event& event) { };
-
-		virtual void on_view_removed() { };
-
-		virtual void on_engine_shutdown() { };
 
 	protected:
 		NON_OWNING TurnipEngine* r_Engine = nullptr;

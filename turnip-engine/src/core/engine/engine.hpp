@@ -25,7 +25,7 @@ namespace tur
 		void add_view(tur_unique<View> view);
 		void remove_view(u32 handle);
 
-	public:
+	private:
 		void on_engine_startup();
 		void on_render();
 		void on_update();

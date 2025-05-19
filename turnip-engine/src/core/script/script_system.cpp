@@ -26,6 +26,10 @@ namespace tur
 
 		load_assembly();
 	}
+	void ScriptSystem::set_project(const ProjectData& projectData)
+	{
+		s_ProjectData = projectData;
+	}
 
 	void ScriptSystem::load_domain()
 	{
@@ -54,11 +58,6 @@ namespace tur
 
 		s_UserAssembly = mono_domain_assembly_open(s_AppDomain, assemblyPath.string().c_str());
 		s_UserImage = mono_assembly_get_image(s_UserAssembly);
-	}
-
-	void ScriptSystem::set_project(const ProjectData& projectData)
-	{
-		s_ProjectData = projectData;
 	}
 
 	void ScriptSystem::on_scene_runtime_start(Scene* scene)

@@ -5,15 +5,15 @@
 
 namespace tur
 {
-	// 1. Kinematics System
-	// * Velvet integrator
-	// * Accumulated timestep for physics
+	struct VelvetWorld
+	{
+		Scene* r_Scene;
+	};
 
-	// 2. Broad collision detection:
-	// * 2D space partition through spatial hashing
+	inline void velvet_world_initialize(VelvetWorld& world)
+	{
 
-	// 3. Narrow collision detection:
-	// * SAT
+	}
 
 	inline void velvet_integrate(Rigidbody2DComponent& rb, const glm::vec2& force, float fdt)
 	{
