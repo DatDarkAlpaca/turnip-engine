@@ -7,6 +7,8 @@ namespace tur::vulkan
 {
 	struct Texture
 	{
+		TextureDescriptor descriptor;
+
 		vk::Image image;
 		vk::ImageView imageView;
 		vk::Sampler sampler;

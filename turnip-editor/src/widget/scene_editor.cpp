@@ -13,7 +13,7 @@ void SceneEditor::on_render_gui()
 	auto windowSize = r_Window->data.properties.dimensions;
 
 	ImGui::Begin("Scene Editor");
-	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
+	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).image;
 	ImGui::Image((void*)sceneTextureHandle, { (float)windowSize.x, (float)windowSize.y });
 	ImGui::End();
 }

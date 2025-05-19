@@ -56,21 +56,24 @@ namespace tur::vulkan
 		catch (vk::SystemError& err) {
 			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
 		}
-
-		auto& drawTexture = r_Device->get_state().drawTexture;
-		transition_image(drawTexture.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 	}
 	void CommandBufferVulkan::begin_render_impl(render_target_handle handle)
 	{
 		const auto& currentFrame = r_Device->get_state().frameDataHolder.get_color_buffer();
-		auto& drawTexture = r_Device->get_state().drawTexture;
 		const auto& swapchainExtent = r_Device->get_state().swapchainExtent;
+
+		auto& renderTarget = r_Device->get_render_targets().get(handle);
+		m_CurrentRenderTarget = handle;
+		if (handle == invalid_handle)
+			renderTarget = r_Device->get_state().drawTexture;
+
+		transition_image(renderTarget.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 
 		vk::RenderingInfo renderInfo = {};
 		{
 			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
 			{
-				colorAttachmentInfo.imageView = drawTexture.imageView;
+				colorAttachmentInfo.imageView = renderTarget.imageView;
 				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
@@ -95,7 +98,7 @@ namespace tur::vulkan
 				colorAttachmentInfo.clearValue;
 			}*/
 
-			renderInfo.renderArea = vk::Rect2D({}, { drawTexture.extent.width, drawTexture.extent.height });
+			renderInfo.renderArea = vk::Rect2D({}, { renderTarget.extent.width, renderTarget.extent.height });
 			renderInfo.colorAttachmentCount = 1;
 			renderInfo.pColorAttachments = &colorAttachmentInfo;
 			renderInfo.layerCount = 1;
@@ -106,7 +109,8 @@ namespace tur::vulkan
 		m_CommandBuffer.beginRendering(renderInfo);
 
 		// Todo: Move ImGUI:
-		render_vulkan_frame(m_CommandBuffer);
+		if(handle == invalid_handle)
+			render_vulkan_frame(m_CommandBuffer);
 	}
 	void CommandBufferVulkan::end_render_impl()
 	{
@@ -120,13 +124,15 @@ namespace tur::vulkan
 		auto& swapchainImages = r_Device->get_state().swapChainImages;
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
-		auto& drawTexture = r_Device->get_state().drawTexture;
+		auto& renderTarget = r_Device->get_render_targets().get(m_CurrentRenderTarget);
+		if (m_CurrentRenderTarget == invalid_handle)
+			renderTarget = r_Device->get_state().drawTexture;
 
-		transition_image(drawTexture.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
+		transition_image(renderTarget.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
 		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
 
-		copy_image(drawTexture.image, swapchainImages.at(currentImage),
-			{ drawTexture.extent.width, drawTexture.extent.height }, swapchainExtent);
+		copy_image(renderTarget.image, swapchainImages.at(currentImage),
+			{ renderTarget.extent.width, renderTarget.extent.height }, swapchainExtent);
 
 		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 
@@ -245,21 +251,7 @@ namespace tur::vulkan
 					descriptorWrite.pImageInfo = &imageInfo;
 				}
 			} break;
-		}
-
-
-
-
-
-
-
-
-
-		
-		
-
-
-		
+		}		
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)

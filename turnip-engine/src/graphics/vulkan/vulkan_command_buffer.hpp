@@ -69,5 +69,7 @@ namespace tur::vulkan
 		vk::CommandBuffer m_CommandBuffer;
 		Pipeline m_BoundPipeline;
 		ClearValue m_ClearValue;
+
+		render_target_handle m_CurrentRenderTarget = invalid_handle;
 	};
 }
