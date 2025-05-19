@@ -14,7 +14,7 @@ namespace tur
 
 	struct ClearValue
 	{
-		Color color = Color(0.f, 0.f, 0.f, 1.0f);
+		Color color = color::White;
 		float depth = 1.0f;
 		u32 stencil = 0;
 	};

@@ -1,6 +1,7 @@
 #pragma once
 #include "core/scene/common_components.hpp"
 #include "core/scene/scene.hpp"
+#include "graphics/camera.hpp"
 #include "quad_renderer.hpp"
 
 namespace tur

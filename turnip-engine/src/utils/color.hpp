@@ -55,4 +55,14 @@ namespace tur
 			struct { f32 r, g, b, a; };
 		};
 	};
+
+	namespace color
+	{
+		inline Color Black		= Color(000, 000, 000, 255);
+		inline Color White		= Color(255, 255, 255, 255);
+
+		inline Color Red		= Color(255, 000, 000, 255);
+		inline Color Green		= Color(000, 255, 000, 255);
+		inline Color Blue		= Color(000, 000, 255, 255);
+	}
 }

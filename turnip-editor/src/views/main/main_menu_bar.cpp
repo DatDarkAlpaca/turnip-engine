@@ -72,7 +72,7 @@ void MainMenuBar::on_file_open()
 }
 void MainMenuBar::on_file_save()
 {
-	SceneSerializer serializer(&r_MainView->m_Scene, r_MainView->m_ProjectData.projectPath / "scene.json");
+	SceneSerializer serializer(&r_MainView->scene, r_MainView->m_ProjectData.projectPath / "scene.json");
 	serializer.serialize();
 
 	r_MainView->m_SceneData.projectEdited = false;

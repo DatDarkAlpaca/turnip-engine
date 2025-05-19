@@ -1,18 +1,9 @@
 create_project("turnip-engine", "StaticLib")
+    externalwarnings "off"
+    links { "turnip-script" }
 
-mono_sdk_sgen_file = path.join(os.getenv("MONO_SDK"), "bin", "mono-2.0-sgen.dll")
+    setup_vendors()
+    define_graphics_api()
 
-links { "turnip-script" }
-
-filter "system:windows"
-    postbuildcommands {
-        "{COPYFILE} %[%{mono_sdk_sgen_file}] %[%{!wks.location}bin/mono-2.0-sgen.dll]",
-        "{COPYFILE} %[%{mono_sdk_sgen_file}] %[%{!wks.location}/mono-2.0-sgen.dll]"
-    }
-filter {}
-
-postbuildcommands {
-    "{COPYFILE} %[%{!binaries_path}/turnip-script/turnip-script.dll] %[%{!wks.location}bin/turnip-script.dll]",
-}
-
-externalwarnings "off"
+    setup_platform()
+    detect_platform()

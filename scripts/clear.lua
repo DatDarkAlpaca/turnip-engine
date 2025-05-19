@@ -11,23 +11,21 @@ newaction {
         os.rmdir("./bin")
         os.rmdir("./intermediate")
         os.rmdir("./.vs")
-        os.rmdir("./bin")
-        
-        os.remove("**.dll")
-        os.remove("**.user")
-        os.remove("**.csproj")
-		os.remove("Makefile")
-		os.remove("**.make")
+		
         os.remove('**.sln')
         os.remove('**.vcxproj')
-        os.remove('**.vcxproj.filters')
-        os.remove("**.vcxproj.user")
+        os.remove('**.filters')
+        os.remove("**.user")
+        os.remove("**.csproj")
+        os.remove("**.dll")        
         os.remove('**.props')
         os.remove('**.targets')
         os.remove('**.Debug')
         os.remove('**.Release')
         os.remove('**.log')
         os.remove('**.ini')
+        os.remove("Makefile")
+		os.remove("**.make")
     end
 }
 
