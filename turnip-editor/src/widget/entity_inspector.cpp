@@ -77,7 +77,8 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-		if (ImGui::ImageButton((void*)textures.get(textureComponent->handle).image, { 50.0f, 50.0f }))
+		// Disallow use of internal graphics data
+		if (ImGui::ImageButton((void*)textures.get(textureComponent->handle).handle, { 50.0f, 50.0f }))
 		{
 			auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
 
