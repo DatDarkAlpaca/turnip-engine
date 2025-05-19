@@ -12,7 +12,8 @@ public:
 			quadRenderer = &r_Engine->get_quad_renderer_system();
 		}
 
-		quadRenderer->get().set_clear_color({ 0.20f, 0.20f, 0.20f, 1.f });
+		quadRenderer->get().set_clear_color({ "#22B14C" });
+		//quadRenderer->get().set_clear_color({ 34, 177, 76 });
 		quadRenderer->set_camera(&camera);
 		quadRenderer->set_scene(&scene);
 	}

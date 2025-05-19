@@ -40,7 +40,7 @@ namespace tur
 		{
 			m_Commands->set_viewport(m_Viewport);
 			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
-			m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
+			m_Commands->clear(ClearFlags::COLOR, ClearValue { m_ClearColor });
 
 			m_Commands->bind_vertex_buffer(buffer, 0, sizeof(Vertex));
 			m_Commands->bind_index_buffer(indexBuffer);
@@ -75,7 +75,7 @@ namespace tur
 		r_Camera = camera;
 	}
 
-	void QuadRenderer::set_clear_color(const glm::vec4& color)
+	void QuadRenderer::set_clear_color(const Color& color)
 	{
 		m_ClearColor = color;
 	}

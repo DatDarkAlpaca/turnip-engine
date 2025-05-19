@@ -58,7 +58,7 @@ namespace tur
 		r_GraphicsDevice->update_buffer(vpBuffer, data);
 	}
 
-	void InstancedQuadRenderer::set_clear_color(const glm::vec4& color)
+	void InstancedQuadRenderer::set_clear_color(const Color& color)
 	{
 		m_ClearColor = color;
 	}
