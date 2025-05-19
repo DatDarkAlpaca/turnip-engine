@@ -51,6 +51,10 @@ namespace tur::vulkan
 		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
 
+	protected:
+		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
+		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
+
 	public:
 		void submit_immediate_command(std::function<void()>&& function);
 
@@ -59,6 +63,7 @@ namespace tur::vulkan
 		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
+		inline free_list<Texture>& get_render_targets() { return m_RenderTargets; }
 
 		inline VulkanState& get_state() { return m_State; }
 		inline vk::CommandBuffer get_imm_command_buffer() const { return m_ImmCommandBuffer; }
@@ -74,6 +79,7 @@ namespace tur::vulkan
 		free_list<Pipeline> m_Pipelines;
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
+		free_list<Texture> m_RenderTargets;
 
 	private:
 		vk::Fence m_ImmFence;

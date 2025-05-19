@@ -40,13 +40,4 @@ function create_project(project_name, project_kind)
             optimize "on"
             inlining "auto"
         filter { }
-
-		-- Platform 
-		detect_platform()
-		
-		-- Vendor
-		setup_vendors()
-		
-		-- Graphics
-		define_graphics_api()
 end

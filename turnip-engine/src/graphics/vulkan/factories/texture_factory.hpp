@@ -100,7 +100,7 @@ namespace tur::vulkan
 		}
 
 		texture.sampler = device.createSampler(samplerInfo);
-
+		texture.descriptor = descriptor;
 		
 		return texture;
 	}

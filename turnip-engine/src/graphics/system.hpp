@@ -9,21 +9,21 @@
 
 namespace tur
 {
-#ifdef DAT_API_OPENGL
+#ifdef TUR_API_OPENGL
 	using GraphicsDevice = tur::gl::GraphicsDeviceGL;
 	using CommandBuffer = tur::gl::CommandBufferGL;
 
-#elif DAT_API_VULKAN
+#elif TUR_API_VULKAN
 	using GraphicsDevice = tur::vulkan::GraphicsDeviceVulkan;
 	using CommandBuffer = tur::vulkan::CommandBufferVulkan;
 #endif
 
 	inline void initialize_graphics_system(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification)
 	{
-#ifdef DAT_API_OPENGL
+#ifdef TUR_API_OPENGL
 		gl::initialize_opengl_windowing(window, properties, specification);
 
-#elif DAT_API_VULKAN
+#elif TUR_API_VULKAN
 		vulkan::initialize_vulkan_windowing(window, properties, specification);
 #endif
 	}

@@ -5,6 +5,8 @@
 #include "core/config/config_data.hpp"
 #include "core/event/events.hpp"
 
+#include "utils/color.hpp"
+
 namespace tur
 {
 	class QuadRenderer
@@ -39,7 +41,7 @@ namespace tur
 	public:
 		void set_camera(Camera* camera);
 
-		void set_clear_color(const glm::vec4& color);
+		void set_clear_color(const Color& color);
 
 		void set_default_texture(texture_handle handle);
 
@@ -68,7 +70,7 @@ namespace tur
 
 	private:
 		std::vector<QuadData> m_Quads;
-		glm::vec4 m_ClearColor;
+		Color m_ClearColor;
 		Viewport m_Viewport;
 
 	private:

@@ -1,6 +1,7 @@
 #pragma once
 #include <numeric>
 #include <glm/glm.hpp>
+#include "utils/color.hpp"
 
 namespace tur
 {
@@ -13,7 +14,7 @@ namespace tur
 
 	struct ClearValue
 	{
-		glm::vec4 color = glm::vec4(0.f, 0.f, 0.f, 1.0f);
+		Color color = color::White;
 		float depth = 1.0f;
 		u32 stencil = 0;
 	};

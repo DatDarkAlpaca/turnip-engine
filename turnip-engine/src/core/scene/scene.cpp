@@ -54,47 +54,13 @@ namespace tur
 		entity.add_component<EntityScriptsComponent>();
 
 		// Record:
-		m_EntityMap[uuidComp.uuid] = entity;
 		++m_Diagnostics.entityCount;
 
 		return entity;
 	}
 
-	void Scene::remove_entity(UUID uuid)
-	{
-		m_EntityMap.erase(uuid);
-
-		auto& entityOption = find_entity_by_uuid(uuid);
-		if (!entityOption.has_value())
-		{
-			TUR_LOG_WARN("Failed to remove entity with UUID: {}", static_cast<u64>(uuid));
-			return;
-		}
-
-		m_Registry.destroy(entityOption.value());
-	}
 	void Scene::remove_entity(Entity entity)
 	{
-		m_EntityMap.erase(entity.UUID());
 		m_Registry.destroy(entity);
-	}
-	
-	std::optional<Entity> Scene::find_entity_by_uuid(UUID uuid) const
-	{
-		if (m_EntityMap.find(uuid) != m_EntityMap.end())
-			return m_EntityMap.at(uuid);
-
-		return std::nullopt;
-	}
-	std::vector<Entity> Scene::find_entities_by_name(const std::string& name)
-	{
-		std::vector<Entity> entities;
-		for (auto [entity, nameComp]: m_Registry.view<NameComponent>().each())
-		{
-			if (nameComp.name == name)
-				entities.push_back(Entity(entity, this));
-		}
-
-		return entities;
 	}
 }

@@ -9,4 +9,6 @@ project "turnip-script"
         "src/**.cs",
 	}
 
-    buildoptions { "/doc:%{binaries_path}/turnip-script.xml" }
+    postbuildcommands {
+        "{COPYFILE} %[%{!binaries_path}/turnip-script/turnip-script.dll] %[%{!wks.location}bin/turnip-script.dll]",
+    }

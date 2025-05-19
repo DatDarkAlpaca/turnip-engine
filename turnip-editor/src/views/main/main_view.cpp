@@ -146,13 +146,13 @@ void MainView::initialize_renderer_system()
 
 	// Main:
 	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &scene);
-	m_RenderSystem.get_renderer().set_clear_color({ 40.f / 255.f, 40.f / 255.f, 40.f / 255.f, 1.0f });
+	m_RenderSystem.get_renderer().set_clear_color({ 40, 40, 40, 255 });
 	m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 	m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
 
 	// Instanced:
 	m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);
-	m_QuadRenderer.set_clear_color({ 1.0f, 0.0f, 0.0f, 1.0f });
+	m_QuadRenderer.set_clear_color(color::Black);
 	m_QuadRenderer.set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 
 	float size = 25.0;

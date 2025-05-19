@@ -4,6 +4,8 @@
 #include "graphics/graphics.hpp"
 #include "core/config/config_data.hpp"
 
+#include "utils/color.hpp"
+
 namespace tur
 {
 	class InstancedQuadRenderer
@@ -35,7 +37,7 @@ namespace tur
 	public:
 		void set_camera(Camera* camera);
 
-		void set_clear_color(const glm::vec4& color);
+		void set_clear_color(const Color& color);
 		void set_viewport(const Viewport& viewport);
 
 		void add_quad(const InstanceData& quadData);
@@ -53,7 +55,7 @@ namespace tur
 
 		InstancedQuadRendererInformation m_RendererInfo;
 
-		glm::vec4 m_ClearColor;
+		Color m_ClearColor;
 		Viewport m_Viewport;
 
 	private:

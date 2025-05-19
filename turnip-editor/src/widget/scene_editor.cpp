@@ -13,6 +13,8 @@ void SceneEditor::on_render_gui()
 	auto windowSize = r_Window->data.properties.dimensions;
 
 	ImGui::Begin("Scene Editor");
+
+	// TODO: disallow use of internal graphics data
 	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
 	ImGui::Image((void*)sceneTextureHandle, { (float)windowSize.x, (float)windowSize.y });
 	ImGui::End();

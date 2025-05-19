@@ -18,7 +18,6 @@ namespace tur
 	{
 	public:
 		static void initialize(const ConfigData& configData, NON_OWNING TurnipEngine* engine);
-		
 		static void set_project(const ProjectData& projectData);
 
 	public:

@@ -77,6 +77,7 @@ namespace tur::vulkan
 			descriptor.format = TextureFormat::RGBA8_UNORM;
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
+
 			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));
 		}
 
@@ -337,6 +338,19 @@ namespace tur::vulkan
 		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 
 		m_Textures.remove(handle);
+	}
+
+	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
+	{
+		descriptor.colorAttachments; // textures
+		descriptor.depthAttachment; // depth
+		descriptor.width;
+		descriptor.height;
+
+		return render_target_handle();
+	}
+	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
+	{
 	}
 }
 
