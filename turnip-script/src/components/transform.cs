@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace TurnipScript
+﻿namespace TurnipScript
 {
     public class Transform : Component
     {
