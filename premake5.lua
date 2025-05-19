@@ -41,5 +41,6 @@ group ""
 include "turnip-engine/engine.lua"
 include "turnip-editor/editor.lua"
 include "turnip-script/script.lua"
+include "turnip-testing/testing.lua"
 
 initialize_platform_scripting()
