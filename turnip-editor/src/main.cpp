@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include <turnip_engine.hpp>
 
-#include "views/project_view.hpp"
+#include "views/project/project_view.hpp"
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 using namespace tur;

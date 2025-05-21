@@ -32,3 +32,6 @@
 [submodule "vendor/pfd"]
 	path = vendor/pfd
 	url = https://github.com/samhocevar/portable-file-dialogs
+[submodule "vendor/imguizmo"]
+	path = vendor/imguizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo
