@@ -13,6 +13,7 @@ vendor_include_dirs["vma"]              = "%{vendor_path}/VulkanMemoryAllocator/
 vendor_include_dirs["nlohmann"]         = "%{vendor_path}/json/single_include"
 vendor_include_dirs["stb"]         	    = "%{vendor_path}/stb"
 vendor_include_dirs["pfd"]         	    = "%{vendor_path}/pfd/"
+vendor_include_dirs["imguizmo"]         = "%{vendor_path}/imguizmo/"
 vendor_include_dirs["mono"]         	= path.join(os.getenv("MONO_SDK"), 'include', 'mono-2.0')
 
 vendor_lib_dirs = { }
@@ -30,6 +31,7 @@ vendor_links[5] = "imgui-vulkan"
 vendor_links[6] = "vma"
 vendor_links[7] = "vulkan-1.lib"
 vendor_links[8] = "mono-2.0-sgen.lib"
+vendor_links[9] = "imguizmo"
 
 vendor_defines = {}
 vendor_defines[0] = "GLFW_INCLUDE_NONE"

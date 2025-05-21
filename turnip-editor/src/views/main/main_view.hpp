@@ -36,7 +36,6 @@ private:
 	void append_window_title(const std::string& extraText);
 
 private:
-	Camera m_MainCamera;
 	QuadRendererSystem m_RenderSystem;
 	InstancedQuadRenderer m_QuadRenderer;
 

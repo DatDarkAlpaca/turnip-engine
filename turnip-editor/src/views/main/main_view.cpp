@@ -106,7 +106,7 @@ void MainView::on_event(Event& event)
 	Subscriber subscriber(event);
 	subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
 		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
-		m_MainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
+		m_SceneData.mainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
 		return false;
 	});
 
@@ -142,16 +142,16 @@ void MainView::initialize_renderer_system()
 {
 	auto windowSize = r_Engine->get_window().data.properties.dimensions;
 
-	m_MainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
+	m_SceneData.mainCamera.set_orthogonal(0.0f, (float)windowSize.x, 0.f, (float)windowSize.y, -1.f, 1.f);
 
 	// Main:
-	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera, &scene);
+	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_SceneData.mainCamera, &scene);
 	m_RenderSystem.get_renderer().set_clear_color({ 40, 40, 40, 255 });
 	m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 	m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
 
 	// Instanced:
-	m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_MainCamera);
+	m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_SceneData.mainCamera);
 	m_QuadRenderer.set_clear_color(color::Black);
 	m_QuadRenderer.set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 

@@ -36,6 +36,7 @@ group "dependencies"
 
     include "vendor/imgui-opengl.lua"
     include "vendor/imgui-vulkan.lua"
+    include "vendor/imguizmo.lua"
 group ""
 
 include "turnip-engine/engine.lua"

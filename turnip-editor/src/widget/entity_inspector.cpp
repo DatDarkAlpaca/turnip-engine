@@ -43,6 +43,8 @@ void EntityInspector::render_transform_component(Entity selectedEntity)
 {
 	auto& transform = selectedEntity.get_component<TransformComponent>().transform;
 
+	render_transform_gizmo(selectedEntity);
+
 	if (ImGui::CollapsingHeader("Transform"))
 	{
 		ImGui::Text("Position");
@@ -185,4 +187,27 @@ void EntityInspector::render_add_script_component(Entity selectedEntity)
 
 		m_SceneData->projectEdited = true;
 	}
+}
+
+void EntityInspector::render_transform_gizmo(Entity selectedEntity)
+{
+	auto& transform = selectedEntity.get_component<TransformComponent>().transform;
+
+	ImGuizmo::BeginFrame();
+
+	ImGuizmo::SetOrthographic(true);
+	ImGuizmo::SetDrawlist();
+
+	ImGuizmo::SetRect(transform.position.x, transform.position.y, 200, 200);
+
+	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+	ImGuizmo::MODE mode = ImGuizmo::LOCAL;
+
+	ImGuizmo::Manipulate(
+		&m_SceneData->mainCamera.view()[0][0],
+		&m_SceneData->mainCamera.projection()[0][0],
+		operation,
+		mode,
+		&transform.transform()[0][0]
+	);
 }

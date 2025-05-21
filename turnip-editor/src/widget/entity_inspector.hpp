@@ -26,6 +26,9 @@ private:
 	void render_add_script_component(Entity selectedEntity);
 
 private:
+	void render_transform_gizmo(Entity selectedEntity);
+
+private:
 	NON_OWNING tur::TurnipEngine* r_Engine = nullptr;
 	NON_OWNING Scene* m_Scene = nullptr;
 	SceneData* m_SceneData = nullptr;

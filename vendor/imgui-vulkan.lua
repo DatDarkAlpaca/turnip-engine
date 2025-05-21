@@ -1,12 +1,12 @@
 project "imgui-vulkan"
-	kind "StaticLib"
+    kind "StaticLib"
     warnings "off"
     language "C++"
     cppdialect "C++17"
     staticruntime "off"
     systemversion "latest"
 
-	targetdir(binaries_path .. "/%{prj.name}")
+    targetdir(binaries_path .. "/%{prj.name}")
     objdir(intermediate_path .. "/%{prj.name}")
 
     includedirs {
