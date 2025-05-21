@@ -2,8 +2,9 @@
 #include <common.hpp>
 #include "core/scene/scene.hpp"
 #include "scene_data.hpp"
+#include "widget.hpp"
 
-class EntityInspector
+class EntityInspector : public Widget
 {
 public:
 	void initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNING tur::Scene* scene, SceneData* sceneData);

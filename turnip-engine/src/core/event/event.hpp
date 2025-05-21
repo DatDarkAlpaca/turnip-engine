@@ -3,11 +3,12 @@
 
 namespace tur
 { 
-	#define DEFINE_EVENT(TYPE)											   \
-		public:															   \
-			static inline EventType GetEventType() { return TYPE; }		   \
-			static inline EventType s_EventType = TYPE;					   \
-			virtual EventType type() const { return TYPE; }
+	using event_id = u64;
+
+	#define DEFINE_EVENT(ID)																		\
+		public:																						\
+			static inline event_id get_id() { return static_cast<event_id>(ID); }					\
+			event_id id() const override { return static_cast<event_id>(ID); };
 
 	class Event
 	{
@@ -15,7 +16,7 @@ namespace tur
 		virtual ~Event() = default;
 
 	public:
-		virtual EventType type() const { return EventType::UNKNOWN; }
+		virtual event_id id() const { return static_cast<event_id>(EventType::UNKNOWN); }
 
 	public:
 		bool handled = false;

@@ -1,11 +1,15 @@
 #include "pch.hpp"
 #include "main_view.hpp"
+#include "event/events.hpp"
+
 #include <core/scene/scene_serialization.hpp>
 
 MainView::MainView(const ProjectData& projectData)
 	: m_ProjectData(projectData)
 {
 	m_MainMenuBar.initialize(this);
+
+	m_EntityInspector.set_callback(BIND(&MainView::on_event, this));
 }
 
 void MainView::set_project_data(const ProjectData& projectData)
@@ -105,9 +109,13 @@ void MainView::on_event(Event& event)
 {
 	Subscriber subscriber(event);
 	subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
-		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)event.width, (float)event.height });
 		m_SceneData.mainCamera.set_orthogonal(0.f, (float)event.width, (float)event.height, 0.f, -1.f, 1.f);
 		return false;
+	});
+
+	subscriber.subscribe<OnEntityInspectorInitialize>([&](const OnEntityInspectorInitialize&) -> bool {
+		TUR_LOG_INFO("Inspector initialized");
+		return true;
 	});
 
 	m_RenderSystem.get_renderer().on_event(event);
@@ -132,8 +140,8 @@ void MainView::initialize_textures()
 	// Scene Texture:
 	{
 		TextureDescriptor descriptor;
-		descriptor.width = 640;
-		descriptor.height = 480;
+		descriptor.width = r_Engine->get_window().size().x;
+		descriptor.height = r_Engine->get_window().size().y;
 
 		m_SceneData.sceneTexture = r_Engine->get_graphics_device().create_texture(descriptor);
 	}

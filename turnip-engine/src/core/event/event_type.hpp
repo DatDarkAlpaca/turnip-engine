@@ -3,7 +3,7 @@
 
 namespace tur
 {
-	enum class EventType : u32
+	enum class EventType : u64
 	{
 		UNKNOWN = 0,
 
@@ -22,6 +22,10 @@ namespace tur
 		MOUSE_PRESSED,
 		MOUSE_RELEASED,
 		MOUSE_SCROLL,
-		MOUSE_MOVE
+		MOUSE_MOVE,
+
+		AMOUNT
 	};
+
+	constexpr inline u64 NextAvailableEventID = static_cast<u64>(EventType::AMOUNT);
 }

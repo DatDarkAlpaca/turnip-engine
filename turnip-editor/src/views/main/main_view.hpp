@@ -20,7 +20,7 @@ public:
 
 public:
 	void set_project_data(const ProjectData& projectData);
-
+	
 public:
 	void on_view_added() override;
 	void on_update() override;

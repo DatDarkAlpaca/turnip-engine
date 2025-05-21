@@ -1,11 +1,15 @@
 #include "pch.hpp"
 #include "entity_inspector.hpp"
+#include "event/entity_inspector_events.hpp"
 
 void EntityInspector::initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNING tur::Scene* scene, SceneData* sceneData)
 {
 	r_Engine = engine;
 	m_Scene = scene;
 	m_SceneData = sceneData;
+
+	OnEntityInspectorInitialize initEvent;
+	callback(initEvent);
 }
 void EntityInspector::on_render_gui()
 {

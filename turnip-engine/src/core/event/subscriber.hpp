@@ -7,7 +7,7 @@ namespace tur
 	{
 	public:
 		Subscriber(Event& event)
-			: event(event)
+			: m_Event(event)
 		{
 
 		}
@@ -16,17 +16,17 @@ namespace tur
 		template<typename ImplementedEvent>
 		void subscribe(std::function<bool(ImplementedEvent)> callback)
 		{
-			if (event.handled)
+			if (m_Event.handled)
 				return;
 
-			if (event.type()  == (EventType)ImplementedEvent::GetEventType())
-			{
-				ImplementedEvent* implementedEvent = static_cast<ImplementedEvent*>(&event);
-				implementedEvent->handled = implementedEvent->handled || callback(*implementedEvent);
-			}
+			if (m_Event.id() != ImplementedEvent::get_id())
+				return;
+
+			ImplementedEvent* implementedEvent = static_cast<ImplementedEvent*>(&m_Event);
+			implementedEvent->handled = implementedEvent->handled || callback(*implementedEvent);
 		}
 
 	private:
-		Event& event;
+		Event& m_Event;
 	};
 }
