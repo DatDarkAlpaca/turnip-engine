@@ -112,6 +112,10 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->resize_render_target_impl(handle, width, height);
 		}
+		void destroy_render_target(render_target_handle handle)
+		{
+			static_cast<Backend*>(this)->destroy_render_target_impl(handle);
+		}
 
 	protected:
 		BaseGraphicsDevice() = default;

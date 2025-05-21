@@ -92,6 +92,9 @@ namespace tur
 
 	void QuadRenderer::set_render_target_texture(texture_handle handle)
 	{
+		if (renderTarget != invalid_handle)
+			r_GraphicsDevice->destroy_render_target(renderTarget);
+
 		auto textDesc = r_GraphicsDevice->get_textures().get(handle).descriptor;
 		RenderTargetDescriptor descriptor = {};
 		{

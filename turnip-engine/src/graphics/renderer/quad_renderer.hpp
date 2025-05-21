@@ -42,16 +42,12 @@ namespace tur
 		void set_camera(Camera* camera);
 
 		void set_clear_color(const Color& color);
-
 		void set_default_texture(texture_handle handle);
-
 		void set_viewport(const Viewport& viewport);
-
 		void set_render_target_texture(texture_handle handle = invalid_handle);
 
 	public:
 		void add_quad(const QuadData& quad);
-
 		void clear_quads();
 
 	private:

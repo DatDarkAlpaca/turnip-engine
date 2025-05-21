@@ -1,14 +1,14 @@
 #pragma once
 #include "event_type.hpp"
 
+#define DEFINE_EVENT(ID)																					\
+		public:																								\
+			static inline tur::event_id get_id() { return static_cast<tur::event_id>(ID); }					\
+			tur::event_id id() const override { return static_cast<tur::event_id>(ID); };
+
 namespace tur
 { 
 	using event_id = u64;
-
-	#define DEFINE_EVENT(ID)																		\
-		public:																						\
-			static inline event_id get_id() { return static_cast<event_id>(ID); }					\
-			event_id id() const override { return static_cast<event_id>(ID); };
 
 	class Event
 	{

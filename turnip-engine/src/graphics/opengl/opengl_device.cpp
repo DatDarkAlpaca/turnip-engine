@@ -309,4 +309,9 @@ namespace tur::gl
 		if (glCheckNamedFramebufferStatus(renderTarget.handle, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			TUR_LOG_CRITICAL("Incomplete framebuffer: ", renderTarget.handle);
 	}
+	void GraphicsDeviceGL::destroy_render_target_impl(render_target_handle handle)
+	{
+		auto& framebuffer = m_RenderTargets.remove(handle);
+		glDeleteFramebuffers(1, &framebuffer.handle);
+	}
 }
