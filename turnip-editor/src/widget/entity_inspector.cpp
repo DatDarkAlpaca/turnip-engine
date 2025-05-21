@@ -1,12 +1,12 @@
 #include "pch.hpp"
 #include "entity_inspector.hpp"
-#include "event/entity_inspector_events.hpp"
+#include "event/events.hpp"
 
 void EntityInspector::initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNING tur::Scene* scene, SceneData* sceneData)
 {
 	r_Engine = engine;
-	m_Scene = scene;
-	m_SceneData = sceneData;
+	r_Scene = scene;
+	r_SceneData = sceneData;
 
 	OnEntityInspectorInitialize initEvent;
 	callback(initEvent);
@@ -15,18 +15,34 @@ void EntityInspector::on_render_gui()
 {
 	ImGui::Begin("Entity Inspector");
 
-	if (m_SceneData->viewerSelectedEntity == entt::null)
+	if (r_SceneData->viewerSelectedEntity.get_handle() == entt::null)
 		return ImGui::End();
 
-	Entity entity(m_SceneData->viewerSelectedEntity, m_Scene);
-
-	render_components(entity);
+	render_components(r_SceneData->viewerSelectedEntity);
 
 	ImGui::Separator();
 
-	render_component_add_list(entity);
+	render_component_add_list(r_SceneData->viewerSelectedEntity);
 
 	ImGui::End();
+}
+
+void EntityInspector::on_event(Event& event)
+{
+	Subscriber subscriber(event);
+	subscriber.subscribe<SceneEditorResized>([&](SceneEditorResized& resizeEvent) -> bool {
+		m_EditorArea.width = (float)resizeEvent.width;
+		m_EditorArea.height = (float)resizeEvent.height;
+
+		return false;
+	});
+
+	subscriber.subscribe<SceneEditorMoved>([&](SceneEditorMoved& moveEvent) -> bool {
+		m_EditorArea.x = (float)moveEvent.x;
+		m_EditorArea.y = (float)moveEvent.y;
+
+		return false;
+	});
 }
 
 void EntityInspector::render_components(Entity selectedEntity)
@@ -46,8 +62,6 @@ void EntityInspector::render_components(Entity selectedEntity)
 void EntityInspector::render_transform_component(Entity selectedEntity)
 {
 	auto& transform = selectedEntity.get_component<TransformComponent>().transform;
-
-	render_transform_gizmo(selectedEntity);
 
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -79,7 +93,7 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 	auto* graphicsDevice = &r_Engine->get_graphics_device();
 	
 	auto entityID = selectedEntity.get_handle();
-	auto* scene = m_Scene;
+	auto* scene = r_Scene;
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
@@ -156,7 +170,7 @@ void EntityInspector::render_add_transform_component(Entity selectedEntity)
 	if (!selectedEntity.has_component<TransformComponent>() && ImGui::MenuItem("Transform"))
 	{
 		selectedEntity.add_component<TransformComponent>();
-		m_SceneData->projectEdited = true;
+		r_SceneData->projectEdited = true;
 	}
 }
 void EntityInspector::render_add_texture_component(Entity selectedEntity)
@@ -164,7 +178,7 @@ void EntityInspector::render_add_texture_component(Entity selectedEntity)
 	if (!selectedEntity.has_component<TextureComponent>() && ImGui::MenuItem("Texture2D"))
 	{
 		selectedEntity.add_component<TextureComponent>();
-		m_SceneData->projectEdited = true;
+		r_SceneData->projectEdited = true;
 	}
 }
 void EntityInspector::render_add_script_component(Entity selectedEntity)
@@ -189,29 +203,6 @@ void EntityInspector::render_add_script_component(Entity selectedEntity)
 			selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.push_back(script);
 		}
 
-		m_SceneData->projectEdited = true;
+		r_SceneData->projectEdited = true;
 	}
-}
-
-void EntityInspector::render_transform_gizmo(Entity selectedEntity)
-{
-	auto& transform = selectedEntity.get_component<TransformComponent>().transform;
-
-	ImGuizmo::BeginFrame();
-
-	ImGuizmo::SetOrthographic(true);
-	ImGuizmo::SetDrawlist();
-
-	ImGuizmo::SetRect(transform.position.x, transform.position.y, 200, 200);
-
-	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
-	ImGuizmo::MODE mode = ImGuizmo::LOCAL;
-
-	ImGuizmo::Manipulate(
-		&m_SceneData->mainCamera.view()[0][0],
-		&m_SceneData->mainCamera.projection()[0][0],
-		operation,
-		mode,
-		&transform.transform()[0][0]
-	);
 }

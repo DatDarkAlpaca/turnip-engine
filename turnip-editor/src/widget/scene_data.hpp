@@ -6,7 +6,7 @@ using namespace tur;
 
 struct SceneData
 {
-	entt::entity viewerSelectedEntity = entt::null;
+	Entity viewerSelectedEntity;
 	texture_handle sceneTexture;
 	Camera mainCamera;
 

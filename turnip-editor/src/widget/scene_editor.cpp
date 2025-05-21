@@ -9,23 +9,58 @@ void SceneEditor::initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON
 
 	initialize_scene_texture();
 }
-
+ 
 void SceneEditor::on_render_gui()
 {
 	ImGui::Begin("Scene Editor");
-	ImVec2 dimensions = ImGui::GetContentRegionAvail();
+	
+	// TODO: disallow use of internal graphics data
+	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
+	ImGui::Image((void*)sceneTextureHandle, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+
+	if (r_SceneData->viewerSelectedEntity.is_valid())
+	{
+		auto& transform = r_SceneData->viewerSelectedEntity.get_component<TransformComponent>().transform;
+
+		ImGuizmo::SetOrthographic(true);
+		ImGuizmo::SetDrawlist(ImGui::GetCurrentWindow()->DrawList);
+
+		ImGuizmo::SetRect(m_LatestPosition.x, m_LatestPosition.y, m_LatestSize.x, m_LatestSize.y);
+
+		ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+		ImGuizmo::MODE mode = ImGuizmo::LOCAL;
+
+		bool manipulated = ImGuizmo::Manipulate(
+			&r_SceneData->mainCamera.view()[0][0],
+			&r_SceneData->mainCamera.projection()[0][0],
+			operation,
+			mode,
+			&transform.raw_transform()[0][0]
+		);
+
+		if(manipulated)
+			transform.decompose_transform();
+	}
+	
+	ImVec2 dimensions = ImGui::GetWindowSize();
 	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y)
 	{
-		m_LatestSize = ImGui::GetContentRegionAvail();
+		m_LatestSize = dimensions;
 		resize_scene_texture();
-		
-		SceneEditorResize editorResize(m_LatestSize.x, m_LatestSize.y);
+
+		SceneEditorResized editorResize((u32)m_LatestSize.x, (u32)m_LatestSize.y);
 		callback(editorResize);
 	}
 
-	// TODO: disallow use of internal graphics data
-	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
-	ImGui::Image((void*)sceneTextureHandle, m_LatestSize);
+	ImVec2 position = ImGui::GetItemRectMin();
+	if (m_LatestPosition.x != position.x || m_LatestPosition.y != position.y)
+	{
+		m_LatestPosition = position;
+
+		SceneEditorMoved editorMoved((u32)m_LatestPosition.x, (u32)m_LatestPosition.y);
+		callback(editorMoved);
+	}
+
 	ImGui::End();
 }
 
@@ -36,7 +71,6 @@ void SceneEditor::initialize_scene_texture()
 	descriptor.height = m_LatestSize.y > 0 ? static_cast<u32>(m_LatestSize.y) : 1;
 
 	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
-	r_SceneData->mainCamera.set_orthogonal(0.0f, m_LatestSize.x, 0.f, m_LatestSize.y, -1.f, 1.f);
 }
 
 void SceneEditor::resize_scene_texture()

@@ -1,6 +1,8 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace tur
 {
@@ -36,6 +38,17 @@ namespace tur
 			
 			m_Transform = model;
 			return m_Transform;
+		}
+
+		glm::mat4& raw_transform() { return m_Transform; }
+
+		void decompose_transform() 
+		{
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::quat quaternion;
+			glm::decompose(m_Transform, scale, quaternion, position, skew, perspective);
+			rotation = glm::degrees(glm::eulerAngles(quaternion));
 		}
 
 	public:

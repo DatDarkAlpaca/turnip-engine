@@ -24,6 +24,7 @@
 	#include <nlohmann/json.hpp>
 
 	#include <imgui.h>
+	#include <ImGuizmo.h>
 
 	#include <mono/jit/jit.h>
 	#include <mono/metadata/threads.h>

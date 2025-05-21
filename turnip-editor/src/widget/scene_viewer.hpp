@@ -13,16 +13,16 @@ public:
 	void on_render_gui();
 
 private:
-	void render_scene_graph_node(entt::entity entity);
+	void render_scene_graph_node(Entity entity);
 
-	void render_scene_viewer_popup(entt::entity entity);
+	void render_scene_viewer_popup(Entity entity);
 
 private:
 	void add_empty_entity();
 
 private:
-	NON_OWNING Scene* m_Scene = nullptr;
-	SceneData* m_SceneData = nullptr;
+	NON_OWNING Scene* r_Scene = nullptr;
+	NON_OWNING SceneData* r_SceneData = nullptr;
 
 private:
 	entt::entity m_RenamingEntity = entt::null;

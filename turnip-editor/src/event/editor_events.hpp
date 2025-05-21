@@ -5,5 +5,6 @@ enum class EditorEvents : u64
 {
 	ON_EDITOR_INIT = tur::NextAvailableEventID,
 
-	ON_SCENE_EDITOR_RESIZE,
+	SCENE_EDITOR_RESIZED,
+	SCENE_EDITOR_MOVED
 };

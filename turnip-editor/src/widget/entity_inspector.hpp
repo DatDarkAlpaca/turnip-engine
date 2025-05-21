@@ -12,6 +12,8 @@ public:
 public:
 	void on_render_gui();
 
+	void on_event(Event& event) override;
+
 private:
 	void render_components(Entity selectedEntity);
 	void render_transform_component(Entity selectedEntity);
@@ -27,10 +29,10 @@ private:
 	void render_add_script_component(Entity selectedEntity);
 
 private:
-	void render_transform_gizmo(Entity selectedEntity);
+	NON_OWNING tur::TurnipEngine* r_Engine = nullptr;
+	NON_OWNING Scene* r_Scene = nullptr;
+	SceneData* r_SceneData = nullptr;
 
 private:
-	NON_OWNING tur::TurnipEngine* r_Engine = nullptr;
-	NON_OWNING Scene* m_Scene = nullptr;
-	SceneData* m_SceneData = nullptr;
+	Rect2D m_EditorArea;
 };

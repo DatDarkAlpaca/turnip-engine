@@ -15,7 +15,6 @@ public:
 
 private:
 	void initialize_scene_texture();
-
 	void resize_scene_texture();
 
 private:
@@ -24,4 +23,5 @@ private:
 
 private:
 	ImVec2 m_LatestSize;
+	ImVec2 m_LatestPosition;
 };

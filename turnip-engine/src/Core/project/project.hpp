@@ -15,7 +15,7 @@ namespace tur
 	struct AssetMetaData
 	{
 		std::filesystem::path filepath;
-		asset_handle assetHandle;
+		asset_handle assetHandle = invalid_handle;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
 			AssetMetaData,
