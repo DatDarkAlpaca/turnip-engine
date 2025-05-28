@@ -38,15 +38,15 @@ namespace tur
 		buffer_handle buffer				= invalid_handle;
 		texture_handle defaultTexture		= invalid_handle;
 		pipeline_handle pipeline			= invalid_handle;
-		render_target_handle renderTarget	= invalid_handle;
 	};
 
 	void initialize_quad_renderer(QuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
-	void quad_renderer_on_event(QuadRenderer& renderer, Event& event);
-	void quad_renderer_render(QuadRenderer& renderer);
+	
+	void quad_renderer_begin(QuadRenderer& renderer);
+	void quad_renderer_render(QuadRenderer& renderer, render_target_handle renderTarget = invalid_handle);
+	void quad_renderer_end(QuadRenderer& renderer);
 
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
-	void quad_renderer_set_render_target_texture(QuadRenderer& renderer, texture_handle handle = invalid_handle);
 
 	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad);
 	void quad_renderer_clear_quads(QuadRenderer& renderer);

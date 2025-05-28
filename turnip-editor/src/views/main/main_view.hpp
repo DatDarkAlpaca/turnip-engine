@@ -35,6 +35,8 @@ private:
 private:
 	void append_window_title(const std::string& extraText);
 
+	void update_render_target(u32 width, u32 height);
+
 private:
 	SceneData m_SceneData;
 	MainMenuBar m_MainMenuBar;
@@ -44,8 +46,8 @@ private:
 	EntityInspector m_EntityInspector;
 
 private:
-	NON_OWNING QuadRenderer* r_QuadRenderer;
-	NON_OWNING InstancedQuadRenderer* r_InstancedRenderer;
+	NON_OWNING QuadRenderer* r_QuadRenderer = nullptr;
+	NON_OWNING InstancedQuadRenderer* r_InstancedRenderer = nullptr;
 
 private:
 	ProjectData m_ProjectData;

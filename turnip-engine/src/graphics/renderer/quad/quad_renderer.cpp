@@ -155,56 +155,49 @@ namespace tur
 		quad_renderer::initialize_pipeline(renderer, configData.quadRendererInformation);
 		quad_renderer::initialize_buffers(renderer);
 	}
-
-	void quad_renderer_on_event(QuadRenderer& renderer, Event& event)
-	{
-		Subscriber subscriber(event);
-		subscriber.subscribe<WindowResizeEvent>([&](const WindowResizeEvent& event) -> bool {
-			if (renderer.renderTarget == invalid_handle)
-				return false;
-
-			if (event.width == 0 || event.height == 0)
-				return false;
-
-			renderer.graphicsDevice->resize_render_target(renderer.renderTarget, event.width, event.height);
-			return false;
-		});
-	}
 	
-	void quad_renderer_render(QuadRenderer& renderer)
+	void quad_renderer_begin(QuadRenderer& renderer)
+	{
+		auto& commands = renderer.commands;
+		commands->begin();
+	}
+
+	void quad_renderer_render(QuadRenderer& renderer, render_target_handle renderTarget)
 	{
 		auto& commands = renderer.commands;
 
-		commands->begin();
+		commands->begin_render(renderTarget);
+		
+		commands->set_viewport(renderer.viewport);
+		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
+		commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
 
-		commands->begin_render(renderer.renderTarget);
+		commands->bind_vertex_buffer(renderer.buffer, 0, sizeof(QuadRenderer::Vertex));
+		commands->bind_index_buffer(renderer.indexBuffer);
+		commands->bind_pipeline(renderer.pipeline);
+
+		commands->set_descriptor_resource(renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+
+		for (const auto& quad : renderer.quads)
 		{
-			commands->set_viewport(renderer.viewport);
-			commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
-			commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
+			quad_renderer::bind_mvp(renderer, quad.transform);
 
-			commands->bind_vertex_buffer(renderer.buffer, 0, sizeof(QuadRenderer::Vertex));
-			commands->bind_index_buffer(renderer.indexBuffer);
-			commands->bind_pipeline(renderer.pipeline);
+			if (quad.texture != invalid_handle)
+				commands->bind_texture(quad.texture);
 
-			commands->set_descriptor_resource(renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-
-			for (const auto& quad : renderer.quads)
+			else
 			{
-				quad_renderer::bind_mvp(renderer, quad.transform);
-
-				if (quad.texture != invalid_handle)
-					commands->bind_texture(quad.texture);
-
-				else
-				{
-					if (renderer.defaultTexture != invalid_handle)
-						commands->bind_texture(renderer.defaultTexture);
-				}
-
-				commands->draw_indexed(6);
+				if (renderer.defaultTexture != invalid_handle)
+					commands->bind_texture(renderer.defaultTexture);
 			}
+
+			commands->draw_indexed(6);
 		}
+	}
+
+	void quad_renderer_end(QuadRenderer& renderer)
+	{
+		auto& commands = renderer.commands;
 		commands->end_render();
 
 		commands->end();
@@ -217,22 +210,6 @@ namespace tur
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle)
 	{
 		renderer.defaultTexture = handle;
-	}
-
-	void quad_renderer_set_render_target_texture(QuadRenderer& renderer, texture_handle handle)
-	{
-		if (renderer.renderTarget != invalid_handle)
-			renderer.graphicsDevice->destroy_render_target(renderer.renderTarget);
-
-		auto textureDesc = renderer.graphicsDevice->get_textures().get(handle).descriptor;
-		RenderTargetDescriptor descriptor = {};
-		{
-			descriptor.colorAttachments.push_back(handle);
-			descriptor.width = textureDesc.width;
-			descriptor.height = textureDesc.height;
-		}
-
-		renderer.renderTarget = renderer.graphicsDevice->create_render_target(descriptor);
 	}
 }
 

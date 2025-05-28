@@ -9,12 +9,12 @@ namespace tur
 		system.scene = scene;
 	}
 
-	void quad_renderer_system_render(QuadRendererSystem& system)
+	void quad_renderer_system_begin(QuadRendererSystem& system)
 	{
 		if (!system.scene)
 			return TUR_LOG_ERROR("Quad renderer system has no set scene");
 
-		if(!system.renderer.camera)
+		if (!system.renderer.camera)
 			return TUR_LOG_ERROR("Quad renderer system has no set camera");
 
 		auto& registry = system.scene->get_registry();
@@ -41,7 +41,18 @@ namespace tur
 			quad_renderer_add_quad(system.renderer, quadData);
 		}
 
-		quad_renderer_render(system.renderer);
+		quad_renderer_begin(system.renderer);
+	}
+
+	void quad_renderer_system_render(QuadRendererSystem& system, render_target_handle handle)
+	{
+		quad_renderer_render(system.renderer, handle);
+	}
+
+	void quad_renderer_system_end(QuadRendererSystem& system)
+	{
+		quad_renderer_end(system.renderer);
+
 		quad_renderer_clear_quads(system.renderer);
 	}
 }
