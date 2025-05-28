@@ -9,10 +9,10 @@
 
 namespace tur
 {
-	class QuadRenderer
+	struct QuadRenderer
 	{
 	public:
-		struct QuadData
+		struct Data
 		{
 			glm::mat4 transform;
 			texture_handle texture;
@@ -32,50 +32,34 @@ namespace tur
 		};
 
 	public:
-		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
-
-		void on_event(Event& event);
-
-		void render();
+		NON_OWNING GraphicsDevice* graphicsDevice = nullptr;
+		NON_OWNING Camera* camera = nullptr;
+		tur_unique<CommandBuffer> commands;
 
 	public:
-		void set_camera(Camera* camera);
-
-		void set_clear_color(const Color& color);
-		void set_default_texture(texture_handle handle);
-		void set_viewport(const Viewport& viewport);
-		void set_render_target_texture(texture_handle handle = invalid_handle);
+		std::vector<Data> quads;
+		Color clearColor;
+		Viewport viewport;
 
 	public:
-		void add_quad(const QuadData& quad);
-		void clear_quads();
-
-	private:
-		void initialize_pipeline();
-
-		void initialize_buffers();
-
-		void bind_mvp(const glm::mat4& transform);
-
-	private:
-		NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
-		NON_OWNING Camera* r_Camera = nullptr;
-		tur_unique<CommandBuffer> m_Commands;
-
-		QuadRendererInformation m_QuadRendererInfo;
-
-	private:
-		std::vector<QuadData> m_Quads;
-		Color m_ClearColor;
-		Viewport m_Viewport;
-
-	private:
-		buffer_handle uniformBuffer = invalid_handle;
-		buffer_handle indexBuffer = invalid_handle;
-		buffer_handle buffer = invalid_handle;
-		texture_handle defaultTexture = invalid_handle;
- 		pipeline_handle pipeline = invalid_handle;
-
-		render_target_handle renderTarget = invalid_handle;
+		buffer_handle uniformBuffer			= invalid_handle;
+		buffer_handle indexBuffer			= invalid_handle;
+		buffer_handle buffer				= invalid_handle;
+		texture_handle defaultTexture		= invalid_handle;
+		pipeline_handle pipeline			= invalid_handle;
+		render_target_handle renderTarget	= invalid_handle;
 	};
+
+	void initialize_quad_renderer(QuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
+	void quad_renderer_on_event(QuadRenderer& renderer, Event& event);
+	void quad_renderer_render(QuadRenderer& renderer);
+
+	void quad_renderer_set_camera(QuadRenderer& renderer, Camera* camera);
+	void quad_renderer_set_clear_color(QuadRenderer& renderer, const Color& color);
+	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
+	void quad_renderer_set_viewport(QuadRenderer& renderer, const Viewport& viewport);
+	void quad_renderer_set_render_target_texture(QuadRenderer& renderer, texture_handle handle = invalid_handle);
+
+	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad);
+	void quad_renderer_clear_quads(QuadRenderer& renderer);
 }

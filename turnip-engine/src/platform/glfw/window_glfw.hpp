@@ -11,7 +11,6 @@ namespace tur
 {
 	struct Window
 	{
-
 	public:
 		glm::vec2 size() const { return data.properties.dimensions; }
 

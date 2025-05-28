@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "project.hpp"
+#include "utils/json/json_file.hpp"
 
 namespace tur
 {
@@ -28,9 +29,8 @@ namespace tur
 		}
 
 		std::string filename = options.projectName + TUR_ENGINE_FILE_EXTENSION;
-		JsonWriter writer(options.projectFolder / filename);
-		writer.write<ProjectData>(projectData);
 
+		json_write_file(options.projectFolder / filename, projectData);
 		return projectData;
 	}
 
@@ -42,8 +42,7 @@ namespace tur
 			return std::nullopt;
 		}
 
-		JsonReader reader(filepath);
-		auto parseResult = reader.parse<ProjectData>();
+		auto parseResult = json_parse_file<ProjectData>(filepath);
 		if (!parseResult.has_value())
 			return std::nullopt;
 

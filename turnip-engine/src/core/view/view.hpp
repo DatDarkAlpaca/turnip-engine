@@ -9,19 +9,17 @@ namespace tur
 {
 	using view_handle = handle_type;
 
-	class TurnipEngine;
-
 	class View
 	{
 	public:
 		virtual ~View() = default;
 
 	public:
-		void set_engine(TurnipEngine* engine)
+		void set_engine(struct TurnipEngine* engine)
 		{
-			r_Engine = engine;
+			this->engine = engine;
 		}
-		void set_handle(u32 handle)
+		void set_handle(view_handle handle)
 		{
 			viewHandle = handle;
 		}
@@ -41,8 +39,8 @@ namespace tur
 		virtual void on_event(Event& event) { };
 
 	protected:
-		NON_OWNING TurnipEngine* r_Engine = nullptr;
-		u32 viewHandle = invalid_handle;
+		NON_OWNING struct TurnipEngine* engine = nullptr;
+		view_handle viewHandle = invalid_handle;
 		Scene scene;
 	};
 }

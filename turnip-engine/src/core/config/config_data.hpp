@@ -1,10 +1,6 @@
 #pragma once
-#include <nlohmann/json.hpp>
 #include <vulkan/vulkan.hpp>
 #include <filesystem>
-
-#include "utils/json/json_reader.hpp"
-#include "utils/json/json_writer.hpp"
 
 #include "graphics/graphics_api.hpp"
 #include "common.hpp"
@@ -17,6 +13,8 @@
 #include "quad_renderer_configuration.hpp"
 #include "instanced_quad_renderer_configuration.hpp"
 #include "scripting_data.hpp"
+
+#include "utils/json/json_file.hpp"
 
 namespace tur
 {
@@ -49,9 +47,8 @@ namespace tur
 		{
 			std::ofstream file(filepath.string());
 
-			JsonWriter writer(filepath);
 			ConfigData defaultData;
-			writer.write(defaultData);
+			json_write_file(filepath, defaultData);
 		}
 	}
 }

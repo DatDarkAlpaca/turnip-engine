@@ -7,110 +7,125 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 
-namespace tur
+namespace tur::engine
 {
-	void TurnipEngine::initialize(const std::filesystem::path& configPath)
+	static void on_startup(TurnipEngine& data)
 	{
-		// Logger:
-		initialize_logger_system();
-
-		// Config:
-		initialize_config_data(configPath);
-
-		JsonReader configReader(configPath);
-		auto readerResult = configReader.parse<ConfigData>();
-		if (!readerResult.has_value())
-			return;
-
-		m_ConfigData = readerResult.value();
-
-		// Worker Pool:
-		m_WorkerPool.initialize();
-
-		// Window:
-		initialize_windowing_system();
-		set_callback_window(&m_Window, BIND(&TurnipEngine::on_event, this));
-		initialize_graphics_system(&m_Window, m_ConfigData.windowProperties, m_ConfigData.graphicsSpecification);
-
-		// Gui:
-		initialize_gui(&m_Window);
-		
-		// Graphics:
-		m_GraphicsDevice.initialize(&m_Window, m_ConfigData);
-		m_GraphicsDevice.initialize_gui_graphics_system();
-
-		m_QuadRendererSystem.initialize(m_ConfigData, &m_GraphicsDevice);
-		m_InstancedQuadRendererSystem.initialize(m_ConfigData, &m_GraphicsDevice);
-
-		// Scripting:
-		ScriptSystem::initialize(m_ConfigData, this);	
-	}
-	void TurnipEngine::run()
-	{
-		on_engine_startup();
-
-		while (is_open_window(&m_Window) && !m_RequestShutdown)
-		{
-			poll_events(&m_Window);
-			m_WorkerPool.poll_tasks();
-
-			on_update();
-
-			on_render();
-
-			m_GraphicsDevice.present();
-		}
-
-		on_engine_shutdown();
-
-		shutdown_window(&m_Window);
-		shutdown_windowing_system();
-	}
-	void TurnipEngine::shutdown()
-	{
-		m_RequestShutdown = true;
-	}
-
-	void TurnipEngine::add_view(tur_unique<View> view)
-	{
-		view->set_engine(this);
-		view_system_add(&m_ViewSystem, std::move(view));
-	}
-	void TurnipEngine::remove_view(u32 handle)
-	{
-		view_system_remove(&m_ViewSystem, handle);
-	}
-	
-	void TurnipEngine::on_engine_startup()
-	{
-		for (const auto& view : m_ViewSystem.views)
+		for (const auto& view : data.viewSystem.views)
 			view->on_engine_startup();
 	}
-	void TurnipEngine::on_render()
-	{
-		m_GraphicsDevice.begin_gui_frame();
 
-		for (const auto& view : m_ViewSystem.views)
+	static void on_render(TurnipEngine& data)
+	{
+		data.graphicsDevice.begin_gui_frame();
+
+		for (const auto& view : data.viewSystem.views)
 		{
 			view->on_render_gui();
 			view->on_render();
 		}
 
-		m_GraphicsDevice.end_gui_frame();
+		data.graphicsDevice.end_gui_frame();
 	}
-	void TurnipEngine::on_update()
+	
+	static void on_update(TurnipEngine& data)
 	{
-		for (const auto& view : m_ViewSystem.views)
+		for (const auto& view : data.viewSystem.views)
 			view->on_update();
 	}
-	void TurnipEngine::on_event(Event& event)
+
+	static void on_event(TurnipEngine& data, Event& event)
 	{
-		for (const auto& view : m_ViewSystem.views)
+		for (const auto& view : data.viewSystem.views)
 			view->on_event(event);
 	}
-	void TurnipEngine::on_engine_shutdown()
+
+	static void on_shutdown(TurnipEngine& data)
 	{
-		for (const auto& view : m_ViewSystem.views)
+		for (const auto& view : data.viewSystem.views)
 			view->on_engine_shutdown();
+	}
+}
+
+namespace tur
+{
+	void initialize_turnip_engine(TurnipEngine& data, const std::filesystem::path& configPath)
+	{
+		// Config:
+		initialize_config_data(configPath);
+
+		// Logger:
+		initialize_logger_system();
+
+		auto readerResult = json_parse_file<ConfigData>(configPath);
+		if (!readerResult.has_value())
+		{
+			TUR_LOG_CRITICAL("Failed to parse the configuration from the specified filepath: {}", configPath.string());
+			return;
+		}
+
+		data.configData = readerResult.value();
+
+		// Worker Pool:
+		data.workerPool.initialize();
+
+		// Window:
+		initialize_windowing_system();
+		set_callback_window(&data.window, [&](Event& event) { engine::on_event(data, event); });
+		initialize_graphics_system(&data.window, data.configData);
+
+		// Gui:
+		initialize_gui(&data.window);
+
+		// Graphics:
+		data.graphicsDevice.initialize(&data.window, data.configData);
+		data.graphicsDevice.initialize_gui_graphics_system();
+
+		initialize_quad_renderer_system(data.quadRendererSystem, data.configData, &data.graphicsDevice);
+		initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
+
+		// Scripting:
+		ScriptSystem::initialize(data.configData, &data);
+	}
+	
+	void turnip_engine_run(TurnipEngine& data)
+	{
+		engine::on_startup(data);
+
+		while (is_open_window(&data.window) && !data.shutdownRequested)
+		{
+			poll_events(&data.window);
+			data.workerPool.poll_tasks();
+
+			engine::on_update(data);
+
+			engine::on_render(data);
+
+			data.graphicsDevice.present();
+		}
+
+		engine::on_shutdown(data);
+
+		shutdown_window(&data.window);
+		shutdown_windowing_system();
+	}
+
+	void turnip_engine_shutdown(TurnipEngine& data)
+	{
+		data.shutdownRequested = true;
+	}
+}
+
+namespace tur
+{
+	void engine_add_view(TurnipEngine& data, tur_unique<View> view)
+	{
+		view->set_engine(&data);
+		view_system_add(&data.viewSystem, std::move(view));
+	}
+
+	void engine_remove_view(TurnipEngine& data, view_handle handle)
+	{
+		view_system_remove(&data.viewSystem, handle);
 	}
 }

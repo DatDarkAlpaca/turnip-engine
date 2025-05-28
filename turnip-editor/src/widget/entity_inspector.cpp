@@ -87,10 +87,10 @@ void EntityInspector::render_transform_component(Entity selectedEntity)
 void EntityInspector::render_texture_component(Entity selectedEntity)
 {
 	auto* textureComponent = &selectedEntity.get_component<TextureComponent>();
-	const auto& textures = r_Engine->get_graphics_device().get_textures();
+	const auto& textures = r_Engine->graphicsDevice.get_textures();
 
-	auto* assetLibrary = &r_Engine->get_asset_library();
-	auto* graphicsDevice = &r_Engine->get_graphics_device();
+	auto* assetLibrary = &r_Engine->assetLibrary;
+	auto* graphicsDevice = &r_Engine->graphicsDevice;
 	
 	auto entityID = selectedEntity.get_handle();
 	auto* scene = r_Scene;
@@ -107,7 +107,7 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 			auto& filepath = std::filesystem::path(filepaths[0]);
 
-			r_Engine->get_worker_pool().submit<AssetInformation>([assetLibrary, filepath]() {
+			r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
 				return load_texture_asset(assetLibrary, filepath);
 			}, [textureComponent, filepath, assetLibrary, graphicsDevice](AssetInformation information) {
 

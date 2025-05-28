@@ -44,8 +44,8 @@ private:
 	EntityInspector m_EntityInspector;
 
 private:
-	QuadRenderer* r_QuadRenderer;
-	InstancedQuadRenderer* r_InstancedRenderer;
+	NON_OWNING QuadRenderer* r_QuadRenderer;
+	NON_OWNING InstancedQuadRenderer* r_InstancedRenderer;
 
 private:
 	ProjectData m_ProjectData;

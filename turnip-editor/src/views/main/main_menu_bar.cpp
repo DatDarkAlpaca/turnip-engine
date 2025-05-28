@@ -48,7 +48,7 @@ void MainMenuBar::on_file_new()
 	{
 		options.projectName = projectName;
 		options.projectFolder = projectFolderPath;
-		options.domainFilepath = r_MainView->r_Engine->get_config_data().scriptingInfo.mainDomainPath;
+		options.domainFilepath = r_MainView->engine->configData.scriptingInfo.mainDomainPath;
 	}
 
 	auto projectWrap = create_empty_project(options);
@@ -84,5 +84,5 @@ void MainMenuBar::on_file_save_as()
 }
 void MainMenuBar::on_file_close()
 {
-	r_MainView->r_Engine->shutdown();
+	turnip_engine_shutdown(*r_MainView->engine);
 }

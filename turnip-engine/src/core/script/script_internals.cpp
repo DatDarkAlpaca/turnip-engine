@@ -124,6 +124,6 @@ void set_transform_scale_native(tur::u32 entityID, glm::vec3* inScale)
 
 PlainVec2D get_mouse_position_window_native()
 {
-	glm::vec2 position = tur::get_mouse_cursor_position_window(&tur::ScriptSystem::r_Engine->get_window());
+	glm::vec2 position = tur::get_mouse_cursor_position_window(&tur::ScriptSystem::r_Engine->window);
 	return { position.x, position.y };
 }

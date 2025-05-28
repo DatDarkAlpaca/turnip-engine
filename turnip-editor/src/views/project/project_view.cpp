@@ -4,14 +4,14 @@
 
 void ProjectView::on_engine_startup()
 {
-	r_Engine->get_view_system().views.reserve(2);
-	show_window(&r_Engine->get_window());
+	engine->viewSystem.views.reserve(2);
+	show_window(&engine->window);
 }
 
 void ProjectView::on_update()
 {
 	if (!m_IsOpen)
-		r_Engine->shutdown();
+		turnip_engine_shutdown(*engine);
 }
 void ProjectView::on_render_gui()
 {
@@ -28,15 +28,15 @@ void ProjectView::on_render_gui()
 			{
 				options.projectName = projectName;
 				options.projectFolder = projectFolderPath;
-				options.domainFilepath = r_Engine->get_config_data().scriptingInfo.mainDomainPath;
+				options.domainFilepath = engine->configData.scriptingInfo.mainDomainPath;
 			}
 
 			auto projectWrap = create_empty_project(options);
 			if (!projectWrap.has_value())
 				return ImGui::End();
 
-			r_Engine->add_view(tur::make_unique<MainView>(projectWrap.value()));
-			r_Engine->remove_view(viewHandle);
+			engine_add_view(*engine, tur::make_unique<MainView>(projectWrap.value()));
+			engine_remove_view(*engine, viewHandle);
 		}
 
 		if (ImGui::Button("Open Project..."))
@@ -55,8 +55,8 @@ void ProjectView::on_render_gui()
 			if (!projectWrap.has_value())
 				return ImGui::End();
 
-			r_Engine->add_view(tur::make_unique<MainView>(projectWrap.value()));
-			r_Engine->remove_view(viewHandle);
+			engine_add_view(*engine, tur::make_unique<MainView>(projectWrap.value()));
+			engine_remove_view(*engine, viewHandle);
 		}
 
 		ImGui::End();
