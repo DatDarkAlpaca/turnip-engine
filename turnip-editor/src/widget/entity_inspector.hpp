@@ -18,6 +18,7 @@ private:
 	void render_components(Entity selectedEntity);
 	void render_transform_component(Entity selectedEntity);
 	void render_texture_component(Entity selectedEntity);
+	void render_instance_component(Entity selectedEntity);		// TODO: rename
 	void render_script_component(Entity selectedEntity);
 
 private:

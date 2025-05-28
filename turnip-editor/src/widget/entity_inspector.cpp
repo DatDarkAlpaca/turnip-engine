@@ -53,6 +53,9 @@ void EntityInspector::render_components(Entity selectedEntity)
 	if (selectedEntity.has_component<TextureComponent>())
 		render_texture_component(selectedEntity);
 
+	if (selectedEntity.has_component<InstancedQuadComponent>())
+		render_instance_component(selectedEntity);
+
 	if (selectedEntity.has_component<EntityScriptsComponent>())
 	{
 		if (!selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.empty())
@@ -132,6 +135,13 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 		}
 	}
 }
+void EntityInspector::render_instance_component(Entity selectedEntity)
+{
+	if (ImGui::CollapsingHeader("Instanced Quad"))
+	{
+		// TODO: implement
+	}
+}
 void EntityInspector::render_script_component(Entity selectedEntity)
 {
 	auto& scripts = selectedEntity.get_component<EntityScriptsComponent>().scriptComponents;
@@ -159,6 +169,7 @@ void EntityInspector::render_component_add_list(Entity selectedEntity)
 
 		render_add_texture_component(selectedEntity);
 
+		render_add_instance_component(selectedEntity);
 
 		render_add_script_component(selectedEntity);
 
