@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "scene_editor.hpp"
+#include "utils/gui_utils.hpp"
 #include "event/scene_editor_events.hpp"
 
 void SceneEditor::initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING SceneData* sceneData)
@@ -18,6 +19,14 @@ void SceneEditor::on_render_gui()
 	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
 	ImGui::Image((void*)sceneTextureHandle, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
 
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+	{
+		auto size = get_mouse_pixel_position(m_LatestSize.x, m_LatestSize.y);
+
+		SceneEditorClicked editorClicked(size.x, size.y);
+		callback(editorClicked);
+	}
+
 	if (r_SceneData->viewerSelectedEntity.is_valid())
 	{
 		auto& transform = r_SceneData->viewerSelectedEntity.get_component<TransformComponent>().transform;
@@ -27,7 +36,7 @@ void SceneEditor::on_render_gui()
 
 		ImGuizmo::SetRect(m_LatestPosition.x, m_LatestPosition.y, m_LatestSize.x, m_LatestSize.y);
 
-		ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+		ImGuizmo::OPERATION operation = ImGuizmo::UNIVERSAL;
 		ImGuizmo::MODE mode = ImGuizmo::LOCAL;
 
 		bool manipulated = ImGuizmo::Manipulate(

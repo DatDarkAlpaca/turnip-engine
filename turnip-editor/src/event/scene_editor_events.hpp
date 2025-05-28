@@ -33,3 +33,19 @@ public:
 	tur::u32 x;
 	tur::u32 y;
 };
+
+class SceneEditorClicked : public tur::Event
+{
+	DEFINE_EVENT(EditorEvents::SCENE_EDITOR_CLICKED);
+
+public:
+	SceneEditorClicked(tur::u32 x, tur::u32 y)
+		: x(x)
+		, y(y)
+	{
+	}
+
+public:
+	tur::u32 x;
+	tur::u32 y;
+};

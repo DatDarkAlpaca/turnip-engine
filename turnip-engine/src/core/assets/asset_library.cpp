@@ -18,6 +18,8 @@ namespace tur
 
 		int width, height, channels;
 
+		stbi_set_flip_vertically_on_load(true);
+
 		DataBuffer buffer;
 		{
 			buffer.data = stbi_load(filepath.string().c_str(), &width, &height, &channels, 0);

@@ -119,10 +119,19 @@ void MainView::on_event(Event& event)
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
 		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
 		m_RenderSystem.get_renderer().set_viewport({ 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
-		m_SceneData.mainCamera.set_orthogonal(0.f, (float)resizeEvent.width, (float)resizeEvent.height, 0.f, -1.f, 1.f);
+		m_SceneData.mainCamera.set_orthogonal(0.f, (float)resizeEvent.width, 0.f, (float)resizeEvent.height, -1.f, 1.f);
 		return false;
 	});
 
+	subscriber.subscribe<SceneEditorClicked>([&](const SceneEditorClicked& clickEvent) -> bool {
+		
+		// Select object on view:
+
+
+		return false;
+	});
+
+	
 	m_EntityInspector.on_event(event);
 	m_SceneEditor.on_event(event);
 
