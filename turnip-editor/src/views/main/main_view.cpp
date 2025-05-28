@@ -139,12 +139,12 @@ void MainView::on_event(Event& event)
 void MainView::on_render()
 {
 	quad_renderer_system_begin(engine->quadRendererSystem);
-
 	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
-
 	quad_renderer_system_end(engine->quadRendererSystem);
 
-	// instanced_quad_system_render(engine->instancedQuadSystem);
+	instanced_quad_system_begin(engine->instancedQuadSystem);
+	instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
+	instanced_quad_system_end(engine->instancedQuadSystem);
 }
 
 void MainView::initialize_textures()
@@ -181,13 +181,7 @@ void MainView::initialize_renderer_system()
 		
 		renderer_set_clear_color(r_InstancedRenderer, { 40, 40, 40, 255 });
 		renderer_set_viewport(r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-
-		float size = 25.0;
-		for (int x = 0; x < 10; ++x)
-		{
-			for (int y = 0; y < 10; ++y)
-				instanced_quad_renderer_add_quad(*r_InstancedRenderer, { { x * size + size, y * size, 0.0f }, { size, size }, 0 });
-		}
+		renderer_set_should_clear(r_InstancedRenderer, false);
 	}
 }
 

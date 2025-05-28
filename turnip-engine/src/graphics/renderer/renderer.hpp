@@ -10,13 +10,14 @@ namespace tur
 		virtual ~Renderer() = default;
 
 	public:
-		Color clearColor;
-		Viewport viewport;
-
-	public:
 		NON_OWNING GraphicsDevice* graphicsDevice = nullptr;
 		NON_OWNING Camera* camera = nullptr;
 		tur_unique<CommandBuffer> commands;
+
+	public:
+		Color clearColor;
+		Viewport viewport;
+		bool shouldClear = true;
 	};
 
 	inline void renderer_set_camera(Renderer* renderer, Camera* camera)
@@ -30,5 +31,9 @@ namespace tur
 	inline void renderer_set_viewport(Renderer* renderer, const Viewport& viewport)
 	{
 		renderer->viewport = viewport;
+	}
+	inline void renderer_set_should_clear(Renderer* renderer, bool shouldClear)
+	{
+		renderer->shouldClear = shouldClear;
 	}
 }

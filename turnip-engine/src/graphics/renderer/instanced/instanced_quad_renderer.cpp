@@ -193,27 +193,38 @@ namespace tur
 		instanced_renderer::initialize_textures(renderer);
 	}
 
-	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer)
+	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer)
 	{
 		auto& commands = renderer.commands;
 		commands->begin();
+	}
 
-		commands->begin_render();
-		{
-			commands->set_viewport(renderer.viewport);
-			commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
+	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer, render_target_handle handle)
+	{
+		auto& commands = renderer.commands;
+
+		commands->begin_render(handle);
+
+		commands->set_viewport(renderer.viewport);
+		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
+		
+		if(renderer.shouldClear)
 			commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
 
-			commands->bind_vertex_buffer(renderer.vertexBuffer, 0, sizeof(InstancedQuadRenderer::Vertex));
-			commands->bind_index_buffer(renderer.indexBuffer);
-			commands->bind_pipeline(renderer.pipeline);
+		commands->bind_vertex_buffer(renderer.vertexBuffer, 0, sizeof(InstancedQuadRenderer::Vertex));
+		commands->bind_index_buffer(renderer.indexBuffer);
+		commands->bind_pipeline(renderer.pipeline);
 
-			commands->set_descriptor_resource(renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-			commands->set_descriptor_resource(renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
+		commands->set_descriptor_resource(renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		commands->set_descriptor_resource(renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
 
-			commands->bind_texture(renderer.textureArray, 0);
-			commands->draw_indexed(6, renderer.quadAmount);
-		}
+		commands->bind_texture(renderer.textureArray, 0);
+		commands->draw_indexed(6, renderer.quadAmount);
+	}
+
+	void instanced_quad_renderer_end(InstancedQuadRenderer& renderer)
+	{
+		auto& commands = renderer.commands;
 		commands->end_render();
 
 		commands->end();
@@ -223,12 +234,23 @@ namespace tur
 
 namespace tur
 {
-	void instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData)
+	u32 instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData)
 	{
+		u32 index = renderer.quadAmount;
+
 		InstanceData* data = (InstanceData*)renderer.instanceMappedData;
-		data[renderer.quadAmount] = quadData;
+		data[index] = quadData;
 
 		++renderer.quadAmount;
+		return index;
+	}
+
+	void instanced_quad_renderer_update_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData, u32 index)
+	{
+		TUR_ASSERT(renderer.info.maxInstanceCount > index, "Invalid instanced renderer index");
+	
+		InstanceData* data = (InstanceData*)renderer.instanceMappedData;
+		data[index] = quadData;
 	}
 
 	void instanced_quad_renderer_add_texture(InstancedQuadRenderer& renderer, const TextureAsset& asset)

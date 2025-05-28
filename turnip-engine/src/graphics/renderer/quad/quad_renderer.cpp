@@ -170,7 +170,9 @@ namespace tur
 		
 		commands->set_viewport(renderer.viewport);
 		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
-		commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
+		
+		if (renderer.shouldClear)
+			commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
 
 		commands->bind_vertex_buffer(renderer.buffer, 0, sizeof(QuadRenderer::Vertex));
 		commands->bind_index_buffer(renderer.indexBuffer);

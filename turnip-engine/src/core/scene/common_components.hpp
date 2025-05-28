@@ -77,4 +77,22 @@ namespace tur
 		std::filesystem::path filepath;
 		texture_handle handle = 0;
 	};
+
+	struct InstancedQuadComponent
+	{
+	public:
+		InstancedQuadComponent() = default;
+		InstancedQuadComponent(const InstancedQuadComponent&) = default;
+		InstancedQuadComponent(u32 textureLayer)
+			: textureLayer(textureLayer)
+		{
+		}
+
+	public:
+		u32 textureLayer = 0;
+
+	public:
+		bool dirtyFlag = true;
+		u32 instanceIndex = invalid_handle;
+	};
 }
