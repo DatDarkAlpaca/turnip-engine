@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "entity_inspector.hpp"
 #include "event/events.hpp"
+#include "utils/gui_utils.hpp"
 
 void EntityInspector::initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNING tur::Scene* scene, SceneData* sceneData)
 {
@@ -90,18 +91,16 @@ void EntityInspector::render_transform_component(Entity selectedEntity)
 void EntityInspector::render_texture_component(Entity selectedEntity)
 {
 	auto* textureComponent = &selectedEntity.get_component<TextureComponent>();
-	const auto& textures = r_Engine->graphicsDevice.get_textures();
 
-	auto* assetLibrary = &r_Engine->assetLibrary;
 	auto* graphicsDevice = &r_Engine->graphicsDevice;
+	auto* assetLibrary = &r_Engine->assetLibrary;
 	
 	auto entityID = selectedEntity.get_handle();
 	auto* scene = r_Scene;
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-		// Disallow use of internal graphics data
-		if (ImGui::ImageButton((void*)textures.get(textureComponent->handle).handle, { 50.0f, 50.0f }))
+		if (ImGui::TextureButton(graphicsDevice, textureComponent->handle, { 50.0f, 50.0f }))
 		{
 			auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
 

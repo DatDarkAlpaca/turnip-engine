@@ -1,4 +1,6 @@
 #pragma once
+#include <variant>
+
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
@@ -101,6 +103,10 @@ namespace tur
 		void destroy_texture(texture_handle handle)
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
+		}
+		auto get_native_texture(texture_handle handle)
+		{
+			return static_cast<Backend*>(this)->get_native_texture_impl(handle);
 		}
 
 	public:

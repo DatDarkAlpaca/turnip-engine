@@ -14,6 +14,10 @@ namespace tur::vulkan
 	class GraphicsDeviceVulkan : public BaseGraphicsDevice<GraphicsDeviceVulkan>
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
+		friend class CommandBufferVulkan;
+
+		friend void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan*);
+		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
 
 	public:
 		void recreate_swapchain();
@@ -58,7 +62,7 @@ namespace tur::vulkan
 	public:
 		void submit_immediate_command(std::function<void()>&& function);
 
-	public:
+	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
 		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }

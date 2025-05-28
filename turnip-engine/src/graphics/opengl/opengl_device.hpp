@@ -16,6 +16,7 @@ namespace tur::gl
 	class GraphicsDeviceGL : public BaseGraphicsDevice<GraphicsDeviceGL>
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceGL>;
+		friend class CommandBufferGL;
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData&);
@@ -41,6 +42,10 @@ namespace tur::gl
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
 		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
 		void destroy_texture_impl(texture_handle handle);
+		Texture get_native_texture_impl(texture_handle handle)
+		{
+			return m_Textures.get(handle);
+		}
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
@@ -55,7 +60,7 @@ namespace tur::gl
 		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
 		void destroy_render_target_impl(render_target_handle handle);
 
-	public:
+	private:
 		inline free_list<Buffer>&		get_buffers()			{ return m_Buffers; }
 		inline free_list<Texture>&		get_textures()			{ return m_Textures; }
 		inline free_list<Shader>&		get_shaders()			{ return m_Shaders; }

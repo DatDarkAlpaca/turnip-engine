@@ -17,9 +17,7 @@ void SceneEditor::on_render_gui()
 {
 	ImGui::Begin("Scene Editor");
 	
-	// TODO: disallow use of internal graphics data
-	auto sceneTextureHandle = r_GraphicsDevice->get_textures().get(r_SceneData->sceneTexture).handle;
-	ImGui::Image((void*)sceneTextureHandle, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+	ImGui::Texture(r_GraphicsDevice, r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 	{
