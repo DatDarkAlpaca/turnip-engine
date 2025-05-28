@@ -41,7 +41,7 @@ namespace tur
 {
 	void instanced_quad_system_set_camera(InstancedQuadSystem& system, Camera* camera)
 	{
-		instanced_quad_renderer_set_camera(system.renderer, camera);
+		renderer_set_camera(&system.renderer, camera);
 	}
 
 	void instanced_quad_system_set_scene(InstancedQuadSystem& system, Scene* scene)

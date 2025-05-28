@@ -1,14 +1,14 @@
 #pragma once
 #include "instanced_quad_renderer_data.hpp"
 
-#include "graphics/graphics.hpp"
+#include "graphics/renderer/renderer.hpp"
 #include "core/config/config_data.hpp"
 
 #include "utils/color.hpp"
 
 namespace tur
 {
-	struct InstancedQuadRenderer
+	struct InstancedQuadRenderer : public Renderer
 	{
 	public:
 		struct Data
@@ -31,14 +31,7 @@ namespace tur
 		};
 
 	public:
-		NON_OWNING GraphicsDevice* graphicsDevice = nullptr;
-		NON_OWNING Camera* camera = nullptr;
-		tur_unique<CommandBuffer> commands;
-
 		InstancedQuadRendererInformation info;
-
-		Color clearColor;
-		Viewport viewport;
 
 	public:
 		pipeline_handle pipeline			= invalid_handle;
@@ -57,10 +50,6 @@ namespace tur
 
 	void initialize_instanced_quad_renderer(InstancedQuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
 	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer);
-
-	void instanced_quad_renderer_set_camera(InstancedQuadRenderer& renderer, Camera* camera);
-	void instanced_quad_renderer_set_clear_color(InstancedQuadRenderer& renderer, const Color& color);
-	void instanced_quad_renderer_set_viewport(InstancedQuadRenderer& renderer, const Viewport& viewport);
 
 	void instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData);
 	void instanced_quad_renderer_add_texture(InstancedQuadRenderer& renderer, const TextureAsset& asset);

@@ -1,15 +1,13 @@
 #pragma once
 #include "quad_renderer_data.hpp"
+#include "graphics/renderer/renderer.hpp"
 
-#include "graphics/graphics.hpp"
 #include "core/config/config_data.hpp"
 #include "core/event/events.hpp"
 
-#include "utils/color.hpp"
-
 namespace tur
 {
-	struct QuadRenderer
+	struct QuadRenderer : public Renderer
 	{
 	public:
 		struct Data
@@ -32,14 +30,7 @@ namespace tur
 		};
 
 	public:
-		NON_OWNING GraphicsDevice* graphicsDevice = nullptr;
-		NON_OWNING Camera* camera = nullptr;
-		tur_unique<CommandBuffer> commands;
-
-	public:
 		std::vector<Data> quads;
-		Color clearColor;
-		Viewport viewport;
 
 	public:
 		buffer_handle uniformBuffer			= invalid_handle;
@@ -54,10 +45,7 @@ namespace tur
 	void quad_renderer_on_event(QuadRenderer& renderer, Event& event);
 	void quad_renderer_render(QuadRenderer& renderer);
 
-	void quad_renderer_set_camera(QuadRenderer& renderer, Camera* camera);
-	void quad_renderer_set_clear_color(QuadRenderer& renderer, const Color& color);
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
-	void quad_renderer_set_viewport(QuadRenderer& renderer, const Viewport& viewport);
 	void quad_renderer_set_render_target_texture(QuadRenderer& renderer, texture_handle handle = invalid_handle);
 
 	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad);

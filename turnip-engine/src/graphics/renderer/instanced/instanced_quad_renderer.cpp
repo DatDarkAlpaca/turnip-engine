@@ -223,34 +223,6 @@ namespace tur
 
 namespace tur
 {
-	void instanced_quad_renderer_set_camera(InstancedQuadRenderer& renderer, Camera* camera)
-	{
-		renderer.camera = camera;
-
-		InstancedQuadRenderer::ViewProjUBO uboData = {};
-		uboData.projection = renderer.camera->projection();
-		uboData.view = renderer.camera->view();
-
-		DataBuffer data;
-		data.data = &uboData;
-		data.size = sizeof(InstancedQuadRenderer::ViewProjUBO);
-
-		renderer.graphicsDevice->update_buffer(renderer.viewProjBuffer, data);
-	}
-
-	void instanced_quad_renderer_set_clear_color(InstancedQuadRenderer& renderer, const Color& color)
-	{
-		renderer.clearColor = color;
-	}
-
-	void instanced_quad_renderer_set_viewport(InstancedQuadRenderer& renderer, const Viewport& viewport)
-	{
-		renderer.viewport = viewport;
-	}
-}
-
-namespace tur
-{
 	void instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData)
 	{
 		InstanceData* data = (InstanceData*)renderer.instanceMappedData;

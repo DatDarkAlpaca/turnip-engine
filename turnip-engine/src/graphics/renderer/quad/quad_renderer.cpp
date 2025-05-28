@@ -214,24 +214,9 @@ namespace tur
 
 namespace tur
 {
-	void quad_renderer_set_camera(QuadRenderer& renderer, Camera* camera)
-	{
-		renderer.camera = camera;
-	}
-
-	void quad_renderer_set_clear_color(QuadRenderer& renderer, const Color& color)
-	{
-		renderer.clearColor = color;
-	}
-
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle)
 	{
 		renderer.defaultTexture = handle;
-	}
-
-	void quad_renderer_set_viewport(QuadRenderer& renderer, const Viewport& viewport)
-	{
-		renderer.viewport = viewport;
 	}
 
 	void quad_renderer_set_render_target_texture(QuadRenderer& renderer, texture_handle handle)

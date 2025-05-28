@@ -50,7 +50,7 @@ namespace tur
 {
 	void quad_renderer_system_set_camera(QuadRendererSystem& system, Camera* camera)
 	{
-		quad_renderer_set_camera(system.renderer, camera);
+		renderer_set_camera(&system.renderer, camera);
 	}
 
 	void quad_renderer_system_set_scene(QuadRendererSystem& system, Scene* scene)

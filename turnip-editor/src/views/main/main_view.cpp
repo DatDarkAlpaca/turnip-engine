@@ -117,7 +117,7 @@ void MainView::on_event(Event& event)
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
 		quad_renderer_set_render_target_texture(*r_QuadRenderer, m_SceneData.sceneTexture);
-		quad_renderer_set_viewport(*r_QuadRenderer, { 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
+		renderer_set_viewport(r_QuadRenderer, { 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
 
 		m_SceneData.editorCamera.camera.set_orthogonal(0.f, (float)resizeEvent.width, 0.f, (float)resizeEvent.height, -1.f, 1.f);
 		return false;
@@ -159,7 +159,7 @@ void MainView::initialize_renderer_system()
 		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
 
 		r_QuadRenderer = &engine->quadRendererSystem.renderer;	
-		quad_renderer_set_clear_color(*r_QuadRenderer, { 40, 40, 40, 255 });	
+		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });	
 		quad_renderer_set_render_target_texture(*r_QuadRenderer, m_SceneData.sceneTexture);
 	}
 
@@ -171,8 +171,8 @@ void MainView::initialize_renderer_system()
 		instanced_quad_system_set_camera(engine->instancedQuadSystem, &m_SceneData.editorCamera.camera);
 
 		r_InstancedRenderer = &engine->instancedQuadSystem.renderer;
-		instanced_quad_renderer_set_clear_color(*r_InstancedRenderer, { 40, 40, 40, 255 });
-		instanced_quad_renderer_set_viewport(*r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+		renderer_set_clear_color(r_InstancedRenderer, { 40, 40, 40, 255 });
+		renderer_set_viewport(r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
 
 		float size = 25.0;
 		for (int x = 0; x < 10; ++x)
