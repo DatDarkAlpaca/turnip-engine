@@ -1,10 +1,9 @@
 #pragma once
 #include <turnip_engine.hpp>
 #include "scene_data.hpp"
+#include "widget.hpp"
 
-using namespace tur;
-
-class SceneViewer
+class SceneViewer : public Widget
 {
 public:
 	void initialize(NON_OWNING Scene* scene, SceneData* sceneData);

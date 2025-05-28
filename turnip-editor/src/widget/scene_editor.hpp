@@ -3,8 +3,6 @@
 #include "scene_data.hpp"
 #include "widget.hpp"
 
-using namespace tur;
-
 class SceneEditor : public Widget
 {
 public:

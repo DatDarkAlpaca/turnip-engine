@@ -1,14 +1,11 @@
 #pragma once
 #include <turnip_engine.hpp>
 
-namespace tur
+class EditorCamera
 {
-	class EditorCamera
-	{
-	public:
+public:
 
 
-	public:
-		Camera camera;
-	};
-}
+public:
+	tur::Camera camera;
+};

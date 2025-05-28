@@ -4,6 +4,8 @@
 
 #include <core/scene/scene_serialization.hpp>
 
+using namespace tur;
+
 MainView::MainView(const ProjectData& projectData)
 	: m_ProjectData(projectData)
 {
@@ -11,6 +13,8 @@ MainView::MainView(const ProjectData& projectData)
 
 	m_EntityInspector.set_callback(BIND(&MainView::on_event, this));
 	m_SceneEditor.set_callback(BIND(&MainView::on_event, this));
+	m_MainMenuBar.set_callback(BIND(&MainView::on_event, this));
+	m_SceneViewer.set_callback(BIND(&MainView::on_event, this));
 }
 
 void MainView::set_project_data(const ProjectData& projectData)
@@ -75,11 +79,6 @@ void MainView::on_view_added()
 }
 void MainView::on_update()
 {
-	if (m_SceneData.projectEdited)
-		append_window_title(m_ProjectData.projectName + "*");
-	else
-		append_window_title(m_ProjectData.projectName);
-
 	scene.on_update_runtime();
 }
 void MainView::on_render_gui()
@@ -109,6 +108,16 @@ void MainView::on_render_gui()
 void MainView::on_event(Event& event)
 {
 	Subscriber subscriber(event);
+
+	subscriber.subscribe<OnProjectEdited>([&](OnProjectEdited&) -> bool {
+		append_window_title(m_ProjectData.projectName + "*");
+		return false;
+	});
+
+	subscriber.subscribe<OnProjectSaved>([&](OnProjectSaved&) -> bool {
+		append_window_title(m_ProjectData.projectName);
+		return false;
+	});
 
 	subscriber.subscribe<OnEntityInspectorInitialize>([&](const OnEntityInspectorInitialize&) -> bool {
 		TUR_LOG_INFO("Inspector initialized");

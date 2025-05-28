@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "scene_viewer.hpp"
+#include "event/events.hpp"
 
 void SceneViewer::initialize(NON_OWNING Scene* scene, SceneData* sceneData)
 {
@@ -109,5 +110,5 @@ void SceneViewer::render_scene_viewer_popup(Entity entity)
 void SceneViewer::add_empty_entity()
 {
 	r_SceneData->viewerSelectedEntity = r_Scene->add_entity();
-	r_SceneData->projectEdited = true;
+	callback(OnProjectEdited());
 }

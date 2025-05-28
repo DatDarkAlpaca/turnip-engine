@@ -3,6 +3,8 @@
 #include "utils/gui_utils.hpp"
 #include "event/scene_editor_events.hpp"
 
+using namespace tur;
+
 void SceneEditor::initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING SceneData* sceneData)
 {
 	r_GraphicsDevice = graphicsDevice;

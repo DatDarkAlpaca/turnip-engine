@@ -13,6 +13,4 @@ struct SceneData
 
 	Entity viewerSelectedEntity;
 	EditorCamera editorCamera;
-
-	bool projectEdited = false; // use events
 };

@@ -159,18 +159,18 @@ void EntityInspector::render_component_add_list(Entity selectedEntity)
 
 		render_add_texture_component(selectedEntity);
 
+
 		render_add_script_component(selectedEntity);
 
 		ImGui::EndPopup();
 	}
 }
-
 void EntityInspector::render_add_transform_component(Entity selectedEntity)
 {
 	if (!selectedEntity.has_component<TransformComponent>() && ImGui::MenuItem("Transform"))
 	{
 		selectedEntity.add_component<TransformComponent>();
-		r_SceneData->projectEdited = true;
+		callback(OnProjectEdited());
 	}
 }
 void EntityInspector::render_add_texture_component(Entity selectedEntity)
@@ -178,7 +178,16 @@ void EntityInspector::render_add_texture_component(Entity selectedEntity)
 	if (!selectedEntity.has_component<TextureComponent>() && ImGui::MenuItem("Texture2D"))
 	{
 		selectedEntity.add_component<TextureComponent>();
-		r_SceneData->projectEdited = true;
+		callback(OnProjectEdited());
+	}
+}
+void EntityInspector::render_add_instance_component(Entity selectedEntity)
+{
+	// TODO: rename
+	if (!selectedEntity.has_component<InstancedQuadComponent>() && ImGui::MenuItem("InstancedQuad2D"))
+	{
+		selectedEntity.add_component<InstancedQuadComponent>();
+		callback(OnProjectEdited());
 	}
 }
 void EntityInspector::render_add_script_component(Entity selectedEntity)
@@ -203,6 +212,6 @@ void EntityInspector::render_add_script_component(Entity selectedEntity)
 			selectedEntity.get_component<EntityScriptsComponent>().scriptComponents.push_back(script);
 		}
 
-		r_SceneData->projectEdited = true;
+		callback(OnProjectEdited());
 	}
 }

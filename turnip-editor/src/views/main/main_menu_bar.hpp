@@ -1,9 +1,10 @@
 #pragma once
+#include "widget/widget.hpp"
 #include <turnip_engine.hpp>
 
 class MainView;
 
-class MainMenuBar
+class MainMenuBar : public Widget
 {
 public:
 	void initialize(NON_OWNING MainView* mainView);

@@ -1,8 +1,11 @@
 #include "pch.hpp"
 #include "main_view.hpp"
 #include "main_menu_bar.hpp"
+#include "event/events.hpp"
 
 #include <core/scene/scene_serialization.hpp>
+
+using namespace tur;
 
 void MainMenuBar::initialize(NON_OWNING MainView* mainView)
 {
@@ -75,12 +78,12 @@ void MainMenuBar::on_file_save()
 	SceneSerializer serializer(&r_MainView->scene, r_MainView->m_ProjectData.projectPath / "scene.json");
 	serializer.serialize();
 
-	r_MainView->m_SceneData.projectEdited = false;
+	callback(OnProjectSaved());
 }
 void MainMenuBar::on_file_save_as()
 {
-	// TODO
-	r_MainView->m_SceneData.projectEdited = false;
+	// TODO: implement
+	// callback(OnProjectSaved());
 }
 void MainMenuBar::on_file_close()
 {

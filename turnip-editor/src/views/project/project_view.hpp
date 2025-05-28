@@ -2,9 +2,7 @@
 #include <imgui.h>
 #include <turnip_engine.hpp>
 
-using namespace tur;
-
-struct ProjectView : public View
+struct ProjectView : public tur::View
 {
 public:
 	void on_engine_startup();

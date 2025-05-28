@@ -1,19 +1,16 @@
 #pragma once
 #include <turnip_engine.hpp>
 
-namespace tur
+class Widget
 {
-	class Widget
-	{
-	public:
-		virtual ~Widget() = default;
+public:
+	virtual ~Widget() = default;
 
-	public:
-		inline void set_callback(EventCallback&& callback) { this->callback = callback; }
+public:
+	inline void set_callback(tur::EventCallback&& callback) { this->callback = callback; }
 
-		virtual void on_event(Event& event) { }
+	virtual void on_event(tur::Event& event) {}
 
-	protected:
-		EventCallback callback;
-	};
-}
+protected:
+	tur::EventCallback callback;
+};
