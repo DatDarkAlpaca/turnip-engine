@@ -1,92 +1,9 @@
 #include "pch.hpp"
 #include "instanced_quad_renderer.hpp"
 
-namespace tur
+namespace tur::instanced_renderer
 {
-    void InstancedQuadRenderer::initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera)
-    {
-		r_GraphicsDevice = graphicsDevice;
-		r_Camera = camera;
-
-		m_Commands = tur::make_unique<CommandBuffer>(r_GraphicsDevice->create_command_buffer());
-		m_Commands->initialize();
-
-		m_RendererInfo = configData.instancedQuadRendererInformation;
-
-		initialize_pipeline();
-		initialize_buffers();
-		initialize_textures();
-    }
-	void InstancedQuadRenderer::render()
-	{
-		m_Commands->begin();
-
-		m_Commands->begin_render();
-		{
-			m_Commands->set_viewport(m_Viewport);
-			m_Commands->set_scissor(Rect2D{ 0, 0, m_Viewport.width, m_Viewport.height });
-			m_Commands->clear(ClearFlags::COLOR, ClearValue{ m_ClearColor });
-
-			m_Commands->bind_vertex_buffer(vertexBuffer, 0, sizeof(Vertex));
-			m_Commands->bind_index_buffer(indexBuffer);
-			m_Commands->bind_pipeline(pipeline);
-
-			m_Commands->set_descriptor_resource(vpBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-			m_Commands->set_descriptor_resource(instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
-
-			m_Commands->bind_texture(textureArray, 0);
-			m_Commands->draw_indexed(6, quadAmount);
-		}
-		m_Commands->end_render();
-
-		m_Commands->end();
-		m_Commands->submit();
-	}
-
-	void InstancedQuadRenderer::set_camera(Camera* camera)
-	{
-		r_Camera = camera;
-
-		VPUBO uboData = {};
-		uboData.projection = r_Camera->projection();
-		uboData.view = r_Camera->view();
-
-		DataBuffer data;
-		data.data = &uboData;
-		data.size = sizeof(VPUBO);
-
-		r_GraphicsDevice->update_buffer(vpBuffer, data);
-	}
-
-	void InstancedQuadRenderer::set_clear_color(const Color& color)
-	{
-		m_ClearColor = color;
-	}
-	void InstancedQuadRenderer::set_viewport(const Viewport& viewport)
-	{
-		m_Viewport = viewport;
-	}
-
-	void InstancedQuadRenderer::add_quad(const InstanceData& quadData)
-	{
-		InstanceData* data = (InstanceData*)instanceMappedData;
-		data[quadAmount] = quadData;
-
-		++quadAmount;
-	}
-	void InstancedQuadRenderer::add_texture(const TextureAsset& asset)
-	{
-		TextureAsset modifiedAsset = asset;
-		modifiedAsset.zOffset = textureCount;
-		modifiedAsset.width = m_RendererInfo.textureWidth;
-		modifiedAsset.height = m_RendererInfo.textureHeight;
-		modifiedAsset.depth = 1;
-
-		r_GraphicsDevice->update_texture(textureArray, modifiedAsset);
-		++textureCount;
-	}
-
-	void InstancedQuadRenderer::initialize_pipeline()
+	static void initialize_pipeline(InstancedQuadRenderer& renderer)
 	{
 		// Vertex Input:
 		VertexInputDescriptor vertexInput;
@@ -94,7 +11,7 @@ namespace tur
 			BindingDescription bindingDescription0;
 			{
 				bindingDescription0.binding = 0;
-				bindingDescription0.stride = sizeof(Vertex);
+				bindingDescription0.stride = sizeof(InstancedQuadRenderer::Vertex);
 				bindingDescription0.inputRate = InputRate::VERTEX;
 				vertexInput.bindings.push_back(bindingDescription0);
 			}
@@ -121,7 +38,7 @@ namespace tur
 		// Rasterizer:
 		RasterizerDescriptor rasterizer = {};
 		{
-			rasterizer.cullMode  = CullMode::FRONT;
+			rasterizer.cullMode = CullMode::FRONT;
 			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
 		}
 
@@ -150,15 +67,15 @@ namespace tur
 		}
 
 		// Shaders:
-		shader_handle vertexShader = r_GraphicsDevice->create_shader(ShaderDescriptor{
-			m_RendererInfo.vertexFilepath,
+		shader_handle vertexShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
+			renderer.info.vertexFilepath,
 			ShaderType::VERTEX
-		});
-	
-		shader_handle fragmentShader = r_GraphicsDevice->create_shader(ShaderDescriptor{
-			m_RendererInfo.fragmentFilepath,
+			});
+
+		shader_handle fragmentShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
+			renderer.info.fragmentFilepath,
 			ShaderType::FRAGMENT
-		});
+			});
 
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;
@@ -167,9 +84,10 @@ namespace tur
 		descriptor.pipelineLayout = layout;
 		descriptor.rasterizerStage = rasterizer;
 
-		pipeline = r_GraphicsDevice->create_graphics_pipeline(descriptor);
+		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
-	void InstancedQuadRenderer::initialize_buffers()
+
+	static void initialize_buffers(InstancedQuadRenderer& renderer)
 	{
 		// Vertex Buffer:
 		{
@@ -179,7 +97,7 @@ namespace tur
 			}
 
 			DataBuffer data;
-			Vertex vertices[4] = {
+			InstancedQuadRenderer::Vertex vertices[4] = {
 				{{ -0.5f, -0.5f, 0.0f },	{ 0.0f, 0.0f }},
 				{{  0.5f, -0.5f, 0.0f },	{ 1.0f, 0.0f }},
 				{{  0.5f,  0.5f, 0.0f },	{ 1.0f, 1.0f }},
@@ -188,7 +106,7 @@ namespace tur
 			data.data = vertices;
 			data.size = sizeof(vertices);
 
-			vertexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
+			renderer.vertexBuffer = renderer.graphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Index:
@@ -202,10 +120,10 @@ namespace tur
 			unsigned int vertices[] = { 0, 1, 2, 2, 3, 0 };
 			data.data = vertices;
 			data.size = sizeof(vertices);
-			
-			indexBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
+
+			renderer.indexBuffer = renderer.graphicsDevice->create_default_buffer(bufferDesc, data);
 		}
-		
+
 		// VP (View & Projection) Uniform Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
@@ -214,19 +132,19 @@ namespace tur
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 
-			VPUBO uboData = {};
-			if (r_Camera)
+			InstancedQuadRenderer::ViewProjUBO uboData = {};
+			if (renderer.camera)
 			{
-				uboData.projection = r_Camera->projection();
-				uboData.view = r_Camera->view();
+				uboData.projection = renderer.camera->projection();
+				uboData.view = renderer.camera->view();
 			}
 
 			DataBuffer data;
 			data.data = &uboData;
-			data.size = sizeof(VPUBO);
-			vpBuffer = r_GraphicsDevice->create_default_buffer(bufferDesc, data);
+			data.size = sizeof(InstancedQuadRenderer::ViewProjUBO);
+			renderer.viewProjBuffer = renderer.graphicsDevice->create_default_buffer(bufferDesc, data);
 		}
-		
+
 		// Instance Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
@@ -235,22 +153,115 @@ namespace tur
 				bufferDesc.usage = BufferUsage::DYNAMIC | BufferUsage::PERSISTENT | BufferUsage::COHERENT | BufferUsage::WRITE;
 			}
 
-			u32 instanceBufferSize = sizeof(InstanceData) * m_RendererInfo.maxInstanceCount;
-			instanceBuffer = r_GraphicsDevice->create_buffer(bufferDesc, sizeof(InstanceData) * m_RendererInfo.maxInstanceCount);
+			u32 instanceBufferSize = sizeof(InstanceData) * renderer.info.maxInstanceCount;
+			renderer.instanceBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(InstanceData) * renderer.info.maxInstanceCount);
 
-			instanceMappedData = r_GraphicsDevice->map_buffer(instanceBuffer, 0, instanceBufferSize,
-				AccessFlags::PERSISTENT | AccessFlags::WRITE | AccessFlags::COHERENT);
+			renderer.instanceMappedData = renderer.graphicsDevice->map_buffer(
+				renderer.instanceBuffer, 0, instanceBufferSize,
+				AccessFlags::PERSISTENT | AccessFlags::WRITE | AccessFlags::COHERENT
+			);
 		}
 	}
-	void InstancedQuadRenderer::initialize_textures()
+
+	static void initialize_textures(InstancedQuadRenderer& renderer)
 	{
 		TextureDescriptor descriptor;
 		{
 			descriptor.type = TextureType::ARRAY_TEXTURE_2D;
-			descriptor.width = m_RendererInfo.textureWidth;
-			descriptor.height = m_RendererInfo.textureHeight;
-			descriptor.depth = std::max<u32>(1, m_RendererInfo.maxTextureCount);
+			descriptor.width = renderer.info.textureWidth;
+			descriptor.height = renderer.info.textureHeight;
+			descriptor.depth = std::max<u32>(1, renderer.info.maxTextureCount);
 		}
-		textureArray = r_GraphicsDevice->create_texture(descriptor);
+		renderer.textureArray = renderer.graphicsDevice->create_texture(descriptor);
+	}
+}
+
+namespace tur
+{
+	void initialize_instanced_quad_renderer(InstancedQuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera)
+	{
+		renderer.graphicsDevice = graphicsDevice;
+		renderer.camera = camera;
+
+		renderer.commands = tur::make_unique<CommandBuffer>(renderer.graphicsDevice->create_command_buffer());
+		renderer.commands->initialize();
+
+		renderer.info = configData.instancedQuadRendererInformation;
+		
+		instanced_renderer::initialize_pipeline(renderer);
+		instanced_renderer::initialize_buffers(renderer);
+		instanced_renderer::initialize_textures(renderer);
+	}
+
+	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer)
+	{
+		auto& commands = renderer.commands;
+		commands->begin();
+	}
+
+	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer, render_target_handle handle)
+	{
+		auto& commands = renderer.commands;
+
+		commands->begin_render(handle);
+
+		commands->set_viewport(renderer.viewport);
+		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
+		
+		if(renderer.shouldClear)
+			commands->clear(ClearFlags::COLOR, ClearValue{ renderer.clearColor });
+
+		commands->bind_vertex_buffer(renderer.vertexBuffer, 0, sizeof(InstancedQuadRenderer::Vertex));
+		commands->bind_index_buffer(renderer.indexBuffer);
+		commands->bind_pipeline(renderer.pipeline);
+
+		commands->set_descriptor_resource(renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		commands->set_descriptor_resource(renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
+
+		commands->bind_texture(renderer.textureArray, 0);
+		commands->draw_indexed(6, renderer.quadAmount);
+	}
+
+	void instanced_quad_renderer_end(InstancedQuadRenderer& renderer)
+	{
+		auto& commands = renderer.commands;
+		commands->end_render();
+
+		commands->end();
+		commands->submit();
+	}
+}
+
+namespace tur
+{
+	u32 instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData)
+	{
+		u32 index = renderer.quadAmount;
+
+		InstanceData* data = (InstanceData*)renderer.instanceMappedData;
+		data[index] = quadData;
+
+		++renderer.quadAmount;
+		return index;
+	}
+
+	void instanced_quad_renderer_update_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData, u32 index)
+	{
+		TUR_ASSERT(renderer.info.maxInstanceCount > index, "Invalid instanced renderer index");
+	
+		InstanceData* data = (InstanceData*)renderer.instanceMappedData;
+		data[index] = quadData;
+	}
+
+	void instanced_quad_renderer_add_texture(InstancedQuadRenderer& renderer, const TextureAsset& asset)
+	{
+		TextureAsset modifiedAsset = asset;
+		modifiedAsset.zOffset = renderer.textureCount;
+		modifiedAsset.width = renderer.info.textureWidth;
+		modifiedAsset.height = renderer.info.textureHeight;
+		modifiedAsset.depth = 1;
+
+		renderer.graphicsDevice->update_texture(renderer.textureArray, modifiedAsset);
+		++renderer.textureCount;
 	}
 }

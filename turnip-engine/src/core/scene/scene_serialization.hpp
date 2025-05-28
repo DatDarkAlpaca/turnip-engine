@@ -1,9 +1,7 @@
 #pragma once
 #include "scene.hpp"
 #include "components.hpp"
-
-#include "utils/json/json_writer.hpp"
-#include "utils/json/json_reader.hpp"
+#include "utils/json/json_file.hpp"
 
 namespace tur
 {
@@ -55,8 +53,7 @@ namespace tur
 			json["scripts"].push_back(scriptJson);
 		}
 
-		JsonWriter writer(filepath);
-		writer.write(json);
+		json_write_file(filepath, json);
 	}
 
 	class SceneSerializer
@@ -64,7 +61,7 @@ namespace tur
 	public:
 		explicit SceneSerializer(NON_OWNING Scene* scene, const std::filesystem::path& filepath)
 			: r_Scene(scene)
-			, m_Writer(filepath)
+			, m_Filepath(filepath)
 		{
 		}
 
@@ -129,12 +126,12 @@ namespace tur
 				}
 			}
 
-			m_Writer.write(json);
+			json_write_file(m_Filepath, json);
 		}
 
 	private:
 		NON_OWNING Scene* r_Scene = nullptr;
-		JsonWriter m_Writer;
+		std::filesystem::path m_Filepath;
 	};
 
 	class SceneDeserializer
@@ -142,16 +139,21 @@ namespace tur
 	public:
 		explicit SceneDeserializer(NON_OWNING Scene* scene, const std::filesystem::path& filepath)
 			: r_Scene(scene)
-			, m_Reader(filepath)
 		{
+			auto jsonResult = json_parse_file(filepath);
+			if (!jsonResult.has_value())
+			{
+				TUR_LOG_ERROR("Failed to parse json file: {}", filepath.string());
+				return;
+			}
+
+			json = jsonResult.value();
 		}
 
 	public:
 		void deserialize()
 		{
 			auto& registry = r_Scene->get_registry();
-
-			nlohmann::json json = m_Reader.parse();
 
 			for (const auto& [entityKey, entityObj] : json.items())
 			{
@@ -238,6 +240,6 @@ namespace tur
 
 	private:
 		NON_OWNING Scene* r_Scene = nullptr;
-		JsonReader m_Reader;
+		nlohmann::json json;
 	};
 }

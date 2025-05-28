@@ -33,10 +33,10 @@ void MainView::set_project_data(const ProjectData& projectData)
 	// Load assets:
 	for (const auto& [entity, textureComponent] : scene.get_registry().view<TextureComponent>().each())
 	{
-		auto* assetLibrary = &r_Engine->get_asset_library();
-		auto* graphicsDevice = &r_Engine->get_graphics_device();
+		auto* assetLibrary = &engine->assetLibrary;
+		auto* graphicsDevice = &engine->graphicsDevice;
 
-		r_Engine->get_worker_pool().submit<AssetInformation>([assetLibrary, textureComponent]() {
+		engine->workerPool.submit<AssetInformation>([assetLibrary, textureComponent]() {
 			return load_texture_asset(assetLibrary, textureComponent.filepath);
 		}, [&textureComponent, assetLibrary, graphicsDevice](AssetInformation information) {
 			// if (information.isDuplicate)
@@ -66,9 +66,9 @@ void MainView::on_view_added()
 	set_project_data(m_ProjectData);
 
 	// Widgets:
-	m_EntityInspector.initialize(r_Engine, &scene, &m_SceneData);
+	m_EntityInspector.initialize(engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
-	m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &m_SceneData);
+	m_SceneEditor.initialize(&engine->graphicsDevice, &m_SceneData);
 
 	initialize_renderer_system();
 	initialize_textures();
@@ -116,8 +116,14 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
-		r_QuadRenderer->set_render_target_texture(m_SceneData.sceneTexture);
-		r_QuadRenderer->set_viewport({ 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
+		// Render target:
+		update_render_target(resizeEvent.width, resizeEvent.height);
+		
+		// Viewport:
+		if(r_QuadRenderer)
+			renderer_set_viewport(r_QuadRenderer, { 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
+		
+		// Camera:
 		m_SceneData.editorCamera.camera.set_orthogonal(0.f, (float)resizeEvent.width, 0.f, (float)resizeEvent.height, -1.f, 1.f);
 		return false;
 	});
@@ -127,65 +133,75 @@ void MainView::on_event(Event& event)
 		return false;
 	});
 
-	
 	m_EntityInspector.on_event(event);
 	m_SceneEditor.on_event(event);
-
-	r_QuadRenderer->on_event(event);
 }
 void MainView::on_render()
 {
-	r_Engine->get_quad_renderer_system().render();
-	// r_Engine->get_instanced_quad_renderer_system().render();
+	quad_renderer_system_begin(engine->quadRendererSystem);
+	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_end(engine->quadRendererSystem);
+
+	instanced_quad_system_begin(engine->instancedQuadSystem);
+	instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
+	instanced_quad_system_end(engine->instancedQuadSystem);
 }
 
 void MainView::initialize_textures()
 {
-	auto& assetLibrary = r_Engine->get_asset_library();
+	auto& assetLibrary = engine->assetLibrary;
 
 	// Default Texture:
 	{
 		auto [descriptor, asset] = create_default_texture();
-		auto defaultTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
-		r_QuadRenderer->set_default_texture(defaultTexture);
+		auto defaultTexture = engine->graphicsDevice.create_texture(descriptor, asset);
+
+		quad_renderer_set_default_texture(engine->quadRendererSystem.renderer, defaultTexture);
 	}
 }
 void MainView::initialize_renderer_system()
 {
-	auto windowSize = r_Engine->get_window().data.properties.dimensions;
+	r_InstancedRenderer = &engine->instancedQuadSystem.renderer;
+	r_QuadRenderer = &engine->quadRendererSystem.renderer;
 
 	// Main:
 	{
-		auto& quadRenderSystem = r_Engine->get_quad_renderer_system();
-		quadRenderSystem.set_scene(&scene);
-		quadRenderSystem.set_camera(&m_SceneData.editorCamera.camera);
+		quad_renderer_system_set_scene(engine->quadRendererSystem, &scene);
+		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
 
-		r_QuadRenderer = &quadRenderSystem.get_renderer();
-		r_QuadRenderer->set_clear_color({ 40, 40, 40, 255 });
-		r_QuadRenderer->set_render_target_texture(m_SceneData.sceneTexture);
+		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });			
 	}
 
 	// Instanced:
 	{
-		auto& instancedRenderSystem = r_Engine->get_instanced_quad_renderer_system();
-		instancedRenderSystem.set_scene(&scene);
-		instancedRenderSystem.set_camera(&m_SceneData.editorCamera.camera);
+		auto windowSize = engine->window.data.properties.dimensions;
 
-		r_InstancedRenderer = &instancedRenderSystem.get_renderer();
-		r_InstancedRenderer->set_clear_color({ 40, 40, 40, 255 });
-		r_InstancedRenderer->set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-
-		float size = 25.0;
-		for (int x = 0; x < 10; ++x)
-		{
-			for (int y = 0; y < 10; ++y)
-				r_InstancedRenderer->add_quad({ { x * size + size, y * size, 0.0f }, { size, size }, 0 });
-		}
+		instanced_quad_system_set_scene(engine->instancedQuadSystem, &scene);
+		instanced_quad_system_set_camera(engine->instancedQuadSystem, &m_SceneData.editorCamera.camera);
+		
+		renderer_set_clear_color(r_InstancedRenderer, { 40, 40, 40, 255 });
+		renderer_set_viewport(r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+		renderer_set_should_clear(r_InstancedRenderer, false);
 	}
 }
 
 void MainView::append_window_title(const std::string& extraText)
 {
-	auto appendedTitle = r_Engine->get_config_data().windowProperties.title + " - " + extraText;
-	set_window_title(&r_Engine->get_window(), appendedTitle);
+	auto appendedTitle = engine->configData.windowProperties.title + " - " + extraText;
+	set_window_title(&engine->window, appendedTitle);
+}
+
+void MainView::update_render_target(u32 width, u32 height)
+{
+	if(m_SceneData.sceneRenderTarget != invalid_handle)
+		engine->graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
+
+	RenderTargetDescriptor descriptor;
+	{
+		descriptor.colorAttachments.push_back(m_SceneData.sceneTexture);
+		descriptor.width = width;
+		descriptor.height = height;
+	}
+
+	m_SceneData.sceneRenderTarget = engine->graphicsDevice.create_render_target(descriptor);
 }

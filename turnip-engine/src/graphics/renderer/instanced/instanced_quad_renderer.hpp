@@ -1,17 +1,17 @@
 #pragma once
 #include "instanced_quad_renderer_data.hpp"
 
-#include "graphics/graphics.hpp"
+#include "graphics/renderer/renderer.hpp"
 #include "core/config/config_data.hpp"
 
 #include "utils/color.hpp"
 
 namespace tur
 {
-	class InstancedQuadRenderer
+	struct InstancedQuadRenderer : public Renderer
 	{
-	private:
-		struct InstanceData
+	public:
+		struct Data
 		{
 			glm::vec3 position;
 			glm::vec2 scale;
@@ -23,53 +23,39 @@ namespace tur
 			glm::vec3 position;
 			glm::vec2 uvs;
 		};
-		
-		struct VPUBO
+
+		struct ViewProjUBO
 		{
 			glm::mat4 view;
 			glm::mat4 projection;
 		};
-	
-	public:
-		void initialize(const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
-		void render();
 
 	public:
-		void set_camera(Camera* camera);
+		InstancedQuadRendererInformation info;
 
-		void set_clear_color(const Color& color);
-		void set_viewport(const Viewport& viewport);
+	public:
+		pipeline_handle pipeline			= invalid_handle;
+		buffer_handle vertexBuffer			= invalid_handle;
+		buffer_handle indexBuffer			= invalid_handle;
+		buffer_handle viewProjBuffer     	= invalid_handle;
+		buffer_handle instanceBuffer		= invalid_handle;
+		texture_handle textureArray			= invalid_handle;
 
-		void add_quad(const InstanceData& quadData);
-		void add_texture(const TextureAsset& asset);
-
-	private:
-		void initialize_pipeline();
-		void initialize_buffers();
-		void initialize_textures();
-
-	private:
-		NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;
-		NON_OWNING Camera* r_Camera = nullptr;
-		tur_unique<CommandBuffer> m_Commands;
-
-		InstancedQuadRendererInformation m_RendererInfo;
-
-		Color m_ClearColor;
-		Viewport m_Viewport;
-
-	private:
-		pipeline_handle pipeline = invalid_handle;
-
-		buffer_handle vertexBuffer      = invalid_handle;
-		buffer_handle indexBuffer       = invalid_handle;
-		buffer_handle vpBuffer          = invalid_handle;
-		buffer_handle instanceBuffer    = invalid_handle;
-
-		texture_handle textureArray = invalid_handle;
-
+	public:
 		void* instanceMappedData = nullptr;
 		u32 quadAmount = 0;
 		u32 textureCount = 0;
 	};
+	using InstanceData = InstancedQuadRenderer::Data;
+
+	void initialize_instanced_quad_renderer(InstancedQuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
+	
+	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer);
+	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer, render_target_handle handle = invalid_handle);
+	void instanced_quad_renderer_end(InstancedQuadRenderer& renderer);
+
+	u32 instanced_quad_renderer_add_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData);
+	void instanced_quad_renderer_update_quad(InstancedQuadRenderer& renderer, const InstanceData& quadData, u32 index);
+
+	void instanced_quad_renderer_add_texture(InstancedQuadRenderer& renderer, const TextureAsset& asset);
 }

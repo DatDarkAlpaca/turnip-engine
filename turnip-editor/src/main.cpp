@@ -9,10 +9,10 @@ using namespace tur;
 int main()
 {
 	TurnipEngine engine;
-	engine.initialize("res/engine_config.json");
-	engine.add_view(tur::make_unique<ProjectView>());
+	initialize_turnip_engine(engine, "res/engine_config.json");
 
-	engine.run();
+	engine_add_view(engine, tur::make_unique<ProjectView>());
+	turnip_engine_run(engine);
 
 	return 0;
 }

@@ -11,7 +11,6 @@ namespace tur
 		{
 			m_Projection = glm::ortho(left, right, bottom, top, zNear, zFar);
 		}
-
 		void set_perspective(float fov, float aspectRatio, float zNear, float zFar)
 		{
 			m_Projection = glm::perspective(fov, aspectRatio, zNear, zFar);
@@ -21,7 +20,6 @@ namespace tur
 		{
 			m_Position = position;
 		}
-
 		void set_target(const glm::vec3& target)
 		{
 			m_Target = target;

@@ -8,8 +8,10 @@ using namespace tur;
 
 struct SceneData
 {
+	texture_handle sceneTexture = invalid_handle;
+	render_target_handle sceneRenderTarget = invalid_handle;
+
 	Entity viewerSelectedEntity;
-	texture_handle sceneTexture;
 	EditorCamera editorCamera;
 
 	bool projectEdited = false; // use events

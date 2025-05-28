@@ -56,9 +56,6 @@ void SceneEditor::on_render_gui()
 	{
 		m_LatestSize = dimensions;
 		resize_scene_texture();
-
-		SceneEditorResized editorResize((u32)m_LatestSize.x, (u32)m_LatestSize.y);
-		callback(editorResize);
 	}
 
 	ImVec2 position = ImGui::GetItemRectMin();
@@ -80,6 +77,9 @@ void SceneEditor::initialize_scene_texture()
 	descriptor.height = m_LatestSize.y > 0 ? static_cast<u32>(m_LatestSize.y) : 1;
 
 	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
+
+	SceneEditorResized editorResize(descriptor.width, descriptor.height);
+	callback(editorResize);
 }
 
 void SceneEditor::resize_scene_texture()

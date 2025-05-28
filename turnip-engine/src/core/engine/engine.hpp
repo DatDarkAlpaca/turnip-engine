@@ -14,48 +14,27 @@
 
 namespace tur
 {
-	class TurnipEngine
+	struct TurnipEngine
 	{
 	public:
-		void initialize(const std::filesystem::path& configPath);
-		void run();
-		void shutdown();
+		Window window;
+		ViewSystem viewSystem;
+		AssetLibrary assetLibrary;
+		ConfigData configData;
+		WorkerPool workerPool;
+		GraphicsDevice graphicsDevice;
 
-	public:	 
-		void add_view(tur_unique<View> view);
-		void remove_view(u32 handle);
-
-	private:
-		void on_engine_startup();
-		void on_render();
-		void on_update();
-		void on_event(Event& event);
-		void on_engine_shutdown();
+		QuadRendererSystem quadRendererSystem;
+		InstancedQuadSystem instancedQuadSystem;
 
 	public:
-		Window& get_window() { return m_Window; }
-		ViewSystem& get_view_system() { return m_ViewSystem; }
-		AssetLibrary& get_asset_library() { return m_AssetLibrary; }
-		WorkerPool& get_worker_pool() { return m_WorkerPool; }
-		GraphicsDevice& get_graphics_device() { return m_GraphicsDevice; }
-
-		QuadRendererSystem& get_quad_renderer_system() { return m_QuadRendererSystem; }
-		InstancedQuadRendererSystem& get_instanced_quad_renderer_system() { return m_InstancedQuadRendererSystem; }
-				
-		const ConfigData& get_config_data() const { return m_ConfigData; }
-
-	private:
-		Window m_Window;
-		ViewSystem m_ViewSystem;
-		AssetLibrary m_AssetLibrary;
-		ConfigData m_ConfigData;
-		WorkerPool m_WorkerPool;
-		GraphicsDevice m_GraphicsDevice;
-
-		QuadRendererSystem m_QuadRendererSystem;
-		InstancedQuadRendererSystem m_InstancedQuadRendererSystem;
-
-	private:
-		bool m_RequestShutdown = false;
+		bool shutdownRequested = false;
 	};
+
+	void initialize_turnip_engine(TurnipEngine& data, const std::filesystem::path& configPath);
+	void turnip_engine_run(TurnipEngine& data);
+	void turnip_engine_shutdown(TurnipEngine& data);
+
+	void engine_add_view(TurnipEngine& data, tur_unique<View> view);
+	void engine_remove_view(TurnipEngine& data, view_handle handle);
 }

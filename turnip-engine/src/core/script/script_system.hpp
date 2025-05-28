@@ -12,7 +12,7 @@
 
 namespace tur
 {
-	class TurnipEngine;
+	struct TurnipEngine;
 
 	class ScriptSystem
 	{

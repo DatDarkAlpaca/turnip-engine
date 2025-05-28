@@ -5,52 +5,18 @@
 
 namespace tur
 {
-	struct InstancedQuadRendererSystem
+	struct InstancedQuadSystem
 	{
-	public:
-		void initialize(const ConfigData& configData, GraphicsDevice* device, Camera* camera = nullptr, Scene* scene = nullptr)
-		{
-			m_Renderer.initialize(configData, device, camera);
-			r_Scene = scene;
-		}
-
-		void set_camera(Camera* camera)
-		{
-			m_Renderer.set_camera(camera);
-		}
-		void set_scene(Scene* scene)
-		{
-			r_Scene = scene;
-		}
-
-	public:
-		void render()
-		{
-			TUR_LOG_CRITICAL("Instanced Quad Renderering is not available as an engine system yet");
-
-			auto& registry = r_Scene->get_registry();
-
-			auto view0 = registry.view<TransformComponent>(entt::exclude<TextureComponent>);
-			for (auto [entity, transformComponent] : view0.each())
-			{
-				// TODO: implement
-			}
-
-			auto view1 = registry.view<TransformComponent, TextureComponent>();
-			for (auto [entity, transformComponent, textureComponent] : view1.each())
-			{
-				// TODO: implement
-			}
-
-			m_Renderer.render();		
-		}
-
-	public:
-		InstancedQuadRenderer& get_renderer() { return m_Renderer; }
-		InstancedQuadRenderer& get() { return m_Renderer; }
-
-	private:
-		InstancedQuadRenderer m_Renderer;
-		NON_OWNING Scene* r_Scene = nullptr;
+		InstancedQuadRenderer renderer;
+		NON_OWNING Scene* scene = nullptr;
 	};
+
+	void initialize_instanced_quad_system(InstancedQuadSystem& system, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera = nullptr, Scene* scene = nullptr);
+	
+	void instanced_quad_system_begin(InstancedQuadSystem& system);
+	void instanced_quad_system_render(InstancedQuadSystem& system, render_target_handle handle = invalid_handle);
+	void instanced_quad_system_end(InstancedQuadSystem& system);
+
+	void instanced_quad_system_set_camera(InstancedQuadSystem& system, Camera* camera);
+	void instanced_quad_system_set_scene(InstancedQuadSystem& system, Scene* scene);
 }
