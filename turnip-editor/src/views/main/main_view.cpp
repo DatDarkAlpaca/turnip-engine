@@ -65,14 +65,13 @@ void MainView::on_view_added()
 {
 	set_project_data(m_ProjectData);
 
-	initialize_textures();
-
 	// Widgets:
 	m_EntityInspector.initialize(r_Engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
 	m_SceneEditor.initialize(&r_Engine->get_graphics_device(), &m_SceneData);
 
 	initialize_renderer_system();
+	initialize_textures();
 }
 void MainView::on_update()
 {
@@ -117,17 +116,14 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
-		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
-		m_RenderSystem.get_renderer().set_viewport({ 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
-		m_SceneData.mainCamera.set_orthogonal(0.f, (float)resizeEvent.width, 0.f, (float)resizeEvent.height, -1.f, 1.f);
+		r_QuadRenderer->set_render_target_texture(m_SceneData.sceneTexture);
+		r_QuadRenderer->set_viewport({ 0.0f, 0.0f, (float)resizeEvent.width, (float)resizeEvent.height });
+		m_SceneData.editorCamera.camera.set_orthogonal(0.f, (float)resizeEvent.width, 0.f, (float)resizeEvent.height, -1.f, 1.f);
 		return false;
 	});
 
 	subscriber.subscribe<SceneEditorClicked>([&](const SceneEditorClicked& clickEvent) -> bool {
-		
 		// Select object on view:
-
-
 		return false;
 	});
 
@@ -135,12 +131,12 @@ void MainView::on_event(Event& event)
 	m_EntityInspector.on_event(event);
 	m_SceneEditor.on_event(event);
 
-	m_RenderSystem.get_renderer().on_event(event);
+	r_QuadRenderer->on_event(event);
 }
 void MainView::on_render()
 {
-	m_RenderSystem.render();
-	m_QuadRenderer.render();
+	r_Engine->get_quad_renderer_system().render();
+	// r_Engine->get_instanced_quad_renderer_system().render();
 }
 
 void MainView::initialize_textures()
@@ -151,7 +147,7 @@ void MainView::initialize_textures()
 	{
 		auto [descriptor, asset] = create_default_texture();
 		auto defaultTexture = r_Engine->get_graphics_device().create_texture(descriptor, asset);
-		m_RenderSystem.get_renderer().set_default_texture(defaultTexture);
+		r_QuadRenderer->set_default_texture(defaultTexture);
 	}
 }
 void MainView::initialize_renderer_system()
@@ -159,23 +155,32 @@ void MainView::initialize_renderer_system()
 	auto windowSize = r_Engine->get_window().data.properties.dimensions;
 
 	// Main:
-	m_RenderSystem.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_SceneData.mainCamera, &scene);
 	{
-		m_RenderSystem.get_renderer().set_clear_color({ 40, 40, 40, 255 });
-		m_RenderSystem.get_renderer().set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-		m_RenderSystem.get_renderer().set_render_target_texture(m_SceneData.sceneTexture);
+		auto& quadRenderSystem = r_Engine->get_quad_renderer_system();
+		quadRenderSystem.set_scene(&scene);
+		quadRenderSystem.set_camera(&m_SceneData.editorCamera.camera);
+
+		r_QuadRenderer = &quadRenderSystem.get_renderer();
+		r_QuadRenderer->set_clear_color({ 40, 40, 40, 255 });
+		r_QuadRenderer->set_render_target_texture(m_SceneData.sceneTexture);
 	}
+
 	// Instanced:
-	m_QuadRenderer.initialize(r_Engine->get_config_data(), &r_Engine->get_graphics_device(), &m_SceneData.mainCamera);
 	{
-		m_QuadRenderer.set_clear_color(color::Black);
-		m_QuadRenderer.set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-	}
-	float size = 25.0;
-	for (int x = 0; x < 10; ++x)
-	{
-		for (int y = 0; y < 10; ++y)
-			m_QuadRenderer.add_quad({ { x * size + size, y * size, 0.0f }, { size, size }, 0 });
+		auto& instancedRenderSystem = r_Engine->get_instanced_quad_renderer_system();
+		instancedRenderSystem.set_scene(&scene);
+		instancedRenderSystem.set_camera(&m_SceneData.editorCamera.camera);
+
+		r_InstancedRenderer = &instancedRenderSystem.get_renderer();
+		r_InstancedRenderer->set_clear_color({ 40, 40, 40, 255 });
+		r_InstancedRenderer->set_viewport({ 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+
+		float size = 25.0;
+		for (int x = 0; x < 10; ++x)
+		{
+			for (int y = 0; y < 10; ++y)
+				r_InstancedRenderer->add_quad({ { x * size + size, y * size, 0.0f }, { size, size }, 0 });
+		}
 	}
 }
 

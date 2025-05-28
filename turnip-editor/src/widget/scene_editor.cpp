@@ -40,8 +40,8 @@ void SceneEditor::on_render_gui()
 		ImGuizmo::MODE mode = ImGuizmo::LOCAL;
 
 		bool manipulated = ImGuizmo::Manipulate(
-			&r_SceneData->mainCamera.view()[0][0],
-			&r_SceneData->mainCamera.projection()[0][0],
+			&r_SceneData->editorCamera.camera.view()[0][0],
+			&r_SceneData->editorCamera.camera.projection()[0][0],
 			operation,
 			mode,
 			&transform.raw_transform()[0][0]

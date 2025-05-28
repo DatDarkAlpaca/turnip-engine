@@ -36,16 +36,16 @@ private:
 	void append_window_title(const std::string& extraText);
 
 private:
-	QuadRendererSystem m_RenderSystem;
-	InstancedQuadRenderer m_QuadRenderer;
-
-private:
 	SceneData m_SceneData;
 	MainMenuBar m_MainMenuBar;
 
 	SceneViewer m_SceneViewer;
 	SceneEditor m_SceneEditor;
 	EntityInspector m_EntityInspector;
+
+private:
+	QuadRenderer* r_QuadRenderer;
+	InstancedQuadRenderer* r_InstancedRenderer;
 
 private:
 	ProjectData m_ProjectData;

@@ -15,9 +15,9 @@
 #include "core/script/script_system.hpp"
 
 #include "graphics/graphics.hpp"
-#include "graphics/renderer/quad_renderer.hpp"
-#include "graphics/renderer/quad_renderer_system.hpp"
-#include "graphics/renderer/instanced_quad_renderer.hpp"
+#include "graphics/renderer/quad/quad_renderer.hpp"
+#include "graphics/renderer/quad/quad_renderer_system.hpp"
+#include "graphics/renderer/instanced/instanced_quad_renderer.hpp"
 
 #include "utils/string_utils.hpp"
 #include "utils/transform.hpp"

@@ -6,8 +6,8 @@
 #include "core/event/events.hpp"
 #include "core/view/view.hpp"
 
-#include "graphics/renderer/quad_renderer_system.hpp"
-#include "graphics/renderer/instanced_quad_renderer_system.hpp"
+#include "graphics/renderer/quad/quad_renderer_system.hpp"
+#include "graphics/renderer/instanced/instanced_quad_renderer_system.hpp"
 
 #include "graphics/graphics.hpp"
 #include "platform/platform.hpp"

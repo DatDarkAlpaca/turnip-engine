@@ -1,7 +1,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 #include "common.hpp"
-#include "graphics/renderer/quad_renderer_data.hpp"
+#include "graphics/renderer/quad/quad_renderer_data.hpp"
 
 namespace tur
 {

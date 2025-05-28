@@ -47,7 +47,7 @@ namespace tur
 	{
 		r_Camera = camera;
 
-		VPUBO uboData;
+		VPUBO uboData = {};
 		uboData.projection = r_Camera->projection();
 		uboData.view = r_Camera->view();
 
@@ -214,7 +214,7 @@ namespace tur
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 
-			VPUBO uboData;
+			VPUBO uboData = {};
 			if (r_Camera)
 			{
 				uboData.projection = r_Camera->projection();
