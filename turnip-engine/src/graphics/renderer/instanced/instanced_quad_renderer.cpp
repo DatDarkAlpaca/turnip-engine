@@ -226,9 +226,7 @@ namespace tur
 	{
 		auto& commands = renderer.commands;
 		commands->end_render();
-
 		commands->end();
-		commands->submit();
 	}
 }
 

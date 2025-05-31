@@ -81,12 +81,6 @@ namespace tur
 			static_cast<CommandBuffer*>(this)->draw_indexed_impl(indexCount, instanceCount, firstVertex, firstInstance);
 		};
 
-	public:
-		void submit()
-		{
-			static_cast<CommandBuffer*>(this)->submit_impl();
-		}
-
 	protected:
 		BaseCommandBuffer() = default;
 	};

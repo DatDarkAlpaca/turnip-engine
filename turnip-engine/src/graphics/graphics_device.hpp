@@ -20,9 +20,17 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_impl(window, configData);
 		}
+		void begin_recording()
+		{
+			static_cast<Backend*>(this)->begin_recording_impl();
+		}
 		void present()
 		{
 			static_cast<Backend*>(this)->present_impl();
+		}
+		void submit()
+		{
+			static_cast<Backend*>(this)->submit_impl();
 		}
 
 	public:

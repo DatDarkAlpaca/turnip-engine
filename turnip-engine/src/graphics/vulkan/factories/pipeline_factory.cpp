@@ -329,7 +329,7 @@ namespace tur::vulkan
 		// Pipeline (! No renderpass since the vulkan device is using dynamic rendering):
 		vk::PipelineRenderingCreateInfo renderingInfo = {};
 		{
-			vk::Format format = vk::Format::eR8G8B8A8Unorm;
+			vk::Format format = device.get_state().swapchainFormat.format;
 			renderingInfo.colorAttachmentCount = 1;
 			renderingInfo.pColorAttachmentFormats = &format;
 		}

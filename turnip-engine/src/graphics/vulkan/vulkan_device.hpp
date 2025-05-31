@@ -25,16 +25,13 @@ namespace tur::vulkan
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
+		void begin_recording_impl();
+		void submit_impl();
 		void present_impl();
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
 		VulkanGUI create_gui_system_impl();
-
-	protected:
-		void initialize_gui_graphics_system_impl();
-		void begin_gui_frame_impl();
-		void end_gui_frame_impl();
 	
 	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);

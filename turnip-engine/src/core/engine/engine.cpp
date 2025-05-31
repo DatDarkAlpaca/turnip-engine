@@ -17,19 +17,26 @@ namespace tur::engine
 
 	static void on_render(TurnipEngine& data)
 	{
-		data.guiSystem->begin_frame();
-
-		for (const auto& view : data.viewSystem.views)
+		data.graphicsDevice.begin_recording();
+		
+		// GUI:
 		{
-			view->on_render_gui();
+			data.guiSystem->begin_frame();
+
+			for (const auto& view : data.viewSystem.views)
+			{
+				view->on_render_gui();
+			}
+
+			data.guiSystem->render();
+			data.guiSystem->end_frame();
 		}
 
-		data.guiSystem->render();
-		data.guiSystem->end_frame();
-
+		// Rendering:
 		for (const auto& view : data.viewSystem.views)
 			view->on_render();
-		
+
+		data.graphicsDevice.submit();
 		data.graphicsDevice.present();
 	}
 	

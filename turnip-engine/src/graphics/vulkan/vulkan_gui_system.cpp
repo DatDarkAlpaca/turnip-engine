@@ -30,7 +30,6 @@ namespace tur::vulkan
 
 		m_CommandBuffer->end_render();
 		m_CommandBuffer->end();
-		m_CommandBuffer->submit();
 	}
 	void VulkanGUI::end_frame_impl()
 	{

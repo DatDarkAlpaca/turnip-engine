@@ -40,9 +40,10 @@ namespace tur::vulkan
 		initialize_frame_data(m_State);
 
 		// Recreate main texture:
+
 		TextureDescriptor descriptor;
 		{
-			descriptor.format = TextureFormat::B8G8R8A8_UNORM;
+			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
@@ -88,7 +89,7 @@ namespace tur::vulkan
 		// Texture:
 		TextureDescriptor descriptor;
 		{
-			descriptor.format = TextureFormat::B8G8R8A8_UNORM;
+			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
@@ -127,6 +128,67 @@ namespace tur::vulkan
 				createInfo.flags = vk::FenceCreateFlagBits::eSignaled;
 				m_ImmFence = m_State.logicalDevice.createFence(createInfo);
 			}
+		}
+	}
+
+	void GraphicsDeviceVulkan::begin_recording_impl()
+	{
+		auto& device = m_State.logicalDevice;
+		auto& swapchain = m_State.swapchain;
+		auto& frameDataHolder = m_State.frameDataHolder;
+		auto& frameData = frameDataHolder.get_frame_data();
+
+		try
+		{
+			auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
+			device.resetFences(frameData.recordingFence);
+		}
+		catch (vk::SystemError& err)
+		{
+			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
+		}
+
+		auto imageResult = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore);
+		frameDataHolder.set_color_buffer(imageResult.value);
+
+		if (imageResult.result == vk::Result::eErrorOutOfDateKHR)
+			recreate_swapchain();
+
+		else if (imageResult.result != vk::Result::eSuccess && imageResult.result != vk::Result::eSuboptimalKHR)
+			TUR_LOG_CRITICAL("Failed to acquire swapchain image");
+
+		frameData.commandBuffer.reset();
+	}
+	void GraphicsDeviceVulkan::submit_impl()
+	{
+		auto& graphicsQueue = m_State.queueList.get(QueueUsage::GRAPHICS);
+		auto& frameDataHolder = m_State.frameDataHolder;
+		const auto& frameData = frameDataHolder.get_frame_data();
+
+		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
+		vk::Semaphore waitSemaphores[] = { frameData.imageAvailableSemaphore };
+		vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+		vk::SubmitInfo submitInfo = {};
+		{
+			submitInfo.pWaitDstStageMask = waitStages;
+
+			submitInfo.waitSemaphoreCount = 1;
+			submitInfo.pWaitSemaphores = waitSemaphores;
+
+			submitInfo.signalSemaphoreCount = 1;
+			submitInfo.pSignalSemaphores = signalSemaphores;
+
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &frameData.commandBuffer;
+		}
+
+		try
+		{
+			graphicsQueue.submit(submitInfo, frameData.recordingFence);
+		}
+		catch (vk::SystemError& err)
+		{
+			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
 		}
 	}
 	void GraphicsDeviceVulkan::present_impl()
@@ -337,9 +399,11 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
 	{
-		Texture& texture = m_Textures.get(handle);
-		m_State.logicalDevice.destroyImageView(texture.imageView);
-		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		submit_immediate_command([&]() {
+			Texture& texture = m_Textures.get(handle);
+			m_State.logicalDevice.destroyImageView(texture.imageView);
+			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		});
 
 		m_Textures.remove(handle);
 	}
@@ -348,6 +412,7 @@ namespace tur::vulkan
 	{
 		TextureDescriptor textureDescriptor;
 		{
+			textureDescriptor.format = get_texture_format(m_State.swapchainFormat.format);
 			textureDescriptor.width = descriptor.width;
 			textureDescriptor.height = descriptor.height;
 		}

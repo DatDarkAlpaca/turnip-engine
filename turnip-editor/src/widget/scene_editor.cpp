@@ -52,7 +52,7 @@ void SceneEditor::on_render_gui()
 	}
 	
 	ImVec2 dimensions = ImGui::GetWindowSize();
-	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y)
+	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)
 	{
 		m_LatestSize = dimensions;
 		resize_scene_texture();
@@ -73,9 +73,9 @@ void SceneEditor::on_render_gui()
 void SceneEditor::initialize_scene_texture()
 {
 	TextureDescriptor descriptor;
-	descriptor.width = m_LatestSize.x > 0 ? static_cast<u32>(m_LatestSize.x) : 1;
-	descriptor.height = m_LatestSize.y > 0 ? static_cast<u32>(m_LatestSize.y) : 1;
-
+	descriptor.width = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.x);
+	descriptor.height = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.y);
+	
 	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
 
 	SceneEditorResized editorResize(descriptor.width, descriptor.height);

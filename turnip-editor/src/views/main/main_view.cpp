@@ -150,9 +150,9 @@ void MainView::on_event(Event& event)
 }
 void MainView::on_render()
 {
-	// quad_renderer_system_begin(engine->quadRendererSystem);
-	// quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
-	// quad_renderer_system_end(engine->quadRendererSystem);
+	quad_renderer_system_begin(engine->quadRendererSystem);
+	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_end(engine->quadRendererSystem);
 
 	//instanced_quad_system_begin(engine->instancedQuadSystem);
 	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);

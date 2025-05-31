@@ -122,7 +122,7 @@ namespace tur::quad_renderer
 		{
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.type = BufferType::UNIFORM_BUFFER;
+				bufferDesc.type = BufferType::UNIFORM_BUFFER | BufferType::TRANSFER_DST;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 
@@ -167,7 +167,7 @@ namespace tur
 		auto& commands = renderer.commands;
 
 		commands->begin_render(renderTarget);
-		
+
 		commands->set_viewport(renderer.viewport);
 		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
 		
@@ -185,12 +185,18 @@ namespace tur
 			quad_renderer::bind_mvp(renderer, quad.transform);
 
 			if (quad.texture != invalid_handle)
+			{
+				commands->set_descriptor_resource(quad.texture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 				commands->bind_texture(quad.texture);
+			}
 
 			else
 			{
 				if (renderer.defaultTexture != invalid_handle)
+				{
+					commands->set_descriptor_resource(renderer.defaultTexture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 					commands->bind_texture(renderer.defaultTexture);
+				}
 			}
 
 			commands->draw_indexed(6);
@@ -203,8 +209,6 @@ namespace tur
 		
 		commands->end_render();
 		commands->end();
-
-		commands->submit();
 	}
 }
 

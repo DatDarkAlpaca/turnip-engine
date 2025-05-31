@@ -35,6 +35,7 @@ namespace tur::vulkan
 				usageFlags |= vk::ImageUsageFlagBits::eTransferDst;
 				usageFlags |= vk::ImageUsageFlagBits::eStorage;
 				usageFlags |= vk::ImageUsageFlagBits::eColorAttachment;
+				usageFlags |= vk::ImageUsageFlagBits::eSampled;
 			}
 			imageCreateInfo.usage = usageFlags;
 		}
