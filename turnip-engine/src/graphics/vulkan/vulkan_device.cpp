@@ -33,10 +33,23 @@ namespace tur::vulkan
 
 		// New Swapchain:
 		SwapchainRequirements requirements;
-		requirements.oldSwapchain = m_State.swapchain;
+		requirements.extent = Extent2D{ size.x, size.y };
+
 		initialize_swapchain(m_State, requirements);
 
 		initialize_frame_data(m_State);
+
+		// Recreate main texture:
+		TextureDescriptor descriptor;
+		{
+			descriptor.format = TextureFormat::B8G8R8A8_UNORM;
+			descriptor.width = m_State.swapchainExtent.width;
+			descriptor.height = m_State.swapchainExtent.height;
+
+			destroy_texture(m_State.drawTextureHandle);
+			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
+		}
 	}
 }
 
@@ -79,7 +92,8 @@ namespace tur::vulkan
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
-			m_State.drawTexture = m_Textures.get(create_texture(descriptor, {}));
+			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
 
 		// Immediate command buffer:

@@ -45,5 +45,6 @@ namespace tur::vulkan
 		// Frame:
 		FrameDataHolder frameDataHolder;
 		Texture drawTexture;
+		texture_handle drawTextureHandle;
 	};
 }

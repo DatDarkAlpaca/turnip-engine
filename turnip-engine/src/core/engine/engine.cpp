@@ -22,13 +22,14 @@ namespace tur::engine
 		for (const auto& view : data.viewSystem.views)
 		{
 			view->on_render_gui();
-
-			data.guiSystem->render();
-
-			view->on_render();
 		}
 
+		data.guiSystem->render();
 		data.guiSystem->end_frame();
+
+		for (const auto& view : data.viewSystem.views)
+			view->on_render();
+		
 		data.graphicsDevice.present();
 	}
 	
