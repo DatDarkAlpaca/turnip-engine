@@ -10,6 +10,7 @@
 namespace tur::vulkan
 {
 	class CommandBufferVulkan;
+	class VulkanGUI;
 
 	class GraphicsDeviceVulkan : public BaseGraphicsDevice<GraphicsDeviceVulkan>
 	{
@@ -28,6 +29,7 @@ namespace tur::vulkan
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
+		VulkanGUI create_gui_system_impl();
 
 	protected:
 		void initialize_gui_graphics_system_impl();
@@ -58,6 +60,7 @@ namespace tur::vulkan
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
 		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
+		void destroy_render_target_impl(render_target_handle handle);
 
 	public:
 		void submit_immediate_command(std::function<void()>&& function);

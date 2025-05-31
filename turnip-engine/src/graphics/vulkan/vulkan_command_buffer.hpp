@@ -9,6 +9,7 @@ namespace tur::vulkan
 	class CommandBufferVulkan : public BaseCommandBuffer<CommandBufferVulkan>
 	{
 		friend class BaseCommandBuffer<CommandBufferVulkan>;
+		friend class VulkanGUI;
 
 	public:
 		CommandBufferVulkan(NON_OWNING GraphicsDeviceVulkan* device);

@@ -71,12 +71,13 @@ namespace tur::vulkan
 		ImGui_ImplGlfw_InitForVulkan(device->get_window()->window, true);
 
 		ImGui_ImplVulkan_InitInfo initInfo = {};
-		//VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
-		VkFormat formats[] = { VK_FORMAT_R8G8B8A8_UNORM };
+
+		static VkFormat formats[] = { (VkFormat)state.swapchainFormat.format };
 		{
 			initInfo.Instance = state.instance;
 			initInfo.PhysicalDevice = state.physicalDevice;
 			initInfo.Device = state.logicalDevice;
+			initInfo.QueueFamily = state.queueList.get_family_index(QueueUsage::GRAPHICS);
 			initInfo.Queue = state.queueList.get(QueueUsage::GRAPHICS);
 			initInfo.DescriptorPool = imguiPool;
 			initInfo.MinImageCount = 3;
@@ -109,7 +110,7 @@ namespace tur::vulkan
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 	}
 
-	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	void end_vulkan_frame()
 	{		
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

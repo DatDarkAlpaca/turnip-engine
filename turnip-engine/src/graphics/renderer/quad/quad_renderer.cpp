@@ -53,7 +53,7 @@ namespace tur::quad_renderer
 				layout.add_binding(description);
 			}
 			{
-				description.binding = 0;
+				description.binding = 1;
 				description.stages = PipelineStage::FRAGMENT_STAGE;
 				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
 				layout.add_binding(description);
@@ -200,9 +200,10 @@ namespace tur
 	void quad_renderer_end(QuadRenderer& renderer)
 	{
 		auto& commands = renderer.commands;
+		
 		commands->end_render();
-
 		commands->end();
+
 		commands->submit();
 	}
 }

@@ -38,7 +38,7 @@ namespace ImGui
 #ifdef TUR_API_OPENGL
 		return ImGui::ImageButton((void*)device->get_native_texture(handle).handle, size, uv0, uv1, framePadding, bgColor, tintColor);
 #else TUR_API_VULKAN
-		#error Unsupported
+		return false;
 #endif
 	}
 
@@ -47,7 +47,7 @@ namespace ImGui
 #ifdef TUR_API_OPENGL
 		ImGui::Image((void*)device->get_native_texture(handle).handle, size, uv0, uv1, tintColor, borderColor);
 #else TUR_API_VULKAN
-#error Unsupported
+		return;
 #endif
 	}
 }

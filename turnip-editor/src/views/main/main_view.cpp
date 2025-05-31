@@ -125,6 +125,9 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
+		if (resizeEvent.width <= 0 || resizeEvent.height <= 0)
+			return false;
+		
 		// Render target:
 		update_render_target(resizeEvent.width, resizeEvent.height);
 		
@@ -151,9 +154,9 @@ void MainView::on_render()
 	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
 	quad_renderer_system_end(engine->quadRendererSystem);
 
-	instanced_quad_system_begin(engine->instancedQuadSystem);
-	instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
-	instanced_quad_system_end(engine->instancedQuadSystem);
+	//instanced_quad_system_begin(engine->instancedQuadSystem);
+	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
+	//instanced_quad_system_end(engine->instancedQuadSystem);
 }
 
 void MainView::initialize_textures()

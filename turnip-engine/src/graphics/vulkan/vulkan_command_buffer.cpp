@@ -62,10 +62,10 @@ namespace tur::vulkan
 		const auto& currentFrame = r_Device->get_state().frameDataHolder.get_color_buffer();
 		const auto& swapchainExtent = r_Device->get_state().swapchainExtent;
 
-		auto& renderTarget = r_Device->get_render_targets().get(handle);
 		m_CurrentRenderTarget = handle;
-		if (handle == invalid_handle)
-			renderTarget = r_Device->get_state().drawTexture;
+		auto& renderTarget = r_Device->get_state().drawTexture;
+		if (handle != invalid_handle)
+			renderTarget = r_Device->get_render_targets().get(handle);
 
 		transition_image(renderTarget.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 
@@ -107,10 +107,6 @@ namespace tur::vulkan
 		}
 
 		m_CommandBuffer.beginRendering(renderInfo);
-
-		// Todo: Move ImGUI:
-		if(handle == invalid_handle)
-			render_vulkan_frame(m_CommandBuffer);
 	}
 	void CommandBufferVulkan::end_render_impl()
 	{
@@ -124,9 +120,9 @@ namespace tur::vulkan
 		auto& swapchainImages = r_Device->get_state().swapChainImages;
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
-		auto& renderTarget = r_Device->get_render_targets().get(m_CurrentRenderTarget);
-		if (m_CurrentRenderTarget == invalid_handle)
-			renderTarget = r_Device->get_state().drawTexture;
+		auto& renderTarget = r_Device->get_state().drawTexture;
+		if (m_CurrentRenderTarget != invalid_handle)
+			renderTarget = r_Device->get_render_targets().get(m_CurrentRenderTarget);
 
 		transition_image(renderTarget.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
 		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
@@ -168,14 +164,15 @@ namespace tur::vulkan
 		// Bind pipeline:
 		auto pipeline = r_Device->get_pipelines().get(handle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
+		m_BoundPipeline = pipeline;
 
 		// Bind descriptor sets:
 		m_CommandBuffer.bindDescriptorSets(
 			get_pipeline_type(pipeline.type), 
-			pipeline.layout, 
-			0, 1, 
-			&pipeline.descriptorSets[frameNumber], 0,
-			nullptr
+			pipeline.layout, 0, 
+			pipeline.descriptorSets.size(),
+			pipeline.descriptorSets.data(),
+			0, nullptr
 		);
 	}
 	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
@@ -198,7 +195,7 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
 	{
-		vk::DescriptorType descriptorType = get_descriptor_type(type);;
+		vk::DescriptorType descriptorType = get_descriptor_type(type);
 		const u32 frameNumber = get_state().frameDataHolder.get_frame_number();
 
 		switch (type)
@@ -217,7 +214,7 @@ namespace tur::vulkan
 
 				vk::WriteDescriptorSet descriptorWrite = {};
 				{
-					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[frameNumber];
+					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[0];
 					descriptorWrite.dstBinding = binding;
 					descriptorWrite.dstArrayElement = 0;
 					descriptorWrite.descriptorType = descriptorType;

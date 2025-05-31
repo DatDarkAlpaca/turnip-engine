@@ -264,7 +264,7 @@ namespace tur::vulkan
 			{
 				pipelineLayoutCreateInfo.flags = vk::PipelineLayoutCreateFlags();
 				pipelineLayoutCreateInfo.setLayoutCount = 1;
-				pipelineLayoutCreateInfo.pSetLayouts = &state.descriptorSetLayout;
+				pipelineLayoutCreateInfo.pSetLayouts = &pipeline.descriptorSetLayout;
 				pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 				pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 			}
@@ -279,8 +279,9 @@ namespace tur::vulkan
 			}
 		}
 		
+		// TODO: allow for more descriptor sets (perchance)
+		// For now the pipeline is stuck to one big descriptor set.
 		// Descriptor Pool:
-		const u64 frameAmount = device.get_state().frameDataHolder.get_frames().size();
 		{
 			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
 			std::vector<vk::DescriptorPoolSize> poolSizes;
@@ -296,7 +297,7 @@ namespace tur::vulkan
 			vk::DescriptorPoolCreateInfo poolInfo;
 			{
 				poolInfo.flags = vk::DescriptorPoolCreateFlags();
-				poolInfo.maxSets = static_cast<u32>(frameAmount);
+				poolInfo.maxSets = 1;
 				poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 				poolInfo.pPoolSizes = poolSizes.data();
 			}
@@ -312,29 +313,26 @@ namespace tur::vulkan
 		}
 
 		// Descriptor sets:
-		for (auto& descriptorSet : pipeline.descriptorSets)
+		vk::DescriptorSetAllocateInfo allocationInfo = {};
+		allocationInfo.descriptorPool = pipeline.descriptorPool;
+		allocationInfo.descriptorSetCount = 1;
+		allocationInfo.pSetLayouts = &pipeline.descriptorSetLayout;
+		try
 		{
-			// Descriptor Set:
-			vk::DescriptorSetAllocateInfo allocationInfo = {};
-			allocationInfo.descriptorPool = device.get_state().descriptorPool;
-			allocationInfo.descriptorSetCount = 1;
-			allocationInfo.pSetLayouts = &device.get_state().descriptorSetLayout;
-
-			try
-			{
-				descriptorSet = logicalDevice.allocateDescriptorSets(allocationInfo)[0];
-			}
-			catch (vk::SystemError err)
-			{
-				TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
-			}
+			pipeline.descriptorSets = logicalDevice.allocateDescriptorSets(allocationInfo);
+		}
+		catch (vk::SystemError err)
+		{
+			TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
 		}
 
 		// Pipeline (! No renderpass since the vulkan device is using dynamic rendering):
 		vk::PipelineRenderingCreateInfo renderingInfo = {};
-		auto format = vk::Format::eR8G8B8A8Unorm;
-		renderingInfo.colorAttachmentCount = 1;
-		renderingInfo.pColorAttachmentFormats = &format;
+		{
+			vk::Format format = vk::Format::eR8G8B8A8Unorm;
+			renderingInfo.colorAttachmentCount = 1;
+			renderingInfo.pColorAttachmentFormats = &format;
+		}
 		
 		vk::GraphicsPipelineCreateInfo pipelineInfo;
 		{

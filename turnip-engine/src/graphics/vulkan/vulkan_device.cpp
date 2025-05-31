@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "vulkan_device.hpp"
 #include "vulkan_command_buffer.hpp"
+#include "vulkan_gui_system.hpp"
 #include "platform/vulkan_context.hpp"
 
 #include "builders/instance_builder.hpp"
@@ -74,7 +75,7 @@ namespace tur::vulkan
 		// Texture:
 		TextureDescriptor descriptor;
 		{
-			descriptor.format = TextureFormat::RGBA8_UNORM;
+			descriptor.format = TextureFormat::B8G8R8A8_UNORM;
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
@@ -159,18 +160,9 @@ namespace tur::vulkan
 	{
 		return CommandBufferVulkan(this);
 	}
-
-	void GraphicsDeviceVulkan::initialize_gui_graphics_system_impl()
+	VulkanGUI GraphicsDeviceVulkan::create_gui_system_impl()
 	{
-		initialize_vulkan_gui(this);
-	}
-	void GraphicsDeviceVulkan::begin_gui_frame_impl()
-	{
-		begin_vulkan_frame();
-	}
-	void GraphicsDeviceVulkan::end_gui_frame_impl()
-	{
-		end_vulkan_frame(this);
+		return VulkanGUI(this);
 	}
 
 	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)
@@ -204,8 +196,6 @@ namespace tur::vulkan
 			destroy_shader(descriptor.geometryShader);
 
 		destroy_shader(descriptor.fragmentShader);
-
-		// Use descriptor set (pipeline layout) info to create a descriptor write array and memory mappings
 
 		return m_Pipelines.add(pipeline);
 	}
@@ -342,15 +332,30 @@ namespace tur::vulkan
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
 	{
-		descriptor.colorAttachments; // textures
-		descriptor.depthAttachment; // depth
-		descriptor.width;
-		descriptor.height;
-
-		return render_target_handle();
+		TextureDescriptor textureDescriptor;
+		{
+			textureDescriptor.width = descriptor.width;
+			textureDescriptor.height = descriptor.height;
+		}
+		return m_RenderTargets.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, textureDescriptor));
 	}
 	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
 	{
+		destroy_render_target(handle);
+		RenderTargetDescriptor descriptor;
+		{
+			descriptor.width = width;
+			descriptor.height = height;
+		}
+		handle = create_render_target(descriptor);
+	}
+	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle handle)
+	{
+		Texture& texture = m_RenderTargets.get(handle);
+		m_State.logicalDevice.destroyImageView(texture.imageView);
+		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+
+		m_RenderTargets.remove(handle);
 	}
 }
 

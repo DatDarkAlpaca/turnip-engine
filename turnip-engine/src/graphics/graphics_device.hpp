@@ -31,18 +31,9 @@ namespace tur
 			return static_cast<Backend*>(this)->create_command_buffer_impl();
 		}
 
-	public:
-		void initialize_gui_graphics_system()
+		auto create_gui_system()
 		{
-			static_cast<Backend*>(this)->initialize_gui_graphics_system_impl();
-		}
-		void begin_gui_frame()
-		{
-			static_cast<Backend*>(this)->begin_gui_frame_impl();
-		}
-		void end_gui_frame()
-		{
-			static_cast<Backend*>(this)->end_gui_frame_impl();
+			return static_cast<Backend*>(this)->create_gui_system_impl();
 		}
 
 	public:
