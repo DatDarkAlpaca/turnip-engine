@@ -133,6 +133,8 @@ namespace tur::gl
 
 		gl_handle textureID;
 		glCreateTextures(textureType, 1, &textureID);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 		{
 			bool generateMipmaps = descriptor.generateMipmaps;
@@ -185,7 +187,7 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::update_texture_impl(texture_handle handle, const TextureAsset& asset)
 	{
-		auto& texture = m_Textures.get(handle);
+		gl::Texture& texture = m_Textures.get(handle);
 		
 		gl_handle dataFormat = get_texture_data_format(asset.dataFormat);
 		gl_handle dataType = !asset.floatTexture ? GL_UNSIGNED_BYTE : GL_FLOAT;
