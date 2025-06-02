@@ -23,13 +23,11 @@ namespace tur::vulkan
 	}
 	void VulkanGUI::render_impl()
 	{
-		m_CommandBuffer->begin();
 		m_CommandBuffer->begin_render();
 
 		render_vulkan_frame(m_CommandBuffer->get_command_buffer());
 
 		m_CommandBuffer->end_render();
-		m_CommandBuffer->end();
 	}
 	void VulkanGUI::end_frame_impl()
 	{

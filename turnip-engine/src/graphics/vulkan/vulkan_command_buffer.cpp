@@ -14,26 +14,9 @@ namespace tur::vulkan
 	{
 	}
 
-	void CommandBufferVulkan::begin_impl()
-	{
-		m_CommandBuffer = get_command_buffer();
-
-		vk::CommandBufferBeginInfo beginInfo = {};
-		{
-			beginInfo.pInheritanceInfo = nullptr;
-			beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
-		}
-
-		try
-		{
-			m_CommandBuffer.begin(beginInfo);
-		}
-		catch (vk::SystemError& err) {
-			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
-		}
-	}
 	void CommandBufferVulkan::begin_render_impl(render_target_handle handle)
 	{
+		m_CommandBuffer = get_command_buffer();
 		m_CurrentRenderTarget = handle;
 
 		Texture* renderTarget;
@@ -58,7 +41,7 @@ namespace tur::vulkan
 					m_ClearValue.color.g,
 					m_ClearValue.color.b,
 					m_ClearValue.color.a
-				});
+					});
 			}
 
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};
@@ -86,13 +69,11 @@ namespace tur::vulkan
 	void CommandBufferVulkan::end_render_impl()
 	{
 		m_CommandBuffer.endRendering();
-	}
-	void CommandBufferVulkan::end_impl()
-	{
+		
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 		auto& swapchainExtent = r_Device->get_state().swapchainExtent;
-
 		auto& swapchainImages = r_Device->get_state().swapChainImages;
+
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
 		if (m_CurrentRenderTarget == invalid_handle)
@@ -106,15 +87,6 @@ namespace tur::vulkan
 				{ renderTarget.extent.width, renderTarget.extent.height }, swapchainExtent);
 
 			transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
-		}
-
-		try
-		{
-			m_CommandBuffer.end();
-		}
-		catch (vk::SystemError err)
-		{
-			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
 		}
 	}
 
@@ -168,63 +140,6 @@ namespace tur::vulkan
 	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
 		
-	}
-
-	void CommandBufferVulkan::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
-	{
-		switch (type)
-		{
-			case DescriptorType::UNIFORM_BUFFER:
-			case DescriptorType::STORAGE_BUFFER:
-			{
-				const Buffer& buffer = r_Device->get_buffers().get(handle);
-
-				vk::DescriptorBufferInfo bufferInfo = {};
-				{
-					bufferInfo.buffer = buffer.buffer;
-					bufferInfo.offset = 0;
-					bufferInfo.range = buffer.size;
-				}
-
-				vk::WriteDescriptorSet descriptorWrite = {};
-				{
-					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[0];
-					descriptorWrite.dstBinding = binding;
-					descriptorWrite.dstArrayElement = 0;
-					descriptorWrite.descriptorType = get_descriptor_type(type);
-					descriptorWrite.descriptorCount = 1;
-
-					descriptorWrite.pBufferInfo = &bufferInfo;
-				}
-
-				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-			} break;
-
-			case DescriptorType::COMBINED_IMAGE_SAMPLER:
-			{
-				const Texture& texture = r_Device->get_textures().get(handle);
-
-				vk::DescriptorImageInfo imageInfo = {};
-				{
-					imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
-					imageInfo.imageView = texture.imageView;
-					imageInfo.sampler = texture.sampler;
-				}
-
-				vk::WriteDescriptorSet descriptorWrite = {};
-				{
-					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[0];
-					descriptorWrite.dstBinding = binding;
-					descriptorWrite.dstArrayElement = 0;
-					descriptorWrite.descriptorType = get_descriptor_type(type);
-					descriptorWrite.descriptorCount = 1;
-
-					descriptorWrite.pImageInfo = &imageInfo;
-				}
-
-				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-			} break;
-		}
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)

@@ -17,10 +17,6 @@ namespace tur
 		}
 
 	public:
-		void begin()
-		{
-			static_cast<CommandBuffer*>(this)->begin_impl();
-		};
 		void begin_render(render_target_handle handle = invalid_handle)
 		{
 			static_cast<CommandBuffer*>(this)->begin_render_impl(handle);
@@ -29,10 +25,6 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->end_render_impl();
 		}
-		void end()
-		{
-			static_cast<CommandBuffer*>(this)->end_impl();
-		};
 
 	public:
 		void set_viewport(const Viewport& viewport)
@@ -64,11 +56,6 @@ namespace tur
 		void bind_texture(texture_handle handle, u32 textureUnit = 0)
 		{
 			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
-		}
-
-		void set_descriptor_resource(handle_type handle, DescriptorType type, u32 binding)
-		{
-			static_cast<CommandBuffer*>(this)->set_descriptor_resource_impl(handle, type, binding);
 		}
 
 	public:

@@ -17,17 +17,19 @@ namespace tur::vulkan
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 		friend class CommandBufferVulkan;
 
-		friend void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan*);
+		friend void initialize_vulkan_gui(GraphicsDeviceVulkan*);
 		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
+		friend Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
 	public:
 		void recreate_swapchain();
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
-		void begin_recording_impl();
+		void begin_impl();
 		void submit_impl();
 		void present_impl();
+		void end_impl();
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
@@ -39,6 +41,7 @@ namespace tur::vulkan
 
 	protected:
 		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
+		void set_descriptor_resource_impl(pipeline_handle pipelineHandle, handle_type resourceHandle, DescriptorType type, u32 binding);
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
@@ -46,6 +49,7 @@ namespace tur::vulkan
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset);
 		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset);
+		void copy_buffer_to_texture_impl(buffer_handle source, texture_handle destination, u32 width, u32 height);
 		void destroy_buffer_impl(buffer_handle handle);
 
 	protected:
@@ -61,6 +65,9 @@ namespace tur::vulkan
 
 	public:
 		void submit_immediate_command(std::function<void()>&& function);
+		void transition_texture_layout(Texture& texture, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
+		void transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
+		void copy_buffer_to_texture_direct(Buffer& buffer, Texture& texture, u32 width, u32 height);
 
 	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }

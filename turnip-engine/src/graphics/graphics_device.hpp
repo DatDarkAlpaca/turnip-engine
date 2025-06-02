@@ -20,9 +20,9 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_impl(window, configData);
 		}
-		void begin_recording()
+		void begin()
 		{
-			static_cast<Backend*>(this)->begin_recording_impl();
+			static_cast<Backend*>(this)->begin_impl();
 		}
 		void present()
 		{
@@ -31,6 +31,10 @@ namespace tur
 		void submit()
 		{
 			static_cast<Backend*>(this)->submit_impl();
+		}
+		void end()
+		{
+			static_cast<Backend*>(this)->end_impl();
 		}
 
 	public:
@@ -59,6 +63,10 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
 		}
+		void set_descriptor_resource(pipeline_handle pipeline, handle_type resourceHandle, DescriptorType type, u32 binding)
+		{
+			static_cast<Backend*>(this)->set_descriptor_resource_impl(pipeline, resourceHandle, type, binding);
+		}
 
 	public:
 		buffer_handle create_default_buffer(const BufferDescriptor& descriptor, const DataBuffer& data)
@@ -80,6 +88,10 @@ namespace tur
 		void copy_buffer(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0)
 		{
 			static_cast<Backend*>(this)->copy_buffer_impl(source, destination, size, srcOffset, dstOffset);
+		}
+		void copy_buffer_to_texture(buffer_handle source, texture_handle destination, u32 width, u32 height)
+		{
+			static_cast<Backend*>(this)->copy_buffer_to_texture_impl(source, destination, width, height);
 		}
 		void destroy_buffer(buffer_handle handle)
 		{

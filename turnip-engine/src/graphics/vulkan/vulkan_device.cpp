@@ -86,9 +86,6 @@ namespace tur::vulkan
 		// Frame Data:
 		initialize_frame_data(m_State);
 
-		// Descriptor sets:
-
-
 		// Texture:
 		TextureDescriptor descriptor;
 		{
@@ -134,7 +131,7 @@ namespace tur::vulkan
 		}
 	}
 
-	void GraphicsDeviceVulkan::begin_recording_impl()
+	void GraphicsDeviceVulkan::begin_impl()
 	{
 		auto& device = m_State.logicalDevice;
 		auto& swapchain = m_State.swapchain;
@@ -160,7 +157,22 @@ namespace tur::vulkan
 		else if (imageResult.result != vk::Result::eSuccess && imageResult.result != vk::Result::eSuboptimalKHR)
 			TUR_LOG_CRITICAL("Failed to acquire swapchain image");
 
-		frameData.commandBuffer.reset();
+		auto& currentCommandBuffer = frameData.commandBuffer;
+		currentCommandBuffer.reset();
+
+		vk::CommandBufferBeginInfo beginInfo = {};
+		{
+			beginInfo.pInheritanceInfo = nullptr;
+			beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
+		}
+
+		try
+		{
+			currentCommandBuffer.begin(beginInfo);
+		}
+		catch (vk::SystemError& err) {
+			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
+		}
 	}
 	void GraphicsDeviceVulkan::submit_impl()
 	{
@@ -235,6 +247,20 @@ namespace tur::vulkan
 		frameDataHolder.increment_frame_count();
 	}
 
+	void GraphicsDeviceVulkan::end_impl()
+	{
+		auto& currentCommandBuffer = m_State.frameDataHolder.get_frame_data().commandBuffer;
+
+		try
+		{
+			currentCommandBuffer.end();
+		}
+		catch (vk::SystemError err)
+		{
+			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
+		}
+	}
+
 	CommandBufferVulkan GraphicsDeviceVulkan::create_command_buffer_impl()
 	{
 		return CommandBufferVulkan(this);
@@ -277,6 +303,64 @@ namespace tur::vulkan
 		destroy_shader(descriptor.fragmentShader);
 
 		return m_Pipelines.add(pipeline);
+	}
+	void GraphicsDeviceVulkan::set_descriptor_resource_impl(pipeline_handle pipelineHandle, handle_type resourceHandle, DescriptorType type, u32 binding)
+	{
+		auto& pipeline = m_Pipelines.get(pipelineHandle);
+
+		switch (type)
+		{
+			case DescriptorType::UNIFORM_BUFFER:
+			case DescriptorType::STORAGE_BUFFER:
+			{
+				const Buffer& buffer = get_buffers().get(resourceHandle);
+
+				vk::DescriptorBufferInfo bufferInfo = {};
+				{
+					bufferInfo.buffer = buffer.buffer;
+					bufferInfo.offset = 0;
+					bufferInfo.range = buffer.size;
+				}
+
+				vk::WriteDescriptorSet descriptorWrite = {};
+				{
+					descriptorWrite.dstSet = pipeline.descriptorSets[0];
+					descriptorWrite.dstBinding = binding;
+					descriptorWrite.dstArrayElement = 0;
+					descriptorWrite.descriptorType = get_descriptor_type(type);
+					descriptorWrite.descriptorCount = 1;
+
+					descriptorWrite.pBufferInfo = &bufferInfo;
+				}
+
+				m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+			} break;
+
+			case DescriptorType::COMBINED_IMAGE_SAMPLER:
+			{
+				const Texture& texture = get_textures().get(resourceHandle);
+
+				vk::DescriptorImageInfo imageInfo = {};
+				{
+					imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
+					imageInfo.imageView = texture.imageView;
+					imageInfo.sampler = texture.sampler;
+				}
+
+				vk::WriteDescriptorSet descriptorWrite = {};
+				{
+					descriptorWrite.dstSet = pipeline.descriptorSets[0];
+					descriptorWrite.dstBinding = binding;
+					descriptorWrite.dstArrayElement = 0;
+					descriptorWrite.descriptorType = get_descriptor_type(type);
+					descriptorWrite.descriptorCount = 1;
+
+					descriptorWrite.pImageInfo = &imageInfo;
+				}
+
+				m_State.logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+			} break;
+		}
 	}
 	
 	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
@@ -366,17 +450,23 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset)
 	{
-		vk::BufferCopy region;
-		{
-			region.dstOffset = dstOffset;
-			region.srcOffset = srcOffset;
-			region.size = size;
-		}
+		submit_immediate_command([&]() {
+			vk::BufferCopy region;
+			{
+				region.dstOffset = dstOffset;
+				region.srcOffset = srcOffset;
+				region.size = size;
+			}
 
-		Buffer& srcBuffer = m_Buffers.get(source);
-		Buffer& dstBuffer = m_Buffers.get(destination);
+			Buffer& srcBuffer = m_Buffers.get(source);
+			Buffer& dstBuffer = m_Buffers.get(destination);
 
-		m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
+			m_ImmCommandBuffer.copyBuffer(srcBuffer.buffer, dstBuffer.buffer, region);
+		});
+	}
+	void GraphicsDeviceVulkan::copy_buffer_to_texture_impl(buffer_handle source, texture_handle destination, u32 width, u32 height)
+	{
+		copy_buffer_to_texture_direct(m_Buffers.get(source), m_Textures.get(destination), width, height);
 	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
 	{
@@ -388,13 +478,11 @@ namespace tur::vulkan
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
-		auto textureHandle = create_texture(descriptor);
-		// TODO: update data
-		return textureHandle;
+		return m_Textures.add(vulkan::create_texture(this, descriptor, asset));
 	}
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
 	{
-		return m_Textures.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, descriptor));
+		return create_texture(descriptor, {});
 	}
 	void GraphicsDeviceVulkan::update_texture_impl(texture_handle handle, const TextureAsset& asset)
 	{
@@ -419,7 +507,7 @@ namespace tur::vulkan
 			textureDescriptor.width = descriptor.width;
 			textureDescriptor.height = descriptor.height;
 		}
-		return m_RenderTargets.add(vulkan::create_texture(m_State.vmaAllocator, m_State.logicalDevice, textureDescriptor));
+		return m_RenderTargets.add(vulkan::create_texture(this, textureDescriptor, {}));
 	}
 	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
 	{
@@ -480,5 +568,85 @@ namespace tur::vulkan
 		auto a = m_State.queueList.get(QueueUsage::TRANSFER);
 		a.submit2(submitInfo, m_ImmFence);
 		auto result = m_State.logicalDevice.waitForFences(m_ImmFence, true, 1000000000);
+	}
+	void GraphicsDeviceVulkan::transition_texture_layout(Texture& texture, vk::ImageLayout oldLayout, vk::ImageLayout newLayout)
+	{
+		submit_immediate_command([&]() {
+
+			vk::ImageAspectFlags aspectMask;
+			vk::ImageSubresourceRange subresourceRange;
+
+			vk::ImageMemoryBarrier2 imageBarrier = {};
+			{
+				imageBarrier.srcStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+				imageBarrier.srcAccessMask = vk::AccessFlagBits2::eMemoryRead;
+
+				imageBarrier.dstStageMask = vk::PipelineStageFlagBits2::eAllCommands;
+				imageBarrier.dstAccessMask = vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead;
+
+				imageBarrier.oldLayout = oldLayout;
+				imageBarrier.newLayout = newLayout;
+
+				if (newLayout == vk::ImageLayout::eDepthAttachmentOptimal)
+					aspectMask = vk::ImageAspectFlagBits::eDepth;
+				else
+					aspectMask = vk::ImageAspectFlagBits::eColor;
+
+				subresourceRange.aspectMask = aspectMask;
+				subresourceRange.baseMipLevel = 0;
+				subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+				subresourceRange.baseArrayLayer = 0;
+				subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
+				imageBarrier.subresourceRange = subresourceRange;
+				imageBarrier.image = texture.image;
+			}
+
+			vk::DependencyInfo dependencyInfo = vk::DependencyInfo().setImageMemoryBarriers(imageBarrier);
+
+			try
+			{
+				m_ImmCommandBuffer.pipelineBarrier2(dependencyInfo);
+			}
+			catch (vk::SystemError& err)
+			{
+				TUR_LOG_CRITICAL("Failed to issue transition image layout command. {}", err.what());
+			}
+			});
+	}
+	void GraphicsDeviceVulkan::transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout)
+	{
+		transition_texture_layout(m_Textures.get(textureHandle), oldLayout, newLayout);
+	}
+	void GraphicsDeviceVulkan::copy_buffer_to_texture_direct(Buffer& buffer, Texture& texture, u32 width, u32 height)
+	{
+		submit_immediate_command([&]() {
+			vk::ImageAspectFlags aspectMask = vk::ImageAspectFlagBits::eColor;
+
+			vk::BufferImageCopy2 region;
+			{
+				region.bufferOffset = 0;
+				region.bufferRowLength = 0;
+				region.bufferImageHeight = 0;
+
+				region.imageSubresource.aspectMask = aspectMask;
+				region.imageSubresource.mipLevel = 0;
+				region.imageSubresource.baseArrayLayer = 0;
+				region.imageSubresource.layerCount = 1;
+				region.imageOffset = vk::Offset3D(0, 0, 0);
+				region.imageExtent = vk::Extent3D(width, height, 1);
+			}
+
+			vk::CopyBufferToImageInfo2 copyInfo = {};
+			{
+				copyInfo.srcBuffer = buffer.buffer;
+				copyInfo.dstImage = texture.image;
+				copyInfo.dstImageLayout = vk::ImageLayout::eTransferDstOptimal;
+				copyInfo.regionCount = 1;
+				copyInfo.pRegions = &region;
+			}
+
+			m_ImmCommandBuffer.copyBufferToImage2(copyInfo);
+		});
 	}
 }

@@ -150,8 +150,8 @@ void MainView::on_event(Event& event)
 }
 void MainView::on_render()
 {
-	quad_renderer_system_begin(engine->quadRendererSystem);
-	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_render(engine->quadRendererSystem);
 	quad_renderer_system_end(engine->quadRendererSystem);
 
 	//instanced_quad_system_begin(engine->instancedQuadSystem);
@@ -180,6 +180,7 @@ void MainView::initialize_renderer_system()
 	{
 		quad_renderer_system_set_scene(engine->quadRendererSystem, &scene);
 		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
+		renderer_set_should_clear(r_QuadRenderer, false);
 
 		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });			
 	}

@@ -161,6 +161,9 @@ namespace tur::instanced_renderer
 				AccessFlags::PERSISTENT | AccessFlags::WRITE | AccessFlags::COHERENT
 			);
 		}
+
+		renderer.graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		renderer.graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
 	}
 
 	static void initialize_textures(InstancedQuadRenderer& renderer)
@@ -193,17 +196,15 @@ namespace tur
 		instanced_renderer::initialize_textures(renderer);
 	}
 
-	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer)
+	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer, render_target_handle handle)
 	{
 		auto& commands = renderer.commands;
-		commands->begin();
+		commands->begin_render(handle);
 	}
 
-	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer, render_target_handle handle)
+	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer)
 	{
 		auto& commands = renderer.commands;
-
-		commands->begin_render(handle);
 
 		commands->set_viewport(renderer.viewport);
 		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
@@ -215,9 +216,6 @@ namespace tur
 		commands->bind_index_buffer(renderer.indexBuffer);
 		commands->bind_pipeline(renderer.pipeline);
 
-		commands->set_descriptor_resource(renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-		commands->set_descriptor_resource(renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
-
 		commands->bind_texture(renderer.textureArray, 0);
 		commands->draw_indexed(6, renderer.quadAmount);
 	}
@@ -226,7 +224,6 @@ namespace tur
 	{
 		auto& commands = renderer.commands;
 		commands->end_render();
-		commands->end();
 	}
 }
 
