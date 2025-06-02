@@ -172,8 +172,6 @@ namespace tur::vulkan
 
 	void CommandBufferVulkan::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
 	{
-		const u32 frameNumber = get_state().frameDataHolder.get_frame_number();
-
 		switch (type)
 		{
 			case DescriptorType::UNIFORM_BUFFER:
@@ -201,7 +199,7 @@ namespace tur::vulkan
 
 				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
 			} break;
-				
+
 			case DescriptorType::COMBINED_IMAGE_SAMPLER:
 			{
 				const Texture& texture = r_Device->get_textures().get(handle);
@@ -226,7 +224,7 @@ namespace tur::vulkan
 
 				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
 			} break;
-		}		
+		}
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)

@@ -86,6 +86,9 @@ namespace tur::vulkan
 		// Frame Data:
 		initialize_frame_data(m_State);
 
+		// Descriptor sets:
+
+
 		// Texture:
 		TextureDescriptor descriptor;
 		{
