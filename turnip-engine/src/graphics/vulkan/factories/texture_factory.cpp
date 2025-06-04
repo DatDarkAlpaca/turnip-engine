@@ -79,6 +79,8 @@ namespace tur::vulkan
 			
 			vmaDestroyBuffer(device->get_state().vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		}
+		else
+			device->transition_texture_layout(texture, vk::ImageLayout::eUndefined, vk::ImageLayout::eShaderReadOnlyOptimal);
 
 		// Image view:
 		vk::ImageViewCreateInfo imageViewCreateInfo = {};

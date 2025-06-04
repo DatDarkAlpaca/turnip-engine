@@ -28,7 +28,7 @@ namespace tur::vulkan
 		while (size.x == 0 || size.y == 0)
 			size = get_window_size(r_Window);
 
-		m_State.logicalDevice.waitIdle();
+		wait_idle();
 		cleanup_swapchain(m_State);
 
 		// New Swapchain:
@@ -86,17 +86,6 @@ namespace tur::vulkan
 		// Frame Data:
 		initialize_frame_data(m_State);
 
-		// Texture:
-		TextureDescriptor descriptor;
-		{
-			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
-			descriptor.width = m_State.swapchainExtent.width;
-			descriptor.height = m_State.swapchainExtent.height;
-
-			m_State.drawTextureHandle = create_texture(descriptor, {});
-			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
-		}
-
 		// Immediate command buffer:
 		{			
 			vk::CommandPoolCreateInfo poolCreateInfo = {};
@@ -128,6 +117,17 @@ namespace tur::vulkan
 				createInfo.flags = vk::FenceCreateFlagBits::eSignaled;
 				m_ImmFence = m_State.logicalDevice.createFence(createInfo);
 			}
+		}
+
+		// Texture:
+		TextureDescriptor descriptor;
+		{
+			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
+			descriptor.width = m_State.swapchainExtent.width;
+			descriptor.height = m_State.swapchainExtent.height;
+
+			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
 	}
 
@@ -521,9 +521,11 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle handle)
 	{
-		Texture& texture = m_RenderTargets.get(handle);
-		m_State.logicalDevice.destroyImageView(texture.imageView);
-		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		submit_immediate_command([&]() {
+			Texture& texture = m_RenderTargets.get(handle);
+			m_State.logicalDevice.destroyImageView(texture.imageView);
+			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		});
 
 		m_RenderTargets.remove(handle);
 	}
@@ -531,6 +533,10 @@ namespace tur::vulkan
 
 namespace tur::vulkan
 {
+	void GraphicsDeviceVulkan::wait_idle()
+	{
+		m_State.logicalDevice.waitIdle();
+	}
 	void GraphicsDeviceVulkan::submit_immediate_command(std::function<void()>&& function)
 	{
 		m_State.logicalDevice.resetFences(m_ImmFence);

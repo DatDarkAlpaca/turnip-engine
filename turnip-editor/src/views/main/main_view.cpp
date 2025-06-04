@@ -72,7 +72,7 @@ void MainView::on_view_added()
 	// Widgets:
 	m_EntityInspector.initialize(engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
-	m_SceneEditor.initialize(&engine->graphicsDevice, &m_SceneData);
+	m_SceneEditor.initialize(&engine->graphicsDevice, engine->guiSystem.get(), &m_SceneData);
 
 	initialize_renderer_system();
 	initialize_textures();
@@ -153,7 +153,7 @@ void MainView::on_render()
 	quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
 	quad_renderer_system_render(engine->quadRendererSystem);
 	quad_renderer_system_end(engine->quadRendererSystem);
-
+	
 	//instanced_quad_system_begin(engine->instancedQuadSystem);
 	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
 	//instanced_quad_system_end(engine->instancedQuadSystem);

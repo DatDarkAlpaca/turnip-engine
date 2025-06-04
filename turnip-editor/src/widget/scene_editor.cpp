@@ -5,10 +5,11 @@
 
 using namespace tur;
 
-void SceneEditor::initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING SceneData* sceneData)
+void SceneEditor::initialize(NON_OWNING GraphicsDevice* graphicsDevice, NON_OWNING GUISystem* guiSystem, NON_OWNING SceneData* sceneData)
 {
 	r_GraphicsDevice = graphicsDevice;
 	r_SceneData = sceneData;
+	r_GUISystem = guiSystem;
 
 	initialize_scene_texture();
 }
@@ -17,7 +18,7 @@ void SceneEditor::on_render_gui()
 {
 	ImGui::Begin("Scene Editor");
 	
-	ImGui::Texture(r_GraphicsDevice, r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+	r_GUISystem->texture(r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 	{
@@ -75,8 +76,15 @@ void SceneEditor::initialize_scene_texture()
 	TextureDescriptor descriptor;
 	descriptor.width = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.x);
 	descriptor.height = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.y);
-	
+
+	if (r_SceneData->sceneTexture != invalid_handle)
+	{
+		r_GUISystem->remove_texture(r_SceneData->sceneTexture);
+		r_GraphicsDevice->destroy_texture(r_SceneData->sceneTexture);
+	}
+
 	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
+	r_GUISystem->add_texture(r_SceneData->sceneTexture);
 
 	SceneEditorResized editorResize(descriptor.width, descriptor.height);
 	callback(editorResize);
@@ -84,6 +92,5 @@ void SceneEditor::initialize_scene_texture()
 
 void SceneEditor::resize_scene_texture()
 {
-	r_GraphicsDevice->destroy_texture(r_SceneData->sceneTexture);
 	initialize_scene_texture();
 }

@@ -41,7 +41,7 @@ namespace tur::vulkan
 					m_ClearValue.color.g,
 					m_ClearValue.color.b,
 					m_ClearValue.color.a
-					});
+				});
 			}
 
 			/*vk::RenderingAttachmentInfo depthAttachmentInfo = {};

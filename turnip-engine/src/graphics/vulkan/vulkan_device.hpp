@@ -63,7 +63,11 @@ namespace tur::vulkan
 		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
 		void destroy_render_target_impl(render_target_handle handle);
 
+	protected:
+		inline Texture get_native_texture_impl(texture_handle handle) { return m_Textures.get(handle); }
+
 	public:
+		void wait_idle();
 		void submit_immediate_command(std::function<void()>&& function);
 		void transition_texture_layout(Texture& texture, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
 		void transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);

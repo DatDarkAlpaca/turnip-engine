@@ -18,7 +18,7 @@ namespace tur::engine
 	static void on_render(TurnipEngine& data)
 	{
 		data.graphicsDevice.begin();
-
+		
 		// GUI:
 		{
 			data.guiSystem->begin_frame();
@@ -33,7 +33,7 @@ namespace tur::engine
 		// View rendering:
 		for (const auto& view : data.viewSystem.views)
 			view->on_render();
-		
+
 		data.graphicsDevice.end();
 		data.graphicsDevice.submit();
 		data.graphicsDevice.present();
