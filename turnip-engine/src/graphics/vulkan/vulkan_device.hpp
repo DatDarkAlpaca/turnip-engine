@@ -1,5 +1,6 @@
 #pragma once
 #include "core/free_list.hpp"
+#include "vulkan_deletion_queue.hpp"
 #include "graphics/graphics_device.hpp"
 
 #include "objects/buffer.hpp"
@@ -16,6 +17,7 @@ namespace tur::vulkan
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 		friend class CommandBufferVulkan;
+		friend void deletion::flush(deletion::DeletionQueue& deletionQueue);
 
 		friend void initialize_vulkan_gui(GraphicsDeviceVulkan*);
 		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
@@ -95,6 +97,9 @@ namespace tur::vulkan
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
 		free_list<Texture> m_RenderTargets;
+
+	private:
+		deletion::DeletionQueue m_DeletionQueue;
 
 	private:
 		vk::Fence m_ImmFence;

@@ -129,6 +129,9 @@ namespace tur::vulkan
 			m_State.drawTextureHandle = create_texture(descriptor, {});
 			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
+
+		// Deletion queue:
+		deletion::initialize_deletion_queue(m_DeletionQueue, this);
 	}
 
 	void GraphicsDeviceVulkan::begin_impl()
@@ -159,6 +162,9 @@ namespace tur::vulkan
 
 		auto& currentCommandBuffer = frameData.commandBuffer;
 		currentCommandBuffer.reset();
+
+		submit_immediate_command([&]() { deletion::flush(m_DeletionQueue); });
+		
 
 		vk::CommandBufferBeginInfo beginInfo = {};
 		{
@@ -470,10 +476,7 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
 	{
-		Buffer& buffer = m_Buffers.get(handle);
-		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
-
-		m_Buffers.remove(handle);
+		deletion::destroy_buffer(m_DeletionQueue, handle);
 	}
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
@@ -490,13 +493,7 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
 	{
-		submit_immediate_command([&]() {
-			Texture& texture = m_Textures.get(handle);
-			m_State.logicalDevice.destroyImageView(texture.imageView);
-			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
-		});
-
-		m_Textures.remove(handle);
+		deletion::destroy_texture(m_DeletionQueue, handle);
 	}
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
@@ -521,13 +518,7 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle handle)
 	{
-		submit_immediate_command([&]() {
-			Texture& texture = m_RenderTargets.get(handle);
-			m_State.logicalDevice.destroyImageView(texture.imageView);
-			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
-		});
-
-		m_RenderTargets.remove(handle);
+		deletion::destroy_render_target(m_DeletionQueue, handle);
 	}
 }
 
