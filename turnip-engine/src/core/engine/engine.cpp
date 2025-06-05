@@ -17,15 +17,26 @@ namespace tur::engine
 
 	static void on_render(TurnipEngine& data)
 	{
-		data.graphicsDevice.begin_gui_frame();
-
-		for (const auto& view : data.viewSystem.views)
+		data.graphicsDevice.begin();
+		
+		// GUI:
 		{
-			view->on_render_gui();
-			view->on_render();
-		}
+			data.guiSystem->begin_frame();
 
-		data.graphicsDevice.end_gui_frame();
+			for (const auto& view : data.viewSystem.views)
+				view->on_render_gui();
+
+			data.guiSystem->render();
+			data.guiSystem->end_frame();
+		}
+		
+		// View rendering:
+		for (const auto& view : data.viewSystem.views)
+			view->on_render();
+
+		data.graphicsDevice.end();
+		data.graphicsDevice.submit();
+		data.graphicsDevice.present();
 	}
 	
 	static void on_update(TurnipEngine& data)
@@ -66,6 +77,9 @@ namespace tur
 
 		data.configData = readerResult.value();
 
+		// Scripting:
+		ScriptSystem::initialize(data.configData, &data);
+
 		// Worker Pool:
 		data.workerPool.initialize();
 
@@ -73,19 +87,18 @@ namespace tur
 		initialize_windowing_system();
 		set_callback_window(&data.window, [&](Event& event) { engine::on_event(data, event); });
 		initialize_graphics_system(&data.window, data.configData);
-
-		// Gui:
-		initialize_gui(&data.window);
-
+		
 		// Graphics:
 		data.graphicsDevice.initialize(&data.window, data.configData);
-		data.graphicsDevice.initialize_gui_graphics_system();
+		
+		// GUI:
+		initialize_gui_system();
+		data.guiSystem = tur::make_unique<GUISystem>(data.graphicsDevice.create_gui_system());
+		data.guiSystem->initialize();
 
+		// Renderers:
 		initialize_quad_renderer_system(data.quadRendererSystem, data.configData, &data.graphicsDevice);
-		initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
-
-		// Scripting:
-		ScriptSystem::initialize(data.configData, &data);
+		//initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
 	}
 	
 	void turnip_engine_run(TurnipEngine& data)
@@ -100,8 +113,6 @@ namespace tur
 			engine::on_update(data);
 
 			engine::on_render(data);
-
-			data.graphicsDevice.present();
 		}
 
 		engine::on_shutdown(data);

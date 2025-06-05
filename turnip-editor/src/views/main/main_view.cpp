@@ -72,7 +72,7 @@ void MainView::on_view_added()
 	// Widgets:
 	m_EntityInspector.initialize(engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
-	m_SceneEditor.initialize(&engine->graphicsDevice, &m_SceneData);
+	m_SceneEditor.initialize(&engine->graphicsDevice, engine->guiSystem.get(), &m_SceneData);
 
 	initialize_renderer_system();
 	initialize_textures();
@@ -125,6 +125,9 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
+		if (resizeEvent.width <= 0 || resizeEvent.height <= 0)
+			return false;
+		
 		// Render target:
 		update_render_target(resizeEvent.width, resizeEvent.height);
 		
@@ -147,13 +150,13 @@ void MainView::on_event(Event& event)
 }
 void MainView::on_render()
 {
-	quad_renderer_system_begin(engine->quadRendererSystem);
-	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_render(engine->quadRendererSystem);
 	quad_renderer_system_end(engine->quadRendererSystem);
-
-	instanced_quad_system_begin(engine->instancedQuadSystem);
-	instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
-	instanced_quad_system_end(engine->instancedQuadSystem);
+	
+	//instanced_quad_system_begin(engine->instancedQuadSystem);
+	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
+	//instanced_quad_system_end(engine->instancedQuadSystem);
 }
 
 void MainView::initialize_textures()
@@ -177,6 +180,7 @@ void MainView::initialize_renderer_system()
 	{
 		quad_renderer_system_set_scene(engine->quadRendererSystem, &scene);
 		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
+		renderer_set_should_clear(r_QuadRenderer, false);
 
 		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });			
 	}

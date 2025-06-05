@@ -1,5 +1,6 @@
 #pragma once
 #include "core/free_list.hpp"
+#include "vulkan_deletion_queue.hpp"
 #include "graphics/graphics_device.hpp"
 
 #include "objects/buffer.hpp"
@@ -10,29 +11,31 @@
 namespace tur::vulkan
 {
 	class CommandBufferVulkan;
+	class VulkanGUI;
 
 	class GraphicsDeviceVulkan : public BaseGraphicsDevice<GraphicsDeviceVulkan>
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 		friend class CommandBufferVulkan;
+		friend void deletion::flush(deletion::DeletionQueue& deletionQueue);
 
-		friend void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan*);
+		friend void initialize_vulkan_gui(GraphicsDeviceVulkan*);
 		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
+		friend Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
 	public:
 		void recreate_swapchain();
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
+		void begin_impl();
+		void submit_impl();
 		void present_impl();
+		void end_impl();
 
 	protected:
 		CommandBufferVulkan create_command_buffer_impl();
-
-	protected:
-		void initialize_gui_graphics_system_impl();
-		void begin_gui_frame_impl();
-		void end_gui_frame_impl();
+		VulkanGUI create_gui_system_impl();
 	
 	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
@@ -40,6 +43,7 @@ namespace tur::vulkan
 
 	protected:
 		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
+		void set_descriptor_resource_impl(pipeline_handle pipelineHandle, handle_type resourceHandle, DescriptorType type, u32 binding);
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
@@ -47,6 +51,7 @@ namespace tur::vulkan
 		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset);
 		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset);
+		void copy_buffer_to_texture_impl(buffer_handle source, texture_handle destination, u32 width, u32 height);
 		void destroy_buffer_impl(buffer_handle handle);
 
 	protected:
@@ -58,9 +63,17 @@ namespace tur::vulkan
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
 		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
+		void destroy_render_target_impl(render_target_handle handle);
+
+	protected:
+		inline Texture get_native_texture_impl(texture_handle handle) { return m_Textures.get(handle); }
 
 	public:
+		void wait_idle();
 		void submit_immediate_command(std::function<void()>&& function);
+		void transition_texture_layout(Texture& texture, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
+		void transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
+		void copy_buffer_to_texture_direct(Buffer& buffer, Texture& texture, u32 width, u32 height);
 
 	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
@@ -84,6 +97,9 @@ namespace tur::vulkan
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
 		free_list<Texture> m_RenderTargets;
+
+	private:
+		deletion::DeletionQueue m_DeletionQueue;
 
 	private:
 		vk::Fence m_ImmFence;

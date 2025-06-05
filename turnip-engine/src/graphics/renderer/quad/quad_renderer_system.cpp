@@ -9,7 +9,7 @@ namespace tur
 		system.scene = scene;
 	}
 
-	void quad_renderer_system_begin(QuadRendererSystem& system)
+	void quad_renderer_system_begin(QuadRendererSystem& system, render_target_handle handle)
 	{
 		if (!system.scene)
 			return TUR_LOG_ERROR("Quad renderer system has no set scene");
@@ -41,12 +41,12 @@ namespace tur
 			quad_renderer_add_quad(system.renderer, quadData);
 		}
 
-		quad_renderer_begin(system.renderer);
+		quad_renderer_begin(system.renderer, handle);
 	}
 
-	void quad_renderer_system_render(QuadRendererSystem& system, render_target_handle handle)
+	void quad_renderer_system_render(QuadRendererSystem& system)
 	{
-		quad_renderer_render(system.renderer, handle);
+		quad_renderer_render(system.renderer);
 	}
 
 	void quad_renderer_system_end(QuadRendererSystem& system)

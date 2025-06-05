@@ -22,7 +22,9 @@ namespace tur
 		AssetLibrary assetLibrary;
 		ConfigData configData;
 		WorkerPool workerPool;
+
 		GraphicsDevice graphicsDevice;
+		tur_unique<GUISystem> guiSystem;
 
 		QuadRendererSystem quadRendererSystem;
 		InstancedQuadSystem instancedQuadSystem;

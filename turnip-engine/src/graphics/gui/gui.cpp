@@ -6,7 +6,7 @@
 
 namespace tur
 {
-	void initialize_gui(Window* window)
+	void initialize_gui_system()
 	{
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();

@@ -14,66 +14,24 @@ namespace tur::vulkan
 	{
 	}
 
-	void CommandBufferVulkan::begin_impl()
-	{
-		auto& device = r_Device->get_state().logicalDevice;
-		auto& swapchain = r_Device->get_state().swapchain;
-		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
-		auto& frameData = frameDataHolder.get_frame_data();
-
-		try 
-		{
-			auto result = device.waitForFences(frameData.recordingFence, true, 1'000'000'000);
-			device.resetFences(frameData.recordingFence);
-		}
-		catch (vk::SystemError& err) 
-		{
-			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
-		}
-
-		auto imageResult = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore);
-		frameDataHolder.set_color_buffer(imageResult.value);
-
-		if (imageResult.result == vk::Result::eErrorOutOfDateKHR)
-			r_Device->recreate_swapchain();
-
-		else if (imageResult.result != vk::Result::eSuccess && imageResult.result != vk::Result::eSuboptimalKHR)
-			TUR_LOG_CRITICAL("Failed to acquire swapchain image");
-
-		m_CommandBuffer = get_command_buffer();
-		m_CommandBuffer.reset();
-
-		vk::CommandBufferBeginInfo beginInfo = {};
-		{
-			beginInfo.pInheritanceInfo = nullptr;
-			beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
-		}
-
-		try
-		{
-			m_CommandBuffer.begin(beginInfo);
-		}
-		catch (vk::SystemError& err) {
-			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
-		}
-	}
 	void CommandBufferVulkan::begin_render_impl(render_target_handle handle)
 	{
-		const auto& currentFrame = r_Device->get_state().frameDataHolder.get_color_buffer();
-		const auto& swapchainExtent = r_Device->get_state().swapchainExtent;
-
-		auto& renderTarget = r_Device->get_render_targets().get(handle);
+		m_CommandBuffer = get_command_buffer();
 		m_CurrentRenderTarget = handle;
-		if (handle == invalid_handle)
-			renderTarget = r_Device->get_state().drawTexture;
 
-		transition_image(renderTarget.image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
+		Texture* renderTarget;
+		if (handle != invalid_handle)
+			renderTarget = &r_Device->get_render_targets().get(handle);
+		else
+			renderTarget = &r_Device->get_state().drawTexture;
+
+		transition_image(renderTarget->image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 
 		vk::RenderingInfo renderInfo = {};
 		{
 			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
 			{
-				colorAttachmentInfo.imageView = renderTarget.imageView;
+				colorAttachmentInfo.imageView = renderTarget->imageView;
 				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
@@ -98,7 +56,7 @@ namespace tur::vulkan
 				colorAttachmentInfo.clearValue;
 			}*/
 
-			renderInfo.renderArea = vk::Rect2D({}, { renderTarget.extent.width, renderTarget.extent.height });
+			renderInfo.renderArea = vk::Rect2D({}, { renderTarget->extent.width, renderTarget->extent.height });
 			renderInfo.colorAttachmentCount = 1;
 			renderInfo.pColorAttachments = &colorAttachmentInfo;
 			renderInfo.layerCount = 1;
@@ -107,42 +65,28 @@ namespace tur::vulkan
 		}
 
 		m_CommandBuffer.beginRendering(renderInfo);
-
-		// Todo: Move ImGUI:
-		if(handle == invalid_handle)
-			render_vulkan_frame(m_CommandBuffer);
 	}
 	void CommandBufferVulkan::end_render_impl()
 	{
 		m_CommandBuffer.endRendering();
-	}
-	void CommandBufferVulkan::end_impl()
-	{
+		
 		auto& frameDataHolder = r_Device->get_state().frameDataHolder;
 		auto& swapchainExtent = r_Device->get_state().swapchainExtent;
-
 		auto& swapchainImages = r_Device->get_state().swapChainImages;
+
 		const auto& currentImage = frameDataHolder.get_color_buffer();
 
-		auto& renderTarget = r_Device->get_render_targets().get(m_CurrentRenderTarget);
 		if (m_CurrentRenderTarget == invalid_handle)
-			renderTarget = r_Device->get_state().drawTexture;
-
-		transition_image(renderTarget.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
-		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
-
-		copy_image(renderTarget.image, swapchainImages.at(currentImage),
-			{ renderTarget.extent.width, renderTarget.extent.height }, swapchainExtent);
-
-		transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
-
-		try
 		{
-			m_CommandBuffer.end();
-		}
-		catch (vk::SystemError err)
-		{
-			throw std::runtime_error("Failed to end() recording to vulkan command buffer.");
+			auto& renderTarget = r_Device->get_state().drawTexture;
+
+			transition_image(renderTarget.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
+			transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+
+			copy_image(renderTarget.image, swapchainImages.at(currentImage),
+				{ renderTarget.extent.width, renderTarget.extent.height }, swapchainExtent);
+
+			transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::ePresentSrcKHR);
 		}
 	}
 
@@ -168,14 +112,15 @@ namespace tur::vulkan
 		// Bind pipeline:
 		auto pipeline = r_Device->get_pipelines().get(handle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
+		m_BoundPipeline = pipeline;
 
 		// Bind descriptor sets:
 		m_CommandBuffer.bindDescriptorSets(
 			get_pipeline_type(pipeline.type), 
-			pipeline.layout, 
-			0, 1, 
-			&pipeline.descriptorSets[frameNumber], 0,
-			nullptr
+			pipeline.layout, 0, 
+			pipeline.descriptorSets.size(),
+			pipeline.descriptorSets.data(),
+			0, nullptr
 		);
 	}
 	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
@@ -194,64 +139,7 @@ namespace tur::vulkan
 	}
 	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
 	{
-	}
-
-	void CommandBufferVulkan::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
-	{
-		vk::DescriptorType descriptorType = get_descriptor_type(type);;
-		const u32 frameNumber = get_state().frameDataHolder.get_frame_number();
-
-		switch (type)
-		{
-			case DescriptorType::UNIFORM_BUFFER:
-			case DescriptorType::STORAGE_BUFFER:
-			{
-				const Buffer& buffer = r_Device->get_buffers().get(handle);
-
-				vk::DescriptorBufferInfo bufferInfo = {};
-				{
-					bufferInfo.buffer = buffer.buffer;
-					bufferInfo.offset = 0;
-					bufferInfo.range = buffer.size;
-				}
-
-				vk::WriteDescriptorSet descriptorWrite = {};
-				{
-					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[frameNumber];
-					descriptorWrite.dstBinding = binding;
-					descriptorWrite.dstArrayElement = 0;
-					descriptorWrite.descriptorType = descriptorType;
-					descriptorWrite.descriptorCount = 1;
-
-					descriptorWrite.pBufferInfo = &bufferInfo;
-				}
-
-				get_device().updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-			} break;
-				
-			case DescriptorType::COMBINED_IMAGE_SAMPLER:
-			{
-				const Texture& texture = r_Device->get_textures().get(handle);
-
-				vk::DescriptorImageInfo imageInfo = {};
-				{
-					imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
-					imageInfo.imageView = texture.imageView;
-					imageInfo.sampler = texture.sampler;
-				}
-
-				vk::WriteDescriptorSet descriptorWrite = {};
-				{
-					descriptorWrite.dstSet = m_BoundPipeline.descriptorSets[frameNumber];
-					descriptorWrite.dstBinding = binding;
-					descriptorWrite.dstArrayElement = 0;
-					descriptorWrite.descriptorType = descriptorType;
-					descriptorWrite.descriptorCount = 1;
-
-					descriptorWrite.pImageInfo = &imageInfo;
-				}
-			} break;
-		}		
+		
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
@@ -261,40 +149,6 @@ namespace tur::vulkan
 	void CommandBufferVulkan::draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
 	{
 		m_CommandBuffer.drawIndexed(indexCount, instanceCount, 0, firstVertex, firstInstance);
-	}
-
-	void CommandBufferVulkan::submit_impl()
-	{
-		auto& state = r_Device->get_state();
-
-		auto& graphicsQueue = state.queueList.get(QueueUsage::GRAPHICS);
-		auto& frameData = state.frameDataHolder.get_frame_data();
-
-		vk::Semaphore signalSemaphores[] = { frameData.renderFinishedSemaphore };
-		vk::Semaphore waitSemaphores[] = { frameData.imageAvailableSemaphore };
-		vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
-		vk::SubmitInfo submitInfo = {};
-		{
-			submitInfo.pWaitDstStageMask = waitStages;
-
-			submitInfo.waitSemaphoreCount = 1;
-			submitInfo.pWaitSemaphores = waitSemaphores;
-
-			submitInfo.signalSemaphoreCount = 1;
-			submitInfo.pSignalSemaphores = signalSemaphores;
-
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &frameData.commandBuffer;
-		}
-
-		try
-		{
-			graphicsQueue.submit(submitInfo, frameData.recordingFence);
-		}
-		catch (vk::SystemError& err)
-		{
-			TUR_LOG_ERROR("Failed to submit commands to the graphics queue. {}", err.what());
-		}
 	}
 }
 

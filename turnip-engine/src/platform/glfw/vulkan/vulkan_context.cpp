@@ -36,27 +36,19 @@ namespace tur::vulkan
 
 		vk::DescriptorPoolSize poolSizes[] = 
 		{
-			{ vk::DescriptorType::eSampler, 1000 },
-			{ vk::DescriptorType::eCombinedImageSampler, 1000 },
-			{ vk::DescriptorType::eSampledImage, 1000 },
-			{ vk::DescriptorType::eStorageImage, 1000 },
-			{ vk::DescriptorType::eUniformTexelBuffer, 1000 },
-			{ vk::DescriptorType::eStorageTexelBuffer, 1000 },
-			{ vk::DescriptorType::eUniformBuffer, 1000 },
-			{ vk::DescriptorType::eStorageBuffer, 1000 },
-			{ vk::DescriptorType::eUniformBufferDynamic, 1000 },
-			{ vk::DescriptorType::eStorageBufferDynamic, 1000 },
-			{ vk::DescriptorType::eInputAttachment, 1000 }
+			{ vk::DescriptorType::eCombinedImageSampler, 5 },
 		};
 
+		// TODO: configuration
 		vk::DescriptorPoolCreateInfo poolInfo = {};
 		{
-			poolInfo.maxSets = 1000;
+			poolInfo.maxSets = 5;
 			poolInfo.poolSizeCount = static_cast<u32>(std::size(poolSizes));
 			poolInfo.pPoolSizes = poolSizes;
+			poolInfo.flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet;
 		}
 
-		vk::DescriptorPool imguiPool;
+		vk::DescriptorPool imguiPool = {};
 		{
 			try
 			{
@@ -71,12 +63,13 @@ namespace tur::vulkan
 		ImGui_ImplGlfw_InitForVulkan(device->get_window()->window, true);
 
 		ImGui_ImplVulkan_InitInfo initInfo = {};
-		//VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
-		VkFormat formats[] = { VK_FORMAT_R8G8B8A8_UNORM };
+
+		static VkFormat formats[] = { (VkFormat)state.swapchainFormat.format };
 		{
 			initInfo.Instance = state.instance;
 			initInfo.PhysicalDevice = state.physicalDevice;
 			initInfo.Device = state.logicalDevice;
+			initInfo.QueueFamily = state.queueList.get_family_index(QueueUsage::GRAPHICS);
 			initInfo.Queue = state.queueList.get(QueueUsage::GRAPHICS);
 			initInfo.DescriptorPool = imguiPool;
 			initInfo.MinImageCount = 3;
@@ -109,7 +102,7 @@ namespace tur::vulkan
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 	}
 
-	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	void end_vulkan_frame()
 	{		
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

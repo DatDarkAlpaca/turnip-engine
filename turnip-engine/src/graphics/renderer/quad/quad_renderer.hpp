@@ -42,8 +42,8 @@ namespace tur
 
 	void initialize_quad_renderer(QuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
 	
-	void quad_renderer_begin(QuadRenderer& renderer);
-	void quad_renderer_render(QuadRenderer& renderer, render_target_handle renderTarget = invalid_handle);
+	void quad_renderer_begin(QuadRenderer& renderer, render_target_handle renderTarget = invalid_handle);
+	void quad_renderer_render(QuadRenderer& renderer);
 	void quad_renderer_end(QuadRenderer& renderer);
 
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
