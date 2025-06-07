@@ -132,6 +132,7 @@ namespace tur::quad_renderer
 		}
 		
 		graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.uniformBuffer, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 	}
 	
 	static void bind_mvp(QuadRenderer& renderer, const glm::mat4& transform)
@@ -185,18 +186,12 @@ namespace tur
 			quad_renderer::bind_mvp(renderer, quad.transform);
 
 			if (quad.texture != invalid_handle)
-			{
-				// commands->set_descriptor_resource(quad.texture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 				commands->bind_texture(quad.texture);
-			}
 
 			else
 			{
 				if (renderer.defaultTexture != invalid_handle)
-				{
-					// commands->set_descriptor_resource(renderer.defaultTexture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 					commands->bind_texture(renderer.defaultTexture);
-				}
 			}
 
 			commands->draw_indexed(6);

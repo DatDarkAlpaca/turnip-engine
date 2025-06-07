@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "graphics/gui_system.hpp"
 #include "vulkan_command_buffer.hpp"
+#include "vulkan_deletion_queue.hpp"
 
 namespace tur::vulkan
 {
@@ -33,7 +34,11 @@ namespace tur::vulkan
 
 		void remove_texture_impl(texture_handle handle)
 		{
-			ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(handle));
+			r_GraphicsDevice->wait_idle();
+
+			deletion::destroy_general(r_GraphicsDevice->m_DeletionQueue, [&, handle](){
+				ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(handle)); 
+			});
 		}
 
 		bool texture_button_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)

@@ -54,7 +54,7 @@ namespace tur::vulkan
 		return "Unknown";
 	}
 
-	static VKAPI_ATTR VkBool32 VKAPI_CALL DefaultDebugCallback(
+	static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -66,6 +66,14 @@ namespace tur::vulkan
 
 		TUR_LOG_ERROR("[Vulkan: {}] [{}]: {}", severity, type, pCallbackData->pMessage);
 		return VK_FALSE;
+	}
+
+	static void destroy_messenger_ext(vk::Instance instance, vk::DebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+	{
+		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+		
+		if (func != nullptr)
+			func(instance, debugMessenger, pAllocator);
 	}
 }
 
@@ -167,12 +175,17 @@ namespace tur::vulkan
 			vk::DebugUtilsMessengerCreateFlagsEXT(),
 			DefaultDebugMessageSeverity,
 			DefaultDebugMessageType,
-			DefaultDebugCallback,
+			default_debug_callback,
 			nullptr
 		);
 
 		vk::DispatchLoaderDynamic DLDI(state.instance, vkGetInstanceProcAddr);
 		state.debugMessenger = state.instance.createDebugUtilsMessengerEXT(debugCreateInfo, nullptr, DLDI);
 		state.DLDI = DLDI;
+	}
+
+	void destroy_instance_messenger(VulkanState& state)
+	{
+		destroy_messenger_ext(state.instance, state.debugMessenger, nullptr);
 	}
 }

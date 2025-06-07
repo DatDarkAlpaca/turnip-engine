@@ -20,6 +20,11 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_impl(window, configData);
 		}
+		void shutdown()
+		{
+			static_cast<Backend*>(this)->shutdown_impl();
+		}
+
 		void begin()
 		{
 			static_cast<Backend*>(this)->begin_impl();
@@ -93,7 +98,7 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->copy_buffer_to_texture_impl(source, destination, width, height);
 		}
-		void destroy_buffer(buffer_handle handle)
+		void destroy_buffer(buffer_handle& handle)
 		{
 			static_cast<Backend*>(this)->destroy_buffer_impl(handle);
 		};
@@ -111,7 +116,7 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->update_texture_impl(handle, asset);
 		}
-		void destroy_texture(texture_handle handle)
+		void destroy_texture(texture_handle& handle)
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
 		}
@@ -129,7 +134,7 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->resize_render_target_impl(handle, width, height);
 		}
-		void destroy_render_target(render_target_handle handle)
+		void destroy_render_target(render_target_handle& handle)
 		{
 			static_cast<Backend*>(this)->destroy_render_target_impl(handle);
 		}

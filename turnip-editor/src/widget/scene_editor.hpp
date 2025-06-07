@@ -12,8 +12,7 @@ public:
 	void on_render_gui();
 
 private:
-	void initialize_scene_texture();
-	void resize_scene_texture();
+	void setup_scene_texture();
 
 private:
 	NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;

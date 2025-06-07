@@ -8,6 +8,9 @@ namespace tur
 	template<typename Type>
 	class free_list 
 	{
+		using iterator = Type*;
+		using const_iterator = const Type*;
+
 	public:
 		handle_type add(const Type& data)
 		{
@@ -42,6 +45,21 @@ namespace tur
 #endif
 			return m_Data[handle];
 		}
+
+		void clear()
+		{
+			m_Data.clear();
+			m_FreeList.clear();
+			m_ExistsEmptySlots = false;
+		}
+
+	public:
+		const_iterator cbegin() const { return m_Data.data(); }
+		const_iterator cend() const { return m_Data.data() + m_Data.size(); }
+		const_iterator begin() const { return cbegin(); }
+		const_iterator end() const { return cend(); }
+		iterator begin() { return m_Data.data(); }
+		iterator end() { return m_Data.data() + m_Data.size(); }
 
 	private:
 		inline bool is_valid_handle(handle_type handle) const

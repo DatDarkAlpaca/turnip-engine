@@ -133,6 +133,61 @@ namespace tur::vulkan
 		// Deletion queue:
 		deletion::initialize_deletion_queue(m_DeletionQueue, this);
 	}
+	void GraphicsDeviceVulkan::shutdown_impl()
+	{
+		auto& device = m_State.logicalDevice;
+		
+		// Swapchain:
+		{
+			for (const auto& image : m_State.swapChainImageViews)
+				device.destroyImageView(image);
+
+			m_State.logicalDevice.destroySwapchainKHR(m_State.swapchain);
+		}
+
+		// Resources:
+		{
+			for (const auto& pipeline : m_Pipelines)
+			{
+				device.destroyPipelineLayout(pipeline.layout);
+				device.destroyPipeline(pipeline.pipeline);
+			}
+
+			// desc sets (separate from pipeline)
+
+			for (const auto& texture : m_Textures)
+			{
+				device.destroyImageView(texture.imageView);
+				vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+			}
+
+			for (const auto& renderTarget : m_RenderTargets)
+			{
+				device.destroyImageView(renderTarget.imageView);
+				vmaDestroyImage(m_State.vmaAllocator, renderTarget.image, renderTarget.allocation);
+			}
+
+			for (const auto& buffer : m_Buffers)
+				vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
+
+			m_ShaderModules.clear();
+			m_RenderTargets.clear();
+			m_Pipelines.clear();
+			m_Textures.clear();
+			m_Buffers.clear();
+
+			m_State.frameDataHolder.shutdown(device);
+			device.destroyCommandPool(m_State.commandPool);
+		}
+		
+		device.destroy();
+
+		if (m_ConfigData.vulkanConfiguration.instanceRequirements.enableValidationLayers)
+			destroy_instance_messenger(m_State);
+
+		vkDestroySurfaceKHR(m_State.instance, m_State.surface, nullptr);
+		m_State.instance.destroy();
+	}
 
 	void GraphicsDeviceVulkan::begin_impl()
 	{
@@ -151,6 +206,8 @@ namespace tur::vulkan
 			TUR_LOG_CRITICAL("Failed to wait for fences. {}", err.what());
 		}
 
+		deletion::flush(m_DeletionQueue);
+
 		auto imageResult = device.acquireNextImageKHR(swapchain, 1'000'000'000, frameData.imageAvailableSemaphore);
 		frameDataHolder.set_color_buffer(imageResult.value);
 
@@ -162,9 +219,6 @@ namespace tur::vulkan
 
 		auto& currentCommandBuffer = frameData.commandBuffer;
 		currentCommandBuffer.reset();
-
-		submit_immediate_command([&]() { deletion::flush(m_DeletionQueue); });
-		
 
 		vk::CommandBufferBeginInfo beginInfo = {};
 		{
@@ -474,9 +528,10 @@ namespace tur::vulkan
 	{
 		copy_buffer_to_texture_direct(m_Buffers.get(source), m_Textures.get(destination), width, height);
 	}
-	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle handle)
+	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle& handle)
 	{
 		deletion::destroy_buffer(m_DeletionQueue, handle);
+		handle = invalid_handle;
 	}
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
@@ -491,9 +546,16 @@ namespace tur::vulkan
 	{
 		// TODO
 	}
-	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle handle)
+	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle& handle)
 	{
-		deletion::destroy_texture(m_DeletionQueue, handle);
+		// deletion::destroy_texture(m_DeletionQueue, handle);
+		Texture& texture = m_Textures.get(handle);
+
+		m_State.logicalDevice.destroyImageView(texture.imageView);
+		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+
+		m_Textures.remove(handle);
+		handle = invalid_handle;
 	}
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
@@ -516,9 +578,16 @@ namespace tur::vulkan
 		}
 		handle = create_render_target(descriptor);
 	}
-	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle handle)
+	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle& handle)
 	{
-		deletion::destroy_render_target(m_DeletionQueue, handle);
+		// deletion::destroy_render_Target(m_DeletionQueue, handle);
+		Texture& texture = m_RenderTargets.get(handle);
+
+		m_State.logicalDevice.destroyImageView(texture.imageView);
+		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+
+		m_RenderTargets.remove(handle);
+		handle = invalid_handle;
 	}
 }
 

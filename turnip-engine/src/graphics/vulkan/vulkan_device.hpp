@@ -17,6 +17,7 @@ namespace tur::vulkan
 	{
 		friend class BaseGraphicsDevice<GraphicsDeviceVulkan>;
 		friend class CommandBufferVulkan;
+		friend class VulkanGUI;
 		friend void deletion::flush(deletion::DeletionQueue& deletionQueue);
 
 		friend void initialize_vulkan_gui(GraphicsDeviceVulkan*);
@@ -28,6 +29,8 @@ namespace tur::vulkan
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
+		void shutdown_impl();
+
 		void begin_impl();
 		void submit_impl();
 		void present_impl();
@@ -52,18 +55,18 @@ namespace tur::vulkan
 		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset);
 		void copy_buffer_to_texture_impl(buffer_handle source, texture_handle destination, u32 width, u32 height);
-		void destroy_buffer_impl(buffer_handle handle);
+		void destroy_buffer_impl(buffer_handle &handle);
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
 		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
-		void destroy_texture_impl(texture_handle handle);
+		void destroy_texture_impl(texture_handle& handle);
 
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
 		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
-		void destroy_render_target_impl(render_target_handle handle);
+		void destroy_render_target_impl(render_target_handle& handle);
 
 	protected:
 		inline Texture get_native_texture_impl(texture_handle handle) { return m_Textures.get(handle); }

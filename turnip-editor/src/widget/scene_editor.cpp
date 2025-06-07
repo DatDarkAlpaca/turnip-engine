@@ -11,13 +11,29 @@ void SceneEditor::initialize(NON_OWNING GraphicsDevice* graphicsDevice, NON_OWNI
 	r_SceneData = sceneData;
 	r_GUISystem = guiSystem;
 
-	initialize_scene_texture();
+	setup_scene_texture();
 }
  
 void SceneEditor::on_render_gui()
 {
 	ImGui::Begin("Scene Editor");
 	
+	ImVec2 dimensions = ImGui::GetWindowSize();
+	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)
+	{
+		m_LatestSize = dimensions;
+		setup_scene_texture();
+	}
+
+	ImVec2 position = ImGui::GetItemRectMin();
+	if (m_LatestPosition.x != position.x || m_LatestPosition.y != position.y)
+	{
+		m_LatestPosition = position;
+
+		SceneEditorMoved editorMoved((u32)m_LatestPosition.x, (u32)m_LatestPosition.y);
+		callback(editorMoved);
+	}
+
 	r_GUISystem->texture(r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
@@ -52,30 +68,14 @@ void SceneEditor::on_render_gui()
 			transform.decompose_transform();
 	}
 	
-	ImVec2 dimensions = ImGui::GetWindowSize();
-	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)
-	{
-		m_LatestSize = dimensions;
-		resize_scene_texture();
-	}
-
-	ImVec2 position = ImGui::GetItemRectMin();
-	if (m_LatestPosition.x != position.x || m_LatestPosition.y != position.y)
-	{
-		m_LatestPosition = position;
-
-		SceneEditorMoved editorMoved((u32)m_LatestPosition.x, (u32)m_LatestPosition.y);
-		callback(editorMoved);
-	}
-
 	ImGui::End();
 }
 
-void SceneEditor::initialize_scene_texture()
+void SceneEditor::setup_scene_texture()
 {
 	TextureDescriptor descriptor;
-	descriptor.width = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.x);
-	descriptor.height = m_LatestSize.x <= 0 ? 1 : static_cast<u32>(m_LatestSize.y);
+	descriptor.width = m_LatestSize.x <= 0 ? 1000 : static_cast<u32>(m_LatestSize.x);
+	descriptor.height = m_LatestSize.y <= 0 ? 1000 : static_cast<u32>(m_LatestSize.y);
 
 	if (r_SceneData->sceneTexture != invalid_handle)
 	{
@@ -88,9 +88,4 @@ void SceneEditor::initialize_scene_texture()
 
 	SceneEditorResized editorResize(descriptor.width, descriptor.height);
 	callback(editorResize);
-}
-
-void SceneEditor::resize_scene_texture()
-{
-	initialize_scene_texture();
 }

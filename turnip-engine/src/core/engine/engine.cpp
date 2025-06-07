@@ -58,6 +58,19 @@ namespace tur::engine
 	}
 }
 
+namespace tur::engine
+{
+	static void shutdown(TurnipEngine& data)
+	{
+		engine::on_shutdown(data);
+
+		data.graphicsDevice.shutdown();
+
+		shutdown_window(&data.window);
+		shutdown_windowing_system();
+	}
+}
+
 namespace tur
 {
 	void initialize_turnip_engine(TurnipEngine& data, const std::filesystem::path& configPath)
@@ -115,10 +128,7 @@ namespace tur
 			engine::on_render(data);
 		}
 
-		engine::on_shutdown(data);
-
-		shutdown_window(&data.window);
-		shutdown_windowing_system();
+		engine::shutdown(data);
 	}
 
 	void turnip_engine_shutdown(TurnipEngine& data)

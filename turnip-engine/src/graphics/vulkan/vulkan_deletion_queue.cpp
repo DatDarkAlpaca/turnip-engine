@@ -9,6 +9,10 @@ namespace tur::vulkan::deletion
 		deletionQueue.device = device;
 	}
 
+	void destroy_general(DeletionQueue& deletionQueue, std::function<void()>&& function)
+	{
+		deletionQueue.additionalDeletionQueue.push_back(std::move(function));
+	}
 	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle handle)
 	{
 		deletionQueue.bufferHandles.push_back(handle);
@@ -29,6 +33,10 @@ namespace tur::vulkan::deletion
 		auto& buffers = deletionQueue.device->get_buffers();
 		auto& textures = deletionQueue.device->get_textures();
 		auto& renderTargets = deletionQueue.device->get_render_targets();
+
+		// Additional deletion:
+		for (const auto& deletionFunction : deletionQueue.additionalDeletionQueue)
+			deletionFunction();
 
 		// Buffers:
 		for (const auto& handle : deletionQueue.bufferHandles)
