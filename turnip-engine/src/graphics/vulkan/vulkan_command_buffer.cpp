@@ -110,16 +110,23 @@ namespace tur::vulkan
 		u32 frameNumber = r_Device->get_state().frameDataHolder.get_frame_number();
 
 		// Bind pipeline:
-		auto pipeline = r_Device->get_pipelines().get(handle);
+		Pipeline pipeline = r_Device->get_pipelines().get(handle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
 		m_BoundPipeline = pipeline;
+
+		std::vector<vk::DescriptorSet> descriptorSets;
+		for (const auto& handle : pipeline.descriptors) 
+		{
+			for (const auto& set : r_Device->get_descriptors().get(handle).sets)
+				descriptorSets.push_back(set);
+		}
 
 		// Bind descriptor sets:
 		m_CommandBuffer.bindDescriptorSets(
 			get_pipeline_type(pipeline.type), 
 			pipeline.layout, 0, 
-			pipeline.descriptorSets.size(),
-			pipeline.descriptorSets.data(),
+			descriptorSets.size(),
+			descriptorSets.data(),
 			0, nullptr
 		);
 	}

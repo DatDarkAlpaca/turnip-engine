@@ -19,6 +19,10 @@ namespace tur::engine
 	{
 		data.graphicsDevice.begin();
 		
+		// View rendering:
+		for (const auto& view : data.viewSystem.views)
+			view->on_render();
+
 		// GUI:
 		{
 			data.guiSystem->begin_frame();
@@ -30,10 +34,6 @@ namespace tur::engine
 			data.guiSystem->end_frame();
 		}
 		
-		// View rendering:
-		for (const auto& view : data.viewSystem.views)
-			view->on_render();
-
 		data.graphicsDevice.end();
 		data.graphicsDevice.submit();
 		data.graphicsDevice.present();
@@ -64,6 +64,7 @@ namespace tur::engine
 	{
 		engine::on_shutdown(data);
 
+		data.guiSystem->shutdown();
 		data.graphicsDevice.shutdown();
 
 		shutdown_window(&data.window);

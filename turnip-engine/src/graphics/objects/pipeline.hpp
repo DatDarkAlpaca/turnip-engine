@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "graphics/type/types.hpp"
 #include "graphics/objects/shader.hpp"
+#include "graphics/objects/descriptor.hpp"
 
 namespace tur
 {
@@ -75,44 +76,6 @@ namespace tur
         R32G32_SINT,            // IVEC2
         R32G32B32A32_UINT,      // UVEC4
     };
-
-    enum class PipelineStage
-    {
-        NONE                = 0,
-        VERTEX_STAGE        = 1 << 0,
-        FRAGMENT_STAGE      = 1 << 2,
-        GRAPHICS_ALL        = 1 << 3
-    };
-}
-
-namespace tur
-{
-    enum class DescriptorType
-    {
-        COMBINED_IMAGE_SAMPLER,
-        UNIFORM_BUFFER,
-        STORAGE_BUFFER
-    };
-
-    struct DescriptorDescription
-    {
-        uint32_t binding;
-        DescriptorType type;
-        PipelineStage stages;
-        u32 amount = 1;
-    };
-
-    struct PipelineLayout
-    {
-    public:
-        void add_binding(const DescriptorDescription& binding)
-        {
-            bindingDescriptors.push_back(binding);
-        }
-
-    public:
-        std::vector<DescriptorDescription> bindingDescriptors;
-    };
 }
 
 namespace tur
@@ -166,7 +129,7 @@ namespace tur
         InputAssemblyDescriptor inputAssemblyStage;
         RasterizerDescriptor rasterizerStage;
 
-        PipelineLayout pipelineLayout;
+        std::vector<descriptor_handle> descriptorSetLayouts;
 
         shader_handle vertexShader = invalid_handle;
         shader_handle tesselationControlShader = invalid_handle;

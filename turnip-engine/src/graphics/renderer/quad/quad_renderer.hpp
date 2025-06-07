@@ -33,6 +33,7 @@ namespace tur
 		std::vector<Data> quads;
 
 	public:
+		descriptor_handle descriptor		= invalid_handle;
 		buffer_handle uniformBuffer			= invalid_handle;
 		buffer_handle indexBuffer			= invalid_handle;
 		buffer_handle buffer				= invalid_handle;

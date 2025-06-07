@@ -10,8 +10,6 @@ void SceneEditor::initialize(NON_OWNING GraphicsDevice* graphicsDevice, NON_OWNI
 	r_GraphicsDevice = graphicsDevice;
 	r_SceneData = sceneData;
 	r_GUISystem = guiSystem;
-
-	setup_scene_texture();
 }
  
 void SceneEditor::on_render_gui()
@@ -22,7 +20,9 @@ void SceneEditor::on_render_gui()
 	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)
 	{
 		m_LatestSize = dimensions;
-		setup_scene_texture();
+
+		SceneEditorResized editorResize(dimensions.x, dimensions.y);
+		callback(editorResize);
 	}
 
 	ImVec2 position = ImGui::GetItemRectMin();
@@ -69,23 +69,4 @@ void SceneEditor::on_render_gui()
 	}
 	
 	ImGui::End();
-}
-
-void SceneEditor::setup_scene_texture()
-{
-	TextureDescriptor descriptor;
-	descriptor.width = m_LatestSize.x <= 0 ? 1000 : static_cast<u32>(m_LatestSize.x);
-	descriptor.height = m_LatestSize.y <= 0 ? 1000 : static_cast<u32>(m_LatestSize.y);
-
-	if (r_SceneData->sceneTexture != invalid_handle)
-	{
-		r_GUISystem->remove_texture(r_SceneData->sceneTexture);
-		r_GraphicsDevice->destroy_texture(r_SceneData->sceneTexture);
-	}
-
-	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
-	r_GUISystem->add_texture(r_SceneData->sceneTexture);
-
-	SceneEditorResized editorResize(descriptor.width, descriptor.height);
-	callback(editorResize);
 }

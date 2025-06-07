@@ -16,6 +16,7 @@
 #include "factories/pipeline_factory.hpp"
 #include "factories/buffer_factory.hpp"
 #include "factories/texture_factory.hpp"
+#include "factories/descriptor_factory.hpp"
 
 #include "platform/platform.hpp"
 
@@ -136,13 +137,20 @@ namespace tur::vulkan
 	void GraphicsDeviceVulkan::shutdown_impl()
 	{
 		auto& device = m_State.logicalDevice;
-		
+		wait_idle();
+
 		// Swapchain:
 		{
 			for (const auto& image : m_State.swapChainImageViews)
 				device.destroyImageView(image);
 
-			m_State.logicalDevice.destroySwapchainKHR(m_State.swapchain);
+			device.destroySwapchainKHR(m_State.swapchain);
+		}
+
+		// Imm Command buffer:
+		{
+			device.destroyCommandPool(m_ImmCommandPool);
+			device.destroyFence(m_ImmFence);
 		}
 
 		// Resources:
@@ -153,12 +161,17 @@ namespace tur::vulkan
 				device.destroyPipeline(pipeline.pipeline);
 			}
 
-			// desc sets (separate from pipeline)
+			for (const auto& descriptor : m_Descriptors)
+			{
+				device.destroyDescriptorPool(descriptor.descriptorPool);
+				device.destroyDescriptorSetLayout(descriptor.setLayout);
+			}
 
 			for (const auto& texture : m_Textures)
 			{
-				device.destroyImageView(texture.imageView);
 				vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+				device.destroyImageView(texture.imageView);
+				device.destroySampler(texture.sampler);
 			}
 
 			for (const auto& renderTarget : m_RenderTargets)
@@ -172,6 +185,7 @@ namespace tur::vulkan
 
 			m_ShaderModules.clear();
 			m_RenderTargets.clear();
+			m_Descriptors.clear();
 			m_Pipelines.clear();
 			m_Textures.clear();
 			m_Buffers.clear();
@@ -180,10 +194,10 @@ namespace tur::vulkan
 			device.destroyCommandPool(m_State.commandPool);
 		}
 		
+		vmaDestroyAllocator(m_State.vmaAllocator);
 		device.destroy();
 
-		if (m_ConfigData.vulkanConfiguration.instanceRequirements.enableValidationLayers)
-			destroy_instance_messenger(m_State);
+		destroy_instance_messenger(m_State);
 
 		vkDestroySurfaceKHR(m_State.instance, m_State.surface, nullptr);
 		m_State.instance.destroy();
@@ -342,32 +356,17 @@ namespace tur::vulkan
 		m_ShaderModules.remove(handle);
 	}
 
-	pipeline_handle GraphicsDeviceVulkan::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
+	descriptor_handle GraphicsDeviceVulkan::create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor)
 	{
-		Pipeline pipeline;
-
-		// Pipeline Creation:
-		pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+		DescriptorWrapper descriptorWrapper;
+		descriptorWrapper.descriptorPool = vulkan::create_descriptor_pool(m_State.logicalDevice, descriptor);
+		descriptorWrapper.setLayout = vulkan::create_descriptor_set_layout(m_State.logicalDevice, descriptor);
+		descriptorWrapper.sets = vulkan::create_descriptor_sets(m_State.logicalDevice, descriptorWrapper.descriptorPool, { descriptorWrapper.setLayout });
 		
-		destroy_shader(descriptor.vertexShader);
-
-		if (descriptor.tesselationControlShader != invalid_handle)
-			destroy_shader(descriptor.tesselationControlShader);
-
-		if (descriptor.tesselationEvaluationShader != invalid_handle)
-			destroy_shader(descriptor.tesselationEvaluationShader);
-
-		if (descriptor.geometryShader != invalid_handle)
-			destroy_shader(descriptor.geometryShader);
-
-		destroy_shader(descriptor.fragmentShader);
-
-		return m_Pipelines.add(pipeline);
+		return m_Descriptors.add(descriptorWrapper);
 	}
-	void GraphicsDeviceVulkan::set_descriptor_resource_impl(pipeline_handle pipelineHandle, handle_type resourceHandle, DescriptorType type, u32 binding)
+	void GraphicsDeviceVulkan::update_descriptor_resource_impl(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex)
 	{
-		auto& pipeline = m_Pipelines.get(pipelineHandle);
-
 		switch (type)
 		{
 			case DescriptorType::UNIFORM_BUFFER:
@@ -384,7 +383,7 @@ namespace tur::vulkan
 
 				vk::WriteDescriptorSet descriptorWrite = {};
 				{
-					descriptorWrite.dstSet = pipeline.descriptorSets[0];
+					descriptorWrite.dstSet = m_Descriptors.get(descriptorHandle).sets.at(setIndex);
 					descriptorWrite.dstBinding = binding;
 					descriptorWrite.dstArrayElement = 0;
 					descriptorWrite.descriptorType = get_descriptor_type(type);
@@ -409,7 +408,7 @@ namespace tur::vulkan
 
 				vk::WriteDescriptorSet descriptorWrite = {};
 				{
-					descriptorWrite.dstSet = pipeline.descriptorSets[0];
+					descriptorWrite.dstSet = m_Descriptors.get(descriptorHandle).sets.at(setIndex);
 					descriptorWrite.dstBinding = binding;
 					descriptorWrite.dstArrayElement = 0;
 					descriptorWrite.descriptorType = get_descriptor_type(type);
@@ -422,7 +421,30 @@ namespace tur::vulkan
 			} break;
 		}
 	}
-	
+
+	pipeline_handle GraphicsDeviceVulkan::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
+	{
+		Pipeline pipeline;
+
+		// Pipeline Creation:
+		pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+		
+		destroy_shader(descriptor.vertexShader);
+
+		if (descriptor.tesselationControlShader != invalid_handle)
+			destroy_shader(descriptor.tesselationControlShader);
+
+		if (descriptor.tesselationEvaluationShader != invalid_handle)
+			destroy_shader(descriptor.tesselationEvaluationShader);
+
+		if (descriptor.geometryShader != invalid_handle)
+			destroy_shader(descriptor.geometryShader);
+
+		destroy_shader(descriptor.fragmentShader);
+
+		return m_Pipelines.add(pipeline);
+	}
+
 	buffer_handle GraphicsDeviceVulkan::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
 	{
 		// Source Buffer:
@@ -552,6 +574,8 @@ namespace tur::vulkan
 		Texture& texture = m_Textures.get(handle);
 
 		m_State.logicalDevice.destroyImageView(texture.imageView);
+		m_State.logicalDevice.destroySampler(texture.sampler);
+
 		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 
 		m_Textures.remove(handle);

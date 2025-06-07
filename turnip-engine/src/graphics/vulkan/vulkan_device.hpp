@@ -6,6 +6,7 @@
 #include "objects/buffer.hpp"
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
+#include "objects/descriptor.hpp"
 #include "objects/vulkan_state.hpp"
 
 namespace tur::vulkan
@@ -20,7 +21,7 @@ namespace tur::vulkan
 		friend class VulkanGUI;
 		friend void deletion::flush(deletion::DeletionQueue& deletionQueue);
 
-		friend void initialize_vulkan_gui(GraphicsDeviceVulkan*);
+		friend vk::DescriptorPool initialize_vulkan_gui(GraphicsDeviceVulkan*);
 		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
 		friend Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
@@ -45,8 +46,11 @@ namespace tur::vulkan
 		void destroy_shader_impl(shader_handle handle);
 
 	protected:
+		descriptor_handle create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor);
+		void update_descriptor_resource_impl(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex);
+
+	protected:
 		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
-		void set_descriptor_resource_impl(pipeline_handle pipelineHandle, handle_type resourceHandle, DescriptorType type, u32 binding);
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
@@ -80,6 +84,7 @@ namespace tur::vulkan
 
 	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
+		inline free_list<DescriptorWrapper>& get_descriptors() { return m_Descriptors; }
 		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
@@ -96,6 +101,7 @@ namespace tur::vulkan
 
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
+		free_list<DescriptorWrapper> m_Descriptors;
 		free_list<Pipeline> m_Pipelines;
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;

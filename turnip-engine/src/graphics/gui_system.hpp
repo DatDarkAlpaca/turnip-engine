@@ -11,6 +11,10 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->initialize_impl();
 		}
+		void shutdown()
+		{
+			static_cast<Backend*>(this)->shutdown_impl();
+		}
 
 	public:
 		void begin_frame()

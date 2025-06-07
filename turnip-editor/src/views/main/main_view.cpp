@@ -80,6 +80,12 @@ void MainView::on_view_added()
 void MainView::on_update()
 {
 	scene.on_update_runtime();
+
+	if (m_UpdateRenderCalled) 
+	{
+		auto size = m_SceneEditor.get_size();
+		update_render_target(size.x, size.y);
+	}
 }
 void MainView::on_render_gui()
 {
@@ -129,7 +135,7 @@ void MainView::on_event(Event& event)
 			return false;
 		
 		// Render target:
-		update_render_target(resizeEvent.width, resizeEvent.height);
+		call_update_render();
 		
 		// Viewport:
 		if(r_QuadRenderer)
@@ -150,9 +156,9 @@ void MainView::on_event(Event& event)
 }
 void MainView::on_render()
 {
-	// quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
-	// quad_renderer_system_render(engine->quadRendererSystem);
-	// quad_renderer_system_end(engine->quadRendererSystem);
+	quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_render(engine->quadRendererSystem);
+	quad_renderer_system_end(engine->quadRendererSystem);
 	
 	//instanced_quad_system_begin(engine->instancedQuadSystem);
 	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
@@ -162,6 +168,9 @@ void MainView::on_render()
 void MainView::initialize_textures()
 {
 	auto& assetLibrary = engine->assetLibrary;
+
+	// Scene Texture:
+	update_render_target(100, 100);
 
 	// Default Texture:
 	{
@@ -200,18 +209,45 @@ void MainView::append_window_title(const std::string& extraText)
 	auto appendedTitle = engine->configData.windowProperties.title + " - " + extraText;
 	set_window_title(&engine->window, appendedTitle);
 }
-
+void MainView::call_update_render()
+{
+	m_UpdateRenderCalled = true;
+}
 void MainView::update_render_target(u32 width, u32 height)
 {
-	if(m_SceneData.sceneRenderTarget != invalid_handle)
-		engine->graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
+	auto& graphicsDevice = engine->graphicsDevice;
+	auto& gui = engine->guiSystem;
 
-	RenderTargetDescriptor descriptor;
+	graphicsDevice.wait_idle();
+
+	// Render target texture:
 	{
-		descriptor.colorAttachments.push_back(m_SceneData.sceneTexture);
-		descriptor.width = width;
-		descriptor.height = height;
-	}
+		TextureDescriptor textureDescriptor;
+		textureDescriptor.width = width;
+		textureDescriptor.height = height;
 
-	m_SceneData.sceneRenderTarget = engine->graphicsDevice.create_render_target(descriptor);
+		if (m_SceneData.sceneTexture != invalid_handle)
+		{
+			gui->remove_texture(m_SceneData.sceneTexture);
+			graphicsDevice.destroy_texture(m_SceneData.sceneTexture);
+		}
+
+		m_SceneData.sceneTexture = graphicsDevice.create_texture(textureDescriptor);
+		gui->add_texture(m_SceneData.sceneTexture);
+	}
+	
+	// Render target:
+	{
+		if (m_SceneData.sceneRenderTarget != invalid_handle)
+			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
+
+		RenderTargetDescriptor renderDescriptor;
+		{
+			renderDescriptor.colorAttachments.push_back(m_SceneData.sceneTexture);
+			renderDescriptor.width = width;
+			renderDescriptor.height = height;
+		}
+
+		m_SceneData.sceneRenderTarget = graphicsDevice.create_render_target(renderDescriptor);
+	}
 }

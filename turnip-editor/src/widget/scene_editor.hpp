@@ -11,8 +11,9 @@ public:
 public:
 	void on_render_gui();
 
-private:
-	void setup_scene_texture();
+public:
+	ImVec2 get_size() const { return m_LatestSize; }
+	ImVec2 get_pos() const { return m_LatestPosition; }
 
 private:
 	NON_OWNING GraphicsDevice* r_GraphicsDevice = nullptr;

@@ -42,24 +42,6 @@ namespace tur::quad_renderer
 			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
 		}
 
-		// Pipeline Layout:
-		PipelineLayout layout;
-		{
-			DescriptorDescription description = {};
-			{
-				description.binding = 0;
-				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = DescriptorType::UNIFORM_BUFFER;
-				layout.add_binding(description);
-			}
-			{
-				description.binding = 1;
-				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
-				layout.add_binding(description);
-			}
-		}
-
 		// Shaders:
 		shader_handle vertexShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
 			information.vertexFilepath,
@@ -70,13 +52,37 @@ namespace tur::quad_renderer
 			ShaderType::FRAGMENT
 		});
 
+		// Descriptors:
+		DescriptorSetLayoutDescriptor descriptorDescriptor;
+		{
+			DescriptorSetLayoutEntry entry0;
+			{
+				entry0.binding = 0;
+				entry0.amount = 1;
+				entry0.type = DescriptorType::UNIFORM_BUFFER;
+				entry0.stage = PipelineStage::VERTEX_STAGE;
+			}
+			descriptorDescriptor.push_back(entry0);
+
+			DescriptorSetLayoutEntry entry1;
+			{
+				entry1.binding = 1;
+				entry1.amount = 1;
+				entry1.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
+				entry1.stage = PipelineStage::FRAGMENT_STAGE;
+			}
+			descriptorDescriptor.push_back(entry1);
+		}
+
+		renderer.descriptor = renderer.graphicsDevice->create_descriptors(descriptorDescriptor);
+
 		// Pipeline:
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
-		descriptor.pipelineLayout = layout;
 		descriptor.rasterizerStage = rasterizer;
+		descriptor.descriptorSetLayouts.push_back(renderer.descriptor);
 
 		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
@@ -131,8 +137,8 @@ namespace tur::quad_renderer
 			renderer.uniformBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(QuadRenderer::UBO));
 		}
 		
-		graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-		graphicsDevice->set_descriptor_resource(renderer.pipeline, renderer.uniformBuffer, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+		renderer.graphicsDevice->update_descriptor_resource(renderer.descriptor, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		// renderer.graphicsDevice->update_descriptor_resource(renderer.descriptor, renderer.uniformBuffer, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 	}
 	
 	static void bind_mvp(QuadRenderer& renderer, const glm::mat4& transform)
@@ -210,7 +216,7 @@ namespace tur
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle)
 	{
 		renderer.defaultTexture = handle;
-		renderer.graphicsDevice->set_descriptor_resource(renderer.pipeline, handle, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+		renderer.graphicsDevice->update_descriptor_resource(renderer.pipeline, handle, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 	}
 }
 

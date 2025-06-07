@@ -1,6 +1,7 @@
 #pragma once
 #include "opengl_common.hpp"
 #include "graphics/objects/pipeline.hpp"
+#include "graphics/objects/descriptor.hpp"
 
 namespace tur::gl
 {

@@ -14,7 +14,13 @@ namespace tur::vulkan
 
 	void VulkanGUI::initialize_impl()
 	{
-		initialize_vulkan_gui(r_GraphicsDevice);
+		m_ImguiPool = initialize_vulkan_gui(r_GraphicsDevice);
+	}
+
+	void VulkanGUI::shutdown_impl()
+	{
+		r_GraphicsDevice->wait_idle();
+		shutdown_vulkan_gui(r_GraphicsDevice->get_state().logicalDevice, m_ImguiPool);
 	}
 
 	void VulkanGUI::begin_frame_impl()
@@ -32,5 +38,16 @@ namespace tur::vulkan
 	void VulkanGUI::end_frame_impl()
 	{
 		end_vulkan_frame();
+	}
+
+	void VulkanGUI::add_texture_impl(texture_handle handle)
+	{
+		Texture& texture = r_GraphicsDevice->get_native_texture(handle);
+		descriptorSets[handle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	}
+
+	void VulkanGUI::remove_texture_impl(texture_handle handle)
+	{
+		ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(handle));
 	}
 }

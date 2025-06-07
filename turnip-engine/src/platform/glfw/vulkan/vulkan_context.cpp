@@ -30,7 +30,7 @@ namespace tur::vulkan
 		initialize_window(window, properties);
 	}
 
-	void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
+	vk::DescriptorPool initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
 	{
 		auto& state = device->get_state();
 
@@ -48,11 +48,11 @@ namespace tur::vulkan
 			poolInfo.flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet;
 		}
 
-		vk::DescriptorPool imguiPool = {};
+		vk::DescriptorPool descriptorPool;
 		{
 			try
 			{
-				imguiPool = state.logicalDevice.createDescriptorPool(poolInfo);
+				descriptorPool = state.logicalDevice.createDescriptorPool(poolInfo);
 			}
 			catch (vk::SystemError)
 			{
@@ -71,7 +71,7 @@ namespace tur::vulkan
 			initInfo.Device = state.logicalDevice;
 			initInfo.QueueFamily = state.queueList.get_family_index(QueueUsage::GRAPHICS);
 			initInfo.Queue = state.queueList.get(QueueUsage::GRAPHICS);
-			initInfo.DescriptorPool = imguiPool;
+			initInfo.DescriptorPool = descriptorPool;
 			initInfo.MinImageCount = 3;
 			initInfo.ImageCount = 3;
 			initInfo.UseDynamicRendering = true;
@@ -87,6 +87,16 @@ namespace tur::vulkan
 		ImGui_ImplVulkan_Init(&initInfo);
 
 		ImGui_ImplVulkan_CreateFontsTexture();
+
+		return descriptorPool;
+	}
+	void shutdown_vulkan_gui(vk::Device device, vk::DescriptorPool descriptorPool)
+	{
+		ImGui_ImplVulkan_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
+		device.destroyDescriptorPool(descriptorPool);
 	}
 
 	void begin_vulkan_frame()

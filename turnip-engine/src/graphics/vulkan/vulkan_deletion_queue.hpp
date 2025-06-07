@@ -6,6 +6,7 @@
 #include "common.hpp"
 #include "graphics/vulkan/objects/texture.hpp"
 #include "graphics/vulkan/objects/buffer.hpp"
+#include "graphics/vulkan/objects/descriptor.hpp"
 #include "core/free_list.hpp"
 
 namespace tur::vulkan 
@@ -31,6 +32,7 @@ namespace tur::vulkan::deletion
 	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle handle);
 	void destroy_texture(DeletionQueue& deletionQueue, texture_handle handle);
 	void destroy_render_target(DeletionQueue& deletionQueue, texture_handle handle);
+	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle handle);
 	
 	void flush(DeletionQueue& deletionQueue);
 }

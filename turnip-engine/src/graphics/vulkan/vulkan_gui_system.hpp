@@ -19,6 +19,7 @@ namespace tur::vulkan
 
 	protected:
 		void initialize_impl();
+		void shutdown_impl();
 
 	protected:
 		void begin_frame_impl();
@@ -26,20 +27,9 @@ namespace tur::vulkan
 		void end_frame_impl();
 
 	protected:
-		void add_texture_impl(texture_handle handle)
-		{
-			Texture& texture = r_GraphicsDevice->get_native_texture(handle);
-			descriptorSets[handle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		}
+		void add_texture_impl(texture_handle handle);
 
-		void remove_texture_impl(texture_handle handle)
-		{
-			r_GraphicsDevice->wait_idle();
-
-			deletion::destroy_general(r_GraphicsDevice->m_DeletionQueue, [&, handle](){
-				ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(handle)); 
-			});
-		}
+		void remove_texture_impl(texture_handle handle);
 
 		bool texture_button_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
 		{
@@ -56,6 +46,7 @@ namespace tur::vulkan
 	private:
 		NON_OWNING GraphicsDeviceVulkan* r_GraphicsDevice = nullptr;
 		tur_unique<CommandBufferVulkan> m_CommandBuffer;
+		vk::DescriptorPool m_ImguiPool;
 
 	private:
 		std::unordered_map<texture_handle, VkDescriptorSet> descriptorSets;

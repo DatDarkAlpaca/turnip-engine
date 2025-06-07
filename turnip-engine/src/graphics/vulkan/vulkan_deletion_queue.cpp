@@ -25,6 +25,10 @@ namespace tur::vulkan::deletion
 	{
 		deletionQueue.renderTargetHandles.push_back(handle);
 	}
+	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle handle)
+	{
+		deletionQueue.renderTargetHandles.push_back(handle);
+	}
 
 	void flush(DeletionQueue& deletionQueue)
 	{

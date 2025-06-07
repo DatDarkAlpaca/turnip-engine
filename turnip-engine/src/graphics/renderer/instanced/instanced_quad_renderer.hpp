@@ -34,6 +34,7 @@ namespace tur
 		InstancedQuadRendererInformation info;
 
 	public:
+		descriptor_handle descriptor		= invalid_handle;
 		pipeline_handle pipeline			= invalid_handle;
 		buffer_handle vertexBuffer			= invalid_handle;
 		buffer_handle indexBuffer			= invalid_handle;

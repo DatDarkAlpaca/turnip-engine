@@ -5,6 +5,7 @@
 #include "objects/texture.hpp"
 #include "objects/pipeline.hpp"
 #include "objects/render_target.hpp"
+#include "objects/descriptor.hpp"
 
 #include "core/config/config_data.hpp"
 #include "graphics_specification.hpp"
@@ -64,13 +65,19 @@ namespace tur
 		}
 
 	public:
+		descriptor_handle create_descriptors(const DescriptorSetLayoutDescriptor& descriptor)
+		{
+			return static_cast<Backend*>(this)->create_descriptors_impl(descriptor);
+		}
+		void update_descriptor_resource(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex = 0)
+		{
+			static_cast<Backend*>(this)->update_descriptor_resource_impl(descriptorHandle, resourceHandle, type, binding, setIndex);
+		}
+
+	public:
 		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
 		{
 			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
-		}
-		void set_descriptor_resource(pipeline_handle pipeline, handle_type resourceHandle, DescriptorType type, u32 binding)
-		{
-			static_cast<Backend*>(this)->set_descriptor_resource_impl(pipeline, resourceHandle, type, binding);
 		}
 
 	public:
