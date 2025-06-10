@@ -131,10 +131,6 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->destroy_texture_impl(handle);
 		}
-		auto get_native_texture(texture_handle handle)
-		{
-			return static_cast<Backend*>(this)->get_native_texture_impl(handle);
-		}
 
 	public:
 		render_target_handle create_render_target(const RenderTargetDescriptor& descriptor)

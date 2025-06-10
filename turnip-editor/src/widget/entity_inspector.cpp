@@ -100,6 +100,7 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
+		r_Engine->guiSystem->add_texture(textureComponent->handle);
 		if (r_Engine->guiSystem->texture_button(textureComponent->handle, { 50.0f, 50.0f }))
 		{
 			auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
