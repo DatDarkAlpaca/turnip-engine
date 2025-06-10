@@ -139,6 +139,8 @@ namespace tur::vulkan
 		auto& device = m_State.logicalDevice;
 		wait_idle();
 
+		deletion::flush(m_DeletionQueue);
+
 		// Swapchain:
 		{
 			for (const auto& image : m_State.swapChainImageViews)
@@ -554,11 +556,7 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle& handle)
 	{
-		Buffer& buffer = m_Buffers.get(handle);
-		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
-
-		m_Buffers.remove(handle);
-		handle = invalid_handle;
+		deletion::destroy_buffer(m_DeletionQueue, handle);
 	}
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
@@ -575,16 +573,7 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle& handle)
 	{
-		// deletion::destroy_texture(m_DeletionQueue, handle);
-		Texture& texture = m_Textures.get(handle);
-
-		m_State.logicalDevice.destroyImageView(texture.imageView);
-		m_State.logicalDevice.destroySampler(texture.sampler);
-
-		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
-
-		m_Textures.remove(handle);
-		handle = invalid_handle;
+		deletion::destroy_texture(m_DeletionQueue, handle);
 	}
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
@@ -628,6 +617,8 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle& handle)
 	{
+		deletion::destroy_render_target(m_DeletionQueue, handle);
+		return;
 		RenderTarget& renderTarget = m_RenderTargets.get(handle);
 
 		for (const auto& colorAttachment : renderTarget.descriptor.colorAttachments)

@@ -43,48 +43,75 @@ namespace tur::vulkan::deletion
 			deletionFunction();
 
 		// Buffers:
-		for (const auto& handle : deletionQueue.bufferHandles)
+		for (auto& handle : deletionQueue.bufferHandles)
 		{
+			if (handle == invalid_handle)
+				continue;
+
 			Buffer& buffer = buffers.get(handle);
 			vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
 
 			buffers.remove(handle);
+			handle = invalid_handle;
 		}
+		deletionQueue.bufferHandles.clear();
 
 		// Textures:
-		for (const auto& handle : deletionQueue.textureHandles)
+		for (auto& handle : deletionQueue.textureHandles)
 		{
+			if (handle == invalid_handle)
+				continue;
+
 			Texture& texture = textures.get(handle);
 
-			device.destroyImageView(texture.imageView);
 			vmaDestroyImage(allocator, texture.image, texture.allocation);
+			device.destroyImageView(texture.imageView);
+			device.destroySampler(texture.sampler);
 
 			textures.remove(handle);
+			handle = invalid_handle;
 		}
+		deletionQueue.textureHandles.clear();
 
 		// Render Targets:
-		for (const auto& handle : deletionQueue.renderTargetHandles)
+		for (auto& handle : deletionQueue.renderTargetHandles)
 		{
 			RenderTarget& renderTarget = renderTargets.get(handle);
 
-			for (const auto& textureHandle : renderTarget.descriptor.colorAttachments)
+			for (auto& textureHandle : renderTarget.descriptor.colorAttachments)
 			{
+				if (textureHandle == invalid_handle)
+					continue;
+
+				if (!textures.constains(textureHandle))
+					continue;
+
 				Texture& texture = textures.get(textureHandle);
 
-				device.destroyImageView(texture.imageView);
 				vmaDestroyImage(allocator, texture.image, texture.allocation);
+				device.destroyImageView(texture.imageView);
+				device.destroySampler(texture.sampler);
+
+				textures.remove(handle);
+				textureHandle = invalid_handle;
 			}
 			
 			if (!renderTarget.descriptor.depthAttachment)
 			{
 				Texture& texture = textures.get(renderTarget.descriptor.depthAttachment);
 
-				device.destroyImageView(texture.imageView);
 				vmaDestroyImage(allocator, texture.image, texture.allocation);
+				device.destroyImageView(texture.imageView);
+				device.destroySampler(texture.sampler);
+
+				textures.remove(handle);
+				renderTarget.descriptor.depthAttachment = invalid_handle;
 			}
 
 			renderTargets.remove(handle);
+			handle = invalid_handle;
 		}
+		deletionQueue.renderTargetHandles.clear();
 	}
 }
 

@@ -46,6 +46,11 @@ namespace tur
 			return m_Data[handle];
 		}
 
+		bool constains(handle_type handle) const
+		{
+			return std::find(m_FreeList.begin(), m_FreeList.end(), handle) == m_FreeList.end();
+		}
+
 		void clear()
 		{
 			m_Data.clear();
@@ -66,7 +71,7 @@ namespace tur
 		std::vector<Type> available() const
 		{
 			std::vector<Type> available;
-			available.resize(m_Data.size() - m_FreeList.size());
+			available.reserve(m_Data.size() - m_FreeList.size());
 
 			for(u64 i = 0; i < m_Data.size(); ++i)
 			{ 

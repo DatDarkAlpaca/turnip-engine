@@ -238,6 +238,7 @@ void MainView::update_render_target(u32 width, u32 height)
 		if (m_SceneData.sceneTexture != invalid_handle)
 		{
 			gui->remove_texture(m_SceneData.sceneTexture);
+			graphicsDevice.destroy_texture(m_SceneData.sceneTexture);
 			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
 		}
 
