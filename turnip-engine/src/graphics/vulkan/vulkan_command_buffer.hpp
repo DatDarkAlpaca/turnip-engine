@@ -31,7 +31,6 @@ namespace tur::vulkan
 		void bind_descriptor_set_impl(descriptor_set_handle handle);
 		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride);
 		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType type);
-		void bind_texture_impl(texture_handle handle, u32 textureUnit);
 
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);

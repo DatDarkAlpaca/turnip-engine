@@ -28,7 +28,8 @@ namespace tur::vulkan
 		else
 			renderTargetTexture = &r_Device->get_state().drawTexture;
 
-		transition_image(renderTargetTexture->image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
+		transition_image(renderTargetTexture->image, renderTargetTexture->layout, vk::ImageLayout::eColorAttachmentOptimal);
+		renderTargetTexture->layout = vk::ImageLayout::eColorAttachmentOptimal;
 
 		vk::RenderingInfo renderInfo = {};
 		{
@@ -83,7 +84,9 @@ namespace tur::vulkan
 		{
 			auto& renderTarget = r_Device->get_state().drawTexture;
 
-			transition_image(renderTarget.image, vk::ImageLayout::eColorAttachmentOptimal, vk::ImageLayout::eTransferSrcOptimal);
+			transition_image(renderTarget.image, renderTarget.layout, vk::ImageLayout::eTransferSrcOptimal);
+			renderTarget.layout = vk::ImageLayout::eTransferSrcOptimal;
+
 			transition_image(swapchainImages.at(currentImage), vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
 
 			copy_image(renderTarget.image, swapchainImages.at(currentImage),
@@ -138,10 +141,6 @@ namespace tur::vulkan
 		const vk::DeviceSize offset = 0;
 
 		m_CommandBuffer.bindIndexBuffer(buffer.buffer, offset, get_buffer_index_type(type));
-	}
-	void CommandBufferVulkan::bind_texture_impl(texture_handle handle, u32 textureUnit)
-	{
-		
 	}
 	
 	void CommandBufferVulkan::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)

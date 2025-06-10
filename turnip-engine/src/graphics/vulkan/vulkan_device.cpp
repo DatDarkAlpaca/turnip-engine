@@ -526,8 +526,9 @@ namespace tur::vulkan
 			}
 
 			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, targetBuffer.buffer, region);
-			vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		});
+
+		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 	}
 	void* GraphicsDeviceVulkan::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
 	{

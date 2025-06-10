@@ -226,7 +226,7 @@ namespace tur
 	{
 		renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
 
-		if(quad.texture != invalid_handle)
+		if (quad.texture != invalid_handle)
 			renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, quad.texture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 
 		renderer.quads.push_back(quad);

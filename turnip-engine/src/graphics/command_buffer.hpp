@@ -57,10 +57,6 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
 		}
-		void bind_texture(texture_handle handle, u32 textureUnit = 0)
-		{
-			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
-		}
 
 	public:
 		void draw(u32 vertexCount, u32 instanceCount = 1, u32 firstVertex = 0, u32 firstInstance = 0)

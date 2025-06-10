@@ -128,7 +128,7 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<OnEntityInspectorInitialize>([&](const OnEntityInspectorInitialize&) -> bool {
-		//TUR_LOG_INFO("Inspector initialized");
+		TUR_LOG_INFO("Inspector initialized");
 		return false;
 	});
 

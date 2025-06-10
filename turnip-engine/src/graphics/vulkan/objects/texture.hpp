@@ -12,11 +12,11 @@ namespace tur::vulkan
 		vk::Image image;
 		vk::ImageView imageView;
 		vk::Sampler sampler;
-		
 		VmaAllocation allocation = nullptr;
 		
 		vk::Extent3D extent;
 		vk::Format format = vk::Format::eR8G8B8A8Unorm;
+		vk::ImageLayout layout = vk::ImageLayout::eUndefined;
 	};
 }
 

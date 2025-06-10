@@ -73,17 +73,18 @@ namespace tur::vulkan
 			Buffer& stagingBuffer = device->get_buffers().get(stagingBufferHandle);
 
 			{
-				device->transition_texture_layout(texture, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+				device->transition_texture_layout(texture, texture.layout, vk::ImageLayout::eTransferDstOptimal);
 
 				device->copy_buffer_to_texture_direct(stagingBuffer, texture, descriptor.width, descriptor.height);
 
 				device->transition_texture_layout(texture, vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::eShaderReadOnlyOptimal);
 			}
-			
 			device->destroy_buffer(stagingBufferHandle);
 		}
 		else
 			device->transition_texture_layout(texture, vk::ImageLayout::eUndefined, vk::ImageLayout::eShaderReadOnlyOptimal);
+
+		texture.layout = vk::ImageLayout::eShaderReadOnlyOptimal;
 
 		// Image view:
 		vk::ImageViewCreateInfo imageViewCreateInfo = {};

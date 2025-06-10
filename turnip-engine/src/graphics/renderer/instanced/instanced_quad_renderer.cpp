@@ -215,7 +215,6 @@ namespace tur
 		commands->bind_index_buffer(renderer.indexBuffer);
 		commands->bind_pipeline(renderer.pipeline);
 
-		commands->bind_texture(renderer.textureArray, 0);
 		commands->draw_indexed(6, renderer.quadAmount);
 	}
 
