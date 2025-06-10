@@ -20,7 +20,7 @@ namespace tur::vulkan
 		vk::DescriptorPoolCreateInfo poolInfo;
 		{
 			poolInfo.flags = vk::DescriptorPoolCreateFlags();
-			poolInfo.maxSets = 1;
+			poolInfo.maxSets = 100;
 			poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 			poolInfo.pPoolSizes = poolSizes.data();
 		}
@@ -67,22 +67,22 @@ namespace tur::vulkan
 		return nullptr;
 	}
 	
-	std::vector<vk::DescriptorSet> create_descriptor_sets(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout)
+	vk::DescriptorSet create_descriptor_set(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout)
 	{
 		vk::DescriptorSetAllocateInfo allocationInfo = {};
 		{
 			allocationInfo.descriptorPool = descriptorPool;
-			allocationInfo.descriptorSetCount = descriptorSetLayout.size();
+			allocationInfo.descriptorSetCount = 1;
 			allocationInfo.pSetLayouts = descriptorSetLayout.data();
 		}
 
 		try
 		{
-			return device.allocateDescriptorSets(allocationInfo);
+			return device.allocateDescriptorSets(allocationInfo)[0];
 		}
 		catch (vk::SystemError err)
 		{
-			TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
+			TUR_LOG_CRITICAL("Failed to allocate frame descriptor set: {}", err.what());
 		}
 
 		return {};

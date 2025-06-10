@@ -48,19 +48,20 @@ void MainView::set_project_data(const ProjectData& projectData)
 			// TODO: map asset handle to texture handle on create_texture.			[URGENT]
 			// TODO: maybe save this threaded function since i use it everywhere
 
-			auto texture = assetLibrary->textures.get(information.handle);
+			TextureAsset textureAsset = assetLibrary->textures.get(information.handle);
 
-			TextureDescriptor descriptor;
+			TextureDescriptor textureDescriptor;
 			{
-				descriptor.format = TextureFormat::RGBA8_UNORM;
-				descriptor.type = TextureType::TEXTURE_2D;
-				descriptor.width = texture.width;
-				descriptor.height = texture.height;
-				descriptor.generateMipmaps = true;
+				textureDescriptor.format = TextureFormat::RGBA8_UNORM;
+				textureDescriptor.type = TextureType::TEXTURE_2D;
+				textureDescriptor.width = textureAsset.width;
+				textureDescriptor.height = textureAsset.height;
+				textureDescriptor.generateMipmaps = true;
 			}
 
-			auto textureGraphics = graphicsDevice->create_texture(descriptor, texture);
-			textureComponent.handle = textureGraphics;
+			textureComponent.handle = graphicsDevice->create_texture(textureDescriptor, textureAsset);
+
+			// TODO: initialize descriptor set here. Specialize each component to a different renderer
 		});
 	}
 }
@@ -85,6 +86,7 @@ void MainView::on_update()
 	{
 		auto size = m_SceneEditor.get_size();
 		update_render_target(size.x, size.y);
+		m_UpdateRenderCalled = false;
 	}
 }
 void MainView::on_render_gui()
@@ -126,8 +128,8 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<OnEntityInspectorInitialize>([&](const OnEntityInspectorInitialize&) -> bool {
-		TUR_LOG_INFO("Inspector initialized");
-		return true;
+		//TUR_LOG_INFO("Inspector initialized");
+		return false;
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
@@ -185,11 +187,13 @@ void MainView::initialize_renderer_system()
 	r_InstancedRenderer = &engine->instancedQuadSystem.renderer;
 	r_QuadRenderer = &engine->quadRendererSystem.renderer;
 
+	const Color& color = { 40, 40, 40, 255 };
+
 	// Main:
 	{
 		quad_renderer_system_set_scene(engine->quadRendererSystem, &scene);
 		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
-		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });			
+		renderer_set_clear_color(r_QuadRenderer, color);
 	}
 
 	// Instanced:
@@ -199,8 +203,13 @@ void MainView::initialize_renderer_system()
 		instanced_quad_system_set_scene(engine->instancedQuadSystem, &scene);
 		instanced_quad_system_set_camera(engine->instancedQuadSystem, &m_SceneData.editorCamera.camera);
 		
-		renderer_set_clear_color(r_InstancedRenderer, { 40, 40, 40, 255 });
+		renderer_set_clear_color(r_InstancedRenderer, color);
 		renderer_set_viewport(r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
+	}
+
+	// GUI:
+	{
+		engine->guiSystem->set_clear_color(color);
 	}
 }
 
@@ -229,17 +238,11 @@ void MainView::update_render_target(u32 width, u32 height)
 		if (m_SceneData.sceneTexture != invalid_handle)
 		{
 			gui->remove_texture(m_SceneData.sceneTexture);
-			graphicsDevice.destroy_texture(m_SceneData.sceneTexture);
+			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
 		}
 
 		m_SceneData.sceneTexture = graphicsDevice.create_texture(textureDescriptor);
 		gui->add_texture(m_SceneData.sceneTexture);
-	}
-	
-	// Render target:
-	{
-		if (m_SceneData.sceneRenderTarget != invalid_handle)
-			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
 
 		RenderTargetDescriptor renderDescriptor;
 		{
@@ -247,7 +250,6 @@ void MainView::update_render_target(u32 width, u32 height)
 			renderDescriptor.width = width;
 			renderDescriptor.height = height;
 		}
-
 		m_SceneData.sceneRenderTarget = graphicsDevice.create_render_target(renderDescriptor);
 	}
 }

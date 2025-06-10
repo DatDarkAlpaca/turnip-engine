@@ -11,5 +11,5 @@ namespace tur::vulkan
 
 	vk::DescriptorSetLayout create_descriptor_set_layout(vk::Device device, const DescriptorSetLayoutDescriptor& descriptor);
 
-	std::vector<vk::DescriptorSet> create_descriptor_sets(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout);
+	vk::DescriptorSet create_descriptor_set(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout);
 }

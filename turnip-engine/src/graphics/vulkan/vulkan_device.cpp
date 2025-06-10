@@ -155,32 +155,26 @@ namespace tur::vulkan
 
 		// Resources:
 		{
-			for (const auto& pipeline : m_Pipelines)
+			for (const auto& pipeline : m_Pipelines.available())
 			{
 				device.destroyPipelineLayout(pipeline.layout);
 				device.destroyPipeline(pipeline.pipeline);
 			}
 
-			for (const auto& descriptor : m_Descriptors)
+			for (const auto& descriptor : m_Descriptors.available())
 			{
 				device.destroyDescriptorPool(descriptor.descriptorPool);
 				device.destroyDescriptorSetLayout(descriptor.setLayout);
 			}
 
-			for (const auto& texture : m_Textures)
+			for (const auto& texture : m_Textures.available())
 			{
 				vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 				device.destroyImageView(texture.imageView);
 				device.destroySampler(texture.sampler);
 			}
 
-			for (const auto& renderTarget : m_RenderTargets)
-			{
-				device.destroyImageView(renderTarget.imageView);
-				vmaDestroyImage(m_State.vmaAllocator, renderTarget.image, renderTarget.allocation);
-			}
-
-			for (const auto& buffer : m_Buffers)
+			for (auto& buffer : m_Buffers.available())
 				vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
 
 			m_ShaderModules.clear();
@@ -358,14 +352,23 @@ namespace tur::vulkan
 
 	descriptor_handle GraphicsDeviceVulkan::create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor)
 	{
-		DescriptorWrapper descriptorWrapper;
+		Descriptor descriptorWrapper;
 		descriptorWrapper.descriptorPool = vulkan::create_descriptor_pool(m_State.logicalDevice, descriptor);
 		descriptorWrapper.setLayout = vulkan::create_descriptor_set_layout(m_State.logicalDevice, descriptor);
-		descriptorWrapper.sets = vulkan::create_descriptor_sets(m_State.logicalDevice, descriptorWrapper.descriptorPool, { descriptorWrapper.setLayout });
 		
 		return m_Descriptors.add(descriptorWrapper);
 	}
-	void GraphicsDeviceVulkan::update_descriptor_resource_impl(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex)
+	descriptor_set_handle GraphicsDeviceVulkan::create_descriptor_set_impl(descriptor_handle handle)
+	{
+		Descriptor& descriptor = m_Descriptors.get(handle);
+
+		DescriptorSet set = {};
+		set.descriptorHandle = handle;
+		set.set = vulkan::create_descriptor_set(m_State.logicalDevice, descriptor.descriptorPool, { descriptor.setLayout });
+
+		return m_DescriptorSets.add(set);
+	}
+	void GraphicsDeviceVulkan::update_descriptor_resource_impl(descriptor_set_handle descriptorSet, handle_type resourceHandle, DescriptorType type, u32 binding)
 	{
 		switch (type)
 		{
@@ -383,7 +386,7 @@ namespace tur::vulkan
 
 				vk::WriteDescriptorSet descriptorWrite = {};
 				{
-					descriptorWrite.dstSet = m_Descriptors.get(descriptorHandle).sets.at(setIndex);
+					descriptorWrite.dstSet = m_DescriptorSets.get(descriptorSet).set;
 					descriptorWrite.dstBinding = binding;
 					descriptorWrite.dstArrayElement = 0;
 					descriptorWrite.descriptorType = get_descriptor_type(type);
@@ -408,7 +411,7 @@ namespace tur::vulkan
 
 				vk::WriteDescriptorSet descriptorWrite = {};
 				{
-					descriptorWrite.dstSet = m_Descriptors.get(descriptorHandle).sets.at(setIndex);
+					descriptorWrite.dstSet = m_DescriptorSets.get(descriptorSet).set;
 					descriptorWrite.dstBinding = binding;
 					descriptorWrite.dstArrayElement = 0;
 					descriptorWrite.descriptorType = get_descriptor_type(type);
@@ -521,9 +524,8 @@ namespace tur::vulkan
 			}
 
 			m_ImmCommandBuffer.copyBuffer(stagingBuffer.buffer, targetBuffer.buffer, region);
+			vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		});
-
-		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 	}
 	void* GraphicsDeviceVulkan::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
 	{
@@ -552,7 +554,10 @@ namespace tur::vulkan
 	}
 	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle& handle)
 	{
-		deletion::destroy_buffer(m_DeletionQueue, handle);
+		Buffer& buffer = m_Buffers.get(handle);
+		vmaDestroyBuffer(m_State.vmaAllocator, buffer.buffer, buffer.allocation);
+
+		m_Buffers.remove(handle);
 		handle = invalid_handle;
 	}
 
@@ -584,31 +589,62 @@ namespace tur::vulkan
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
 	{
-		TextureDescriptor textureDescriptor;
+		bool hasColorAttachment = false;
+		for (const auto& attachment : descriptor.colorAttachments)
 		{
-			textureDescriptor.format = get_texture_format(m_State.swapchainFormat.format);
-			textureDescriptor.width = descriptor.width;
-			textureDescriptor.height = descriptor.height;
+			if (attachment != invalid_handle)
+				hasColorAttachment = true;
 		}
-		return m_RenderTargets.add(vulkan::create_texture(this, textureDescriptor, {}));
+
+		RenderTarget renderTarget;
+		renderTarget.descriptor = descriptor;
+		
+		if (!hasColorAttachment)
+		{
+			TextureDescriptor textureDescriptor;
+			{
+				textureDescriptor.format = get_texture_format(m_State.swapchainFormat.format);
+				textureDescriptor.width = descriptor.width;
+				textureDescriptor.height = descriptor.height;
+			}
+
+			texture_handle colorAttachment = create_texture(textureDescriptor);
+			renderTarget.descriptor.colorAttachments.push_back(colorAttachment);
+		}
+
+		return m_RenderTargets.add(renderTarget);
 	}
-	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
+	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle& handle, u32 width, u32 height)
 	{
 		destroy_render_target(handle);
-		RenderTargetDescriptor descriptor;
+
+		RenderTargetDescriptor descriptor = {};
 		{
 			descriptor.width = width;
 			descriptor.height = height;
 		}
+
 		handle = create_render_target(descriptor);
 	}
 	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle& handle)
 	{
-		// deletion::destroy_render_Target(m_DeletionQueue, handle);
-		Texture& texture = m_RenderTargets.get(handle);
+		RenderTarget& renderTarget = m_RenderTargets.get(handle);
 
-		m_State.logicalDevice.destroyImageView(texture.imageView);
-		vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		for (const auto& colorAttachment : renderTarget.descriptor.colorAttachments)
+		{
+			Texture& texture = m_Textures.get(colorAttachment);
+			m_State.logicalDevice.destroyImageView(texture.imageView);
+			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+			
+			m_Textures.remove(colorAttachment);
+		}
+
+		if (renderTarget.descriptor.depthAttachment != invalid_handle)
+		{
+			Texture& texture = m_Textures.get(renderTarget.descriptor.depthAttachment);
+			m_State.logicalDevice.destroyImageView(texture.imageView);
+			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
+		}
 
 		m_RenderTargets.remove(handle);
 		handle = invalid_handle;

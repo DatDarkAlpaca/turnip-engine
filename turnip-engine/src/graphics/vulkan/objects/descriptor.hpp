@@ -4,11 +4,16 @@
 
 namespace tur::vulkan
 {
-    struct DescriptorWrapper
+    struct Descriptor
     {
         vk::DescriptorPool descriptorPool;
         vk::DescriptorSetLayout setLayout;
-        std::vector<vk::DescriptorSet> sets;
+    };
+
+    struct DescriptorSet
+    {
+        vk::DescriptorSet set;
+        descriptor_handle descriptorHandle;
     };
 }
 

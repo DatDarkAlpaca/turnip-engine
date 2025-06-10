@@ -60,14 +60,17 @@ namespace tur::vulkan
 		}
 
 		// Data:
-		if (asset.data.size > 0)
+		if (asset.data.size > 0 && asset.data.data)
 		{
 			BufferDescriptor stagingDescriptor = {};
 			{
 				stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
-				stagingDescriptor.type = BufferType::TRANSFER_SRC;
+				stagingDescriptor.type = BufferType::TRANSFER_SRC | BufferType::TRANSFER_DST;
 			}
-			Buffer stagingBuffer = create_buffer(device->get_state().vmaAllocator, stagingDescriptor, asset.data.size);
+
+			buffer_handle stagingBufferHandle = device->create_buffer(stagingDescriptor, asset.data.size);
+			device->update_buffer(stagingBufferHandle, asset.data, 0);
+			Buffer& stagingBuffer = device->get_buffers().get(stagingBufferHandle);
 
 			{
 				device->transition_texture_layout(texture, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
@@ -77,7 +80,7 @@ namespace tur::vulkan
 				device->transition_texture_layout(texture, vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::eShaderReadOnlyOptimal);
 			}
 			
-			vmaDestroyBuffer(device->get_state().vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
+			device->destroy_buffer(stagingBufferHandle);
 		}
 		else
 			device->transition_texture_layout(texture, vk::ImageLayout::eUndefined, vk::ImageLayout::eShaderReadOnlyOptimal);

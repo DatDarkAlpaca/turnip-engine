@@ -69,9 +69,13 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_descriptors_impl(descriptor);
 		}
-		void update_descriptor_resource(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex = 0)
+		descriptor_set_handle create_descriptor_set(descriptor_handle handle)
 		{
-			static_cast<Backend*>(this)->update_descriptor_resource_impl(descriptorHandle, resourceHandle, type, binding, setIndex);
+			return static_cast<Backend*>(this)->create_descriptor_set_impl(handle);
+		}
+		void update_descriptor_resource(descriptor_set_handle descriptorSetHandle, handle_type resourceHandle, DescriptorType type, u32 binding)
+		{
+			static_cast<Backend*>(this)->update_descriptor_resource_impl(descriptorSetHandle, resourceHandle, type, binding);
 		}
 
 	public:
@@ -137,7 +141,7 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_render_target_impl(descriptor);
 		}
-		void resize_render_target(render_target_handle handle, u32 width, u32 height)
+		void resize_render_target(render_target_handle& handle, u32 width, u32 height)
 		{
 			static_cast<Backend*>(this)->resize_render_target_impl(handle, width, height);
 		}

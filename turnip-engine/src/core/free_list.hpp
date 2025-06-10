@@ -6,7 +6,7 @@
 namespace tur
 {
 	template<typename Type>
-	class free_list 
+	class free_list
 	{
 		using iterator = Type*;
 		using const_iterator = const Type*;
@@ -58,8 +58,26 @@ namespace tur
 		const_iterator cend() const { return m_Data.data() + m_Data.size(); }
 		const_iterator begin() const { return cbegin(); }
 		const_iterator end() const { return cend(); }
+
 		iterator begin() { return m_Data.data(); }
 		iterator end() { return m_Data.data() + m_Data.size(); }
+
+	public:
+		std::vector<Type> available() const
+		{
+			std::vector<Type> available;
+			available.resize(m_Data.size() - m_FreeList.size());
+
+			for(u64 i = 0; i < m_Data.size(); ++i)
+			{ 
+				if (std::find(m_FreeList.begin(), m_FreeList.end(), i) != m_FreeList.end())
+					continue;
+
+				available.push_back(m_Data[i]);
+			}
+
+			return available;
+		}
 
 	private:
 		inline bool is_valid_handle(handle_type handle) const

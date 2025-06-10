@@ -22,6 +22,9 @@ namespace tur::vulkan
 		void shutdown_impl();
 
 	protected:
+		void set_clear_color_impl(const Color& color);
+
+	protected:
 		void begin_frame_impl();
 		void render_impl();
 		void end_frame_impl();
@@ -31,17 +34,8 @@ namespace tur::vulkan
 
 		void remove_texture_impl(texture_handle handle);
 
-		bool texture_button_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
-		{
-			Texture& texture = r_GraphicsDevice->get_native_texture(handle);
-			return ImGui::ImageButton("Image", (ImTextureID)descriptorSets[handle], size, uv0, uv1, bgColor, tintColor);
-		}
-
-		void texture_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor)
-		{
-			Texture& texture = r_GraphicsDevice->get_native_texture(handle);
-			ImGui::Image((ImTextureID)descriptorSets[handle], size, uv0, uv1, tintColor, borderColor);
-		}
+		bool texture_button_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor);
+		void texture_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor);
 
 	private:
 		NON_OWNING GraphicsDeviceVulkan* r_GraphicsDevice = nullptr;
@@ -50,5 +44,6 @@ namespace tur::vulkan
 
 	private:
 		std::unordered_map<texture_handle, VkDescriptorSet> descriptorSets;
+		Color m_ClearColor;
 	};
 }

@@ -45,6 +45,10 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);
 		}
+		void bind_descriptor_set(descriptor_set_handle handle)
+		{
+			static_cast<CommandBuffer*>(this)->bind_descriptor_set_impl(handle);
+		}
 		void bind_vertex_buffer(buffer_handle handle, u32 binding, u32 stride)
 		{
 			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding, stride);

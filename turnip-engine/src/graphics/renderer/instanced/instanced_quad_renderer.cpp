@@ -53,7 +53,7 @@ namespace tur::instanced_renderer
 			ShaderType::FRAGMENT
 		});
 
-		// Descriptors:
+		// Descriptor Layout:
 		DescriptorSetLayoutDescriptor descriptorDescriptor;
 		{
 			DescriptorSetLayoutEntry entry0;

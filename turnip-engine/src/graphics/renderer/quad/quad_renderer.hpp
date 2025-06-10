@@ -13,7 +13,8 @@ namespace tur
 		struct Data
 		{
 			glm::mat4 transform;
-			texture_handle texture;
+			texture_handle texture = invalid_handle;
+			descriptor_set_handle descriptorSet = invalid_handle;
 		};
 
 		struct Vertex
@@ -37,8 +38,11 @@ namespace tur
 		buffer_handle uniformBuffer			= invalid_handle;
 		buffer_handle indexBuffer			= invalid_handle;
 		buffer_handle buffer				= invalid_handle;
-		texture_handle defaultTexture		= invalid_handle;
 		pipeline_handle pipeline			= invalid_handle;
+
+	public:
+		texture_handle defaultTexture		= invalid_handle;
+		descriptor_set_handle defaultDescriptorSet = invalid_handle;
 	};
 
 	void initialize_quad_renderer(QuadRenderer& renderer, const ConfigData& configData, GraphicsDevice* graphicsDevice, Camera* camera);
@@ -49,6 +53,6 @@ namespace tur
 
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
 
-	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad);
+	void quad_renderer_add_quad(QuadRenderer& renderer, QuadRenderer::Data& quad);
 	void quad_renderer_clear_quads(QuadRenderer& renderer);
 }

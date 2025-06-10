@@ -8,6 +8,7 @@
 #include "objects/pipeline.hpp"
 #include "objects/descriptor.hpp"
 #include "objects/vulkan_state.hpp"
+#include "objects/render_target.hpp"
 
 namespace tur::vulkan
 {
@@ -47,8 +48,9 @@ namespace tur::vulkan
 
 	protected:
 		descriptor_handle create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor);
-		void update_descriptor_resource_impl(descriptor_handle descriptorHandle, handle_type resourceHandle, DescriptorType type, u32 binding, u32 setIndex);
-
+		descriptor_set_handle create_descriptor_set_impl(descriptor_handle handle);
+		void update_descriptor_resource_impl(descriptor_set_handle descriptorSetHandle, handle_type resourceHandle, DescriptorType type, u32 binding);
+		
 	protected:
 		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
 
@@ -69,7 +71,7 @@ namespace tur::vulkan
 
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
-		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
+		void resize_render_target_impl(render_target_handle& handle, u32 width, u32 height);
 		void destroy_render_target_impl(render_target_handle& handle);
 
 	protected:
@@ -84,11 +86,12 @@ namespace tur::vulkan
 
 	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }
-		inline free_list<DescriptorWrapper>& get_descriptors() { return m_Descriptors; }
+		inline free_list<Descriptor>& get_descriptors() { return m_Descriptors; }
+		inline free_list<DescriptorSet>& get_descriptor_sets() { return m_DescriptorSets; }
 		inline free_list<Pipeline>& get_pipelines() { return m_Pipelines; }
 		inline free_list<Texture>& get_textures() { return m_Textures; }
 		inline free_list<Buffer>& get_buffers() { return m_Buffers; }
-		inline free_list<Texture>& get_render_targets() { return m_RenderTargets; }
+		inline free_list<RenderTarget>& get_render_targets() { return m_RenderTargets; }
 
 		inline VulkanState& get_state() { return m_State; }
 		inline vk::CommandBuffer get_imm_command_buffer() const { return m_ImmCommandBuffer; }
@@ -101,11 +104,13 @@ namespace tur::vulkan
 
 	private:
 		free_list<vk::ShaderModule> m_ShaderModules;
-		free_list<DescriptorWrapper> m_Descriptors;
+		free_list<Descriptor> m_Descriptors;
+		free_list<DescriptorSet> m_DescriptorSets;
+
 		free_list<Pipeline> m_Pipelines;
 		free_list<Texture> m_Textures;
 		free_list<Buffer> m_Buffers;
-		free_list<Texture> m_RenderTargets;
+		free_list<RenderTarget> m_RenderTargets;
 
 	private:
 		deletion::DeletionQueue m_DeletionQueue;

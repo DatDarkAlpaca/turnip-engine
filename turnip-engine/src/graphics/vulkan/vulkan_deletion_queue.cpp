@@ -65,10 +65,23 @@ namespace tur::vulkan::deletion
 		// Render Targets:
 		for (const auto& handle : deletionQueue.renderTargetHandles)
 		{
-			Texture& texture = renderTargets.get(handle);
+			RenderTarget& renderTarget = renderTargets.get(handle);
 
-			device.destroyImageView(texture.imageView);
-			vmaDestroyImage(allocator, texture.image, texture.allocation);
+			for (const auto& textureHandle : renderTarget.descriptor.colorAttachments)
+			{
+				Texture& texture = textures.get(textureHandle);
+
+				device.destroyImageView(texture.imageView);
+				vmaDestroyImage(allocator, texture.image, texture.allocation);
+			}
+			
+			if (!renderTarget.descriptor.depthAttachment)
+			{
+				Texture& texture = textures.get(renderTarget.descriptor.depthAttachment);
+
+				device.destroyImageView(texture.imageView);
+				vmaDestroyImage(allocator, texture.image, texture.allocation);
+			}
 
 			renderTargets.remove(handle);
 		}

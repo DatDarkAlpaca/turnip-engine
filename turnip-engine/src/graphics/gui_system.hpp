@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/objects/texture.hpp"
+#include "utils/color.hpp"
 
 namespace tur
 {
@@ -14,6 +15,12 @@ namespace tur
 		void shutdown()
 		{
 			static_cast<Backend*>(this)->shutdown_impl();
+		}
+
+	public:
+		void set_clear_color(const Color& color)
+		{
+			static_cast<Backend*>(this)->set_clear_color_impl(color);
 		}
 
 	public:

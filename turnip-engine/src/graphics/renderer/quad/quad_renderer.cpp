@@ -52,7 +52,7 @@ namespace tur::quad_renderer
 			ShaderType::FRAGMENT
 		});
 
-		// Descriptors:
+		// Descriptor Layout:
 		DescriptorSetLayoutDescriptor descriptorDescriptor;
 		{
 			DescriptorSetLayoutEntry entry0;
@@ -75,7 +75,8 @@ namespace tur::quad_renderer
 		}
 
 		renderer.descriptor = renderer.graphicsDevice->create_descriptors(descriptorDescriptor);
-
+		renderer.defaultDescriptorSet = renderer.graphicsDevice->create_descriptor_set(renderer.descriptor);
+		
 		// Pipeline:
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;
@@ -137,8 +138,7 @@ namespace tur::quad_renderer
 			renderer.uniformBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(QuadRenderer::UBO));
 		}
 		
-		renderer.graphicsDevice->update_descriptor_resource(renderer.descriptor, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-		// renderer.graphicsDevice->update_descriptor_resource(renderer.descriptor, renderer.uniformBuffer, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+		renderer.graphicsDevice->update_descriptor_resource(renderer.defaultDescriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);	
 	}
 	
 	static void bind_mvp(QuadRenderer& renderer, const glm::mat4& transform)
@@ -192,12 +192,12 @@ namespace tur
 			quad_renderer::bind_mvp(renderer, quad.transform);
 
 			if (quad.texture != invalid_handle)
-				commands->bind_texture(quad.texture);
+				commands->bind_descriptor_set(quad.descriptorSet);
 
 			else
 			{
 				if (renderer.defaultTexture != invalid_handle)
-					commands->bind_texture(renderer.defaultTexture);
+					commands->bind_descriptor_set(renderer.defaultDescriptorSet);
 			}
 
 			commands->draw_indexed(6);
@@ -216,14 +216,19 @@ namespace tur
 	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle)
 	{
 		renderer.defaultTexture = handle;
-		renderer.graphicsDevice->update_descriptor_resource(renderer.pipeline, handle, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+		renderer.graphicsDevice->update_descriptor_resource(renderer.defaultDescriptorSet, renderer.defaultTexture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 	}
 }
 
 namespace tur
 {
-	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad)
+	void quad_renderer_add_quad(QuadRenderer& renderer, QuadRenderer::Data& quad)
 	{
+		renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+
+		if(quad.texture != invalid_handle)
+			renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, quad.texture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+
 		renderer.quads.push_back(quad);
 	}
 

@@ -20,8 +20,10 @@ namespace tur
 		auto& registry = system.scene->get_registry();
 
 		auto view0 = registry.view<TransformComponent>(entt::exclude<TextureComponent>);
-		for (auto [entity, transformComponent] : view0.each())
+		for (auto& [entity, transformComponent] : view0.each())
 		{
+			continue;
+			// TODO: IMPORTANT - default texture
 			QuadRenderer::Data quadData = {};
 			quadData.transform = transformComponent.transform.transform();
 			quadData.texture = invalid_handle;
@@ -30,13 +32,16 @@ namespace tur
 		}
 
 		auto view1 = registry.view<TransformComponent, TextureComponent>();
-		for (auto [entity, transformComponent, textureComponent] : view1.each())
+		for (auto& [entity, transformComponent, textureComponent] : view1.each())
 		{
-			const auto& texture = textureComponent.handle;
-
 			QuadRenderer::Data quadData = {};
 			quadData.transform = transformComponent.transform.transform();
-			quadData.texture = texture;
+			quadData.texture = textureComponent.handle;
+
+			if (textureComponent.descriptorHandle == invalid_handle)
+				textureComponent.descriptorHandle = system.renderer.graphicsDevice->create_descriptor_set(system.renderer.descriptor);
+
+			quadData.descriptorSet = textureComponent.descriptorHandle;
 
 			quad_renderer_add_quad(system.renderer, quadData);
 		}

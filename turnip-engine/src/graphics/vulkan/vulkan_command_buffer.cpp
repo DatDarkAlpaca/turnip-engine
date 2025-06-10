@@ -19,19 +19,22 @@ namespace tur::vulkan
 		m_CommandBuffer = get_command_buffer();
 		m_CurrentRenderTarget = handle;
 
-		Texture* renderTarget;
+		Texture* renderTargetTexture;
 		if (handle != invalid_handle)
-			renderTarget = &r_Device->get_render_targets().get(handle);
+		{
+			auto renderTarget = r_Device->get_render_targets().get(handle);
+			renderTargetTexture = &r_Device->get_textures().get(renderTarget.descriptor.colorAttachments[0]);
+		}
 		else
-			renderTarget = &r_Device->get_state().drawTexture;
+			renderTargetTexture = &r_Device->get_state().drawTexture;
 
-		transition_image(renderTarget->image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
+		transition_image(renderTargetTexture->image, vk::ImageLayout::eUndefined, vk::ImageLayout::eColorAttachmentOptimal);
 
 		vk::RenderingInfo renderInfo = {};
 		{
 			vk::RenderingAttachmentInfo colorAttachmentInfo = {};
 			{
-				colorAttachmentInfo.imageView = renderTarget->imageView;
+				colorAttachmentInfo.imageView = renderTargetTexture->imageView;
 				colorAttachmentInfo.imageLayout = vk::ImageLayout::eAttachmentOptimal;
 				colorAttachmentInfo.resolveMode = vk::ResolveModeFlagBits::eNone;
 				colorAttachmentInfo.loadOp = vk::AttachmentLoadOp::eClear;
@@ -56,7 +59,7 @@ namespace tur::vulkan
 				colorAttachmentInfo.clearValue;
 			}*/
 
-			renderInfo.renderArea = vk::Rect2D({}, { renderTarget->extent.width, renderTarget->extent.height });
+			renderInfo.renderArea = vk::Rect2D({}, { renderTargetTexture->extent.width, renderTargetTexture->extent.height });
 			renderInfo.colorAttachmentCount = 1;
 			renderInfo.pColorAttachments = &colorAttachmentInfo;
 			renderInfo.layerCount = 1;
@@ -109,24 +112,16 @@ namespace tur::vulkan
 		auto& frameData = r_Device->get_state().frameDataHolder.get_frame_data();
 		u32 frameNumber = r_Device->get_state().frameDataHolder.get_frame_number();
 
-		// Bind pipeline:
 		Pipeline pipeline = r_Device->get_pipelines().get(handle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
 		m_BoundPipeline = pipeline;
-
-		std::vector<vk::DescriptorSet> descriptorSets;
-		for (const auto& handle : pipeline.descriptors) 
-		{
-			for (const auto& set : r_Device->get_descriptors().get(handle).sets)
-				descriptorSets.push_back(set);
-		}
-
-		// Bind descriptor sets:
+	}
+	void CommandBufferVulkan::bind_descriptor_set_impl(descriptor_set_handle handle)
+	{
 		m_CommandBuffer.bindDescriptorSets(
-			get_pipeline_type(pipeline.type), 
-			pipeline.layout, 0, 
-			descriptorSets.size(),
-			descriptorSets.data(),
+			get_pipeline_type(m_BoundPipeline.type),
+			m_BoundPipeline.layout, 0,
+			1, &r_Device->get_descriptor_sets().get(handle).set,
 			0, nullptr
 		);
 	}

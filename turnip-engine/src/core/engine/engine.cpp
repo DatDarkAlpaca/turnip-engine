@@ -33,7 +33,7 @@ namespace tur::engine
 			data.guiSystem->render();
 			data.guiSystem->end_frame();
 		}
-		
+
 		data.graphicsDevice.end();
 		data.graphicsDevice.submit();
 		data.graphicsDevice.present();
@@ -112,7 +112,7 @@ namespace tur
 
 		// Renderers:
 		initialize_quad_renderer_system(data.quadRendererSystem, data.configData, &data.graphicsDevice);
-		//initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
+		// initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
 	}
 	
 	void turnip_engine_run(TurnipEngine& data)
