@@ -5,7 +5,7 @@ namespace tur::gl
 {
 	struct RenderTarget
 	{
-		render_target_handle handle;
+		render_target_handle textureHandle;
 		RenderTargetDescriptor descriptor;
 	};
 }

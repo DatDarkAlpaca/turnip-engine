@@ -19,7 +19,7 @@ namespace tur::gl
 
 	protected:
 		void begin_impl();
-		void begin_render_impl(render_target_handle handle);
+		void begin_render_impl(render_target_handle textureHandle);
 		void end_render_impl();
 		void end_impl();
 
@@ -29,12 +29,12 @@ namespace tur::gl
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
 	protected:
-		void bind_pipeline_impl(pipeline_handle handle);
-		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride);
-		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType);
-		void bind_texture_impl(texture_handle handle, u32 textureUnit);
+		void bind_pipeline_impl(pipeline_handle textureHandle);
+		void bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride);
+		void bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType indexType);
+		void bind_texture_impl(texture_handle textureHandle, u32 textureUnit);
 		
-		void set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding);
+		void set_descriptor_resource_impl(handle_type textureHandle, DescriptorType type, u32 binding);
 
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);

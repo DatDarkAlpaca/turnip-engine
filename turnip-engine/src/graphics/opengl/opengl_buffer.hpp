@@ -10,7 +10,7 @@ namespace tur::gl
 	struct Buffer
 	{
 		BufferDescriptor descriptor = {};
-		gl_handle handle = invalid_handle;
+		gl_handle textureHandle = invalid_handle;
 	};
 }
 
