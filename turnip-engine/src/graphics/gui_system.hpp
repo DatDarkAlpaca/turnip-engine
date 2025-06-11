@@ -38,24 +38,24 @@ namespace tur
 		}
 
 	public:
-		void add_texture(texture_handle handle)
+		void add_texture(texture_handle textureHandle)
 		{
-			static_cast<Backend*>(this)->add_texture_impl(handle);
+			static_cast<Backend*>(this)->add_texture_impl(textureHandle);
 		}
 
-		void remove_texture(texture_handle handle)
+		void remove_texture(texture_handle textureHandle)
 		{
-			static_cast<Backend*>(this)->remove_texture_impl(handle);
+			static_cast<Backend*>(this)->remove_texture_impl(textureHandle);
 		}
 
-		bool texture_button(texture_handle handle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), int framePadding = -1, const ImVec4& bgColor = ImVec4(0, 0, 0, 0), const ImVec4& tintColor = ImVec4(1, 1, 1, 1))
+		bool texture_button(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), int framePadding = -1, const ImVec4& bgColor = ImVec4(0, 0, 0, 0), const ImVec4& tintColor = ImVec4(1, 1, 1, 1))
 		{
-			return static_cast<Backend*>(this)->texture_button_impl(handle, size, uv0, uv1, framePadding, bgColor, tintColor);
+			return static_cast<Backend*>(this)->texture_button_impl(textureHandle, size, uv0, uv1, framePadding, bgColor, tintColor);
 		}
 
-		void texture(texture_handle handle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& tintColor = ImVec4(1, 1, 1, 1), const ImVec4& borderColor = ImVec4(0, 0, 0, 0))
+		void texture(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& tintColor = ImVec4(1, 1, 1, 1), const ImVec4& borderColor = ImVec4(0, 0, 0, 0))
 		{
-			static_cast<Backend*>(this)->texture_impl(handle, size, uv0, uv1, tintColor, borderColor);
+			static_cast<Backend*>(this)->texture_impl(textureHandle, size, uv0, uv1, tintColor, borderColor);
 		}
 	};
 

@@ -59,9 +59,9 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_shader_impl(descriptor);
 		}
-		void destroy_shader(shader_handle handle)
+		void destroy_shader(shader_handle textureHandle)
 		{
-			static_cast<Backend*>(this)->destroy_shader_impl(handle);
+			static_cast<Backend*>(this)->destroy_shader_impl(textureHandle);
 		}
 
 	public:
@@ -69,9 +69,9 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_descriptors_impl(descriptor);
 		}
-		descriptor_set_handle create_descriptor_set(descriptor_handle handle)
+		descriptor_set_handle build_descriptor_set(descriptor_handle textureHandle)
 		{
-			return static_cast<Backend*>(this)->create_descriptor_set_impl(handle);
+			return static_cast<Backend*>(this)->create_descriptor_set_impl(textureHandle);
 		}
 		void update_descriptor_resource(descriptor_set_handle descriptorSetHandle, handle_type resourceHandle, DescriptorType type, u32 binding)
 		{
@@ -79,7 +79,7 @@ namespace tur
 		}
 
 	public:
-		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
+		pipeline_handle build_graphics_pipeline(const PipelineDescriptor& descriptor)
 		{
 			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
 		}
@@ -89,17 +89,17 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_default_buffer_impl(descriptor, data);
 		}
-		buffer_handle create_buffer(const BufferDescriptor& descriptor, u32 size)
+		buffer_handle build_buffer(const BufferDescriptor& descriptor, u32 size)
 		{
 			return static_cast<Backend*>(this)->create_buffer_impl(descriptor, size);
 		}
-		void update_buffer(buffer_handle handle, const DataBuffer& data, u32 offset = 0)
+		void update_buffer(buffer_handle textureHandle, const DataBuffer& data, u32 offset = 0)
 		{
-			static_cast<Backend*>(this)->update_buffer_impl(handle, data, offset);
+			static_cast<Backend*>(this)->update_buffer_impl(textureHandle, data, offset);
 		}
-		void* map_buffer(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+		void* map_buffer(buffer_handle textureHandle, u32 offset, u32 length, AccessFlags flags)
 		{
-			return static_cast<Backend*>(this)->map_buffer_impl(handle, offset, length, flags);
+			return static_cast<Backend*>(this)->map_buffer_impl(textureHandle, offset, length, flags);
 		}
 		void copy_buffer(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0)
 		{
@@ -109,27 +109,27 @@ namespace tur
 		{
 			static_cast<Backend*>(this)->copy_buffer_to_texture_impl(source, destination, width, height);
 		}
-		void destroy_buffer(buffer_handle& handle)
+		void destroy_buffer(buffer_handle& textureHandle)
 		{
-			static_cast<Backend*>(this)->destroy_buffer_impl(handle);
+			static_cast<Backend*>(this)->destroy_buffer_impl(textureHandle);
 		};
 
 	public:
-		texture_handle create_texture(const TextureDescriptor& descriptor, const TextureAsset& asset)
+		texture_handle build_texture(const TextureDescriptor& descriptor, const TextureAsset& asset)
 		{
 			return static_cast<Backend*>(this)->create_texture_impl(descriptor, asset);
 		}
-		texture_handle create_texture(const TextureDescriptor& descriptor)
+		texture_handle build_texture(const TextureDescriptor& descriptor)
 		{
 			return static_cast<Backend*>(this)->create_texture_impl(descriptor);
 		}
-		void update_texture(texture_handle handle, const TextureAsset& asset)
+		void update_texture(texture_handle textureHandle, const TextureAsset& asset)
 		{
-			return static_cast<Backend*>(this)->update_texture_impl(handle, asset);
+			return static_cast<Backend*>(this)->update_texture_impl(textureHandle, asset);
 		}
-		void destroy_texture(texture_handle& handle)
+		void destroy_texture(texture_handle& textureHandle)
 		{
-			static_cast<Backend*>(this)->destroy_texture_impl(handle);
+			static_cast<Backend*>(this)->destroy_texture_impl(textureHandle);
 		}
 
 	public:
@@ -137,13 +137,13 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_render_target_impl(descriptor);
 		}
-		void resize_render_target(render_target_handle& handle, u32 width, u32 height)
+		void resize_render_target(render_target_handle& textureHandle, u32 width, u32 height)
 		{
-			static_cast<Backend*>(this)->resize_render_target_impl(handle, width, height);
+			static_cast<Backend*>(this)->resize_render_target_impl(textureHandle, width, height);
 		}
-		void destroy_render_target(render_target_handle& handle)
+		void destroy_render_target(render_target_handle& textureHandle)
 		{
-			static_cast<Backend*>(this)->destroy_render_target_impl(handle);
+			static_cast<Backend*>(this)->destroy_render_target_impl(textureHandle);
 		}
 
 	protected:

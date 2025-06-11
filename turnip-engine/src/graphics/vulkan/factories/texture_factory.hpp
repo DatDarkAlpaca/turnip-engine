@@ -8,5 +8,5 @@ namespace tur::vulkan
 {
 	class GraphicsDeviceVulkan;
 
-	Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
+	Texture build_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 }

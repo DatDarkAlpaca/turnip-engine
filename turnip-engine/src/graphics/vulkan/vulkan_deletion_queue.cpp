@@ -13,21 +13,21 @@ namespace tur::vulkan::deletion
 	{
 		deletionQueue.additionalDeletionQueue.push_back(std::move(function));
 	}
-	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle handle)
+	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle textureHandle)
 	{
-		deletionQueue.bufferHandles.push_back(handle);
+		deletionQueue.bufferHandles.push_back(textureHandle);
 	}
-	void destroy_texture(DeletionQueue& deletionQueue, texture_handle handle)
+	void destroy_texture(DeletionQueue& deletionQueue, texture_handle textureHandle)
 	{
-		deletionQueue.textureHandles.push_back(handle);
+		deletionQueue.textureHandles.push_back(textureHandle);
 	}
-	void destroy_render_target(DeletionQueue& deletionQueue, texture_handle handle)
+	void destroy_render_target(DeletionQueue& deletionQueue, texture_handle textureHandle)
 	{
-		deletionQueue.renderTargetHandles.push_back(handle);
+		deletionQueue.renderTargetHandles.push_back(textureHandle);
 	}
-	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle handle)
+	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle textureHandle)
 	{
-		deletionQueue.renderTargetHandles.push_back(handle);
+		deletionQueue.renderTargetHandles.push_back(textureHandle);
 	}
 
 	void flush(DeletionQueue& deletionQueue)
@@ -43,40 +43,40 @@ namespace tur::vulkan::deletion
 			deletionFunction();
 
 		// Buffers:
-		for (auto& handle : deletionQueue.bufferHandles)
+		for (auto& textureHandle : deletionQueue.bufferHandles)
 		{
-			if (handle == invalid_handle)
+			if (textureHandle == invalid_handle)
 				continue;
 
-			Buffer& buffer = buffers.get(handle);
+			Buffer& buffer = buffers.get(textureHandle);
 			vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
 
-			buffers.remove(handle);
-			handle = invalid_handle;
+			buffers.remove(textureHandle);
+			textureHandle = invalid_handle;
 		}
 		deletionQueue.bufferHandles.clear();
 
 		// Textures:
-		for (auto& handle : deletionQueue.textureHandles)
+		for (auto& textureHandle : deletionQueue.textureHandles)
 		{
-			if (handle == invalid_handle)
+			if (textureHandle == invalid_handle)
 				continue;
 
-			Texture& texture = textures.get(handle);
+			Texture& texture = textures.get(textureHandle);
 
 			vmaDestroyImage(allocator, texture.image, texture.allocation);
 			device.destroyImageView(texture.imageView);
 			device.destroySampler(texture.sampler);
 
-			textures.remove(handle);
-			handle = invalid_handle;
+			textures.remove(textureHandle);
+			textureHandle = invalid_handle;
 		}
 		deletionQueue.textureHandles.clear();
 
 		// Render Targets:
-		for (auto& handle : deletionQueue.renderTargetHandles)
+		for (auto& textureHandle : deletionQueue.renderTargetHandles)
 		{
-			RenderTarget& renderTarget = renderTargets.get(handle);
+			RenderTarget& renderTarget = renderTargets.get(textureHandle);
 
 			for (auto& textureHandle : renderTarget.descriptor.colorAttachments)
 			{
@@ -92,7 +92,7 @@ namespace tur::vulkan::deletion
 				device.destroyImageView(texture.imageView);
 				device.destroySampler(texture.sampler);
 
-				textures.remove(handle);
+				textures.remove(textureHandle);
 				textureHandle = invalid_handle;
 			}
 			
@@ -104,12 +104,12 @@ namespace tur::vulkan::deletion
 				device.destroyImageView(texture.imageView);
 				device.destroySampler(texture.sampler);
 
-				textures.remove(handle);
+				textures.remove(textureHandle);
 				renderTarget.descriptor.depthAttachment = invalid_handle;
 			}
 
-			renderTargets.remove(handle);
-			handle = invalid_handle;
+			renderTargets.remove(textureHandle);
+			textureHandle = invalid_handle;
 		}
 		deletionQueue.renderTargetHandles.clear();
 	}

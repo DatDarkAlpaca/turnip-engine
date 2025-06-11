@@ -14,15 +14,15 @@ namespace tur::vulkan
 	{
 	}
 
-	void CommandBufferVulkan::begin_render_impl(render_target_handle handle)
+	void CommandBufferVulkan::begin_render_impl(render_target_handle textureHandle)
 	{
 		m_CommandBuffer = get_command_buffer();
-		m_CurrentRenderTarget = handle;
+		m_CurrentRenderTarget = textureHandle;
 
 		Texture* renderTargetTexture;
-		if (handle != invalid_handle)
+		if (textureHandle != invalid_handle)
 		{
-			auto renderTarget = r_Device->get_render_targets().get(handle);
+			auto renderTarget = r_Device->get_render_targets().get(textureHandle);
 			renderTargetTexture = &r_Device->get_textures().get(renderTarget.descriptor.colorAttachments[0]);
 		}
 		else
@@ -110,34 +110,34 @@ namespace tur::vulkan
 		m_ClearValue = clearValue;
 	}
 
-	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle handle)
+	void CommandBufferVulkan::bind_pipeline_impl(pipeline_handle textureHandle)
 	{
 		auto& frameData = r_Device->get_state().frameDataHolder.get_frame_data();
 		u32 frameNumber = r_Device->get_state().frameDataHolder.get_frame_number();
 
-		Pipeline pipeline = r_Device->get_pipelines().get(handle);
+		Pipeline pipeline = r_Device->get_pipelines().get(textureHandle);
 		m_CommandBuffer.bindPipeline(get_pipeline_type(pipeline.type), pipeline.pipeline);
 		m_BoundPipeline = pipeline;
 	}
-	void CommandBufferVulkan::bind_descriptor_set_impl(descriptor_set_handle handle)
+	void CommandBufferVulkan::bind_descriptor_set_impl(descriptor_set_handle textureHandle)
 	{
 		m_CommandBuffer.bindDescriptorSets(
 			get_pipeline_type(m_BoundPipeline.type),
 			m_BoundPipeline.layout, 0,
-			1, &r_Device->get_descriptor_sets().get(handle).set,
+			1, &r_Device->get_descriptor_sets().get(textureHandle).set,
 			0, nullptr
 		);
 	}
-	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
+	void CommandBufferVulkan::bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride)
 	{
-		const Buffer& buffer = r_Device->get_buffers().get(handle);
+		const Buffer& buffer = r_Device->get_buffers().get(textureHandle);
 		const vk::DeviceSize offset = 0;
 
 		m_CommandBuffer.bindVertexBuffers(binding, buffer.buffer, offset);
 	}
-	void CommandBufferVulkan::bind_index_buffer_impl(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
+	void CommandBufferVulkan::bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 	{
-		const Buffer& buffer = r_Device->get_buffers().get(handle);
+		const Buffer& buffer = r_Device->get_buffers().get(textureHandle);
 		const vk::DeviceSize offset = 0;
 
 		m_CommandBuffer.bindIndexBuffer(buffer.buffer, offset, get_buffer_index_type(type));

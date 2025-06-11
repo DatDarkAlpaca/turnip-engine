@@ -9,7 +9,7 @@ namespace tur
 		system.scene = scene;
 	}
 
-	void quad_renderer_system_begin(QuadRendererSystem& system, render_target_handle handle)
+	void quad_renderer_system_begin(QuadRendererSystem& system, render_target_handle textureHandle)
 	{
 		if (!system.scene)
 			return TUR_LOG_ERROR("Quad renderer system has no set scene");
@@ -19,7 +19,7 @@ namespace tur
 
 		auto& registry = system.scene->get_registry();
 
-		auto view0 = registry.view<TransformComponent>(entt::exclude<TextureComponent>);
+		auto view0 = registry.view<TransformComponent>(entt::exclude<QuadTexture2D>);
 		for (auto& [entity, transformComponent] : view0.each())
 		{
 			continue;
@@ -31,22 +31,18 @@ namespace tur
 			quad_renderer_add_quad(system.renderer, quadData);
 		}
 
-		auto view1 = registry.view<TransformComponent, TextureComponent>();
+		auto view1 = registry.view<TransformComponent, QuadTexture2D>();
 		for (auto& [entity, transformComponent, textureComponent] : view1.each())
 		{
 			QuadRenderer::Data quadData = {};
 			quadData.transform = transformComponent.transform.transform();
-			quadData.texture = textureComponent.handle;
-
-			if (textureComponent.descriptorHandle == invalid_handle)
-				textureComponent.descriptorHandle = system.renderer.graphicsDevice->create_descriptor_set(system.renderer.descriptor);
-
+			quadData.texture = textureComponent.textureHandle;
 			quadData.descriptorSet = textureComponent.descriptorHandle;
 
 			quad_renderer_add_quad(system.renderer, quadData);
 		}
 
-		quad_renderer_begin(system.renderer, handle);
+		quad_renderer_begin(system.renderer, textureHandle);
 	}
 
 	void quad_renderer_system_render(QuadRendererSystem& system)

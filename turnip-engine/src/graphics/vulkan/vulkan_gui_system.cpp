@@ -45,24 +45,24 @@ namespace tur::vulkan
 		end_vulkan_frame();
 	}
 
-	void VulkanGUI::add_texture_impl(texture_handle handle)
+	void VulkanGUI::add_texture_impl(texture_handle textureHandle)
 	{
-		Texture& texture = r_GraphicsDevice->get_textures().get(handle);
-		descriptorSets[handle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
+		descriptorSets[textureHandle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
-	void VulkanGUI::remove_texture_impl(texture_handle handle)
+	void VulkanGUI::remove_texture_impl(texture_handle textureHandle)
 	{
-		ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(handle));
+		ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(textureHandle));
 	}
 
-	bool VulkanGUI::texture_button_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
+	bool VulkanGUI::texture_button_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
 	{
-		Texture& texture = r_GraphicsDevice->get_textures().get(handle);
-		return ImGui::ImageButton("Image", (ImTextureID)descriptorSets[handle], size, uv0, uv1, bgColor, tintColor);
+		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
+		return ImGui::ImageButton("Image", (ImTextureID)descriptorSets[textureHandle], size, uv0, uv1, bgColor, tintColor);
 	}
-	void VulkanGUI::texture_impl(texture_handle handle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor)
+	void VulkanGUI::texture_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor)
 	{
-		Texture& texture = r_GraphicsDevice->get_textures().get(handle);
-		ImGui::Image((ImTextureID)descriptorSets[handle], size, uv0, uv1, tintColor, borderColor);
+		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
+		ImGui::Image((ImTextureID)descriptorSets[textureHandle], size, uv0, uv1, tintColor, borderColor);
 	}
 }

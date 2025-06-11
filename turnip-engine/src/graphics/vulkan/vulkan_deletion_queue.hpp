@@ -29,10 +29,10 @@ namespace tur::vulkan::deletion
 	void initialize_deletion_queue(DeletionQueue& deletionQueue, GraphicsDeviceVulkan* device);
 
 	void destroy_general(DeletionQueue& deletionQueue, std::function<void()>&& function);
-	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle handle);
-	void destroy_texture(DeletionQueue& deletionQueue, texture_handle handle);
-	void destroy_render_target(DeletionQueue& deletionQueue, texture_handle handle);
-	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle handle);
+	void destroy_buffer(DeletionQueue& deletionQueue, buffer_handle textureHandle);
+	void destroy_texture(DeletionQueue& deletionQueue, texture_handle textureHandle);
+	void destroy_render_target(DeletionQueue& deletionQueue, texture_handle textureHandle);
+	void destroy_descriptor_set(DeletionQueue& deletionQueue, descriptor_handle textureHandle);
 	
 	void flush(DeletionQueue& deletionQueue);
 }

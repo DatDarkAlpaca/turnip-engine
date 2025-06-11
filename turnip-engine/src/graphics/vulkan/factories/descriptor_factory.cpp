@@ -5,7 +5,7 @@
 
 namespace tur::vulkan
 {
-	vk::DescriptorPool create_descriptor_pool(vk::Device device, const DescriptorSetLayoutDescriptor& descriptor)
+	vk::DescriptorPool build_descriptor_pool(vk::Device device, const DescriptorSetLayoutDescriptor& descriptor)
 	{
 		std::vector<vk::DescriptorPoolSize> poolSizes;
 
@@ -37,7 +37,7 @@ namespace tur::vulkan
 		return nullptr;
 	}
 
-	vk::DescriptorSetLayout create_descriptor_set_layout(vk::Device device, const DescriptorSetLayoutDescriptor& descriptor)
+	vk::DescriptorSetLayout build_descriptor_set_layout(vk::Device device, const DescriptorSetLayoutDescriptor& descriptor)
 	{
 		std::vector<vk::DescriptorSetLayoutBinding> descriptorBindings;
 		for (const auto& [binding, amount, type, stages] : descriptor)
@@ -67,7 +67,7 @@ namespace tur::vulkan
 		return nullptr;
 	}
 	
-	vk::DescriptorSet create_descriptor_set(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout)
+	vk::DescriptorSet build_descriptor_set(vk::Device device, vk::DescriptorPool descriptorPool, std::vector<vk::DescriptorSetLayout> descriptorSetLayout)
 	{
 		vk::DescriptorSetAllocateInfo allocationInfo = {};
 		{

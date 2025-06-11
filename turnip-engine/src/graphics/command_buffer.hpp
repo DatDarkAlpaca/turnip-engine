@@ -17,9 +17,9 @@ namespace tur
 		}
 
 	public:
-		void begin_render(render_target_handle handle = invalid_handle)
+		void begin_render(render_target_handle textureHandle = invalid_handle)
 		{
-			static_cast<CommandBuffer*>(this)->begin_render_impl(handle);
+			static_cast<CommandBuffer*>(this)->begin_render_impl(textureHandle);
 		}
 		void end_render()
 		{
@@ -41,21 +41,21 @@ namespace tur
 		}
 
 	public:
-		void bind_pipeline(pipeline_handle handle)
+		void bind_pipeline(pipeline_handle textureHandle)
 		{
-			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);
+			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(textureHandle);
 		}
-		void bind_descriptor_set(descriptor_set_handle handle)
+		void bind_descriptor_set(descriptor_set_handle textureHandle)
 		{
-			static_cast<CommandBuffer*>(this)->bind_descriptor_set_impl(handle);
+			static_cast<CommandBuffer*>(this)->bind_descriptor_set_impl(textureHandle);
 		}
-		void bind_vertex_buffer(buffer_handle handle, u32 binding, u32 stride)
+		void bind_vertex_buffer(buffer_handle textureHandle, u32 binding, u32 stride)
 		{
-			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding, stride);
+			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(textureHandle, binding, stride);
 		}
-		void bind_index_buffer(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
+		void bind_index_buffer(buffer_handle textureHandle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 		{
-			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
+			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(textureHandle, type);
 		}
 
 	public:

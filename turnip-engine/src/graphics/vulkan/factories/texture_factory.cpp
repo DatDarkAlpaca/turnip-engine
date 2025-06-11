@@ -5,7 +5,7 @@
 
 namespace tur::vulkan
 {
-	Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset)
+	Texture build_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
 		Texture texture;
 		texture.format = get_texture_format(descriptor.format);
@@ -68,7 +68,7 @@ namespace tur::vulkan
 				stagingDescriptor.type = BufferType::TRANSFER_SRC | BufferType::TRANSFER_DST;
 			}
 
-			buffer_handle stagingBufferHandle = device->create_buffer(stagingDescriptor, asset.data.size);
+			buffer_handle stagingBufferHandle = device->build_buffer(stagingDescriptor, asset.data.size);
 			device->update_buffer(stagingBufferHandle, asset.data, 0);
 			Buffer& stagingBuffer = device->get_buffers().get(stagingBufferHandle);
 

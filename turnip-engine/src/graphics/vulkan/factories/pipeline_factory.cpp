@@ -5,7 +5,7 @@
 
 namespace tur::vulkan
 {
-	Pipeline create_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
+	Pipeline build_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
 	{
 		Pipeline pipeline;
 		pipeline.type = PipelineType::GRAPHICS;

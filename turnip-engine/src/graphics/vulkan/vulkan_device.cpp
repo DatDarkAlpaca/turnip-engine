@@ -49,7 +49,7 @@ namespace tur::vulkan
 			descriptor.height = m_State.swapchainExtent.height;
 
 			destroy_texture(m_State.drawTextureHandle);
-			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTextureHandle = build_texture(descriptor, {});
 			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
 	}
@@ -127,7 +127,7 @@ namespace tur::vulkan
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
-			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTextureHandle = build_texture(descriptor, {});
 			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
 
@@ -342,31 +342,31 @@ namespace tur::vulkan
 
 	shader_handle GraphicsDeviceVulkan::create_shader_impl(const ShaderDescriptor& descriptor)
 	{
-		vk::ShaderModule shaderModule = create_shader_module(m_State.logicalDevice, descriptor);
+		vk::ShaderModule shaderModule = build_shader_module(m_State.logicalDevice, descriptor);
 		return m_ShaderModules.add(shaderModule);
 	}
-	void GraphicsDeviceVulkan::destroy_shader_impl(shader_handle handle)
+	void GraphicsDeviceVulkan::destroy_shader_impl(shader_handle textureHandle)
 	{
-		auto shaderModule = m_ShaderModules.get(handle);
+		auto shaderModule = m_ShaderModules.get(textureHandle);
 		m_State.logicalDevice.destroyShaderModule(shaderModule);
-		m_ShaderModules.remove(handle);
+		m_ShaderModules.remove(textureHandle);
 	}
 
 	descriptor_handle GraphicsDeviceVulkan::create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor)
 	{
 		Descriptor descriptorWrapper;
-		descriptorWrapper.descriptorPool = vulkan::create_descriptor_pool(m_State.logicalDevice, descriptor);
-		descriptorWrapper.setLayout = vulkan::create_descriptor_set_layout(m_State.logicalDevice, descriptor);
+		descriptorWrapper.descriptorPool = vulkan::build_descriptor_pool(m_State.logicalDevice, descriptor);
+		descriptorWrapper.setLayout = vulkan::build_descriptor_set_layout(m_State.logicalDevice, descriptor);
 		
 		return m_Descriptors.add(descriptorWrapper);
 	}
-	descriptor_set_handle GraphicsDeviceVulkan::create_descriptor_set_impl(descriptor_handle handle)
+	descriptor_set_handle GraphicsDeviceVulkan::create_descriptor_set_impl(descriptor_handle textureHandle)
 	{
-		Descriptor& descriptor = m_Descriptors.get(handle);
+		Descriptor& descriptor = m_Descriptors.get(textureHandle);
 
 		DescriptorSet set = {};
-		set.descriptorHandle = handle;
-		set.set = vulkan::create_descriptor_set(m_State.logicalDevice, descriptor.descriptorPool, { descriptor.setLayout });
+		set.descriptorHandle = textureHandle;
+		set.set = vulkan::build_descriptor_set(m_State.logicalDevice, descriptor.descriptorPool, { descriptor.setLayout });
 
 		return m_DescriptorSets.add(set);
 	}
@@ -432,7 +432,7 @@ namespace tur::vulkan
 		Pipeline pipeline;
 
 		// Pipeline Creation:
-		pipeline = vulkan::create_graphics_pipeline(*this, descriptor);
+		pipeline = vulkan::build_graphics_pipeline(*this, descriptor);
 		
 		destroy_shader(descriptor.vertexShader);
 
@@ -459,7 +459,7 @@ namespace tur::vulkan
 			srcDescriptor.type = descriptor.type | BufferType::TRANSFER_DST;
 			srcDescriptor.memoryUsage = BufferMemoryUsage::GPU_ONLY;
 		}
-		Buffer buffer = vulkan::create_buffer(m_State.vmaAllocator, srcDescriptor, data.size);
+		Buffer buffer = vulkan::build_buffer(m_State.vmaAllocator, srcDescriptor, data.size);
 
 		// Staging buffer:
 		BufferDescriptor stagingDescriptor = {};
@@ -467,7 +467,7 @@ namespace tur::vulkan
 			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
 			stagingDescriptor.type = BufferType::TRANSFER_SRC;
 		}
-		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
+		Buffer stagingBuffer = vulkan::build_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
 		
 		// Buffer data:
 		if (data.data)
@@ -495,11 +495,11 @@ namespace tur::vulkan
 	}
 	buffer_handle GraphicsDeviceVulkan::create_buffer_impl(const BufferDescriptor& descriptor, u32 size)
 	{
-		return m_Buffers.add(vulkan::create_buffer(m_State.vmaAllocator, descriptor, size));
+		return m_Buffers.add(vulkan::build_buffer(m_State.vmaAllocator, descriptor, size));
 	}
-	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	void GraphicsDeviceVulkan::update_buffer_impl(buffer_handle textureHandle, const DataBuffer& data, u32 offset)
 	{
-		Buffer& targetBuffer = m_Buffers.get(handle);
+		Buffer& targetBuffer = m_Buffers.get(textureHandle);
 
 		// Staging buffer:
 		BufferDescriptor stagingDescriptor = {};
@@ -507,7 +507,7 @@ namespace tur::vulkan
 			stagingDescriptor.memoryUsage = BufferMemoryUsage::CPU_ONLY;
 			stagingDescriptor.type = BufferType::TRANSFER_SRC;
 		}
-		Buffer stagingBuffer = vulkan::create_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
+		Buffer stagingBuffer = vulkan::build_buffer(m_State.vmaAllocator, stagingDescriptor, data.size);
 		
 		{
 			void* bufferData = nullptr;
@@ -530,7 +530,7 @@ namespace tur::vulkan
 
 		vmaDestroyBuffer(m_State.vmaAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 	}
-	void* GraphicsDeviceVulkan::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+	void* GraphicsDeviceVulkan::map_buffer_impl(buffer_handle textureHandle, u32 offset, u32 length, AccessFlags flags)
 	{
 		TUR_LOG_CRITICAL("map_buffer not implemented");
 		return nullptr;
@@ -555,26 +555,26 @@ namespace tur::vulkan
 	{
 		copy_buffer_to_texture_direct(m_Buffers.get(source), m_Textures.get(destination), width, height);
 	}
-	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle& handle)
+	void GraphicsDeviceVulkan::destroy_buffer_impl(buffer_handle& textureHandle)
 	{
-		deletion::destroy_buffer(m_DeletionQueue, handle);
+		deletion::destroy_buffer(m_DeletionQueue, textureHandle);
 	}
 
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
-		return m_Textures.add(vulkan::create_texture(this, descriptor, asset));
+		return m_Textures.add(vulkan::build_texture(this, descriptor, asset));
 	}
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
 	{
-		return create_texture(descriptor, {});
+		return build_texture(descriptor, {});
 	}
-	void GraphicsDeviceVulkan::update_texture_impl(texture_handle handle, const TextureAsset& asset)
+	void GraphicsDeviceVulkan::update_texture_impl(texture_handle textureHandle, const TextureAsset& asset)
 	{
 		// TODO
 	}
-	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle& handle)
+	void GraphicsDeviceVulkan::destroy_texture_impl(texture_handle& textureHandle)
 	{
-		deletion::destroy_texture(m_DeletionQueue, handle);
+		deletion::destroy_texture(m_DeletionQueue, textureHandle);
 	}
 
 	render_target_handle GraphicsDeviceVulkan::create_render_target_impl(const RenderTargetDescriptor& descriptor)
@@ -598,15 +598,15 @@ namespace tur::vulkan
 				textureDescriptor.height = descriptor.height;
 			}
 
-			texture_handle colorAttachment = create_texture(textureDescriptor);
+			texture_handle colorAttachment = build_texture(textureDescriptor);
 			renderTarget.descriptor.colorAttachments.push_back(colorAttachment);
 		}
 
 		return m_RenderTargets.add(renderTarget);
 	}
-	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle& handle, u32 width, u32 height)
+	void GraphicsDeviceVulkan::resize_render_target_impl(render_target_handle& textureHandle, u32 width, u32 height)
 	{
-		destroy_render_target(handle);
+		destroy_render_target(textureHandle);
 
 		RenderTargetDescriptor descriptor = {};
 		{
@@ -614,13 +614,13 @@ namespace tur::vulkan
 			descriptor.height = height;
 		}
 
-		handle = create_render_target(descriptor);
+		textureHandle = create_render_target(descriptor);
 	}
-	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle& handle)
+	void GraphicsDeviceVulkan::destroy_render_target_impl(render_target_handle& textureHandle)
 	{
-		deletion::destroy_render_target(m_DeletionQueue, handle);
+		deletion::destroy_render_target(m_DeletionQueue, textureHandle);
 		return;
-		RenderTarget& renderTarget = m_RenderTargets.get(handle);
+		RenderTarget& renderTarget = m_RenderTargets.get(textureHandle);
 
 		for (const auto& colorAttachment : renderTarget.descriptor.colorAttachments)
 		{
@@ -638,8 +638,8 @@ namespace tur::vulkan
 			vmaDestroyImage(m_State.vmaAllocator, texture.image, texture.allocation);
 		}
 
-		m_RenderTargets.remove(handle);
-		handle = invalid_handle;
+		m_RenderTargets.remove(textureHandle);
+		textureHandle = invalid_handle;
 	}
 }
 

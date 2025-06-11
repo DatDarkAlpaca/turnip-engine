@@ -51,7 +51,7 @@ namespace tur
 	void quad_renderer_render(QuadRenderer& renderer);
 	void quad_renderer_end(QuadRenderer& renderer);
 
-	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle);
+	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle textureHandle);
 
 	void quad_renderer_add_quad(QuadRenderer& renderer, QuadRenderer::Data& quad);
 	void quad_renderer_clear_quads(QuadRenderer& renderer);

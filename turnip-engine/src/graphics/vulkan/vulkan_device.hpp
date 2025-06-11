@@ -23,8 +23,8 @@ namespace tur::vulkan
 		friend void deletion::flush(deletion::DeletionQueue& deletionQueue);
 
 		friend vk::DescriptorPool initialize_vulkan_gui(GraphicsDeviceVulkan*);
-		friend Pipeline create_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
-		friend Texture create_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
+		friend Pipeline build_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
+		friend Texture build_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
 	public:
 		void recreate_swapchain();
@@ -44,11 +44,11 @@ namespace tur::vulkan
 	
 	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
-		void destroy_shader_impl(shader_handle handle);
+		void destroy_shader_impl(shader_handle textureHandle);
 
 	protected:
 		descriptor_handle create_descriptors_impl(const DescriptorSetLayoutDescriptor& descriptor);
-		descriptor_set_handle create_descriptor_set_impl(descriptor_handle handle);
+		descriptor_set_handle create_descriptor_set_impl(descriptor_handle textureHandle);
 		void update_descriptor_resource_impl(descriptor_set_handle descriptorSetHandle, handle_type resourceHandle, DescriptorType type, u32 binding);
 		
 	protected:
@@ -57,25 +57,25 @@ namespace tur::vulkan
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
-		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset);
-		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
+		void update_buffer_impl(buffer_handle textureHandle, const DataBuffer& data, u32 offset);
+		void* map_buffer_impl(buffer_handle textureHandle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset, u32 dstOffset);
 		void copy_buffer_to_texture_impl(buffer_handle source, texture_handle destination, u32 width, u32 height);
-		void destroy_buffer_impl(buffer_handle &handle);
+		void destroy_buffer_impl(buffer_handle &textureHandle);
 
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
-		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
-		void destroy_texture_impl(texture_handle& handle);
+		void update_texture_impl(texture_handle textureHandle, const TextureAsset& asset);
+		void destroy_texture_impl(texture_handle& textureHandle);
 
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
-		void resize_render_target_impl(render_target_handle& handle, u32 width, u32 height);
-		void destroy_render_target_impl(render_target_handle& handle);
+		void resize_render_target_impl(render_target_handle& textureHandle, u32 width, u32 height);
+		void destroy_render_target_impl(render_target_handle& textureHandle);
 
 	protected:
-		inline Texture get_native_texture_impl(texture_handle handle) { return m_Textures.get(handle); }
+		inline Texture get_native_texture_impl(texture_handle textureHandle) { return m_Textures.get(textureHandle); }
 
 	public:
 		void wait_idle();
