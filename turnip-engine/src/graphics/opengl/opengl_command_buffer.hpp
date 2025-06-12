@@ -1,12 +1,12 @@
 #pragma once
 #include <glad/glad.h>
 #include <unordered_map>
-
-#include "opengl_device.hpp"
 #include "graphics/command_buffer.hpp"
 
 namespace tur::gl
 {
+	class GraphicsDeviceGL;
+
 	class CommandBufferGL : public BaseCommandBuffer<CommandBufferGL>
 	{
 		friend class BaseCommandBuffer<CommandBufferGL>;
@@ -18,10 +18,8 @@ namespace tur::gl
 		void initialize_impl();
 
 	protected:
-		void begin_impl();
 		void begin_render_impl(render_target_handle textureHandle);
 		void end_render_impl();
-		void end_impl();
 
 	protected:
 		void set_viewport_impl(const Viewport& viewport);
@@ -30,18 +28,13 @@ namespace tur::gl
 
 	protected:
 		void bind_pipeline_impl(pipeline_handle textureHandle);
+		void bind_descriptor_set_impl(descriptor_set_handle textureHandle);
 		void bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride);
 		void bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType indexType);
-		void bind_texture_impl(texture_handle textureHandle, u32 textureUnit);
 		
-		void set_descriptor_resource_impl(handle_type textureHandle, DescriptorType type, u32 binding);
-
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
-
-	protected:
-		void submit_impl();
 
 	private:
 		void setup_pipeline_bindings(const PipelineDescriptor& descriptor);

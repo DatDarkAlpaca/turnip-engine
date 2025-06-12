@@ -14,6 +14,7 @@ namespace tur
 #ifdef TUR_API_OPENGL
 	using GraphicsDevice = tur::gl::GraphicsDeviceGL;
 	using CommandBuffer = tur::gl::CommandBufferGL;
+	using GUISystem = tur::gl::OpenGLGUI;
 
 #elif TUR_API_VULKAN
 	using GraphicsDevice = tur::vulkan::GraphicsDeviceVulkan;

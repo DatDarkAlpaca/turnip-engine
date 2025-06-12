@@ -209,8 +209,6 @@ void MainView::update_render_target(u32 width, u32 height)
 	auto& graphicsDevice = engine->graphicsDevice;
 	auto& gui = engine->guiSystem;
 
-	graphicsDevice.wait_idle();
-
 	// Render target texture:
 	{
 		TextureDescriptor textureDescriptor;

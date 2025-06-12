@@ -1,4 +1,5 @@
 #include "pch.hpp"
+#include <ImGuizmo.h>
 #include <GLFW/glfw3.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -74,12 +75,6 @@ namespace tur::gl
 		}
 #endif
 	}
-
-	void present_opengl_window(Window* window)
-	{
-		glfwSwapBuffers(window->window);
-	}
-
 	void initialize_opengl_gui(Window* window)
 	{
 		ImGui_ImplGlfw_InitForOpenGL(window->window, true);
@@ -91,15 +86,17 @@ namespace tur::gl
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-	}
 
-	void end_opengl_frame()
+		ImGuizmo::BeginFrame();
+	}
+	void render_opengl_frame()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
-
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+	}
+	void end_opengl_frame()
+	{
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -108,5 +105,10 @@ namespace tur::gl
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	void present_opengl_window(Window* window)
+	{
+		glfwSwapBuffers(window->window);
 	}
 }

@@ -29,7 +29,6 @@ namespace tur::vulkan
 
 		initialize_window(window, properties);
 	}
-
 	vk::DescriptorPool initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
 	{
 		auto& state = device->get_state();
@@ -105,13 +104,11 @@ namespace tur::vulkan
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
-
 	void render_vulkan_frame(vk::CommandBuffer commandBuffer)
 	{
 		ImGui::Render();
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 	}
-
 	void end_vulkan_frame()
 	{		
 		ImGuiIO& io = ImGui::GetIO();
@@ -131,7 +128,6 @@ namespace tur::vulkan
 		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 		return extensions;
 	}
-
 	VkSurfaceKHR get_vulkan_surface(vk::Instance instance, Window* window)
 	{
 		VkSurfaceKHR surface;
@@ -143,7 +139,6 @@ namespace tur::vulkan
 		TUR_LOG_CRITICAL("Failed to create window surface using GLFW and Vulkan");
 		return nullptr;
 	}
-
 	std::vector<const char*> get_vulkan_extension_platform_surface_names()
 	{
 #ifdef TUR_PLATFORM_WIN32

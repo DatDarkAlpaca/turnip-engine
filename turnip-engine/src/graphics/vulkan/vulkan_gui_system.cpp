@@ -55,6 +55,8 @@ namespace tur::vulkan
 	}
 	void VulkanGUI::remove_texture_impl(texture_handle textureHandle)
 	{
+		r_GraphicsDevice->wait_idle();
+
 		ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(textureHandle));
 
 		descriptorSets.erase(textureHandle);

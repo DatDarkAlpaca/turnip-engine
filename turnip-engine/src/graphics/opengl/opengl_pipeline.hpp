@@ -212,7 +212,7 @@ namespace tur::gl
 {
     struct Pipeline
     {
-        gl_handle textureHandle = invalid_handle;
+        gl_handle handle = invalid_handle;
         PipelineDescriptor descriptor;
     };
 }
