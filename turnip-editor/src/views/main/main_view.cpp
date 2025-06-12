@@ -14,13 +14,11 @@ MainView::MainView(const ProjectData& projectData)
 
 void MainView::set_project_data(const ProjectData& projectData)
 {
-	m_ProjectData = projectData;
-	ScriptSystem::set_project(m_ProjectData);
-
 	// Reset:
 	scene.get_registry().clear();
 	m_SceneData.viewerSelectedEntity = Entity();
 
+	// TODO: record scene data inside projectData.
 	// Deserialize main scene:
 	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
 		return;
@@ -28,21 +26,13 @@ void MainView::set_project_data(const ProjectData& projectData)
 	SceneDeserializer deserializer(&scene, projectData.projectPath / "scene.json");
 	deserializer.deserialize();
 
-	// Load assets:
-	auto* assetLibrary = &engine->assetLibrary;
-	auto* graphicsDevice = &engine->graphicsDevice;
 
-	for (const auto& [filepath, uuid] : m_ProjectData.assetMetadata)
+	// Project Data:
 	{
-		engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
-			return load_texture_asset(assetLibrary, filepath);
-		}, [&](AssetInformation information) {
-			if (!information.is_valid())
-				return;
+		m_ProjectData = projectData;
+		load_project_data(m_ProjectData, &engine->assetLibrary, &engine->workerPool, get_main_event_callback());
 
-			OnNewTextureLoad textureLoadEvent(information.assetHandle);
-			get_main_event_callback()(textureLoadEvent);
-		});
+		ScriptSystem::set_project(m_ProjectData);
 	}
 }
 

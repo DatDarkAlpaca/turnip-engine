@@ -5,9 +5,9 @@
 #include <nlohmann/json.hpp>
 
 #include "common.hpp"
-
+#include "core/event/event.hpp"
+#include "core/worker/worker_pool.hpp"
 #include "core/assets/asset_library.hpp"
-#include "core/script/script_compiler.hpp"
 
 namespace tur
 {
@@ -49,6 +49,8 @@ namespace tur
 	std::optional<ProjectData> create_empty_project(const ProjectOptions& options);
 
 	void save_project_data(ProjectData& data, AssetLibrary* assetLibrary);
+
+	void load_project_data(ProjectData& data, AssetLibrary* assetLibrary, WorkerPool* pool, EventCallback&& callback);
 
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath);
 }

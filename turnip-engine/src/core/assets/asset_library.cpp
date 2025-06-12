@@ -5,7 +5,7 @@
 
 namespace tur
 {
-	AssetInformation load_texture_asset(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
+	AssetInformation load_texture_asset(AssetLibrary* assetLibrary, const std::filesystem::path& filepath, const UUID& uuid)
 	{
 		if (!std::filesystem::exists(filepath))
 		{
@@ -28,7 +28,7 @@ namespace tur
 		TextureAsset asset;
 		{
 			asset.filepath = filepath;
-			asset.uuid = UUID();
+			asset.uuid = uuid != invalid_uuid ? uuid : UUID();
 
 			asset.width = static_cast<u32>(width);
 			asset.height = static_cast<u32>(height);
@@ -42,7 +42,7 @@ namespace tur
 		return { textureHandle };
 	}
 
-	AssetInformation load_texture_asset_float(AssetLibrary* assetLibrary, const std::filesystem::path& filepath)
+	AssetInformation load_texture_asset_float(AssetLibrary* assetLibrary, const std::filesystem::path& filepath, const UUID& uuid)
 	{
 		if (!std::filesystem::exists(filepath))
 		{
@@ -64,7 +64,7 @@ namespace tur
 		TextureAsset asset;
 		{
 			asset.filepath = filepath;
-			asset.uuid = UUID();
+			asset.uuid = uuid != invalid_uuid ? uuid : UUID();
 
 			asset.width = static_cast<u32>(width);
 			asset.height = static_cast<u32>(height);

@@ -1,7 +1,9 @@
 #include "pch.hpp"
 #include "entity_inspector.hpp"
+
 #include "event/events.hpp"
 #include "utils/gui_utils.hpp"
+#include "core/script/script_compiler.hpp"
 
 void EntityInspector::initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNING tur::Scene* scene, SceneData* sceneData)
 {

@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "project.hpp"
+#include "core/event/events.hpp"
 #include "utils/json/json_file.hpp"
+#include "core/script/script_compiler.hpp"
 
 namespace tur
 {
@@ -58,6 +60,22 @@ namespace tur
 		std::string filename = data.projectName + TUR_ENGINE_FILE_EXTENSION;
 
 		json_write_file(data.projectPath / filename, data);
+	}
+
+	void load_project_data(ProjectData& data, AssetLibrary* assetLibrary, WorkerPool* pool, EventCallback&& callback)
+	{
+		for (const auto& [filepath, uuid] : data.assetMetadata)
+		{
+			pool->submit<AssetInformation>([assetLibrary, filepath, uuid]() {
+				return load_texture_asset(assetLibrary, filepath, uuid);
+			}, [&, callback](AssetInformation information) {
+				if (!information.is_valid())
+					return;
+
+				OnNewTextureLoad textureLoadEvent(information.assetHandle);
+				callback(textureLoadEvent);
+			});
+		}
 	}
 
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath)
