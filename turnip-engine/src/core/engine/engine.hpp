@@ -6,6 +6,7 @@
 #include "core/event/events.hpp"
 #include "core/view/view.hpp"
 
+#include "graphics/renderer/renderer_assembler_system.hpp"
 #include "graphics/renderer/quad/quad_renderer_system.hpp"
 #include "graphics/renderer/instanced/instanced_quad_renderer_system.hpp"
 
@@ -22,12 +23,16 @@ namespace tur
 		AssetLibrary assetLibrary;
 		ConfigData configData;
 		WorkerPool workerPool;
-		GraphicsDevice graphicsDevice;
 
+		GraphicsDevice graphicsDevice;
+		tur_unique<GUISystem> guiSystem;
+
+		RendererAssemblerSystem rendererAssemblerSystem;
 		QuadRendererSystem quadRendererSystem;
 		InstancedQuadSystem instancedQuadSystem;
 
 	public:
+		EventCallback mainEventCallback;
 		bool shutdownRequested = false;
 	};
 
@@ -36,5 +41,5 @@ namespace tur
 	void turnip_engine_shutdown(TurnipEngine& data);
 
 	void engine_add_view(TurnipEngine& data, tur_unique<View> view);
-	void engine_remove_view(TurnipEngine& data, view_handle handle);
+	void engine_remove_view(TurnipEngine& data, view_handle textureHandle);
 }

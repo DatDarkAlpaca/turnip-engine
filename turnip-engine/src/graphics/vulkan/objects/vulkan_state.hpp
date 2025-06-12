@@ -42,12 +42,9 @@ namespace tur::vulkan
 		// Command Pool:
 		vk::CommandPool commandPool;
 
-		// Descriptors:
-		vk::DescriptorSetLayout descriptorSetLayout;
-		vk::DescriptorPool descriptorPool;
-
 		// Frame:
 		FrameDataHolder frameDataHolder;
 		Texture drawTexture;
+		texture_handle drawTextureHandle;
 	};
 }

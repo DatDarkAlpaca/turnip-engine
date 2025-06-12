@@ -7,7 +7,7 @@
 #include "platform/vulkan_context.hpp"
 #include "graphics/vulkan/vulkan_device.hpp"
 #include "graphics/vulkan/vulkan_command_buffer.hpp"
-// TODO: add vulkan
+#include "graphics/vulkan/vulkan_gui_system.hpp"
 
 namespace tur
 {
@@ -18,6 +18,7 @@ namespace tur
 #elif TUR_API_VULKAN
 	using GraphicsDevice = tur::vulkan::GraphicsDeviceVulkan;
 	using CommandBuffer = tur::vulkan::CommandBufferVulkan;
+	using GUISystem = tur::vulkan::VulkanGUI;
 #endif
 
 	inline void initialize_graphics_system(Window* window, const ConfigData& configData)

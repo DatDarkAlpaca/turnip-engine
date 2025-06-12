@@ -7,7 +7,7 @@ namespace tur::gl
 	struct Texture
 	{
 		TextureDescriptor descriptor;
-		texture_handle handle = invalid_handle;
+		texture_handle textureHandle = invalid_handle;
 	};
 }
 

@@ -9,6 +9,7 @@ namespace tur::vulkan
 	class CommandBufferVulkan : public BaseCommandBuffer<CommandBufferVulkan>
 	{
 		friend class BaseCommandBuffer<CommandBufferVulkan>;
+		friend class VulkanGUI;
 
 	public:
 		CommandBufferVulkan(NON_OWNING GraphicsDeviceVulkan* device);
@@ -17,10 +18,8 @@ namespace tur::vulkan
 		void initialize_impl();
 
 	protected:
-		void begin_impl();
-		void begin_render_impl(render_target_handle handle);
+		void begin_render_impl(render_target_handle textureHandle);
 		void end_render_impl();
-		void end_impl();
 
 	protected:
 		void set_viewport_impl(const Viewport& viewport);
@@ -28,19 +27,14 @@ namespace tur::vulkan
 		void clear_impl(ClearFlags flags, const ClearValue& clearValue);
 
 	protected:
-		void bind_pipeline_impl(pipeline_handle handle);
-		void bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride);
-		void bind_index_buffer_impl(buffer_handle handle, BufferIndexType type);
-		void bind_texture_impl(texture_handle handle, u32 textureUnit);
-
-		void set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding);
+		void bind_pipeline_impl(pipeline_handle textureHandle);
+		void bind_descriptor_set_impl(descriptor_set_handle textureHandle);
+		void bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride);
+		void bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType type);
 
 	protected:
 		void draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
 		void draw_indexed_impl(u32 indexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
-
-	protected:
-		void submit_impl();
 
 	private:
 		void transition_image(vk::Image targetImage, vk::ImageLayout currentLayout, vk::ImageLayout newLayout);

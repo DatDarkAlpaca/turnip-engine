@@ -71,7 +71,7 @@ namespace tur
         u32 depth = 1;
         u32 mipLevels = 1;
 
-        TextureFormat format = TextureFormat::RGBA8_UNORM;
+        TextureFormat format = TextureFormat::B8G8R8A8_UNORM;
         TextureType type = TextureType::TEXTURE_2D;
 
         bool generateMipmaps = false;

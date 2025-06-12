@@ -19,12 +19,12 @@ namespace tur::gl
 	{
 		glBindVertexArray(m_VAO);
 	}
-	void CommandBufferGL::begin_render_impl(render_target_handle handle)
+	void CommandBufferGL::begin_render_impl(render_target_handle textureHandle)
 	{
-		if(handle == invalid_handle)
+		if(textureHandle == invalid_handle)
 			return glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, r_Device->get_render_targets().get(handle).handle);
+		glBindFramebuffer(GL_FRAMEBUFFER, r_Device->get_render_targets().get(textureHandle).textureHandle);
 	}
 	void CommandBufferGL::end_render_impl()
 	{
@@ -77,12 +77,12 @@ namespace tur::gl
 		glClear(setBits);
 	}
 	
-	void CommandBufferGL::bind_pipeline_impl(pipeline_handle handle)
+	void CommandBufferGL::bind_pipeline_impl(pipeline_handle textureHandle)
 	{
-		m_ActivePipeline = r_Device->get_pipelines().get(handle);
+		m_ActivePipeline = r_Device->get_pipelines().get(textureHandle);
 		const auto& descriptor = m_ActivePipeline.descriptor;
 
-		glUseProgram(m_ActivePipeline.handle);
+		glUseProgram(m_ActivePipeline.textureHandle);
 
 		glFrontFace(get_front_face(descriptor.rasterizerStage.frontFace));
 		glPolygonMode(GL_FRONT_AND_BACK, get_polygon_mode(descriptor.rasterizerStage.polygonMode));
@@ -90,24 +90,24 @@ namespace tur::gl
 
 		setup_pipeline_bindings(descriptor);
 	}
-	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle handle, u32 binding, u32 stride)
+	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride)
 	{
-		gl_handle bufferHandle = r_Device->get_buffers().get(handle).handle;
+		gl_handle bufferHandle = r_Device->get_buffers().get(textureHandle).textureHandle;
 		glVertexArrayVertexBuffer(m_VAO, binding, bufferHandle, 0, stride);
 	}
-	void CommandBufferGL::bind_index_buffer_impl(buffer_handle handle, BufferIndexType indexType)
+	void CommandBufferGL::bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType indexType)
 	{
-		Buffer buffer = r_Device->get_buffers().get(handle);
+		Buffer buffer = r_Device->get_buffers().get(textureHandle);
 		m_IndexType = indexType;
-		glVertexArrayElementBuffer(m_VAO, buffer.handle);
+		glVertexArrayElementBuffer(m_VAO, buffer.textureHandle);
 	}
-	void CommandBufferGL::bind_texture_impl(texture_handle handle, u32 textureUnit)
+	void CommandBufferGL::bind_texture_impl(texture_handle textureHandle, u32 textureUnit)
 	{
-		Texture texture = r_Device->get_textures().get(handle);
-		glBindTextureUnit(textureUnit, texture.handle);
+		Texture texture = r_Device->get_textures().get(textureHandle);
+		glBindTextureUnit(textureUnit, texture.textureHandle);
 	}
 
-	void CommandBufferGL::set_descriptor_resource_impl(handle_type handle, DescriptorType type, u32 binding)
+	void CommandBufferGL::set_descriptor_resource_impl(handle_type textureHandle, DescriptorType type, u32 binding)
 	{
 		gl_handle glType = get_descriptor_set_type(type);
 
@@ -115,11 +115,11 @@ namespace tur::gl
 		{
 			case DescriptorType::STORAGE_BUFFER:
 			case DescriptorType::UNIFORM_BUFFER:
-				glBindBufferBase(glType, binding, r_Device->get_buffers().get(handle).handle);
+				glBindBufferBase(glType, binding, r_Device->get_buffers().get(textureHandle).textureHandle);
 				break;
 
 			case DescriptorType::COMBINED_IMAGE_SAMPLER:
-				glBindTextureUnit(binding, r_Device->get_textures().get(handle).handle);
+				glBindTextureUnit(binding, r_Device->get_textures().get(textureHandle).textureHandle);
 				break;
 		}
 	}

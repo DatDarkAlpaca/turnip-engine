@@ -6,5 +6,5 @@ namespace tur::vulkan
 {
 	class GraphicsDeviceVulkan;
 
-	Pipeline create_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor);
+	Pipeline build_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor);
 }

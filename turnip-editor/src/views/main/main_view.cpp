@@ -10,23 +10,15 @@ MainView::MainView(const ProjectData& projectData)
 	: m_ProjectData(projectData)
 {
 	m_MainMenuBar.initialize(this);
-
-	m_EntityInspector.set_callback(BIND(&MainView::on_event, this));
-	m_SceneEditor.set_callback(BIND(&MainView::on_event, this));
-	m_MainMenuBar.set_callback(BIND(&MainView::on_event, this));
-	m_SceneViewer.set_callback(BIND(&MainView::on_event, this));
 }
 
 void MainView::set_project_data(const ProjectData& projectData)
 {
-	m_ProjectData = projectData;
-
 	// Reset:
 	scene.get_registry().clear();
 	m_SceneData.viewerSelectedEntity = Entity();
 
-	ScriptSystem::set_project(m_ProjectData);
-
+	// TODO: record scene data inside projectData.
 	// Deserialize main scene:
 	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
 		return;
@@ -34,45 +26,29 @@ void MainView::set_project_data(const ProjectData& projectData)
 	SceneDeserializer deserializer(&scene, projectData.projectPath / "scene.json");
 	deserializer.deserialize();
 
-	// Load assets:
-	for (const auto& [entity, textureComponent] : scene.get_registry().view<TextureComponent>().each())
+
+	// Project Data:
 	{
-		auto* assetLibrary = &engine->assetLibrary;
-		auto* graphicsDevice = &engine->graphicsDevice;
+		m_ProjectData = projectData;
+		load_project_data(m_ProjectData, &engine->assetLibrary, &engine->workerPool, get_main_event_callback());
 
-		engine->workerPool.submit<AssetInformation>([assetLibrary, textureComponent]() {
-			return load_texture_asset(assetLibrary, textureComponent.filepath);
-		}, [&textureComponent, assetLibrary, graphicsDevice](AssetInformation information) {
-			// if (information.isDuplicate)
-			//	return;
-			// TODO: map asset handle to texture handle on create_texture.			[URGENT]
-			// TODO: maybe save this threaded function since i use it everywhere
-
-			auto texture = assetLibrary->textures.get(information.handle);
-
-			TextureDescriptor descriptor;
-			{
-				descriptor.format = TextureFormat::RGBA8_UNORM;
-				descriptor.type = TextureType::TEXTURE_2D;
-				descriptor.width = texture.width;
-				descriptor.height = texture.height;
-				descriptor.generateMipmaps = true;
-			}
-
-			auto textureGraphics = graphicsDevice->create_texture(descriptor, texture);
-			textureComponent.handle = textureGraphics;
-		});
+		ScriptSystem::set_project(m_ProjectData);
 	}
 }
 
 void MainView::on_view_added()
 {
+	m_EntityInspector.set_callback(std::move(get_main_event_callback()));
+	m_SceneEditor.set_callback(std::move(get_main_event_callback()));
+	m_MainMenuBar.set_callback(std::move(get_main_event_callback()));
+	m_SceneViewer.set_callback(std::move(get_main_event_callback()));
+
 	set_project_data(m_ProjectData);
 
 	// Widgets:
 	m_EntityInspector.initialize(engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
-	m_SceneEditor.initialize(&engine->graphicsDevice, &m_SceneData);
+	m_SceneEditor.initialize(&engine->graphicsDevice, engine->guiSystem.get(), &m_SceneData);
 
 	initialize_renderer_system();
 	initialize_textures();
@@ -80,6 +56,13 @@ void MainView::on_view_added()
 void MainView::on_update()
 {
 	scene.on_update_runtime();
+
+	if (m_UpdateRenderCalled) 
+	{
+		auto size = m_SceneEditor.get_size();
+		update_render_target(static_cast<u32>(size.x), static_cast<u32>(size.y));
+		m_UpdateRenderCalled = false;
+	}
 }
 void MainView::on_render_gui()
 {
@@ -115,18 +98,26 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<OnProjectSaved>([&](OnProjectSaved&) -> bool {
+		SceneSerializer serializer(&scene, m_ProjectData.projectPath / "scene.json");
+		serializer.serialize();
+
+		save_project_data(m_ProjectData, &engine->assetLibrary);
+
 		append_window_title(m_ProjectData.projectName);
 		return false;
 	});
 
 	subscriber.subscribe<OnEntityInspectorInitialize>([&](const OnEntityInspectorInitialize&) -> bool {
 		TUR_LOG_INFO("Inspector initialized");
-		return true;
+		return false;
 	});
 
 	subscriber.subscribe<SceneEditorResized>([&](const SceneEditorResized& resizeEvent) -> bool {
+		if (resizeEvent.width <= 0 || resizeEvent.height <= 0)
+			return false;
+		
 		// Render target:
-		update_render_target(resizeEvent.width, resizeEvent.height);
+		call_update_render();
 		
 		// Viewport:
 		if(r_QuadRenderer)
@@ -147,18 +138,21 @@ void MainView::on_event(Event& event)
 }
 void MainView::on_render()
 {
-	quad_renderer_system_begin(engine->quadRendererSystem);
-	quad_renderer_system_render(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_begin(engine->quadRendererSystem, m_SceneData.sceneRenderTarget);
+	quad_renderer_system_render(engine->quadRendererSystem);
 	quad_renderer_system_end(engine->quadRendererSystem);
-
-	instanced_quad_system_begin(engine->instancedQuadSystem);
-	instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
-	instanced_quad_system_end(engine->instancedQuadSystem);
+	
+	//instanced_quad_system_begin(engine->instancedQuadSystem);
+	//instanced_quad_system_render(engine->instancedQuadSystem, m_SceneData.sceneRenderTarget);
+	//instanced_quad_system_end(engine->instancedQuadSystem);
 }
 
 void MainView::initialize_textures()
 {
 	auto& assetLibrary = engine->assetLibrary;
+
+	// Scene Texture:
+	update_render_target(100, 100);
 
 	// Default Texture:
 	{
@@ -173,12 +167,13 @@ void MainView::initialize_renderer_system()
 	r_InstancedRenderer = &engine->instancedQuadSystem.renderer;
 	r_QuadRenderer = &engine->quadRendererSystem.renderer;
 
+	const Color& color = { 40, 40, 40, 255 };
+
 	// Main:
 	{
 		quad_renderer_system_set_scene(engine->quadRendererSystem, &scene);
 		quad_renderer_system_set_camera(engine->quadRendererSystem, &m_SceneData.editorCamera.camera);
-
-		renderer_set_clear_color(r_QuadRenderer, { 40, 40, 40, 255 });			
+		renderer_set_clear_color(r_QuadRenderer, color);
 	}
 
 	// Instanced:
@@ -188,10 +183,16 @@ void MainView::initialize_renderer_system()
 		instanced_quad_system_set_scene(engine->instancedQuadSystem, &scene);
 		instanced_quad_system_set_camera(engine->instancedQuadSystem, &m_SceneData.editorCamera.camera);
 		
-		renderer_set_clear_color(r_InstancedRenderer, { 40, 40, 40, 255 });
+		renderer_set_clear_color(r_InstancedRenderer, color);
 		renderer_set_viewport(r_InstancedRenderer, { 0.f, 0.f, (float)windowSize.x, (float)windowSize.y });
-		renderer_set_should_clear(r_InstancedRenderer, false);
 	}
+
+	// GUI:
+	{
+		engine->guiSystem->set_clear_color(color);
+	}
+
+	set_renderer_assembler_system_scene(engine->rendererAssemblerSystem, &scene);
 }
 
 void MainView::append_window_title(const std::string& extraText)
@@ -199,18 +200,39 @@ void MainView::append_window_title(const std::string& extraText)
 	auto appendedTitle = engine->configData.windowProperties.title + " - " + extraText;
 	set_window_title(&engine->window, appendedTitle);
 }
-
+void MainView::call_update_render()
+{
+	m_UpdateRenderCalled = true;
+}
 void MainView::update_render_target(u32 width, u32 height)
 {
-	if(m_SceneData.sceneRenderTarget != invalid_handle)
-		engine->graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
+	auto& graphicsDevice = engine->graphicsDevice;
+	auto& gui = engine->guiSystem;
 
-	RenderTargetDescriptor descriptor;
+	graphicsDevice.wait_idle();
+
+	// Render target texture:
 	{
-		descriptor.colorAttachments.push_back(m_SceneData.sceneTexture);
-		descriptor.width = width;
-		descriptor.height = height;
-	}
+		TextureDescriptor textureDescriptor;
+		textureDescriptor.width = width;
+		textureDescriptor.height = height;
 
-	m_SceneData.sceneRenderTarget = engine->graphicsDevice.create_render_target(descriptor);
+		if (m_SceneData.sceneTexture != invalid_handle)
+		{
+			gui->remove_texture(m_SceneData.sceneTexture);
+			graphicsDevice.destroy_texture(m_SceneData.sceneTexture);
+			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
+		}
+
+		m_SceneData.sceneTexture = graphicsDevice.create_texture(textureDescriptor);
+		gui->add_texture(m_SceneData.sceneTexture);
+
+		RenderTargetDescriptor renderDescriptor;
+		{
+			renderDescriptor.colorAttachments.push_back(m_SceneData.sceneTexture);
+			renderDescriptor.width = width;
+			renderDescriptor.height = height;
+		}
+		m_SceneData.sceneRenderTarget = graphicsDevice.create_render_target(renderDescriptor);
+	}
 }

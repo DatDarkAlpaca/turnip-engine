@@ -32,7 +32,7 @@ namespace tur::gl
 
 	protected:
 		shader_handle create_shader_impl(const ShaderDescriptor& descriptor);
-		void destroy_shader_impl(shader_handle handle);
+		void destroy_shader_impl(shader_handle textureHandle);
 
 	protected:
 		pipeline_handle create_graphics_pipeline_impl(const PipelineDescriptor& descriptor);
@@ -40,25 +40,25 @@ namespace tur::gl
 	protected:
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset);
 		texture_handle create_texture_impl(const TextureDescriptor& descriptor);
-		void update_texture_impl(texture_handle handle, const TextureAsset& asset);
-		void destroy_texture_impl(texture_handle handle);
-		Texture get_native_texture_impl(texture_handle handle)
+		void update_texture_impl(texture_handle textureHandle, const TextureAsset& asset);
+		void destroy_texture_impl(texture_handle textureHandle);
+		Texture get_native_texture_impl(texture_handle textureHandle)
 		{
-			return m_Textures.get(handle);
+			return m_Textures.get(textureHandle);
 		}
 
 	protected:
 		buffer_handle create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data);
 		buffer_handle create_buffer_impl(const BufferDescriptor& descriptor, u32 size);
-		void update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset = 0);
-		void* map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags);
+		void update_buffer_impl(buffer_handle textureHandle, const DataBuffer& data, u32 offset = 0);
+		void* map_buffer_impl(buffer_handle textureHandle, u32 offset, u32 length, AccessFlags flags);
 		void copy_buffer_impl(buffer_handle source, buffer_handle destination, u32 size, u32 srcOffset = 0, u32 dstOffset = 0);
-		void destroy_buffer_impl(buffer_handle handle);
+		void destroy_buffer_impl(buffer_handle textureHandle);
 
 	protected:
 		render_target_handle create_render_target_impl(const RenderTargetDescriptor& descriptor);
-		void resize_render_target_impl(render_target_handle handle, u32 width, u32 height);
-		void destroy_render_target_impl(render_target_handle handle);
+		void resize_render_target_impl(render_target_handle textureHandle, u32 width, u32 height);
+		void destroy_render_target_impl(render_target_handle textureHandle);
 
 	private:
 		inline free_list<Buffer>&		get_buffers()			{ return m_Buffers; }

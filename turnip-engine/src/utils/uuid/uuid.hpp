@@ -10,7 +10,7 @@ namespace tur
 	{
 	public:
 		UUID()
-			: m_UUID(generate_random<u64>())
+			: m_UUID(generate_random<u64>(std::numeric_limits<u64>::min(), std::numeric_limits<u64>::max() - 1))
 		{
 
 		}
@@ -18,15 +18,23 @@ namespace tur
 		UUID(u64 uuid)
 			: m_UUID(uuid)
 		{
-
 		}
 
 	public:
 		operator u64() const { return m_UUID; }
 
+	public:
+		bool is_valid() const { return m_UUID != std::numeric_limits<u64>::max(); }
+
+	public:
+		u64& data() { return m_UUID; }
+		u64 data() const { return m_UUID; }
+
 	private:
-		u64 m_UUID;
+		u64 m_UUID = std::numeric_limits<u64>::max();
 	};
+
+	static inline UUID invalid_uuid = UUID(std::numeric_limits<u64>::max());
 }
 
 namespace std 
@@ -38,7 +46,7 @@ namespace std
 	{
 		size_t operator()(const tur::UUID& uuid) const
 		{
-			return static_cast<uint64_t>(uuid);
+			return uuid.data();
 		}
 	};
 }

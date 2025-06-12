@@ -14,22 +14,22 @@
     },
     "graphicsSpecification": {
         "api": "OPENGL",
-        "major": 4,
-        "minor": 5,
+        "major": 1,
+        "minor": 3,
         "patch": 0,
         "variant": 0
     },
     "instancedQuadRendererInformation": {
-        "fragmentFilepath": "./res/shaders/instanced/iquad_gl.frag",
+        "fragmentFilepath": "./res/shaders/instanced/iquad_vk_frag.spv",
         "maxInstanceCount": 1200,
         "maxTextureCount": 2,
         "textureHeight": 32,
         "textureWidth": 32,
-        "vertexFilepath": "./res/shaders/instanced/iquad_gl.vert"
+        "vertexFilepath": "./res/shaders/instanced/iquad_vk_vert.spv"
     },
     "quadRendererInformation": {
-        "fragmentFilepath": "./res/shaders/quad/quad_gl.frag",
-        "vertexFilepath": "./res/shaders/quad/quad_gl.vert"
+        "fragmentFilepath": "./res/shaders/quad/quad_vk_frag.spv",
+        "vertexFilepath": "./res/shaders/quad/quad_vk_vert.spv"
     },
     "scriptingInfo": {
 	"mainDomainPath": "bin/turnip-script.dll",
