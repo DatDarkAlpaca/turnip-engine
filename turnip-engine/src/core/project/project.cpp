@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "project.hpp"
+#include "core/event/events.hpp"
 #include "utils/json/json_file.hpp"
+#include "core/script/script_compiler.hpp"
 
 namespace tur
 {
@@ -32,6 +34,48 @@ namespace tur
 
 		json_write_file(options.projectFolder / filename, projectData);
 		return projectData;
+	}
+
+	void save_project_data(ProjectData& data, AssetLibrary* assetLibrary)
+	{
+		using namespace std::filesystem;
+
+		if (!exists(data.projectPath))
+		{
+			TUR_LOG_WARN("{} is not a valid directory. Failed to save project", data.projectPath.string());
+			return;
+		}
+
+		data.assetMetadata.clear();
+		for (const auto& texture : assetLibrary->textures)
+		{
+			AssetMetaData metaData;
+			{
+				metaData.filepath = texture.filepath;
+				metaData.uuid = texture.uuid;
+			}
+			data.assetMetadata.push_back(metaData);
+		}
+
+		std::string filename = data.projectName + TUR_ENGINE_FILE_EXTENSION;
+
+		json_write_file(data.projectPath / filename, data);
+	}
+
+	void load_project_data(ProjectData& data, AssetLibrary* assetLibrary, WorkerPool* pool, EventCallback&& callback)
+	{
+		for (const auto& [filepath, uuid] : data.assetMetadata)
+		{
+			pool->submit<AssetInformation>([assetLibrary, filepath, uuid]() {
+				return load_texture_asset(assetLibrary, filepath, uuid);
+			}, [&, callback](AssetInformation information) {
+				if (!information.is_valid())
+					return;
+
+				OnNewTextureLoad textureLoadEvent(information.assetHandle);
+				callback(textureLoadEvent);
+			});
+		}
 	}
 
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath)

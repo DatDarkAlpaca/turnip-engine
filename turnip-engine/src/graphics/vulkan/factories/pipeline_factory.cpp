@@ -5,7 +5,7 @@
 
 namespace tur::vulkan
 {
-	Pipeline create_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
+	Pipeline build_graphics_pipeline(GraphicsDeviceVulkan& device, const PipelineDescriptor& descriptor)
 	{
 		Pipeline pipeline;
 		pipeline.type = PipelineType::GRAPHICS;
@@ -239,32 +239,16 @@ namespace tur::vulkan
 	
 		// Pipeline Layout:
 		{
-			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
-			auto& state = device.get_state();
-
-			std::vector<vk::DescriptorSetLayoutBinding> descriptorBindings;
-			for (const auto& [binding, type, stages, amount] : bindingDescriptors)
-			{
-				vk::DescriptorSetLayoutBinding descriptorBinding = {};
-				descriptorBinding.binding = binding;
-				descriptorBinding.descriptorType = get_descriptor_type(type);
-				descriptorBinding.stageFlags = get_pipeline_stages(stages);
-				descriptorBinding.descriptorCount = amount;
-
-				descriptorBindings.push_back(descriptorBinding);
-			}
-
-			vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
-			descriptorSetLayoutInfo.bindingCount = static_cast<u32>(descriptorBindings.size());
-			descriptorSetLayoutInfo.pBindings = descriptorBindings.data();
-
-			pipeline.descriptorSetLayout = state.logicalDevice.createDescriptorSetLayout(descriptorSetLayoutInfo);
+			std::vector<vk::DescriptorSetLayout> setLayouts;
+			setLayouts.reserve(descriptor.descriptorSetLayouts.size());
+			for (const auto& setLayoutHandle : descriptor.descriptorSetLayouts)
+				setLayouts.push_back(device.get_descriptors().get(setLayoutHandle).setLayout);	
 
 			vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
 			{
 				pipelineLayoutCreateInfo.flags = vk::PipelineLayoutCreateFlags();
-				pipelineLayoutCreateInfo.setLayoutCount = 1;
-				pipelineLayoutCreateInfo.pSetLayouts = &state.descriptorSetLayout;
+				pipelineLayoutCreateInfo.setLayoutCount = static_cast<u32>(setLayouts.size());
+				pipelineLayoutCreateInfo.pSetLayouts = setLayouts.data();
 				pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 				pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 			}
@@ -279,62 +263,13 @@ namespace tur::vulkan
 			}
 		}
 		
-		// Descriptor Pool:
-		const u64 frameAmount = device.get_state().frameDataHolder.get_frames().size();
-		{
-			const auto& bindingDescriptors = descriptor.pipelineLayout.bindingDescriptors;
-			std::vector<vk::DescriptorPoolSize> poolSizes;
-
-			for (const auto& bindingDescriptor : bindingDescriptors)
-			{
-				vk::DescriptorPoolSize poolSize;
-				poolSize.type = get_descriptor_type(bindingDescriptor.type);
-				poolSize.descriptorCount = bindingDescriptor.amount;
-				poolSizes.push_back(poolSize);
-			}
-
-			vk::DescriptorPoolCreateInfo poolInfo;
-			{
-				poolInfo.flags = vk::DescriptorPoolCreateFlags();
-				poolInfo.maxSets = static_cast<u32>(frameAmount);
-				poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-				poolInfo.pPoolSizes = poolSizes.data();
-			}
-
-			try 
-			{
-				pipeline.descriptorPool = logicalDevice.createDescriptorPool(poolInfo);
-			}
-			catch (vk::SystemError err) 
-			{
-				TUR_LOG_CRITICAL("Failed to create descriptor pool");
-			}
-		}
-
-		// Descriptor sets:
-		for (auto& descriptorSet : pipeline.descriptorSets)
-		{
-			// Descriptor Set:
-			vk::DescriptorSetAllocateInfo allocationInfo = {};
-			allocationInfo.descriptorPool = device.get_state().descriptorPool;
-			allocationInfo.descriptorSetCount = 1;
-			allocationInfo.pSetLayouts = &device.get_state().descriptorSetLayout;
-
-			try
-			{
-				descriptorSet = logicalDevice.allocateDescriptorSets(allocationInfo)[0];
-			}
-			catch (vk::SystemError err)
-			{
-				TUR_LOG_CRITICAL("Failed to allocate frame descriptor set");
-			}
-		}
-
 		// Pipeline (! No renderpass since the vulkan device is using dynamic rendering):
 		vk::PipelineRenderingCreateInfo renderingInfo = {};
-		auto format = vk::Format::eR8G8B8A8Unorm;
-		renderingInfo.colorAttachmentCount = 1;
-		renderingInfo.pColorAttachmentFormats = &format;
+		{
+			vk::Format format = device.get_state().swapchainFormat.format;
+			renderingInfo.colorAttachmentCount = 1;
+			renderingInfo.pColorAttachmentFormats = &format;
+		}
 		
 		vk::GraphicsPipelineCreateInfo pipelineInfo;
 		{
@@ -374,6 +309,7 @@ namespace tur::vulkan
 			}
 
 			pipeline.pipeline = result.value;
+			pipeline.descriptors = descriptor.descriptorSetLayouts;
 		}
 		catch (vk::SystemError& err)
 		{

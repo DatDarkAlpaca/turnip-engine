@@ -11,6 +11,6 @@ namespace tur
 		u32 height;
 
 		std::vector<texture_handle> colorAttachments;
-		texture_handle depthAttachment;
+		texture_handle depthAttachment = invalid_handle;
 	};
 }

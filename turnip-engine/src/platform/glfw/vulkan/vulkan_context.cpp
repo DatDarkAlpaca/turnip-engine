@@ -30,37 +30,29 @@ namespace tur::vulkan
 		initialize_window(window, properties);
 	}
 
-	void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
+	vk::DescriptorPool initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device)
 	{
 		auto& state = device->get_state();
 
 		vk::DescriptorPoolSize poolSizes[] = 
 		{
-			{ vk::DescriptorType::eSampler, 1000 },
-			{ vk::DescriptorType::eCombinedImageSampler, 1000 },
-			{ vk::DescriptorType::eSampledImage, 1000 },
-			{ vk::DescriptorType::eStorageImage, 1000 },
-			{ vk::DescriptorType::eUniformTexelBuffer, 1000 },
-			{ vk::DescriptorType::eStorageTexelBuffer, 1000 },
-			{ vk::DescriptorType::eUniformBuffer, 1000 },
-			{ vk::DescriptorType::eStorageBuffer, 1000 },
-			{ vk::DescriptorType::eUniformBufferDynamic, 1000 },
-			{ vk::DescriptorType::eStorageBufferDynamic, 1000 },
-			{ vk::DescriptorType::eInputAttachment, 1000 }
+			{ vk::DescriptorType::eCombinedImageSampler, 5 },
 		};
 
+		// TODO: configuration
 		vk::DescriptorPoolCreateInfo poolInfo = {};
 		{
-			poolInfo.maxSets = 1000;
+			poolInfo.maxSets = 5;
 			poolInfo.poolSizeCount = static_cast<u32>(std::size(poolSizes));
 			poolInfo.pPoolSizes = poolSizes;
+			poolInfo.flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet;
 		}
 
-		vk::DescriptorPool imguiPool;
+		vk::DescriptorPool descriptorPool;
 		{
 			try
 			{
-				imguiPool = state.logicalDevice.createDescriptorPool(poolInfo);
+				descriptorPool = state.logicalDevice.createDescriptorPool(poolInfo);
 			}
 			catch (vk::SystemError)
 			{
@@ -71,14 +63,15 @@ namespace tur::vulkan
 		ImGui_ImplGlfw_InitForVulkan(device->get_window()->window, true);
 
 		ImGui_ImplVulkan_InitInfo initInfo = {};
-		//VkFormat formats[] = { VK_FORMAT_R16G16B16A16_SFLOAT };
-		VkFormat formats[] = { VK_FORMAT_R8G8B8A8_UNORM };
+
+		static VkFormat formats[] = { (VkFormat)state.swapchainFormat.format };
 		{
 			initInfo.Instance = state.instance;
 			initInfo.PhysicalDevice = state.physicalDevice;
 			initInfo.Device = state.logicalDevice;
+			initInfo.QueueFamily = state.queueList.get_family_index(QueueUsage::GRAPHICS);
 			initInfo.Queue = state.queueList.get(QueueUsage::GRAPHICS);
-			initInfo.DescriptorPool = imguiPool;
+			initInfo.DescriptorPool = descriptorPool;
 			initInfo.MinImageCount = 3;
 			initInfo.ImageCount = 3;
 			initInfo.UseDynamicRendering = true;
@@ -94,6 +87,16 @@ namespace tur::vulkan
 		ImGui_ImplVulkan_Init(&initInfo);
 
 		ImGui_ImplVulkan_CreateFontsTexture();
+
+		return descriptorPool;
+	}
+	void shutdown_vulkan_gui(vk::Device device, vk::DescriptorPool descriptorPool)
+	{
+		ImGui_ImplVulkan_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
+		device.destroyDescriptorPool(descriptorPool);
 	}
 
 	void begin_vulkan_frame()
@@ -109,7 +112,7 @@ namespace tur::vulkan
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 	}
 
-	void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device)
+	void end_vulkan_frame()
 	{		
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

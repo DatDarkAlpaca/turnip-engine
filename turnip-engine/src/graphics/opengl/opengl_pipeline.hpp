@@ -1,6 +1,7 @@
 #pragma once
 #include "opengl_common.hpp"
 #include "graphics/objects/pipeline.hpp"
+#include "graphics/objects/descriptor.hpp"
 
 namespace tur::gl
 {
@@ -211,7 +212,7 @@ namespace tur::gl
 {
     struct Pipeline
     {
-        gl_handle handle = invalid_handle;
+        gl_handle textureHandle = invalid_handle;
         PipelineDescriptor descriptor;
     };
 }

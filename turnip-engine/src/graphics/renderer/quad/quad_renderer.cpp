@@ -42,24 +42,6 @@ namespace tur::quad_renderer
 			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
 		}
 
-		// Pipeline Layout:
-		PipelineLayout layout;
-		{
-			DescriptorDescription description = {};
-			{
-				description.binding = 0;
-				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = DescriptorType::UNIFORM_BUFFER;
-				layout.add_binding(description);
-			}
-			{
-				description.binding = 0;
-				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
-				layout.add_binding(description);
-			}
-		}
-
 		// Shaders:
 		shader_handle vertexShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
 			information.vertexFilepath,
@@ -70,19 +52,46 @@ namespace tur::quad_renderer
 			ShaderType::FRAGMENT
 		});
 
+		// Descriptor Layout:
+		DescriptorSetLayoutDescriptor descriptorDescriptor;
+		{
+			DescriptorSetLayoutEntry entry0;
+			{
+				entry0.binding = 0;
+				entry0.amount = 1;
+				entry0.type = DescriptorType::UNIFORM_BUFFER;
+				entry0.stage = PipelineStage::VERTEX_STAGE;
+			}
+			descriptorDescriptor.push_back(entry0);
+
+			DescriptorSetLayoutEntry entry1;
+			{
+				entry1.binding = 1;
+				entry1.amount = 1;
+				entry1.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
+				entry1.stage = PipelineStage::FRAGMENT_STAGE;
+			}
+			descriptorDescriptor.push_back(entry1);
+		}
+
+		renderer.descriptor = renderer.graphicsDevice->create_descriptors(descriptorDescriptor);
+		renderer.defaultDescriptorSet = renderer.graphicsDevice->create_descriptor_set(renderer.descriptor);
+		
 		// Pipeline:
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
-		descriptor.pipelineLayout = layout;
 		descriptor.rasterizerStage = rasterizer;
+		descriptor.descriptorSetLayouts.push_back(renderer.descriptor);
 
 		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
 
 	static void initialize_buffers(QuadRenderer& renderer)
 	{
+		auto& graphicsDevice = renderer.graphicsDevice;
+
 		// Vertex Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
@@ -100,7 +109,7 @@ namespace tur::quad_renderer
 			data.data = vertices;
 			data.size = sizeof(vertices);
 
-			renderer.buffer = renderer.graphicsDevice->create_default_buffer(bufferDesc, data);
+			renderer.buffer = graphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Index:
@@ -115,19 +124,21 @@ namespace tur::quad_renderer
 			data.data = vertices;
 			data.size = sizeof(vertices);
 
-			renderer.indexBuffer = renderer.graphicsDevice->create_default_buffer(bufferDesc, data);
+			renderer.indexBuffer = graphicsDevice->create_default_buffer(bufferDesc, data);
 		}
 
 		// Uniform Buffer:
 		{
 			BufferDescriptor bufferDesc = {};
 			{
-				bufferDesc.type = BufferType::UNIFORM_BUFFER;
+				bufferDesc.type = BufferType::UNIFORM_BUFFER | BufferType::TRANSFER_DST;
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 
 			renderer.uniformBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(QuadRenderer::UBO));
 		}
+		
+		renderer.graphicsDevice->update_descriptor_resource(renderer.defaultDescriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);	
 	}
 	
 	static void bind_mvp(QuadRenderer& renderer, const glm::mat4& transform)
@@ -156,18 +167,16 @@ namespace tur
 		quad_renderer::initialize_buffers(renderer);
 	}
 	
-	void quad_renderer_begin(QuadRenderer& renderer)
+	void quad_renderer_begin(QuadRenderer& renderer, render_target_handle renderTarget)
 	{
 		auto& commands = renderer.commands;
-		commands->begin();
+		commands->begin_render(renderTarget);
 	}
 
-	void quad_renderer_render(QuadRenderer& renderer, render_target_handle renderTarget)
+	void quad_renderer_render(QuadRenderer& renderer)
 	{
 		auto& commands = renderer.commands;
 
-		commands->begin_render(renderTarget);
-		
 		commands->set_viewport(renderer.viewport);
 		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
 		
@@ -176,21 +185,19 @@ namespace tur
 
 		commands->bind_vertex_buffer(renderer.buffer, 0, sizeof(QuadRenderer::Vertex));
 		commands->bind_index_buffer(renderer.indexBuffer);
-		commands->bind_pipeline(renderer.pipeline);
-
-		commands->set_descriptor_resource(renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		commands->bind_pipeline(renderer.pipeline);	
 
 		for (const auto& quad : renderer.quads)
 		{
 			quad_renderer::bind_mvp(renderer, quad.transform);
 
 			if (quad.texture != invalid_handle)
-				commands->bind_texture(quad.texture);
+				commands->bind_descriptor_set(quad.descriptorSet);
 
 			else
 			{
 				if (renderer.defaultTexture != invalid_handle)
-					commands->bind_texture(renderer.defaultTexture);
+					commands->bind_descriptor_set(renderer.defaultDescriptorSet);
 			}
 
 			commands->draw_indexed(6);
@@ -201,24 +208,27 @@ namespace tur
 	{
 		auto& commands = renderer.commands;
 		commands->end_render();
-
-		commands->end();
-		commands->submit();
 	}
 }
 
 namespace tur
 {
-	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle handle)
+	void quad_renderer_set_default_texture(QuadRenderer& renderer, texture_handle textureHandle)
 	{
-		renderer.defaultTexture = handle;
+		renderer.defaultTexture = textureHandle;
+		renderer.graphicsDevice->update_descriptor_resource(renderer.defaultDescriptorSet, renderer.defaultTexture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
 	}
 }
 
 namespace tur
 {
-	void quad_renderer_add_quad(QuadRenderer& renderer, const QuadRenderer::Data& quad)
+	void quad_renderer_add_quad(QuadRenderer& renderer, QuadRenderer::Data& quad)
 	{
+		renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+
+		if (quad.texture != invalid_handle)
+			renderer.graphicsDevice->update_descriptor_resource(quad.descriptorSet, quad.texture, DescriptorType::COMBINED_IMAGE_SAMPLER, 1);
+
 		renderer.quads.push_back(quad);
 	}
 

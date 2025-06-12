@@ -5,19 +5,36 @@
 
 using namespace tur;
 
-void SceneEditor::initialize(NON_OWNING tur::GraphicsDevice* graphicsDevice, NON_OWNING SceneData* sceneData)
+void SceneEditor::initialize(NON_OWNING GraphicsDevice* graphicsDevice, NON_OWNING GUISystem* guiSystem, NON_OWNING SceneData* sceneData)
 {
 	r_GraphicsDevice = graphicsDevice;
 	r_SceneData = sceneData;
-
-	initialize_scene_texture();
+	r_GUISystem = guiSystem;
 }
  
 void SceneEditor::on_render_gui()
 {
 	ImGui::Begin("Scene Editor");
 	
-	ImGui::Texture(r_GraphicsDevice, r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+	ImVec2 dimensions = ImGui::GetWindowSize();
+	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)
+	{
+		m_LatestSize = dimensions;
+
+		SceneEditorResized editorResize(static_cast<u32>(dimensions.x), static_cast<u32>(dimensions.y));
+		callback(editorResize);
+	}
+
+	ImVec2 position = ImGui::GetItemRectMin();
+	if (m_LatestPosition.x != position.x || m_LatestPosition.y != position.y)
+	{
+		m_LatestPosition = position;
+
+		SceneEditorMoved editorMoved((u32)m_LatestPosition.x, (u32)m_LatestPosition.y);
+		callback(editorMoved);
+	}
+
+	r_GUISystem->texture(r_SceneData->sceneTexture, m_LatestSize, { 0.0f, 1.0f }, { 1.0f, 0.0f });
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 	{
@@ -29,6 +46,9 @@ void SceneEditor::on_render_gui()
 
 	if (r_SceneData->viewerSelectedEntity.is_valid())
 	{
+		if (!r_SceneData->viewerSelectedEntity.has_component<TransformComponent>())
+			return ImGui::End();
+
 		auto& transform = r_SceneData->viewerSelectedEntity.get_component<TransformComponent>().transform;
 
 		ImGuizmo::SetOrthographic(true);
@@ -51,39 +71,5 @@ void SceneEditor::on_render_gui()
 			transform.decompose_transform();
 	}
 	
-	ImVec2 dimensions = ImGui::GetWindowSize();
-	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y)
-	{
-		m_LatestSize = dimensions;
-		resize_scene_texture();
-	}
-
-	ImVec2 position = ImGui::GetItemRectMin();
-	if (m_LatestPosition.x != position.x || m_LatestPosition.y != position.y)
-	{
-		m_LatestPosition = position;
-
-		SceneEditorMoved editorMoved((u32)m_LatestPosition.x, (u32)m_LatestPosition.y);
-		callback(editorMoved);
-	}
-
 	ImGui::End();
-}
-
-void SceneEditor::initialize_scene_texture()
-{
-	TextureDescriptor descriptor;
-	descriptor.width = m_LatestSize.x > 0 ? static_cast<u32>(m_LatestSize.x) : 1;
-	descriptor.height = m_LatestSize.y > 0 ? static_cast<u32>(m_LatestSize.y) : 1;
-
-	r_SceneData->sceneTexture = r_GraphicsDevice->create_texture(descriptor);
-
-	SceneEditorResized editorResize(descriptor.width, descriptor.height);
-	callback(editorResize);
-}
-
-void SceneEditor::resize_scene_texture()
-{
-	r_GraphicsDevice->destroy_texture(r_SceneData->sceneTexture);
-	initialize_scene_texture();
 }

@@ -2,23 +2,24 @@
 #include <filesystem>
 #include <optional>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 #include "common.hpp"
-
+#include "core/event/event.hpp"
+#include "core/worker/worker_pool.hpp"
 #include "core/assets/asset_library.hpp"
-#include "core/script/script_compiler.hpp"
 
 namespace tur
 {
 	struct AssetMetaData
 	{
 		std::filesystem::path filepath;
-		asset_handle assetHandle = invalid_handle;
+		UUID uuid;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
 			AssetMetaData,
 			filepath,
-			assetHandle
+			uuid
 		);
 	};
 
@@ -46,6 +47,10 @@ namespace tur
 	};
 
 	std::optional<ProjectData> create_empty_project(const ProjectOptions& options);
+
+	void save_project_data(ProjectData& data, AssetLibrary* assetLibrary);
+
+	void load_project_data(ProjectData& data, AssetLibrary* assetLibrary, WorkerPool* pool, EventCallback&& callback);
 
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath);
 }

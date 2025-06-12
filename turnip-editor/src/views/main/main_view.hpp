@@ -34,7 +34,7 @@ private:
 
 private:
 	void append_window_title(const std::string& extraText);
-
+	void call_update_render();
 	void update_render_target(u32 width, u32 height);
 
 private:
@@ -51,4 +51,5 @@ private:
 
 private:
 	ProjectData m_ProjectData;
+	bool m_UpdateRenderCalled = false;
 };

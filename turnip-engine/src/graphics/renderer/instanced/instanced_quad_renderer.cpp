@@ -42,47 +42,46 @@ namespace tur::instanced_renderer
 			rasterizer.frontFace = FrontFace::COUNTER_CLOCKWISE;
 		}
 
-		// Pipeline Layout:
-		PipelineLayout layout;
-		{
-			DescriptorDescription description = {};
-			{
-				description.binding = 0;
-				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = DescriptorType::UNIFORM_BUFFER;
-				layout.add_binding(description);
-			}
-			{
-				description.binding = 1;
-				description.stages = PipelineStage::VERTEX_STAGE;
-				description.type = DescriptorType::STORAGE_BUFFER;
-				layout.add_binding(description);
-			}
-			{
-				description.binding = 0;
-				description.stages = PipelineStage::FRAGMENT_STAGE;
-				description.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
-				layout.add_binding(description);
-			}
-		}
-
 		// Shaders:
 		shader_handle vertexShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
 			renderer.info.vertexFilepath,
 			ShaderType::VERTEX
-			});
+		});
 
 		shader_handle fragmentShader = renderer.graphicsDevice->create_shader(ShaderDescriptor{
 			renderer.info.fragmentFilepath,
 			ShaderType::FRAGMENT
-			});
+		});
 
+		// Descriptor Layout:
+		DescriptorSetLayoutDescriptor descriptorDescriptor;
+		{
+			DescriptorSetLayoutEntry entry0;
+			{
+				entry0.binding = 0;
+				entry0.type = DescriptorType::COMBINED_IMAGE_SAMPLER;
+				entry0.stage = PipelineStage::FRAGMENT_STAGE;
+			}
+			descriptorDescriptor.push_back(entry0);
+
+			DescriptorSetLayoutEntry entry1;
+			{
+				entry1.binding = 1;
+				entry1.type = DescriptorType::STORAGE_BUFFER;
+				entry1.stage = PipelineStage::VERTEX_STAGE;
+			}
+			descriptorDescriptor.push_back(entry1);
+		}
+
+		renderer.descriptor = renderer.graphicsDevice->create_descriptors(descriptorDescriptor);
+
+		// Pipeline:
 		PipelineDescriptor descriptor;
 		descriptor.vertexInputStage = vertexInput;
 		descriptor.fragmentShader = fragmentShader;
 		descriptor.vertexShader = vertexShader;
-		descriptor.pipelineLayout = layout;
 		descriptor.rasterizerStage = rasterizer;
+		descriptor.descriptorSetLayouts.push_back(renderer.descriptor);
 
 		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
@@ -161,6 +160,9 @@ namespace tur::instanced_renderer
 				AccessFlags::PERSISTENT | AccessFlags::WRITE | AccessFlags::COHERENT
 			);
 		}
+
+		renderer.graphicsDevice->update_descriptor_resource(renderer.pipeline, renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
+		renderer.graphicsDevice->update_descriptor_resource(renderer.pipeline, renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
 	}
 
 	static void initialize_textures(InstancedQuadRenderer& renderer)
@@ -193,17 +195,15 @@ namespace tur
 		instanced_renderer::initialize_textures(renderer);
 	}
 
-	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer)
+	void instanced_quad_renderer_begin(InstancedQuadRenderer& renderer, render_target_handle textureHandle)
 	{
 		auto& commands = renderer.commands;
-		commands->begin();
+		commands->begin_render(textureHandle);
 	}
 
-	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer, render_target_handle handle)
+	void instanced_quad_renderer_render(InstancedQuadRenderer& renderer)
 	{
 		auto& commands = renderer.commands;
-
-		commands->begin_render(handle);
 
 		commands->set_viewport(renderer.viewport);
 		commands->set_scissor(Rect2D{ 0, 0, renderer.viewport.width, renderer.viewport.height });
@@ -215,10 +215,6 @@ namespace tur
 		commands->bind_index_buffer(renderer.indexBuffer);
 		commands->bind_pipeline(renderer.pipeline);
 
-		commands->set_descriptor_resource(renderer.viewProjBuffer, DescriptorType::UNIFORM_BUFFER, 0);
-		commands->set_descriptor_resource(renderer.instanceBuffer, DescriptorType::STORAGE_BUFFER, 1);
-
-		commands->bind_texture(renderer.textureArray, 0);
 		commands->draw_indexed(6, renderer.quadAmount);
 	}
 
@@ -226,9 +222,6 @@ namespace tur
 	{
 		auto& commands = renderer.commands;
 		commands->end_render();
-
-		commands->end();
-		commands->submit();
 	}
 }
 

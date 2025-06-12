@@ -49,14 +49,14 @@ namespace tur::gl
 		check_compile_error(shaderID, descriptor.type);
 
 		Shader shader = {};
-		shader.handle = shaderID;
+		shader.textureHandle = shaderID;
 
 		return static_cast<texture_handle>(m_Shaders.add(shader));
 	}
-	void GraphicsDeviceGL::destroy_shader_impl(shader_handle handle)
+	void GraphicsDeviceGL::destroy_shader_impl(shader_handle textureHandle)
 	{
-		glDeleteShader(m_Shaders.get(handle).handle);
-		m_Shaders.remove(handle);
+		glDeleteShader(m_Shaders.get(textureHandle).textureHandle);
+		m_Shaders.remove(textureHandle);
 	}
 
 	pipeline_handle GraphicsDeviceGL::create_graphics_pipeline_impl(const PipelineDescriptor& descriptor)
@@ -73,21 +73,21 @@ namespace tur::gl
 			if (vertexShader == invalid_handle)
 				TUR_LOG_CRITICAL("Vertex shader not specified in a graphics pipeline");
 
-			glAttachShader(pipelineID, m_Shaders.get(vertexShader).handle);
+			glAttachShader(pipelineID, m_Shaders.get(vertexShader).textureHandle);
 
 			if (tesselationControlShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(tesselationControlShader).handle);
+				glAttachShader(pipelineID, m_Shaders.get(tesselationControlShader).textureHandle);
 
 			if (tesselationEvaluationShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(tesselationEvaluationShader).handle);
+				glAttachShader(pipelineID, m_Shaders.get(tesselationEvaluationShader).textureHandle);
 
 			if (geometryShader != invalid_handle)
-				glAttachShader(pipelineID, m_Shaders.get(geometryShader).handle);
+				glAttachShader(pipelineID, m_Shaders.get(geometryShader).textureHandle);
 
 			if (fragmentShader == invalid_handle)
 				TUR_LOG_CRITICAL("Fragment shader not specified in a graphics pipeline");
 
-			glAttachShader(pipelineID, m_Shaders.get(fragmentShader).handle);
+			glAttachShader(pipelineID, m_Shaders.get(fragmentShader).textureHandle);
 		}
 
 		glLinkProgram(pipelineID);
@@ -112,7 +112,7 @@ namespace tur::gl
 		}
 
 		Pipeline pipeline;
-		pipeline.handle = pipelineID;
+		pipeline.textureHandle = pipelineID;
 		pipeline.descriptor = descriptor;
 
 		return static_cast<texture_handle>(m_Pipelines.add(pipeline));
@@ -179,13 +179,13 @@ namespace tur::gl
 
 		gl::Texture texture;
 		{
-			texture.handle = textureID;
+			texture.textureHandle = textureID;
 			texture.descriptor = descriptor;
 		}
 
 		return static_cast<texture_handle>(m_Textures.add(texture));
 	}
-	void GraphicsDeviceGL::update_texture_impl(texture_handle handle, const TextureAsset& asset)
+	void GraphicsDeviceGL::update_texture_impl(texture_handle textureHandle, const TextureAsset& asset)
 	{
 		gl::Texture& texture = m_Textures.get(handle);
 		
@@ -195,14 +195,14 @@ namespace tur::gl
 		switch (texture.descriptor.type)
 		{
 			case TextureType::TEXTURE_2D:
-				glTextureSubImage2D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.width, asset.height,
+				glTextureSubImage2D(texture.textureHandle, 0, asset.xOffset, asset.yOffset, asset.width, asset.height,
 					dataFormat, dataType, asset.data.data);
 				break;
 
 			case TextureType::CUBE_MAP:
 			case TextureType::ARRAY_TEXTURE_2D:
 			case TextureType::TEXTURE_3D:
-				glTextureSubImage3D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.zOffset,
+				glTextureSubImage3D(texture.textureHandle, 0, asset.xOffset, asset.yOffset, asset.zOffset,
 					asset.width, asset.height, asset.depth, dataFormat, dataType, asset.data.data);
 				break;
 
@@ -210,10 +210,10 @@ namespace tur::gl
 				TUR_LOG_ERROR("Invalid texture descriptor type on update");
 		}
 	}
-	void GraphicsDeviceGL::destroy_texture_impl(texture_handle handle)
+	void GraphicsDeviceGL::destroy_texture_impl(texture_handle textureHandle)
 	{
-		auto& texture = m_Textures.remove(handle);
-		glDeleteTextures(1, &texture.handle);
+		auto& texture = m_Textures.remove(textureHandle);
+		glDeleteTextures(1, &texture.textureHandle);
 	}
 
 	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
@@ -224,7 +224,7 @@ namespace tur::gl
 
 		gl::Buffer buffer;
 		buffer.descriptor = descriptor;
-		buffer.handle = bufferID;
+		buffer.textureHandle = bufferID;
 
 		return static_cast<buffer_handle>(m_Buffers.add(buffer));
 	}
@@ -232,15 +232,15 @@ namespace tur::gl
 	{
 		return create_default_buffer_impl(descriptor, { nullptr, size });
 	}
-	void GraphicsDeviceGL::update_buffer_impl(buffer_handle handle, const DataBuffer& data, u32 offset)
+	void GraphicsDeviceGL::update_buffer_impl(buffer_handle textureHandle, const DataBuffer& data, u32 offset)
 	{
-		auto& buffer = m_Buffers.get(handle);		
-		glNamedBufferSubData(buffer.handle, offset, data.size, data.data);
+		auto& buffer = m_Buffers.get(textureHandle);		
+		glNamedBufferSubData(buffer.textureHandle, offset, data.size, data.data);
 	}
-	void* GraphicsDeviceGL::map_buffer_impl(buffer_handle handle, u32 offset, u32 length, AccessFlags flags)
+	void* GraphicsDeviceGL::map_buffer_impl(buffer_handle textureHandle, u32 offset, u32 length, AccessFlags flags)
 	{
 		return glMapNamedBufferRange(
-			m_Buffers.get(handle).handle, 
+			m_Buffers.get(textureHandle).textureHandle, 
 			offset,
 			length,
 			get_buffer_access_flags(flags)
@@ -251,12 +251,12 @@ namespace tur::gl
 		auto& srcBuffer = m_Buffers.get(source);
 		auto& dstBuffer = m_Buffers.get(destination);
 
-		glCopyNamedBufferSubData(srcBuffer.handle, dstBuffer.handle, srcOffset, dstOffset, size);
+		glCopyNamedBufferSubData(srcBuffer.textureHandle, dstBuffer.textureHandle, srcOffset, dstOffset, size);
 	}
-	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle handle)
+	void GraphicsDeviceGL::destroy_buffer_impl(buffer_handle textureHandle)
 	{
-		auto& buffer = m_Buffers.remove(handle);
-		glDeleteBuffers(1, &buffer.handle);
+		auto& buffer = m_Buffers.remove(textureHandle);
+		glDeleteBuffers(1, &buffer.textureHandle);
 	}
 
 	render_target_handle GraphicsDeviceGL::create_render_target_impl(const RenderTargetDescriptor& descriptor)
@@ -267,7 +267,7 @@ namespace tur::gl
 		u32 index = 0;
 		for (const auto& colorAttachment : descriptor.colorAttachments)
 		{
-			gl_handle colorAttachmentHandle = m_Textures.get(colorAttachment).handle;
+			gl_handle colorAttachmentHandle = m_Textures.get(colorAttachment).textureHandle;
 			glNamedFramebufferTexture(framebufferID, GL_COLOR_ATTACHMENT0 + index, colorAttachmentHandle, 0);
 			
 			++index;
@@ -285,9 +285,9 @@ namespace tur::gl
 
 		return m_RenderTargets.add({ framebufferID, descriptor });
 	}
-	void GraphicsDeviceGL::resize_render_target_impl(render_target_handle handle, u32 width, u32 height)
+	void GraphicsDeviceGL::resize_render_target_impl(render_target_handle textureHandle, u32 width, u32 height)
 	{
-		RenderTarget renderTarget = m_RenderTargets.get(handle);
+		RenderTarget renderTarget = m_RenderTargets.get(textureHandle);
 		renderTarget.descriptor.width  = width;
 		renderTarget.descriptor.height = height;
 
@@ -300,21 +300,21 @@ namespace tur::gl
 			textureDescriptor.width = width;
 			textureDescriptor.height = height;
 
-			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).handle;
-			glNamedFramebufferTexture(renderTarget.handle, GL_COLOR_ATTACHMENT0 + static_cast<u32>(index), colorAttachment, 0);
+			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).textureHandle;
+			glNamedFramebufferTexture(renderTarget.textureHandle, GL_COLOR_ATTACHMENT0 + static_cast<u32>(index), colorAttachment, 0);
 		}
 
 		u32 rbo;
 		glCreateRenderbuffers(1, &rbo);
 		glNamedRenderbufferStorage(rbo, GL_DEPTH24_STENCIL8, width, height);
-		glNamedFramebufferRenderbuffer(renderTarget.handle, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		glNamedFramebufferRenderbuffer(renderTarget.textureHandle, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		if (glCheckNamedFramebufferStatus(renderTarget.handle, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			TUR_LOG_CRITICAL("Incomplete framebuffer: ", renderTarget.handle);
+		if (glCheckNamedFramebufferStatus(renderTarget.textureHandle, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			TUR_LOG_CRITICAL("Incomplete framebuffer: ", renderTarget.textureHandle);
 	}
-	void GraphicsDeviceGL::destroy_render_target_impl(render_target_handle handle)
+	void GraphicsDeviceGL::destroy_render_target_impl(render_target_handle textureHandle)
 	{
-		auto& framebuffer = m_RenderTargets.remove(handle);
-		glDeleteFramebuffers(1, &framebuffer.handle);
+		auto& framebuffer = m_RenderTargets.remove(textureHandle);
+		glDeleteFramebuffers(1, &framebuffer.textureHandle);
 	}
 }

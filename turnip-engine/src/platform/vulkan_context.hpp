@@ -11,13 +11,14 @@ namespace tur::vulkan
 
 	extern void initialize_vulkan_windowing(Window* window, const WindowProperties& properties, const GraphicsSpecification& specification);
 
-	extern void initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device);
+	extern vk::DescriptorPool initialize_vulkan_gui(vulkan::GraphicsDeviceVulkan* device);
+	extern void shutdown_vulkan_gui(vk::Device device, vk::DescriptorPool descriptorPool);
 
 	extern void begin_vulkan_frame();
 
 	extern void render_vulkan_frame(vk::CommandBuffer commandBuffer);
 
-	extern void end_vulkan_frame(vulkan::GraphicsDeviceVulkan* device);
+	extern void end_vulkan_frame();
 
 	extern std::vector<const char*> get_windowing_vulkan_extensions();
 

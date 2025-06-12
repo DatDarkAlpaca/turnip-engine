@@ -8,4 +8,6 @@
 namespace tur::vulkan
 {
 	void initialize_instance(VulkanState& state, const ConfigData& configuration);
+
+	void destroy_instance_messenger(VulkanState& state);
 }

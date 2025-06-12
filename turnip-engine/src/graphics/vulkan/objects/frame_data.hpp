@@ -22,6 +22,17 @@ namespace tur::vulkan
 		}
 
 	public:
+		void shutdown(vk::Device& device)
+		{
+			for (const auto& frame : m_FrameData)
+			{
+				device.destroySemaphore(frame.imageAvailableSemaphore);
+				device.destroySemaphore(frame.renderFinishedSemaphore);
+				device.destroyFence(frame.recordingFence);
+			}
+		}
+
+	public:
 		void increment_frame_count()
 		{
 			m_FrameNumber = (m_FrameNumber + 1) % m_TotalAllocatedFrames;

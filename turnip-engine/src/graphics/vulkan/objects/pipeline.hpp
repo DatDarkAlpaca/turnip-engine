@@ -166,24 +166,6 @@ namespace tur::vulkan
 
         return flags;
     }
-
-    constexpr inline vk::DescriptorType get_descriptor_type(DescriptorType type)
-    {
-        switch (type)
-        {
-            case DescriptorType::COMBINED_IMAGE_SAMPLER:
-                return vk::DescriptorType::eCombinedImageSampler;
-
-            case DescriptorType::UNIFORM_BUFFER:
-                return vk::DescriptorType::eUniformBuffer;
-
-            case DescriptorType::STORAGE_BUFFER:
-                return vk::DescriptorType::eStorageBuffer;
-        }
-
-        TUR_LOG_CRITICAL("Invalid Descriptor Type: {}", static_cast<u32>(type));
-        return vk::DescriptorType::eUniformBuffer;
-    }
 }
 
 namespace tur::vulkan
@@ -194,9 +176,6 @@ namespace tur::vulkan
         vk::Pipeline pipeline;
         vk::PipelineLayout layout;
         PipelineDescriptor descriptor;
-
-        vk::DescriptorPool descriptorPool;
-        std::vector<vk::DescriptorSet> descriptorSets;
-        vk::DescriptorSetLayout descriptorSetLayout;
+        std::vector<descriptor_handle> descriptors;
     };
 }

@@ -1,17 +1,10 @@
-#pragma once
-#pragma once
-#pragma once
-#include <vulkan/vulkan.hpp>
-
-#include "graphics/vulkan/objects/vulkan_state.hpp"
-#include "common.hpp"
+#include "pch.hpp"
+#include "command_pool_builder.hpp"
 
 namespace tur::vulkan
 {
-	void initialize_descriptor_pool(VulkanState& state)
+	void initialize_command_pool(VulkanState& state)
 	{
-		state.frameDataHolder.get_frames();
-
 		vk::CommandPoolCreateInfo poolCreateInfo = {};
 		{
 			poolCreateInfo.flags = vk::CommandPoolCreateFlags() | vk::CommandPoolCreateFlagBits::eResetCommandBuffer;

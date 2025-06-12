@@ -17,22 +17,14 @@ namespace tur
 		}
 
 	public:
-		void begin()
+		void begin_render(render_target_handle textureHandle = invalid_handle)
 		{
-			static_cast<CommandBuffer*>(this)->begin_impl();
-		};
-		void begin_render(render_target_handle handle = invalid_handle)
-		{
-			static_cast<CommandBuffer*>(this)->begin_render_impl(handle);
+			static_cast<CommandBuffer*>(this)->begin_render_impl(textureHandle);
 		}
 		void end_render()
 		{
 			static_cast<CommandBuffer*>(this)->end_render_impl();
 		}
-		void end()
-		{
-			static_cast<CommandBuffer*>(this)->end_impl();
-		};
 
 	public:
 		void set_viewport(const Viewport& viewport)
@@ -49,26 +41,21 @@ namespace tur
 		}
 
 	public:
-		void bind_pipeline(pipeline_handle handle)
+		void bind_pipeline(pipeline_handle textureHandle)
 		{
-			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(handle);
+			static_cast<CommandBuffer*>(this)->bind_pipeline_impl(textureHandle);
 		}
-		void bind_vertex_buffer(buffer_handle handle, u32 binding, u32 stride)
+		void bind_descriptor_set(descriptor_set_handle textureHandle)
 		{
-			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(handle, binding, stride);
+			static_cast<CommandBuffer*>(this)->bind_descriptor_set_impl(textureHandle);
 		}
-		void bind_index_buffer(buffer_handle handle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
+		void bind_vertex_buffer(buffer_handle textureHandle, u32 binding, u32 stride)
 		{
-			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(handle, type);
+			static_cast<CommandBuffer*>(this)->bind_vertex_buffer_impl(textureHandle, binding, stride);
 		}
-		void bind_texture(texture_handle handle, u32 textureUnit = 0)
+		void bind_index_buffer(buffer_handle textureHandle, BufferIndexType type = BufferIndexType::UNSIGNED_INT)
 		{
-			static_cast<CommandBuffer*>(this)->bind_texture_impl(handle, textureUnit);
-		}
-
-		void set_descriptor_resource(handle_type handle, DescriptorType type, u32 binding)
-		{
-			static_cast<CommandBuffer*>(this)->set_descriptor_resource_impl(handle, type, binding);
+			static_cast<CommandBuffer*>(this)->bind_index_buffer_impl(textureHandle, type);
 		}
 
 	public:
@@ -80,12 +67,6 @@ namespace tur
 		{
 			static_cast<CommandBuffer*>(this)->draw_indexed_impl(indexCount, instanceCount, firstVertex, firstInstance);
 		};
-
-	public:
-		void submit()
-		{
-			static_cast<CommandBuffer*>(this)->submit_impl();
-		}
 
 	protected:
 		BaseCommandBuffer() = default;
