@@ -179,7 +179,7 @@ namespace tur::gl
 
 		gl::Texture texture;
 		{
-			texture.textureHandle = textureID;
+			texture.handle = textureID;
 			texture.descriptor = descriptor;
 		}
 
@@ -187,7 +187,7 @@ namespace tur::gl
 	}
 	void GraphicsDeviceGL::update_texture_impl(texture_handle textureHandle, const TextureAsset& asset)
 	{
-		gl::Texture& texture = m_Textures.get(handle);
+		gl::Texture& texture = m_Textures.get(textureHandle);
 		
 		gl_handle dataFormat = get_texture_data_format(asset.dataFormat);
 		gl_handle dataType = !asset.floatTexture ? GL_UNSIGNED_BYTE : GL_FLOAT;
@@ -195,14 +195,14 @@ namespace tur::gl
 		switch (texture.descriptor.type)
 		{
 			case TextureType::TEXTURE_2D:
-				glTextureSubImage2D(texture.textureHandle, 0, asset.xOffset, asset.yOffset, asset.width, asset.height,
+				glTextureSubImage2D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.width, asset.height,
 					dataFormat, dataType, asset.data.data);
 				break;
 
 			case TextureType::CUBE_MAP:
 			case TextureType::ARRAY_TEXTURE_2D:
 			case TextureType::TEXTURE_3D:
-				glTextureSubImage3D(texture.textureHandle, 0, asset.xOffset, asset.yOffset, asset.zOffset,
+				glTextureSubImage3D(texture.handle, 0, asset.xOffset, asset.yOffset, asset.zOffset,
 					asset.width, asset.height, asset.depth, dataFormat, dataType, asset.data.data);
 				break;
 
@@ -213,7 +213,7 @@ namespace tur::gl
 	void GraphicsDeviceGL::destroy_texture_impl(texture_handle textureHandle)
 	{
 		auto& texture = m_Textures.remove(textureHandle);
-		glDeleteTextures(1, &texture.textureHandle);
+		glDeleteTextures(1, &texture.handle);
 	}
 
 	buffer_handle GraphicsDeviceGL::create_default_buffer_impl(const BufferDescriptor& descriptor, const DataBuffer& data)
@@ -267,7 +267,7 @@ namespace tur::gl
 		u32 index = 0;
 		for (const auto& colorAttachment : descriptor.colorAttachments)
 		{
-			gl_handle colorAttachmentHandle = m_Textures.get(colorAttachment).textureHandle;
+			gl_handle colorAttachmentHandle = m_Textures.get(colorAttachment).handle;
 			glNamedFramebufferTexture(framebufferID, GL_COLOR_ATTACHMENT0 + index, colorAttachmentHandle, 0);
 			
 			++index;
@@ -300,7 +300,7 @@ namespace tur::gl
 			textureDescriptor.width = width;
 			textureDescriptor.height = height;
 
-			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).textureHandle;
+			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).handle;
 			glNamedFramebufferTexture(renderTarget.textureHandle, GL_COLOR_ATTACHMENT0 + static_cast<u32>(index), colorAttachment, 0);
 		}
 

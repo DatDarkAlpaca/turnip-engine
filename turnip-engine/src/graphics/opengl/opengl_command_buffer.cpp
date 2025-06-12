@@ -104,7 +104,7 @@ namespace tur::gl
 	void CommandBufferGL::bind_texture_impl(texture_handle textureHandle, u32 textureUnit)
 	{
 		Texture texture = r_Device->get_textures().get(textureHandle);
-		glBindTextureUnit(textureUnit, texture.textureHandle);
+		glBindTextureUnit(textureUnit, texture.handle);
 	}
 
 	void CommandBufferGL::set_descriptor_resource_impl(handle_type textureHandle, DescriptorType type, u32 binding)
@@ -119,7 +119,7 @@ namespace tur::gl
 				break;
 
 			case DescriptorType::COMBINED_IMAGE_SAMPLER:
-				glBindTextureUnit(binding, r_Device->get_textures().get(textureHandle).textureHandle);
+				glBindTextureUnit(binding, r_Device->get_textures().get(textureHandle).handle);
 				break;
 		}
 	}
