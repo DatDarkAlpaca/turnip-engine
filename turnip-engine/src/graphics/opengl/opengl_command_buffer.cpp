@@ -1,4 +1,5 @@
 #include "pch.hpp"
+#include "opengl_device.hpp"
 #include "opengl_pipeline.hpp"
 #include "opengl_command_buffer.hpp"
 
@@ -15,24 +16,18 @@ namespace tur::gl
 		glCreateVertexArrays(1, &m_VAO);
 	}
 
-	void CommandBufferGL::begin_impl()
-	{
-		glBindVertexArray(m_VAO);
-	}
 	void CommandBufferGL::begin_render_impl(render_target_handle textureHandle)
 	{
+		glBindVertexArray(m_VAO);
+
 		if(textureHandle == invalid_handle)
 			return glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, r_Device->get_render_targets().get(textureHandle).textureHandle);
+		glBindFramebuffer(GL_FRAMEBUFFER, r_Device->get_render_targets().get(textureHandle).handle);
 	}
 	void CommandBufferGL::end_render_impl()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-	void CommandBufferGL::end_impl()
-	{
-		// * Blank
 	}
 
 	void CommandBufferGL::set_viewport_impl(const Viewport& viewport)
@@ -82,7 +77,7 @@ namespace tur::gl
 		m_ActivePipeline = r_Device->get_pipelines().get(textureHandle);
 		const auto& descriptor = m_ActivePipeline.descriptor;
 
-		glUseProgram(m_ActivePipeline.textureHandle);
+		glUseProgram(m_ActivePipeline.handle);
 
 		glFrontFace(get_front_face(descriptor.rasterizerStage.frontFace));
 		glPolygonMode(GL_FRONT_AND_BACK, get_polygon_mode(descriptor.rasterizerStage.polygonMode));
@@ -90,38 +85,29 @@ namespace tur::gl
 
 		setup_pipeline_bindings(descriptor);
 	}
+	void CommandBufferGL::bind_descriptor_set_impl(descriptor_set_handle handle)
+	{
+		const auto& descriptorset = r_Device->get_descriptor_sets().get(handle);
+
+		for (const auto& buffer : descriptorset.boundBuffers)
+		{
+		}
+
+		for (const auto& texture : descriptorset.boundTextures)
+		{
+			glBindTexture(GL_TEXTURE_2D, r_Device->get_textures().get(texture).handle);
+		}
+	}
 	void CommandBufferGL::bind_vertex_buffer_impl(buffer_handle textureHandle, u32 binding, u32 stride)
 	{
-		gl_handle bufferHandle = r_Device->get_buffers().get(textureHandle).textureHandle;
+		gl_handle bufferHandle = r_Device->get_buffers().get(textureHandle).handle;
 		glVertexArrayVertexBuffer(m_VAO, binding, bufferHandle, 0, stride);
 	}
 	void CommandBufferGL::bind_index_buffer_impl(buffer_handle textureHandle, BufferIndexType indexType)
 	{
 		Buffer buffer = r_Device->get_buffers().get(textureHandle);
 		m_IndexType = indexType;
-		glVertexArrayElementBuffer(m_VAO, buffer.textureHandle);
-	}
-	void CommandBufferGL::bind_texture_impl(texture_handle textureHandle, u32 textureUnit)
-	{
-		Texture texture = r_Device->get_textures().get(textureHandle);
-		glBindTextureUnit(textureUnit, texture.handle);
-	}
-
-	void CommandBufferGL::set_descriptor_resource_impl(handle_type textureHandle, DescriptorType type, u32 binding)
-	{
-		gl_handle glType = get_descriptor_set_type(type);
-
-		switch (type)
-		{
-			case DescriptorType::STORAGE_BUFFER:
-			case DescriptorType::UNIFORM_BUFFER:
-				glBindBufferBase(glType, binding, r_Device->get_buffers().get(textureHandle).textureHandle);
-				break;
-
-			case DescriptorType::COMBINED_IMAGE_SAMPLER:
-				glBindTextureUnit(binding, r_Device->get_textures().get(textureHandle).handle);
-				break;
-		}
+		glVertexArrayElementBuffer(m_VAO, buffer.handle);
 	}
 
 	void CommandBufferGL::draw_impl(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance)
@@ -141,11 +127,6 @@ namespace tur::gl
 			glDrawElements(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr);
 		else
 			glDrawElementsInstanced(topology, indexCount, get_buffer_index_type(m_IndexType), nullptr, instanceCount);
-	}
-	
-	void CommandBufferGL::submit_impl()
-	{
-		/* Blank */
 	}
 }
 

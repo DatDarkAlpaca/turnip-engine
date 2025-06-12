@@ -8,7 +8,7 @@ namespace tur::gl
 {
     struct Shader
     {
-        gl_handle textureHandle;
+        gl_handle handle;
     };
 }
 

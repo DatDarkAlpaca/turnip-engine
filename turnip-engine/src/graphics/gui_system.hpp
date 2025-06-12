@@ -58,27 +58,4 @@ namespace tur
 			static_cast<Backend*>(this)->texture_impl(textureHandle, size, uv0, uv1, tintColor, borderColor);
 		}
 	};
-
-	class OpenGLGUI : public BaseGUISystem<OpenGLGUI>
-	{
-	public:
-		void initialize_impl()
-		{
-
-		}
-
-	public:
-		void begin_frame_impl()
-		{
-		
-		}
-		void render_impl()
-		{
-
-		}
-		void end_frame_impl()
-		{
-
-		}
-	};
 }
