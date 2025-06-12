@@ -34,6 +34,32 @@ namespace tur
 		return projectData;
 	}
 
+	void save_project_data(ProjectData& data, AssetLibrary* assetLibrary)
+	{
+		using namespace std::filesystem;
+
+		if (!exists(data.projectPath))
+		{
+			TUR_LOG_WARN("{} is not a valid directory. Failed to save project", data.projectPath.string());
+			return;
+		}
+
+		data.assetMetadata.clear();
+		for (const auto& texture : assetLibrary->textures)
+		{
+			AssetMetaData metaData;
+			{
+				metaData.filepath = texture.filepath;
+				metaData.uuid = texture.uuid;
+			}
+			data.assetMetadata.push_back(metaData);
+		}
+
+		std::string filename = data.projectName + TUR_ENGINE_FILE_EXTENSION;
+
+		json_write_file(data.projectPath / filename, data);
+	}
+
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath)
 	{
 		if (!std::filesystem::exists(filepath) || !std::filesystem::is_regular_file(filepath))

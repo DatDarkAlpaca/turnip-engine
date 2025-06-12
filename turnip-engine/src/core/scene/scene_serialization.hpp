@@ -5,6 +5,8 @@
 
 namespace tur
 {
+	// TODO: simplify
+
 	inline void serialize_entity(const std::filesystem::path& filepath, NON_OWNING Scene* scene, entt::entity entityID)
 	{
 		auto& registry = scene->get_registry();
@@ -37,8 +39,8 @@ namespace tur
 		json["transform"]["scale"]["z"] = transform.scale.z;
 
 		// Texture:
-		const auto textureComponent = registry.get<TextureComponent>(entityID);
-		json["texture"]["filepath"] = textureComponent.filepath.string();
+		const auto textureComponent = registry.get<QuadTexture2D>(entityID);
+		json["texture"]["uuid"] = textureComponent.textureUUID;
 
 		// Scripts:
 		const auto& scriptComponents = registry.get<EntityScriptsComponent>(entityID);
@@ -107,9 +109,9 @@ namespace tur
 				json[eid(entity)]["transform"]["scale"]["z"]    = transform.scale.z;
 			}
 
-			for (const auto& [entity, texture] : registry.view<TextureComponent>().each())
+			for (const auto& [entity, texture] : registry.view<QuadTexture2D>().each())
 			{
-				json[eid(entity)]["texture"]["filepath"] = texture.filepath.string();
+				json[eid(entity)]["texture"]["uuid"] = texture.textureUUID;
 			}
 
 			for (const auto& [entity, scripts] : registry.view<EntityScriptsComponent>().each())
@@ -210,12 +212,12 @@ namespace tur
 				
 				if (entityObj.contains("texture"))
 				{
-					TextureComponent textureComponent;
+					QuadTexture2D textureComponent;
 					{
-						textureComponent.filepath = std::string(entityObj["texture"]["filepath"]);					
+						textureComponent.textureUUID = UUID(static_cast<u64>(entityObj["texture"]["uuid"]));
 					}
 
-					registry.emplace<TextureComponent>(entity, textureComponent);
+					registry.emplace<QuadTexture2D>(entity, textureComponent);
 				}
 
 				if (entityObj.contains("scripts"))

@@ -30,25 +30,25 @@ namespace tur
 			return emptyHandle;
 		}
 
-		Type remove(handle_type handle)
+		Type remove(handle_type textureHandle)
 		{
 			m_ExistsEmptySlots = true;
-			m_FreeList.push_back(handle);
-			return m_Data[handle];
+			m_FreeList.push_back(textureHandle);
+			return m_Data[textureHandle];
 		}
 
-		Type get(handle_type handle) const
+		Type get(handle_type textureHandle) const
 		{
 #ifdef TUR_DEBUG
-			if (!is_valid_handle(handle))
-				TUR_LOG_CRITICAL("Invalid handle: {}", handle);
+			if (!is_valid_handle(textureHandle))
+				TUR_LOG_CRITICAL("Invalid handle: {}", textureHandle);
 #endif
-			return m_Data[handle];
+			return m_Data[textureHandle];
 		}
 
-		bool constains(handle_type handle) const
+		bool constains(handle_type textureHandle) const
 		{
-			return std::find(m_FreeList.begin(), m_FreeList.end(), handle) == m_FreeList.end();
+			return std::find(m_FreeList.begin(), m_FreeList.end(), textureHandle) == m_FreeList.end();
 		}
 
 		void clear()
@@ -85,11 +85,11 @@ namespace tur
 		}
 
 	private:
-		inline bool is_valid_handle(handle_type handle) const
+		inline bool is_valid_handle(handle_type textureHandle) const
 		{
 			for (const auto& emptyHandle : m_FreeList)
 			{
-				if (handle == emptyHandle)
+				if (textureHandle == emptyHandle)
 					return false;
 			}
 

@@ -18,3 +18,5 @@
 #include "mouse_events/mouse_pressed_event.hpp"
 #include "mouse_events/mouse_scroll_event.hpp"
 #include "mouse_events/mouse_moved_event.hpp"
+
+#include "asset_events/asset_events.hpp"

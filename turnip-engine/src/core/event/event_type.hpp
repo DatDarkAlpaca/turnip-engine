@@ -24,6 +24,8 @@ namespace tur
 		MOUSE_SCROLL,
 		MOUSE_MOVE,
 
+		ASSET_ON_LOAD_NEW_TEXTURE,
+
 		AMOUNT
 	};
 

@@ -51,7 +51,7 @@ void EntityInspector::render_components(Entity selectedEntity)
 	if (selectedEntity.has_component<TransformComponent>())
 		render_transform_component(selectedEntity);
 
-	if (selectedEntity.has_component<TextureComponent>())
+	if (selectedEntity.has_component<QuadTexture2D>())
 		render_texture_component(selectedEntity);
 
 	if (selectedEntity.has_component<InstancedQuadComponent>())
@@ -90,7 +90,7 @@ void EntityInspector::render_transform_component(Entity selectedEntity)
 }
 void EntityInspector::render_texture_component(Entity selectedEntity)
 {
-	auto* textureComponent = &selectedEntity.get_component<TextureComponent>();
+	auto* textureComponent = &selectedEntity.get_component<QuadTexture2D>();
 
 	auto* graphicsDevice = &r_Engine->graphicsDevice;
 	auto* assetLibrary = &r_Engine->assetLibrary;
@@ -100,38 +100,54 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-		r_Engine->guiSystem->add_texture(textureComponent->handle);
-		if (r_Engine->guiSystem->texture_button(textureComponent->handle, { 50.0f, 50.0f }))
+		if (textureComponent->textureHandle == invalid_handle)
 		{
-			auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
+			if (ImGui::Button("Choose Texture..."))
+			{
+				auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
 
-			if (filepaths.empty())
-				return;
-
-			auto& filepath = std::filesystem::path(filepaths[0]);
-
-			r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
-				return load_texture_asset(assetLibrary, filepath);
-			}, [textureComponent, filepath, assetLibrary, graphicsDevice](AssetInformation information) {
-
-				if (information.isDuplicate)
+				if (filepaths.empty())
 					return;
 
-				auto texture = assetLibrary->textures.get(information.handle);
+				auto& filepath = std::filesystem::path(filepaths[0]);
 
-				TextureDescriptor descriptor;
-				{
-					descriptor.format = TextureFormat::RGBA8_UNORM;
-					descriptor.type = TextureType::TEXTURE_2D;
-					descriptor.width = texture.width;
-					descriptor.height = texture.height;
-					descriptor.generateMipmaps = true;
-				}
+				r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
+					return load_texture_asset(assetLibrary, filepath);
+				}, [textureComponent, this, assetLibrary](AssetInformation information) {
+					if (!information.is_valid())
+						return;
 
-				auto textureGraphics = graphicsDevice->create_texture(descriptor, texture);
-				textureComponent->handle = textureGraphics;
-				textureComponent->filepath = filepath;
-			});
+					// Update entity texture UUID:
+					textureComponent->textureUUID = assetLibrary->textures.get(information.assetHandle).uuid;
+
+					OnNewTextureLoad textureLoadEvent(information.assetHandle);
+					callback(textureLoadEvent);
+				});
+			}
+			return;
+		}
+		else
+		{
+			r_Engine->guiSystem->add_texture(textureComponent->textureHandle);
+			if (r_Engine->guiSystem->texture_button(textureComponent->textureHandle, { 50.0f, 50.0f }))
+			{
+				auto filepaths = open_file_dialog("Open texture", { "All Images (*.png, *.jpg)", "*.png", "*.jpg" });
+
+				if (filepaths.empty())
+					return;
+
+				auto& filepath = std::filesystem::path(filepaths[0]);
+
+				r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
+					return load_texture_asset(assetLibrary, filepath);
+				}, [&](AssetInformation information) {
+					if (!information.is_valid())
+						return;
+
+					OnNewTextureLoad textureLoadEvent(information.assetHandle);
+					callback(textureLoadEvent);
+				});
+			}
 		}
 	}
 }
@@ -186,9 +202,9 @@ void EntityInspector::render_add_transform_component(Entity selectedEntity)
 }
 void EntityInspector::render_add_texture_component(Entity selectedEntity)
 {
-	if (!selectedEntity.has_component<TextureComponent>() && ImGui::MenuItem("Texture2D"))
+	if (!selectedEntity.has_component<QuadTexture2D>() && ImGui::MenuItem("Texture2D"))
 	{
-		selectedEntity.add_component<TextureComponent>();
+		auto& quadTexture = selectedEntity.add_component<QuadTexture2D>();
 		callback(OnProjectEdited());
 	}
 }

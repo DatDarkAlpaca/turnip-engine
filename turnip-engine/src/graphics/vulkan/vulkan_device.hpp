@@ -27,7 +27,7 @@ namespace tur::vulkan
 		friend Texture build_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
 	public:
-		void recreate_swapchain();
+		
 
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
@@ -83,6 +83,9 @@ namespace tur::vulkan
 		void transition_texture_layout(Texture& texture, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
 		void transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
 		void copy_buffer_to_texture_direct(Buffer& buffer, Texture& texture, u32 width, u32 height);
+
+	private:
+		void recreate_swapchain();
 
 	private:
 		inline free_list<vk::ShaderModule>& get_shader_modules() { return m_ShaderModules; }

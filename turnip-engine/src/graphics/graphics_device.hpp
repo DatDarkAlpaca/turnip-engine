@@ -69,9 +69,9 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_descriptors_impl(descriptor);
 		}
-		descriptor_set_handle build_descriptor_set(descriptor_handle textureHandle)
+		descriptor_set_handle create_descriptor_set(descriptor_handle descriptorHandle)
 		{
-			return static_cast<Backend*>(this)->create_descriptor_set_impl(textureHandle);
+			return static_cast<Backend*>(this)->create_descriptor_set_impl(descriptorHandle);
 		}
 		void update_descriptor_resource(descriptor_set_handle descriptorSetHandle, handle_type resourceHandle, DescriptorType type, u32 binding)
 		{
@@ -79,7 +79,7 @@ namespace tur
 		}
 
 	public:
-		pipeline_handle build_graphics_pipeline(const PipelineDescriptor& descriptor)
+		pipeline_handle create_graphics_pipeline(const PipelineDescriptor& descriptor)
 		{
 			return static_cast<Backend*>(this)->create_graphics_pipeline_impl(descriptor);
 		}
@@ -89,7 +89,7 @@ namespace tur
 		{
 			return static_cast<Backend*>(this)->create_default_buffer_impl(descriptor, data);
 		}
-		buffer_handle build_buffer(const BufferDescriptor& descriptor, u32 size)
+		buffer_handle create_buffer(const BufferDescriptor& descriptor, u32 size)
 		{
 			return static_cast<Backend*>(this)->create_buffer_impl(descriptor, size);
 		}
@@ -115,11 +115,11 @@ namespace tur
 		};
 
 	public:
-		texture_handle build_texture(const TextureDescriptor& descriptor, const TextureAsset& asset)
+		texture_handle create_texture(const TextureDescriptor& descriptor, const TextureAsset& asset)
 		{
 			return static_cast<Backend*>(this)->create_texture_impl(descriptor, asset);
 		}
-		texture_handle build_texture(const TextureDescriptor& descriptor)
+		texture_handle create_texture(const TextureDescriptor& descriptor)
 		{
 			return static_cast<Backend*>(this)->create_texture_impl(descriptor);
 		}

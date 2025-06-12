@@ -17,7 +17,11 @@ namespace tur
 
 	struct AssetInformation
 	{
-		asset_handle handle;
+	public:
+		bool is_valid() const { return assetHandle != invalid_handle && !isDuplicate; }
+
+	public:
+		asset_handle assetHandle = invalid_handle;
 		bool isDuplicate = false;
 	};
 
@@ -25,5 +29,5 @@ namespace tur
 
 	AssetInformation load_texture_asset_float(AssetLibrary* assetLibrary, const std::filesystem::path& filepath);
 
-	void unload_texture_asset(AssetLibrary* assetLibrary, asset_handle handle);
+	void unload_texture_asset(AssetLibrary* assetLibrary, asset_handle assetHandle);
 }

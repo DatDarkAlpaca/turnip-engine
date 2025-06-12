@@ -75,7 +75,7 @@ namespace tur::quad_renderer
 		}
 
 		renderer.descriptor = renderer.graphicsDevice->create_descriptors(descriptorDescriptor);
-		renderer.defaultDescriptorSet = renderer.graphicsDevice->build_descriptor_set(renderer.descriptor);
+		renderer.defaultDescriptorSet = renderer.graphicsDevice->create_descriptor_set(renderer.descriptor);
 		
 		// Pipeline:
 		PipelineDescriptor descriptor;
@@ -85,7 +85,7 @@ namespace tur::quad_renderer
 		descriptor.rasterizerStage = rasterizer;
 		descriptor.descriptorSetLayouts.push_back(renderer.descriptor);
 
-		renderer.pipeline = renderer.graphicsDevice->build_graphics_pipeline(descriptor);
+		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
 
 	static void initialize_buffers(QuadRenderer& renderer)
@@ -135,7 +135,7 @@ namespace tur::quad_renderer
 				bufferDesc.usage = BufferUsage::DYNAMIC;
 			}
 
-			renderer.uniformBuffer = renderer.graphicsDevice->build_buffer(bufferDesc, sizeof(QuadRenderer::UBO));
+			renderer.uniformBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(QuadRenderer::UBO));
 		}
 		
 		renderer.graphicsDevice->update_descriptor_resource(renderer.defaultDescriptorSet, renderer.uniformBuffer, DescriptorType::UNIFORM_BUFFER, 0);	

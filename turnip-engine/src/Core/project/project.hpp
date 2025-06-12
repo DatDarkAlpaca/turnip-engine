@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <optional>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 #include "common.hpp"
 
@@ -13,12 +14,12 @@ namespace tur
 	struct AssetMetaData
 	{
 		std::filesystem::path filepath;
-		asset_handle assetHandle = invalid_handle;
+		UUID uuid;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
 			AssetMetaData,
 			filepath,
-			assetHandle
+			uuid
 		);
 	};
 
@@ -46,6 +47,8 @@ namespace tur
 	};
 
 	std::optional<ProjectData> create_empty_project(const ProjectOptions& options);
+
+	void save_project_data(ProjectData& data, AssetLibrary* assetLibrary);
 
 	std::optional<ProjectData> read_project_file(const std::filesystem::path& filepath);
 }

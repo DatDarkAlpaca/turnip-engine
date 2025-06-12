@@ -1,6 +1,7 @@
 #pragma once
 #include <filesystem>
 #include "core/buffer.hpp"
+#include "utils/uuid/uuid.hpp"
 #include "graphics/objects/texture.hpp"
 
 namespace tur
@@ -10,6 +11,7 @@ namespace tur
 		std::filesystem::path filepath;
         TextureDataFormat dataFormat  = TextureDataFormat::RGBA;
 		DataBuffer data;
+        UUID uuid;
 
 		u32 width    = 0;
 		u32 height   = 0;

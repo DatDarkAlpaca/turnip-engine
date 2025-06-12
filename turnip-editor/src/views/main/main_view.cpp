@@ -10,22 +10,16 @@ MainView::MainView(const ProjectData& projectData)
 	: m_ProjectData(projectData)
 {
 	m_MainMenuBar.initialize(this);
-
-	m_EntityInspector.set_callback(BIND(&MainView::on_event, this));
-	m_SceneEditor.set_callback(BIND(&MainView::on_event, this));
-	m_MainMenuBar.set_callback(BIND(&MainView::on_event, this));
-	m_SceneViewer.set_callback(BIND(&MainView::on_event, this));
 }
 
 void MainView::set_project_data(const ProjectData& projectData)
 {
 	m_ProjectData = projectData;
+	ScriptSystem::set_project(m_ProjectData);
 
 	// Reset:
 	scene.get_registry().clear();
 	m_SceneData.viewerSelectedEntity = Entity();
-
-	ScriptSystem::set_project(m_ProjectData);
 
 	// Deserialize main scene:
 	if (!std::filesystem::is_regular_file(projectData.projectPath / "scene.json"))
@@ -35,39 +29,30 @@ void MainView::set_project_data(const ProjectData& projectData)
 	deserializer.deserialize();
 
 	// Load assets:
-	for (const auto& [entity, textureComponent] : scene.get_registry().view<TextureComponent>().each())
+	auto* assetLibrary = &engine->assetLibrary;
+	auto* graphicsDevice = &engine->graphicsDevice;
+
+	for (const auto& [filepath, uuid] : m_ProjectData.assetMetadata)
 	{
-		auto* assetLibrary = &engine->assetLibrary;
-		auto* graphicsDevice = &engine->graphicsDevice;
+		engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
+			return load_texture_asset(assetLibrary, filepath);
+		}, [&](AssetInformation information) {
+			if (!information.is_valid())
+				return;
 
-		engine->workerPool.submit<AssetInformation>([assetLibrary, textureComponent]() {
-			return load_texture_asset(assetLibrary, textureComponent.filepath);
-		}, [&textureComponent, assetLibrary, graphicsDevice](AssetInformation information) {
-			// if (information.isDuplicate)
-			//	return;
-			// TODO: map asset handle to texture handle on create_texture.			[URGENT]
-			// TODO: maybe save this threaded function since i use it everywhere
-
-			TextureAsset textureAsset = assetLibrary->textures.get(information.handle);
-
-			TextureDescriptor textureDescriptor;
-			{
-				textureDescriptor.format = TextureFormat::RGBA8_UNORM;
-				textureDescriptor.type = TextureType::TEXTURE_2D;
-				textureDescriptor.width = textureAsset.width;
-				textureDescriptor.height = textureAsset.height;
-				textureDescriptor.generateMipmaps = true;
-			}
-
-			textureComponent.handle = graphicsDevice->create_texture(textureDescriptor, textureAsset);
-
-			// TODO: initialize descriptor set here. Specialize each component to a different renderer
+			OnNewTextureLoad textureLoadEvent(information.assetHandle);
+			get_main_event_callback()(textureLoadEvent);
 		});
 	}
 }
 
 void MainView::on_view_added()
 {
+	m_EntityInspector.set_callback(std::move(get_main_event_callback()));
+	m_SceneEditor.set_callback(std::move(get_main_event_callback()));
+	m_MainMenuBar.set_callback(std::move(get_main_event_callback()));
+	m_SceneViewer.set_callback(std::move(get_main_event_callback()));
+
 	set_project_data(m_ProjectData);
 
 	// Widgets:
@@ -85,7 +70,7 @@ void MainView::on_update()
 	if (m_UpdateRenderCalled) 
 	{
 		auto size = m_SceneEditor.get_size();
-		update_render_target(size.x, size.y);
+		update_render_target(static_cast<u32>(size.x), static_cast<u32>(size.y));
 		m_UpdateRenderCalled = false;
 	}
 }
@@ -123,6 +108,11 @@ void MainView::on_event(Event& event)
 	});
 
 	subscriber.subscribe<OnProjectSaved>([&](OnProjectSaved&) -> bool {
+		SceneSerializer serializer(&scene, m_ProjectData.projectPath / "scene.json");
+		serializer.serialize();
+
+		save_project_data(m_ProjectData, &engine->assetLibrary);
+
 		append_window_title(m_ProjectData.projectName);
 		return false;
 	});
@@ -211,6 +201,8 @@ void MainView::initialize_renderer_system()
 	{
 		engine->guiSystem->set_clear_color(color);
 	}
+
+	set_renderer_assembler_system_scene(engine->rendererAssemblerSystem, &scene);
 }
 
 void MainView::append_window_title(const std::string& extraText)

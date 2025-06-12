@@ -247,7 +247,7 @@ namespace tur::vulkan
 			vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
 			{
 				pipelineLayoutCreateInfo.flags = vk::PipelineLayoutCreateFlags();
-				pipelineLayoutCreateInfo.setLayoutCount = setLayouts.size();
+				pipelineLayoutCreateInfo.setLayoutCount = static_cast<u32>(setLayouts.size());
 				pipelineLayoutCreateInfo.pSetLayouts = setLayouts.data();
 				pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 				pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;

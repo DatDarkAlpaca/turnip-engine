@@ -83,7 +83,7 @@ namespace tur::instanced_renderer
 		descriptor.rasterizerStage = rasterizer;
 		descriptor.descriptorSetLayouts.push_back(renderer.descriptor);
 
-		renderer.pipeline = renderer.graphicsDevice->build_graphics_pipeline(descriptor);
+		renderer.pipeline = renderer.graphicsDevice->create_graphics_pipeline(descriptor);
 	}
 
 	static void initialize_buffers(InstancedQuadRenderer& renderer)
@@ -153,7 +153,7 @@ namespace tur::instanced_renderer
 			}
 
 			u32 instanceBufferSize = sizeof(InstanceData) * renderer.info.maxInstanceCount;
-			renderer.instanceBuffer = renderer.graphicsDevice->build_buffer(bufferDesc, sizeof(InstanceData) * renderer.info.maxInstanceCount);
+			renderer.instanceBuffer = renderer.graphicsDevice->create_buffer(bufferDesc, sizeof(InstanceData) * renderer.info.maxInstanceCount);
 
 			renderer.instanceMappedData = renderer.graphicsDevice->map_buffer(
 				renderer.instanceBuffer, 0, instanceBufferSize,
@@ -174,7 +174,7 @@ namespace tur::instanced_renderer
 			descriptor.height = renderer.info.textureHeight;
 			descriptor.depth = std::max<u32>(1, renderer.info.maxTextureCount);
 		}
-		renderer.textureArray = renderer.graphicsDevice->build_texture(descriptor);
+		renderer.textureArray = renderer.graphicsDevice->create_texture(descriptor);
 	}
 }
 

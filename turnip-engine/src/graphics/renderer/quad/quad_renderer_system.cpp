@@ -19,21 +19,12 @@ namespace tur
 
 		auto& registry = system.scene->get_registry();
 
-		auto view0 = registry.view<TransformComponent>(entt::exclude<QuadTexture2D>);
-		for (auto& [entity, transformComponent] : view0.each())
+		auto view0 = registry.view<TransformComponent, QuadTexture2D>();
+		for (auto& [entity, transformComponent, textureComponent] : view0.each())
 		{
-			continue;
-			// TODO: IMPORTANT - default texture
-			QuadRenderer::Data quadData = {};
-			quadData.transform = transformComponent.transform.transform();
-			quadData.texture = invalid_handle;
+			if (textureComponent.descriptorHandle == invalid_handle)
+				textureComponent.descriptorHandle = system.renderer.graphicsDevice->create_descriptor_set(system.renderer.descriptor);
 
-			quad_renderer_add_quad(system.renderer, quadData);
-		}
-
-		auto view1 = registry.view<TransformComponent, QuadTexture2D>();
-		for (auto& [entity, transformComponent, textureComponent] : view1.each())
-		{
 			QuadRenderer::Data quadData = {};
 			quadData.transform = transformComponent.transform.transform();
 			quadData.texture = textureComponent.textureHandle;

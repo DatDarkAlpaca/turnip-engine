@@ -21,7 +21,7 @@ void SceneEditor::on_render_gui()
 	{
 		m_LatestSize = dimensions;
 
-		SceneEditorResized editorResize(dimensions.x, dimensions.y);
+		SceneEditorResized editorResize(static_cast<u32>(dimensions.x), static_cast<u32>(dimensions.y));
 		callback(editorResize);
 	}
 
@@ -46,6 +46,9 @@ void SceneEditor::on_render_gui()
 
 	if (r_SceneData->viewerSelectedEntity.is_valid())
 	{
+		if (!r_SceneData->viewerSelectedEntity.has_component<TransformComponent>())
+			return ImGui::End();
+
 		auto& transform = r_SceneData->viewerSelectedEntity.get_component<TransformComponent>().transform;
 
 		ImGuizmo::SetOrthographic(true);

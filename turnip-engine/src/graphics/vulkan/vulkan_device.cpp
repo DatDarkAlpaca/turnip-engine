@@ -22,41 +22,6 @@
 
 namespace tur::vulkan
 {
-	void GraphicsDeviceVulkan::recreate_swapchain()
-	{
-		auto size = get_window_size(r_Window);
-
-		while (size.x == 0 || size.y == 0)
-			size = get_window_size(r_Window);
-
-		wait_idle();
-		cleanup_swapchain(m_State);
-
-		// New Swapchain:
-		SwapchainRequirements requirements;
-		requirements.extent = Extent2D{ size.x, size.y };
-
-		initialize_swapchain(m_State, requirements);
-
-		initialize_frame_data(m_State);
-
-		// Recreate main texture:
-
-		TextureDescriptor descriptor;
-		{
-			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
-			descriptor.width = m_State.swapchainExtent.width;
-			descriptor.height = m_State.swapchainExtent.height;
-
-			destroy_texture(m_State.drawTextureHandle);
-			m_State.drawTextureHandle = build_texture(descriptor, {});
-			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
-		}
-	}
-}
-
-namespace tur::vulkan
-{
 	void GraphicsDeviceVulkan::initialize_impl(NON_OWNING Window* window, const ConfigData& configData)
 	{
 		const auto& vulkanConfig = configData.vulkanConfiguration;
@@ -127,7 +92,7 @@ namespace tur::vulkan
 			descriptor.width = m_State.swapchainExtent.width;
 			descriptor.height = m_State.swapchainExtent.height;
 
-			m_State.drawTextureHandle = build_texture(descriptor, {});
+			m_State.drawTextureHandle = create_texture(descriptor, {});
 			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
 		}
 
@@ -566,7 +531,7 @@ namespace tur::vulkan
 	}
 	texture_handle GraphicsDeviceVulkan::create_texture_impl(const TextureDescriptor& descriptor)
 	{
-		return build_texture(descriptor, {});
+		return create_texture(descriptor, {});
 	}
 	void GraphicsDeviceVulkan::update_texture_impl(texture_handle textureHandle, const TextureAsset& asset)
 	{
@@ -598,7 +563,7 @@ namespace tur::vulkan
 				textureDescriptor.height = descriptor.height;
 			}
 
-			texture_handle colorAttachment = build_texture(textureDescriptor);
+			texture_handle colorAttachment = create_texture(textureDescriptor);
 			renderTarget.descriptor.colorAttachments.push_back(colorAttachment);
 		}
 
@@ -766,5 +731,40 @@ namespace tur::vulkan
 
 			m_ImmCommandBuffer.copyBufferToImage2(copyInfo);
 		});
+	}
+}
+
+namespace tur::vulkan
+{
+	void GraphicsDeviceVulkan::recreate_swapchain()
+	{
+		auto size = get_window_size(r_Window);
+
+		while (size.x == 0 || size.y == 0)
+			size = get_window_size(r_Window);
+
+		wait_idle();
+		cleanup_swapchain(m_State);
+
+		// New Swapchain:
+		SwapchainRequirements requirements;
+		requirements.extent = Extent2D{ size.x, size.y };
+
+		initialize_swapchain(m_State, requirements);
+
+		initialize_frame_data(m_State);
+
+		// Recreate main texture:
+
+		TextureDescriptor descriptor;
+		{
+			descriptor.format = get_texture_format(m_State.swapchainFormat.format);
+			descriptor.width = m_State.swapchainExtent.width;
+			descriptor.height = m_State.swapchainExtent.height;
+
+			destroy_texture(m_State.drawTextureHandle);
+			m_State.drawTextureHandle = create_texture(descriptor, {});
+			m_State.drawTexture = m_Textures.get(m_State.drawTextureHandle);
+		}
 	}
 }

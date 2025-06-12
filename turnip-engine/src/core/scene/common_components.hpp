@@ -63,19 +63,19 @@ namespace tur
 		Transform transform;
 	};
 
-	struct TextureComponent
+	struct QuadTexture2D
 	{
 	public:
-		TextureComponent() = default;
-		TextureComponent(const TextureComponent&) = default;
-		TextureComponent(texture_handle handle, const std::filesystem::path& filepath) 
-			: handle(handle) 
-			, filepath(filepath)
+		QuadTexture2D() = default;
+		QuadTexture2D(const QuadTexture2D&) = default;
+		QuadTexture2D(UUID textureUUID, texture_handle textureHandle)
+			: textureHandle(textureHandle)
+			, textureUUID(textureUUID)
 		{ }
 
 	public:
-		std::filesystem::path filepath;
-		texture_handle handle = invalid_handle;
+		UUID textureUUID = invalid_uuid;
+		texture_handle textureHandle = invalid_handle;
 		descriptor_handle descriptorHandle = invalid_handle;
 	};
 

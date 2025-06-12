@@ -32,7 +32,7 @@ namespace tur
 namespace ImGui
 {
 	// TODO: make it cross-api
-	inline bool TextureButton(GraphicsDevice* device, texture_handle handle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), int framePadding = -1, const ImVec4& bgColor = ImVec4(0, 0, 0, 0), const ImVec4& tintColor = ImVec4(1, 1, 1, 1))
+	inline bool TextureButton(GraphicsDevice* device, texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), int framePadding = -1, const ImVec4& bgColor = ImVec4(0, 0, 0, 0), const ImVec4& tintColor = ImVec4(1, 1, 1, 1))
 	{
 		
 #ifdef TUR_API_OPENGL
@@ -42,7 +42,7 @@ namespace ImGui
 #endif
 	}
 
-	inline void Texture(GraphicsDevice* device, texture_handle handle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& tintColor = ImVec4(1, 1, 1, 1), const ImVec4& borderColor = ImVec4(0, 0, 0, 0))
+	inline void Texture(GraphicsDevice* device, texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& tintColor = ImVec4(1, 1, 1, 1), const ImVec4& borderColor = ImVec4(0, 0, 0, 0))
 	{
 #ifdef TUR_API_OPENGL
 		ImGui::Image((void*)device->get_native_texture(handle).handle, size, uv0, uv1, tintColor, borderColor);

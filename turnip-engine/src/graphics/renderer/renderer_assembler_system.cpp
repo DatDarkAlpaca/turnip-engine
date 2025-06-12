@@ -8,6 +8,9 @@ namespace tur
 	{
 		const TextureAsset& textureAsset = system.assetLibrary->textures.get(assetHandle);
 
+		// TODO: use a TextureFormat based on the TextureDataFormat provided.
+		// TODO: provide additional texture options (needs an AssetLibrary viewer)
+
 		TextureDescriptor textureDescriptor;
 		{
 			textureDescriptor.format = TextureFormat::RGBA8_UNORM;
@@ -17,7 +20,7 @@ namespace tur
 			textureDescriptor.generateMipmaps = true;
 		}
 
-		system.textureMap[textureAsset.uuid] = system.graphicsDevice->build_texture(textureDescriptor, textureAsset);
+		system.textureMap[textureAsset.uuid] = system.graphicsDevice->create_texture(textureDescriptor, textureAsset);
 	}
 
 	static void assign_entity_textures(RendererAssemblerSystem& system)
@@ -29,13 +32,11 @@ namespace tur
 
 		for (auto& [entity, textureComponent] : system.scene->get_registry().view<QuadTexture2D>().each())
 		{
-			if (system.textureMap.find(textureComponent.textureHandle) == system.textureMap.end())
+			if (system.textureMap.find(textureComponent.textureUUID) == system.textureMap.end())
 				continue;
 			
-			textureComponent.textureHandle = system.textureMap.at(textureComponent.textureHandle);
-			textureComponent.descriptorHandle = system.graphicsDevice->build_descriptor_set(system.renderer.descriptor);
+			textureComponent.textureHandle = system.textureMap.at(textureComponent.textureUUID);
 		}
-
 	}
 }
 

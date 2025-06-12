@@ -47,6 +47,8 @@ namespace tur::engine
 
 	static void on_event(TurnipEngine& data, Event& event)
 	{
+		on_event_renderer_assembler(data.rendererAssemblerSystem, event);
+
 		for (const auto& view : data.viewSystem.views)
 			view->on_event(event);
 	}
@@ -76,6 +78,8 @@ namespace tur
 {
 	void initialize_turnip_engine(TurnipEngine& data, const std::filesystem::path& configPath)
 	{
+		data.mainEventCallback = [engine_reference = std::ref(data)](Event& event) { engine::on_event(engine_reference.get(), event); };
+
 		// Config:
 		initialize_config_data(configPath);
 
@@ -99,7 +103,7 @@ namespace tur
 
 		// Window:
 		initialize_windowing_system();
-		set_callback_window(&data.window, [&](Event& event) { engine::on_event(data, event); });
+		set_callback_window(&data.window, std::move(data.mainEventCallback));
 		initialize_graphics_system(&data.window, data.configData);
 		
 		// Graphics:
@@ -113,6 +117,13 @@ namespace tur
 		// Renderers:
 		initialize_quad_renderer_system(data.quadRendererSystem, data.configData, &data.graphicsDevice);
 		// initialize_instanced_quad_system(data.instancedQuadSystem, data.configData, &data.graphicsDevice);
+		
+		initialize_renderer_assembler_system(
+			data.rendererAssemblerSystem, 
+			&data.graphicsDevice, 
+			&data.assetLibrary, 
+			&data.quadRendererSystem.renderer
+		);
 	}
 	
 	void turnip_engine_run(TurnipEngine& data)
@@ -146,8 +157,8 @@ namespace tur
 		view_system_add(&data.viewSystem, std::move(view));
 	}
 
-	void engine_remove_view(TurnipEngine& data, view_handle handle)
+	void engine_remove_view(TurnipEngine& data, view_handle textureHandle)
 	{
-		view_system_remove(&data.viewSystem, handle);
+		view_system_remove(&data.viewSystem, textureHandle);
 	}
 }

@@ -75,9 +75,6 @@ void MainMenuBar::on_file_open()
 }
 void MainMenuBar::on_file_save()
 {
-	SceneSerializer serializer(&r_MainView->scene, r_MainView->m_ProjectData.projectPath / "scene.json");
-	serializer.serialize();
-
 	callback(OnProjectSaved());
 }
 void MainMenuBar::on_file_save_as()

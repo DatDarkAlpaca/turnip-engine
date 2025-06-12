@@ -15,14 +15,10 @@ namespace tur
 		virtual ~View() = default;
 
 	public:
-		void set_engine(struct TurnipEngine* engine)
-		{
-			this->engine = engine;
-		}
-		void set_handle(view_handle handle)
-		{
-			viewHandle = handle;
-		}
+		void set_engine(struct TurnipEngine* engine);
+		void set_handle(view_handle textureHandle);
+
+		EventCallback get_main_event_callback() const;
 
 	public:
 		virtual void on_engine_startup() { };
@@ -51,27 +47,7 @@ namespace tur
 		std::vector<tur_unique<View>> views;
 	};
 	
-	inline view_handle view_system_add(ViewSystem* system, tur_unique<View> view)
-	{
-		view->on_view_added();
-		system->views.push_back(std::move(view));
-
-		u32 handle = static_cast<view_handle>(system->views.size() - 1);
-		system->views[handle]->set_handle(handle);
-
-		return handle;
-	}
-
-	inline void view_system_remove(ViewSystem* system, view_handle handle)
-	{
-		auto viewSystemIterator = system->views.begin() + handle;
-		viewSystemIterator->get()->on_view_removed();
-
-		system->views.erase(viewSystemIterator);
-	}
-
-	inline tur_unique<View>& view_system_get(ViewSystem* system, view_handle handle)
-	{
-		return system->views[handle];
-	}
+	view_handle view_system_add(ViewSystem* system, tur_unique<View> view);
+	void view_system_remove(ViewSystem* system, view_handle textureHandle);
+	tur_unique<View>& view_system_get(ViewSystem* system, view_handle textureHandle);
 }

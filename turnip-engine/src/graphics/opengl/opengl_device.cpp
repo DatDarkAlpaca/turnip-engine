@@ -120,7 +120,7 @@ namespace tur::gl
 	
 	texture_handle GraphicsDeviceGL::create_texture_impl(const TextureDescriptor& descriptor, const TextureAsset& asset)
 	{
-		texture_handle textureIndex = build_texture(descriptor);
+		texture_handle textureIndex = create_texture(descriptor);
 		auto& texture = m_Textures.get(textureIndex);
 
 		update_texture_impl(textureIndex, asset);
@@ -298,7 +298,7 @@ namespace tur::gl
 			textureDescriptor.width = width;
 			textureDescriptor.height = height;
 
-			colorAttachment = m_Textures.get(build_texture(textureDescriptor)).textureHandle;
+			colorAttachment = m_Textures.get(create_texture(textureDescriptor)).textureHandle;
 			glNamedFramebufferTexture(renderTarget.textureHandle, GL_COLOR_ATTACHMENT0 + static_cast<u32>(index), colorAttachment, 0);
 		}
 
