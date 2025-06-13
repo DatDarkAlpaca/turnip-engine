@@ -20,3 +20,5 @@
 #include "mouse_events/mouse_moved_event.hpp"
 
 #include "asset_events/asset_events.hpp"
+
+#include "scene_events/component_events.hpp"

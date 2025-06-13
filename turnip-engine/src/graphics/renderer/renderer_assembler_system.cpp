@@ -1,9 +1,11 @@
 #include "pch.hpp"
 #include "core/scene/components.hpp"
+
 #include "renderer_assembler_system.hpp"
 
 namespace tur
 {
+	// Texture Asset:
 	static void batch_texture(RendererAssemblerSystem& system, asset_handle assetHandle)
 	{
 		const TextureAsset& textureAsset = system.assetLibrary->textures.get(assetHandle);
@@ -23,6 +25,12 @@ namespace tur
 		system.textureMap[textureAsset.uuid] = system.graphicsDevice->create_texture(textureDescriptor, textureAsset);
 	}
 
+	// Quad Renderer:
+	static void assign_entity_texture_uuid(RendererAssemblerSystem& system, entt::entity entity, const UUID& uuid)
+	{
+		system.scene->get_registry().get<QuadTexture2D>(entity).textureUUID = uuid;
+	}
+
 	static void assign_entity_textures(RendererAssemblerSystem& system)
 	{
 #ifdef TUR_DEBUG
@@ -37,6 +45,15 @@ namespace tur
 			
 			textureComponent.textureHandle = system.textureMap.at(textureComponent.textureUUID);
 		}
+	}
+
+	static void remove_entity_texture(RendererAssemblerSystem& system, entt::entity entity)
+	{
+		auto& texture = system.scene->get_registry().get<QuadTexture2D>(entity);
+
+		texture.descriptorHandle = invalid_handle;
+		texture.textureHandle = invalid_handle;
+		texture.textureUUID = invalid_uuid;
 	}
 }
 
@@ -58,7 +75,19 @@ namespace tur
 		Subscriber subscriber(event);
 		subscriber.subscribe<OnNewTextureLoad>([&](const OnNewTextureLoad& onLoadEvent) -> bool {
 			batch_texture(system, onLoadEvent.assetHandle);
+
+			const TextureAsset& textureAsset = system.assetLibrary->textures.get(onLoadEvent.assetHandle);
 			assign_entity_textures(system);
+			return false;
+		});
+
+		subscriber.subscribe<SceneQuadTextureLoaded>([&](const SceneQuadTextureLoaded& sceneQuadLoadEvent) -> bool {
+			assign_entity_texture_uuid(system, sceneQuadLoadEvent.entity, sceneQuadLoadEvent.textureUUID);
+			return false;
+		});
+
+		subscriber.subscribe<SceneQuadTextureUnloaded>([&](const SceneQuadTextureUnloaded& sceneQuadUnloadEvent) -> bool {
+			remove_entity_texture(system, sceneQuadUnloadEvent.entity);
 			return false;
 		});
 	}

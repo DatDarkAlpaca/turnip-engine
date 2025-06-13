@@ -115,12 +115,14 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 				r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
 					return load_texture_asset(assetLibrary, filepath);
-				}, [textureComponent, this, assetLibrary](AssetInformation information) {
+				}, [textureComponent, this, assetLibrary, selectedEntity](AssetInformation information) {
+					tur::UUID& textureUUID = assetLibrary->textures.get(information.assetHandle).uuid;
+					
+					SceneQuadTextureLoaded sceneQuadLoadEvent(selectedEntity.get_handle(), textureUUID);
+					callback(sceneQuadLoadEvent);
+
 					if (!information.is_valid())
 						return;
-
-					// Update entity texture UUID:
-					textureComponent->textureUUID = assetLibrary->textures.get(information.assetHandle).uuid;
 
 					OnNewTextureLoad textureLoadEvent(information.assetHandle);
 					callback(textureLoadEvent);
@@ -149,6 +151,12 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 					OnNewTextureLoad textureLoadEvent(information.assetHandle);
 					callback(textureLoadEvent);
 				});
+			}
+
+			if (ImGui::Button("Remove texture"))
+			{
+				SceneQuadTextureUnloaded quadTextureUnloadEvent(selectedEntity.get_handle());
+				callback(quadTextureUnloadEvent);
 			}
 		}
 	}
