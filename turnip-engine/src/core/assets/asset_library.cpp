@@ -17,7 +17,6 @@ namespace tur
 			return { assetLibrary->assetFilepathMap[filepath.string()], true };
 
 		int width, height, channels;
-		stbi_set_flip_vertically_on_load(true);
 
 		DataBuffer buffer;
 		{

@@ -38,8 +38,24 @@ void MainMenuBar::on_render()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("View"))
+		{
+			for (auto& [widget, name]: m_WidgetList)
+			{
+				if (ImGui::MenuItem(name.c_str(), "", nullptr, &widget->isOpen))
+					widget->set_open(!widget->isOpen);
+			}
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void MainMenuBar::register_widget(Widget* widget, const std::string& name)
+{
+	m_WidgetList.push_back({ widget, name });
 }
 
 void MainMenuBar::on_file_new()

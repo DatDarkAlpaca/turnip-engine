@@ -16,7 +16,10 @@ void EntityInspector::initialize(NON_OWNING tur::TurnipEngine* engine, NON_OWNIN
 }
 void EntityInspector::on_render_gui()
 {
-	ImGui::Begin("Entity Inspector");
+	if (!isOpen)
+		return;
+
+	ImGui::Begin("Entity Inspector", &isOpen);
 
 	if (r_SceneData->viewerSelectedEntity.get_handle() == entt::null)
 		return ImGui::End();
@@ -143,7 +146,12 @@ void EntityInspector::render_texture_component(Entity selectedEntity)
 
 				r_Engine->workerPool.submit<AssetInformation>([assetLibrary, filepath]() {
 					return load_texture_asset(assetLibrary, filepath);
-				}, [&](AssetInformation information) {
+				}, [textureComponent, this, assetLibrary, selectedEntity](AssetInformation information) {
+					tur::UUID& textureUUID = assetLibrary->textures.get(information.assetHandle).uuid;
+
+					SceneQuadTextureLoaded sceneQuadLoadEvent(selectedEntity.get_handle(), textureUUID);
+					callback(sceneQuadLoadEvent);
+
 					if (!information.is_valid())
 						return;
 

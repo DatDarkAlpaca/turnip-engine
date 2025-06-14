@@ -11,6 +11,10 @@ public:
 
 	virtual void on_event(tur::Event& event) {}
 
+public:
+	void set_open(bool open) { isOpen = open; }
+	bool isOpen = true;
+
 protected:
-	tur::EventCallback callback;
+	tur::EventCallback callback;	
 };

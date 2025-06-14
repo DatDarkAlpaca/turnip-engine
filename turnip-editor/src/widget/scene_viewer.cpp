@@ -10,7 +10,10 @@ void SceneViewer::initialize(NON_OWNING Scene* scene, SceneData* sceneData)
 
 void SceneViewer::on_render_gui()
 {
-	ImGui::Begin("Scene Viewer");
+	if (!isOpen)
+		return;
+
+	ImGui::Begin("Scene Viewer", &isOpen);
 
 	auto& registry = r_Scene->get_registry();
 	for (auto& [entity, sceneGraphComp] : registry.view<SceneGraphComponent>().each())

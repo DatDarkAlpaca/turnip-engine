@@ -3,6 +3,8 @@
 
 void AssetLibraryEditor::initialize(NON_OWNING tur::AssetLibrary* assetLibrary, NON_OWNING RendererAssemblerSystem* assemblerSystem, NON_OWNING GUISystem* guiSystem)
 {
+	isOpen = false;
+
 	this->guiSystem = guiSystem;
 	this->assetLibrary = assetLibrary;
 	this->assemblerSystem = assemblerSystem;
@@ -10,12 +12,15 @@ void AssetLibraryEditor::initialize(NON_OWNING tur::AssetLibrary* assetLibrary, 
 
 void AssetLibraryEditor::on_render_gui()
 {
-	ImGui::Begin("Asset Library Editor");
+	if (!isOpen)
+		return;
+
+	ImGui::Begin("Asset Library Editor", &isOpen);
 	ImVec2 windowSize = ImGui::GetWindowSize();
 
 	// Left Panel:
 	{
-		ImGui::BeginChild("Asset List", ImVec2(windowSize.x * s_LeftPanelProportion, windowSize.y - 40), true);
+		ImGui::BeginChild("Asset List", ImVec2(windowSize.x * s_LeftPanelProportion, windowSize.y - 40), ImGuiChildFlags_ResizeX | ImGuiChildFlags_ResizeY);
 		
 		if (ImGui::BeginCombo("Asset Type", get_asset_type_name(m_CurrentFilterType)))
 		{
@@ -34,6 +39,7 @@ void AssetLibraryEditor::on_render_gui()
 			{
 				if (ImGui::Button(texture.filepath.string().c_str()))
 				{
+					// TODO: fix error
 					m_TextureAsset = &texture;
 					m_CurrentHandle = assemblerSystem->textureMap.at(texture.uuid);
 					m_CurrentSelectedType = AssetType::TEXTURE;
@@ -55,7 +61,7 @@ void AssetLibraryEditor::on_render_gui()
 		
 		// Upper:
 		{
-			ImGui::BeginChild("Asset Display", ImVec2(rightPanelWidth, windowSize.y * s_UpperPanelPropotion), true, ImGuiWindowFlags_NoScrollbar);
+			ImGui::BeginChild("Asset Display", ImVec2(rightPanelWidth, windowSize.y * s_UpperPanelPropotion), ImGuiWindowFlags_NoScrollbar | ImGuiChildFlags_ResizeX | ImGuiChildFlags_ResizeY);
 			ImVec2 assetDisplaySize = ImGui::GetContentRegionAvail();
 			constexpr float padding = 50.f;
 
@@ -93,7 +99,7 @@ void AssetLibraryEditor::on_render_gui()
 
 		// Bottom:
 		{
-			ImGui::BeginChild("Asset Information", ImVec2(rightPanelWidth, windowSize.y * s_LowerPanelPropotion), true);
+			ImGui::BeginChild("Asset Information", ImVec2(rightPanelWidth, windowSize.y * s_LowerPanelPropotion), ImGuiChildFlags_ResizeX | ImGuiChildFlags_ResizeY);
 
 			ImGui::Text("Asset Information");
 			ImGui::Separator();
@@ -102,18 +108,19 @@ void AssetLibraryEditor::on_render_gui()
 			{
 				case AssetType::TEXTURE:
 				{
-					const auto& texture = m_TextureAsset;
+					if (!m_TextureAsset)
+						break;
 
-					ImGui::Text("UUID: %lx", texture->uuid);
-					ImGui::Text("Filepath: %s", texture->filepath.string().c_str());
-					ImGui::Text("Data Format: %s", get_texture_data_format_name(texture->dataFormat));
+					ImGui::Text("UUID: %lx", m_TextureAsset->uuid);
+					ImGui::Text("Filepath: %s", m_TextureAsset->filepath.string().c_str());
+					ImGui::Text("Data Format: %s", get_texture_data_format_name(m_TextureAsset->dataFormat));
 
-					ImGui::Text("Dimensions: (%lupx, %lupx)", texture->width, texture->height);
-					ImGui::Text("Depth: %lu", texture->depth);
-					ImGui::Text("Channels: %lux", texture->channels);
+					ImGui::Text("Dimensions: (%lupx, %lupx)", m_TextureAsset->width, m_TextureAsset->height);
+					ImGui::Text("Depth: %lu", m_TextureAsset->depth);
+					ImGui::Text("Channels: %lux", m_TextureAsset->channels);
 
-					ImGui::Text("Offset: (%lu, %lu, %lu)", texture->xOffset, texture->yOffset, texture->zOffset);
-					ImGui::Text("Float Texture: %s", texture->floatTexture ? "Yes" : "No");
+					ImGui::Text("Offset: (%lu, %lu, %lu)", m_TextureAsset->xOffset, m_TextureAsset->yOffset, m_TextureAsset->zOffset);
+					ImGui::Text("Float Texture: %s", m_TextureAsset->floatTexture ? "Yes" : "No");
 				} break;
 			}
 			

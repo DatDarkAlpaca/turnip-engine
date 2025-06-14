@@ -11,6 +11,9 @@ public:
 
 	void on_render();
 
+public:
+	void register_widget(Widget* widget, const std::string& name);
+
 private:
 	void on_file_new();
 	void on_file_open();
@@ -20,4 +23,11 @@ private:
 
 private:
 	NON_OWNING MainView* r_MainView = nullptr;
+
+	struct WidgetInfo
+	{
+		Widget* widget;
+		std::string name;
+	};
+	std::vector<WidgetInfo> m_WidgetList;
 };

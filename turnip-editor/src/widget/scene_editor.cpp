@@ -14,7 +14,10 @@ void SceneEditor::initialize(NON_OWNING GraphicsDevice* graphicsDevice, NON_OWNI
  
 void SceneEditor::on_render_gui()
 {
-	ImGui::Begin("Scene Editor");
+	if (!isOpen)
+		return;
+
+	ImGui::Begin("Scene Editor", &isOpen);
 	
 	ImVec2 dimensions = ImGui::GetWindowSize();
 	if (m_LatestSize.x != dimensions.x || m_LatestSize.y != dimensions.y && dimensions.x > 0 && dimensions.y > 0)

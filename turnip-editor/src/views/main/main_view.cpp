@@ -52,6 +52,14 @@ void MainView::on_view_added()
 	m_SceneEditor.initialize(&engine->graphicsDevice, engine->guiSystem.get(), &m_SceneData);
 	m_AssetLibraryEditor.initialize(&engine->assetLibrary, &engine->rendererAssemblerSystem, engine->guiSystem.get());
 
+	// Main Menu:
+	{
+		m_MainMenuBar.register_widget(&m_EntityInspector, "Entity Inspector");
+		m_MainMenuBar.register_widget(&m_SceneViewer, "Scene Viewer");
+		m_MainMenuBar.register_widget(&m_SceneEditor, "Scene Editor");
+		m_MainMenuBar.register_widget(&m_AssetLibraryEditor, "Asset Library");
+	}
+
 	initialize_renderer_system();
 	initialize_textures();
 }
