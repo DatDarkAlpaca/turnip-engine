@@ -192,6 +192,9 @@ namespace tur
 
 		set_properties_window(window, properties);
 		set_window_events(window);
+		
+		if(properties.startsMaximized)
+			maximimize_window(window);
 	}
 	void set_callback_window(Window* window, EventCallback&& callback)
 	{
@@ -247,6 +250,10 @@ namespace tur
 	void hide_window(Window* window)
 	{
 		glfwHideWindow(window->window);
+	}
+	void maximimize_window(Window* window)
+	{
+		glfwMaximizeWindow(window->window);
 	}
 
 	glm::vec2 get_mouse_cursor_position_window(Window* window)

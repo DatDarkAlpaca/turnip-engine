@@ -61,6 +61,7 @@
         }
     },
     "windowProperties": {
+        "startsMaximized": true,
         "dimensions": {
             "x": 640,
             "y": 480

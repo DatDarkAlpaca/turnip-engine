@@ -13,6 +13,7 @@ namespace tur
 		glm::uvec2 position		= glm::vec2(Position::DEFAULT, Position::DEFAULT);
 		glm::uvec2 minSize		= glm::vec2(0);
 		glm::uvec2 maxSize		= dimensions;
+		bool startsMaximized	= false;
 	};
 
 	struct Window;
@@ -32,6 +33,7 @@ namespace tur
 
 	extern void show_window(Window* window);
 	extern void hide_window(Window* window);
+	extern void maximimize_window(Window* window);
 
 	extern glm::vec2  get_mouse_cursor_position_window(Window* window);
 

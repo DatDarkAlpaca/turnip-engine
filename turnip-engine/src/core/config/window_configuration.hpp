@@ -10,10 +10,11 @@ namespace tur
 {
 	inline void to_json(nlohmann::json& json, const WindowProperties& properties)
 	{
-		json["title"]		= properties.title;
-		json["dimensions"]	= properties.dimensions;
-		json["minSize"]		= properties.minSize;
-		json["maxSize"]		= properties.maxSize;
+		json["title"]				= properties.title;
+		json["dimensions"]			= properties.dimensions;
+		json["minSize"]				= properties.minSize;
+		json["maxSize"]				= properties.maxSize;
+		json["startsMaximized"]		= properties.startsMaximized;
 
 		if(properties.position == invalid_size)
 		{
@@ -26,10 +27,11 @@ namespace tur
 
 	inline void from_json(const nlohmann::json& json, WindowProperties& properties)
 	{
-		properties.title = json["title"];
-		properties.dimensions = json["dimensions"];
-		properties.minSize = json["minSize"];
-		properties.maxSize = json["maxSize"];
+		properties.title				= json["title"];
+		properties.dimensions			= json["dimensions"];
+		properties.minSize				= json["minSize"];
+		properties.maxSize				= json["maxSize"];
+		properties.startsMaximized		= json["startsMaximized"];
 
 		auto xPosString = json["position"].at("x").get<std::string>();
 		to_lower(xPosString);
