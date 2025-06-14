@@ -42,6 +42,7 @@ void MainView::on_view_added()
 	m_SceneEditor.set_callback(std::move(get_main_event_callback()));
 	m_MainMenuBar.set_callback(std::move(get_main_event_callback()));
 	m_SceneViewer.set_callback(std::move(get_main_event_callback()));
+	m_AssetLibraryEditor.set_callback(std::move(get_main_event_callback()));
 
 	set_project_data(m_ProjectData);
 
@@ -49,6 +50,7 @@ void MainView::on_view_added()
 	m_EntityInspector.initialize(engine, &scene, &m_SceneData);
 	m_SceneViewer.initialize(&scene, &m_SceneData);
 	m_SceneEditor.initialize(&engine->graphicsDevice, engine->guiSystem.get(), &m_SceneData);
+	m_AssetLibraryEditor.initialize(&engine->assetLibrary, &engine->rendererAssemblerSystem, engine->guiSystem.get());
 
 	initialize_renderer_system();
 	initialize_textures();
@@ -87,6 +89,7 @@ void MainView::on_render_gui()
 	m_SceneEditor.on_render_gui();
 	m_SceneViewer.on_render_gui();
 	m_EntityInspector.on_render_gui();
+	m_AssetLibraryEditor.on_render_gui();
 }
 void MainView::on_event(Event& event)
 {
@@ -217,13 +220,12 @@ void MainView::update_render_target(u32 width, u32 height)
 
 		if (m_SceneData.sceneTexture != invalid_handle)
 		{
-			gui->remove_texture(m_SceneData.sceneTexture);
+			// TODO: [vulkan] update gui descriptor set
 			graphicsDevice.destroy_texture(m_SceneData.sceneTexture);
 			graphicsDevice.destroy_render_target(m_SceneData.sceneRenderTarget);
 		}
 
 		m_SceneData.sceneTexture = graphicsDevice.create_texture(textureDescriptor);
-		gui->add_texture(m_SceneData.sceneTexture);
 
 		RenderTargetDescriptor renderDescriptor;
 		{

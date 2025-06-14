@@ -45,25 +45,10 @@ namespace tur::vulkan
 		end_vulkan_frame();
 	}
 
-	void VulkanGUI::add_texture_impl(texture_handle textureHandle)
-	{
-		if (descriptorSets.find(textureHandle) != descriptorSets.end())
-			return;
-
-		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
-		descriptorSets[textureHandle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-	}
-	void VulkanGUI::remove_texture_impl(texture_handle textureHandle)
-	{
-		r_GraphicsDevice->wait_idle();
-
-		ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(textureHandle));
-
-		descriptorSets.erase(textureHandle);
-	}
-
 	bool VulkanGUI::texture_button_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
 	{
+		add_texture(textureHandle);
+
 		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
 
 		if(descriptorSets.find(textureHandle) == descriptorSets.end())
@@ -73,11 +58,34 @@ namespace tur::vulkan
 	}
 	void VulkanGUI::texture_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor)
 	{
+		add_texture(textureHandle);
+
 		Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
 	
 		if (descriptorSets.find(textureHandle) == descriptorSets.end())
 			return;
 		
 		ImGui::Image((ImTextureID)descriptorSets[textureHandle], size, uv0, uv1, tintColor, borderColor);
+	}
+
+	void VulkanGUI::add_texture(texture_handle textureHandle)
+	{
+		if (descriptorSets.find(textureHandle) != descriptorSets.end())
+			return;
+
+		r_GraphicsDevice->add_frame_begin_work([&]() {
+			Texture& texture = r_GraphicsDevice->get_textures().get(textureHandle);
+			descriptorSets[textureHandle] = ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		});
+	}
+	void VulkanGUI::remove_texture(texture_handle textureHandle)
+	{
+		r_GraphicsDevice->add_frame_begin_work([&]() {
+			r_GraphicsDevice->wait_idle();
+
+			ImGui_ImplVulkan_RemoveTexture(descriptorSets.at(textureHandle));
+
+			descriptorSets.erase(textureHandle);
+		});
 	}
 }

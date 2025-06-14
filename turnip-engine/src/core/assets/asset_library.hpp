@@ -1,15 +1,14 @@
 #pragma once
 #include <filesystem>
-
 #include "common.hpp"
+
+#include "asset.hpp"
 #include "texture_asset.hpp"
 #include "core/free_list.hpp"
 #include "utils/uuid/uuid.hpp"
 
 namespace tur
 {
-	using asset_handle = handle_type;
-
 	struct AssetLibrary
 	{
 		free_list<TextureAsset> textures;

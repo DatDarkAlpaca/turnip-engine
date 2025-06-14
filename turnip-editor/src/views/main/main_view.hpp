@@ -8,6 +8,7 @@
 #include "widget/scene_viewer.hpp"
 #include "widget/entity_inspector.hpp"
 #include "widget/scene_editor.hpp"
+#include "widget/asset_library_editor.hpp"
 
 using namespace tur;
 
@@ -44,6 +45,7 @@ private:
 	SceneViewer m_SceneViewer;
 	SceneEditor m_SceneEditor;
 	EntityInspector m_EntityInspector;
+	AssetLibraryEditor m_AssetLibraryEditor;
 
 private:
 	NON_OWNING QuadRenderer* r_QuadRenderer = nullptr;

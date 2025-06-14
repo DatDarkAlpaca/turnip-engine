@@ -26,9 +26,6 @@ namespace tur::vulkan
 		friend Pipeline build_graphics_pipeline(GraphicsDeviceVulkan&, const PipelineDescriptor&);
 		friend Texture build_texture(GraphicsDeviceVulkan* device, const TextureDescriptor& descriptor, const TextureAsset& asset);
 
-	public:
-		
-
 	protected:
 		void initialize_impl(NON_OWNING Window* window, const ConfigData& configData);
 		void shutdown_impl();
@@ -84,6 +81,12 @@ namespace tur::vulkan
 		void transition_texture_layout(texture_handle textureHandle, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
 		void copy_buffer_to_texture_direct(Buffer& buffer, Texture& texture, u32 width, u32 height);
 
+	public:
+		inline void add_frame_begin_work(std::function<void()>&& work)
+		{
+			m_FrameStartWorkQueue.push_back(std::move(work));
+		}
+
 	private:
 		void recreate_swapchain();
 
@@ -122,5 +125,8 @@ namespace tur::vulkan
 		vk::Fence m_ImmFence;
 		vk::CommandPool m_ImmCommandPool;
 		vk::CommandBuffer m_ImmCommandBuffer;
+
+	private:
+		std::vector<std::function<void()>> m_FrameStartWorkQueue;
 	};
 }

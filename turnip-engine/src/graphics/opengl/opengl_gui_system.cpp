@@ -40,13 +40,6 @@ namespace tur::gl
 		end_opengl_frame();
 	}
 
-	void OpenGLGUI::add_texture_impl(texture_handle textureHandle)
-	{
-	}
-	void OpenGLGUI::remove_texture_impl(texture_handle textureHandle)
-	{
-	}
-
 	bool OpenGLGUI::texture_button_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor)
 	{
 		return ImGui::ImageButton((void*)r_GraphicsDevice->get_textures().get(textureHandle).handle, size, uv0, uv1, framePadding, bgColor, tintColor);

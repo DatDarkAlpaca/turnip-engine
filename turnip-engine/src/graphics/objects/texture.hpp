@@ -62,6 +62,50 @@ namespace tur
         BGRA_INTEGER,
     };
 
+    constexpr static inline const char* get_texture_data_format_name(TextureDataFormat dataFormat)
+    {
+        switch (dataFormat)
+        {
+            case TextureDataFormat::RED:            
+                return "RED";
+
+            case TextureDataFormat::RG:             
+                return "RG";
+
+            case TextureDataFormat::RGB:            
+                return "RGB";
+
+            case TextureDataFormat::RGBA:           
+                return "RGBA";
+
+            case TextureDataFormat::BGR:            
+                return "BGR";
+
+            case TextureDataFormat::BGRA:           
+                return "BGRA";
+
+            case TextureDataFormat::RED_INTEGER:    
+                return "RED INTEGER";
+
+            case TextureDataFormat::RG_INTEGER:     
+                return "RG INTEGER";
+
+            case TextureDataFormat::RGB_INTEGER:    
+                return "RGB INTEGER";
+
+            case TextureDataFormat::RGBA_INTEGER:   
+                return "RGBA INTEGER";
+
+            case TextureDataFormat::BGR_INTEGER:    
+                return "BGR INTEGER";
+
+            case TextureDataFormat::BGRA_INTEGER:   
+                return "BGRA INTEGER";
+        }
+
+        return "UNKNOWN";
+    }
+
     struct TextureDescriptor
     {
         // todo: array layers. 

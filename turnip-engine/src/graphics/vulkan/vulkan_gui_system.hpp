@@ -30,12 +30,12 @@ namespace tur::vulkan
 		void end_frame_impl();
 
 	protected:
-		void add_texture_impl(texture_handle textureHandle);
-
-		void remove_texture_impl(texture_handle textureHandle);
-
 		bool texture_button_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int framePadding, const ImVec4& bgColor, const ImVec4& tintColor);
 		void texture_impl(texture_handle textureHandle, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tintColor, const ImVec4& borderColor);
+
+	private:
+		void add_texture(texture_handle textureHandle);
+		void remove_texture(texture_handle textureHandle);
 
 	private:
 		NON_OWNING GraphicsDeviceVulkan* r_GraphicsDevice = nullptr;

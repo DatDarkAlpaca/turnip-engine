@@ -208,6 +208,10 @@ namespace tur::vulkan
 		catch (vk::SystemError& err) {
 			TUR_LOG_ERROR("Failed to begin() recording to vulkan command buffer.", err.what());
 		}
+
+		// Frame begin work queue:
+		for (const auto& work : m_FrameStartWorkQueue)
+			work();
 	}
 	void GraphicsDeviceVulkan::submit_impl()
 	{
